@@ -15,6 +15,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        //http.authorizeRequests().anyRequest().permitAll();
+
         http.authorizeRequests()
                 .antMatchers("/", "/about", "/reg").permitAll()
                 .antMatchers("/webjars/**").permitAll()
@@ -22,55 +24,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                .loginPage("/login").defaultSuccessUrl("/main")
+                .loginPage("/login").defaultSuccessUrl("/game")
                 .permitAll()
                 .and()
                 .logout()
                 .permitAll();
 
-        /*http.authorizeRequests()
-                .antMatchers("/", "/about").permitAll()
-                .antMatchers("/admin", "/about").access("hasRole('ROLE_ADMIN')")
-                .anyRequest().authenticated()
-                .and()
-                .formLogin()
-                .loginPage("/login").defaultSuccessUrl("/main")
-                .permitAll()
-                .and()
-                .logout()
-                .permitAll();*/
 
-       /*http
-                .authorizeRequests()
-                .antMatchers("/", "/about", "/greeting").permitAll()
-                .antMatchers("/admin").access("hasRole('ROLE_ADMIN')")
-                .antMatchers("/main").access("hasRole('ROLE_USER')")
-                .and()
-                .formLogin()
-                .loginPage("/login")
-                .usernameParameter("username").passwordParameter("password")
-                .defaultSuccessUrl("/main")
-                .and()
-                .logout().logoutSuccessUrl("/login?logout")
-                .and()
-                .exceptionHandling().accessDeniedPage("/403")
-                .and()
-                .csrf();*/
-
-        /*
-        http
-                .authorizeRequests()
-                .antMatchers("/", "/about", "/greeting").permitAll()
-                .antMatchers("/admin*//**").access("hasRole('ROLE_ADMIN')")
-         .anyRequest().authenticated()
-         .and()
-         .formLogin()
-         .loginPage("/login")
-         .permitAll()
-         .defaultSuccessUrl("/main")
-         .and()
-         .logout()
-         .permitAll();*/
     }
 
     @Autowired
