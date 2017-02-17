@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Login</title>
+    <link href="webjars/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"></link>
+</head>
+<body>
+<div class="container">
+
+    <!--<p>Log in</p>
+    <div th:if="${param.error}">
+        Invalid username and password.
+    </div>
+    <div th:if="${param.logout}">
+        You have been logged out.
+    </div>
+    <form th:action="@{/login}" method="post">
+        <div><label> User Name : <input type="text" name="username"/> </label></div>
+        <div><label> Password: <input type="password" name="password"/> </label></div>
+        <div><input type="submit" value="Sign In"/></div>
+    </form>-->
+
+    <form method="POST" action="${contextPath}/login" class="form-signin">
+        <h2 class="form-heading">Log in</h2>
+
+        <div class="form-group ${param.error != null ? 'has-error' : ''}">
+
+            <span th:if="${param.error}">Invalid username and password.</span>
+            <span th:if="${param.logout}"> You have been logged out. </span>
+
+            <input name="username" type="text" class="form-control" placeholder="Username" autofocus="true"/>
+            <span> </span>
+            <input name="password" type="password" class="form-control" placeholder="Password"/>
+            <span> </span>
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Log In</button>
+
+            <h4 class="text-center"><a href="${contextPath}/registration">Create an account</a></h4>
+        </div>
+
+    </form>
+
+</div>
+<script src="webjars/jquery/1.9.1/jquery.min.js"></script>
+<script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</body>
+</html>
