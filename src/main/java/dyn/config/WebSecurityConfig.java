@@ -7,12 +7,24 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordencoder());
+        /*auth
+                .inMemoryAuthentication()
+                .withUser("user").password("password").roles("USER", "ADMIN");*/
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         //http.authorizeRequests().anyRequest().permitAll();
@@ -31,14 +43,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll();
 
 
-    }
-
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        System.out.println("configureGlobal");
-        auth
-                .inMemoryAuthentication()
-                .withUser("user").password("password").roles("USER", "ADMIN");
     }
 
     @Bean(name = "passwordEncoder")
