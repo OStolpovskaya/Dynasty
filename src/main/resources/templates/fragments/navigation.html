@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Index</title>
+    <link href="webjars/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"></link>
+</head>
+<body>
+<div th:fragment="nav-for-index">
+    <nav role="navigation" class="navbar navbar-default">
+        <div>
+            <a href="http://www.yandex.ru" class="navbar-brand">Dynasty</a>
+        </div>
+        <div>
+            <ul class="nav navbar-nav">
+                <li th:classappend="${#httpServletRequest.getRequestURI() == '/' ? 'active':''}"><a href="/">Home</a>
+                </li>
+                <li th:classappend="${#httpServletRequest.getRequestURI() == '/about' ? 'active':''}"><a href="/about">About</a>
+                </li>
+                <li th:classappend="${#httpServletRequest.getRequestURI() == '/login' ? 'active':''}"><a href="/login">Login</a>
+                </li>
+                <li th:classappend="${#httpServletRequest.getRequestURI() == '/reg' ? 'active':''}"><a href="/reg">Registration</a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="?language=en">en</a></li>
+                <li><a href="?language=ru">ru</a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+<div th:fragment="nav-for-game">
+    <nav role="navigation" class="navbar navbar-default">
+        <div>
+            <a href="http://www.yandex.ru" class="navbar-brand">Dynasty</a>
+        </div>
+        <div>
+            <ul class="nav navbar-nav">
+                <li><a href="/">Home</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="?language=en">en</a></li>
+                <li><a href="?language=ru">ru</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+<script src="webjars/jquery/1.9.1/jquery.min.js"></script>
+<script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</body>
+</html>

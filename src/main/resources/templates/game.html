@@ -6,21 +6,7 @@
     <link href="webjars/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"></link>
 </head>
 <body>
-<nav role="navigation" class="navbar navbar-default">
-    <div>
-        <a href="http://www.yandex.ru" class="navbar-brand">Dynasty</a>
-    </div>
-    <div>
-        <ul class="nav navbar-nav">
-            <li><a href="/">Home</a></li>
-        </ul>
-        <ul class="nav navbar-nav navbar-right">
-            <li><a href="?language=en">en</a></li>
-            <li><a href="?language=ru">ru</a></li>
-            <li><a href="/logout">Logout</a></li>
-        </ul>
-    </div>
-</nav>
+<div th:replace="fragments/navigation :: nav-for-game"></div>
 <div class="container">
     <p>Игра</p>
     <h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>

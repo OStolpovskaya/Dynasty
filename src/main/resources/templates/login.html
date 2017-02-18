@@ -6,23 +6,7 @@
     <link href="webjars/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"></link>
 </head>
 <body>
-<nav role="navigation" class="navbar navbar-default">
-    <div>
-        <a href="http://www.yandex.ru" class="navbar-brand">Dynasty</a>
-    </div>
-    <div>
-        <ul class="nav navbar-nav">
-            <li><a href="/">Home</a></li>
-            <li><a href="/about">About</a></li>
-            <li class="active"><a href="/login">Login</a></li>
-            <li><a href="/reg">Registration</a></li>
-        </ul>
-        <ul class="nav navbar-nav navbar-right">
-            <li><a href="?language=en">en</a></li>
-            <li><a href="?language=ru">ru</a></li>
-        </ul>
-    </div>
-</nav>
+<div th:replace="fragments/navigation :: nav-for-index"></div>
 <div class="container">
 
 
@@ -38,23 +22,6 @@
             <h4 class="text-center"><a href="/reg">Create an account</a></h4>
         </div>
     </form>
-
-    <!--<form method="POST" action="/login" class="form-signin">
-        <h2 class="form-heading">Log in</h2>
-
-        <div class="form-group ${param.error != null ? 'has-error' : ''}">
-
-            <span th:if="${param.error}">Invalid username and password.</span>
-            <span th:if="${param.logout}"> You have been logged out. </span>
-
-            <input name="username" type="text" class="form-control" placeholder="Username" autofocus="true"/>
-            <input name="password" type="password" class="form-control" placeholder="Password"/>
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Log In</button>
-
-            <h4 class="text-center"><a href="/reg">Create an account</a></h4>
-        </div>
-
-    </form>-->
 
 </div>
 <script src="webjars/jquery/1.9.1/jquery.min.js"></script>
