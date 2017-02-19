@@ -55,6 +55,14 @@ public class RegistrationController {
         if (!regUser.getPassword().equals(regUser.getPasswordConfirm())) {
             result.rejectValue("passwordConfirm", "password.doNotMatch");
         }
+
+        if (userRepository.findByUserName(regUser.getUserName()) != null) {
+            result.rejectValue("userName", "username.alreadyExists");
+        }
+        if (userRepository.findByEmail(regUser.getEmail()) != null) {
+            result.rejectValue("email", "email.alreadyExists");
+        }
+
         if (result.hasErrors()) {
             return "reg";
         }
