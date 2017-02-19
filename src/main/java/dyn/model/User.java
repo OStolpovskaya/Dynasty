@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -38,6 +39,8 @@ public class User implements Serializable {
     @Transient
     private String passwordConfirm;
 
+    @OneToMany(mappedBy = "user")
+    private List<Family> families;
 
     public User() {
 
@@ -97,6 +100,10 @@ public class User implements Serializable {
 
     public void setPasswordConfirm(String passwordConfirm) {
         this.passwordConfirm = passwordConfirm;
+    }
+
+    public List<Family> getFamilies() {
+        return families;
     }
 
     @Override

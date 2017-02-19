@@ -72,7 +72,6 @@ public class RegistrationController {
         System.out.println("SAVE:" + regUser.toString());
 
         userRepository.save(regUser);
-        System.out.println("SAVED:" + regUser.toString());
 
         UserRole userRole = new UserRole();
         userRole.setUserid(regUser.getUserid());
@@ -80,8 +79,6 @@ public class RegistrationController {
         System.out.println("SAVE:" + userRole.toString());
 
         userRolesRepository.save(userRole);
-
-        System.out.println("SAVED:" + userRole.toString());
 
         System.out.println("Autologin " + regUser.getUserName() + " " + regUser.getPasswordConfirm());
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(regUser.getUserName(), regUser.getPasswordConfirm());
