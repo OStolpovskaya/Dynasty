@@ -1,6 +1,10 @@
 package dyn.model;
 
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
+
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @Entity
@@ -14,17 +18,26 @@ public class User implements Serializable {
     @Column(name = "userid")
     private Long userId;
 
+    @Size(min = 6, message = "{username.size}")
     @Column(name = "username")
     private String userName;
 
-    @Column(name = "password")
-    private String password;
-
+    @NotEmpty(message = "{email.notEmpty}")
+    @Email(message = "{email.notCorrect}")
     @Column(name = "email")
     private String email;
 
     @Column(name = "enabled")
     private boolean enabled;
+
+
+    @Column(name = "password")
+    @NotEmpty(message = "{password.notEmpty}")
+    private String password;
+
+    @Transient
+    private String passwordConfirm;
+
 
     public User() {
 
@@ -78,5 +91,23 @@ public class User implements Serializable {
         this.userName = userName;
     }
 
+    public String getPasswordConfirm() {
+        return passwordConfirm;
+    }
 
+    public void setPasswordConfirm(String passwordConfirm) {
+        this.passwordConfirm = passwordConfirm;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", userName='" + userName + '\'' +
+                ", email='" + email + '\'' +
+                ", enabled=" + enabled +
+                ", password='" + password + '\'' +
+                ", passwordConfirm='" + passwordConfirm + '\'' +
+                '}';
+    }
 }

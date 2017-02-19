@@ -8,6 +8,7 @@
 <body>
 <div th:replace="fragments/navigation :: nav-for-index"></div>
 <div class="container">
+    <div th:text="${mess}"></div>
     <div th:text="#{welcome}"></div>
     <div th:text="${#locale}"></div>
     <div></div>
