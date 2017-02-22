@@ -1,6 +1,9 @@
 package dyn.model;
 
-import dyn.model.appearance.*;
+import dyn.model.appearance.Eyes;
+import dyn.model.appearance.Head;
+import dyn.model.appearance.Height;
+import dyn.model.appearance.SkinColor;
 
 import javax.persistence.*;
 
@@ -32,6 +35,7 @@ public class Character {
     private Character spouse;
 
     private int level;
+
 
     @OneToOne
     private Race race;

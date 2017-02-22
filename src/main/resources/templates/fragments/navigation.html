@@ -46,6 +46,27 @@
         </div>
     </nav>
 </div>
+<div th:fragment="nav-for-admin">
+    <nav role="navigation" class="navbar navbar-default">
+        <div>
+            <a href="http://www.yandex.ru" class="navbar-brand">Dynasty</a>
+        </div>
+        <div>
+            <ul class="nav navbar-nav">
+                <li><a href="/">Home</a></li>
+                <li><a href="/admin">Admin</a></li>
+                <li><a href="/admin/appearance">Appearance</a></li>
+                <li><a href="/admin/race">Race</a></li>
+                <li><a href="/admin/achievements">Achievements</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="?language=en">en</a></li>
+                <li><a href="?language=ru">ru</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
 <script src="webjars/jquery/1.9.1/jquery.min.js"></script>
 <script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 </body>
