@@ -29,7 +29,7 @@ public class Application extends WebMvcConfigurerAdapter {
     public DriverManagerDataSource dataSource() {
         DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
         driverManagerDataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        driverManagerDataSource.setUrl("jdbc:mysql://localhost:3306/userbase?useUnicode=true&characterEncoding=UTF-8");
+        driverManagerDataSource.setUrl("jdbc:mysql://localhost:3306/dyn?useUnicode=true&characterEncoding=UTF-8");
         driverManagerDataSource.setUsername("OM");
         driverManagerDataSource.setPassword("201285olga");
         return driverManagerDataSource;
