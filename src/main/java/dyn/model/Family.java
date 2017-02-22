@@ -2,6 +2,7 @@ package dyn.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 /**
  * Created by OM on 19.02.2017.
@@ -33,6 +34,11 @@ public class Family {
 
     @Column(name = "level")
     private int level;
+
+    // ===================================
+    @OneToMany(mappedBy = "family")
+    private List<Character> characters;
+
 
     public Long getId() {
         return id;

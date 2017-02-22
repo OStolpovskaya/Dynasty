@@ -69,18 +69,18 @@ public class RegistrationController {
 
         regUser.setEnabled(true);
         regUser.setPassword(passwordEncoder.encode(regUser.getPassword()));
-        System.out.println("SAVE:" + regUser.toString());
+        logger.debug("SAVE:" + regUser.toString());
 
         userRepository.save(regUser);
 
         UserRole userRole = new UserRole();
         userRole.setUserid(regUser.getUserid());
         userRole.setRole("ROLE_USER");
-        System.out.println("SAVE:" + userRole.toString());
+        logger.debug("SAVE:" + userRole.toString());
 
         userRolesRepository.save(userRole);
 
-        System.out.println("Autologin " + regUser.getUserName() + " " + regUser.getPasswordConfirm());
+        logger.info("Autologin " + regUser.getUserName() + " " + regUser.getPasswordConfirm());
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(regUser.getUserName(), regUser.getPasswordConfirm());
 
         // generate session if one doesn't exist

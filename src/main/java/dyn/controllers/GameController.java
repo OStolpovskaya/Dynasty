@@ -89,6 +89,9 @@ public class GameController {
         family.setLevel(0);
         System.out.println("SAVE:" + family.toString());
         familyRepository.save(family);
+
+        //TODO: generate characters
+
         return "redirect:/game";
     }
 
