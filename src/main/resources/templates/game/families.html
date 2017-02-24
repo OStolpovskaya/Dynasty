@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Families</title>
+    <link th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}" rel="stylesheet"></link>
+</head>
+<body>
+<div th:replace="fragments/navigation :: nav-for-game"></div>
+<div class="container">
+    <h3>Families</h3>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Family name</th>
+            <th>Current</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="family : ${families}">
+            <td th:text="${family.getId()}">1</td>
+            <td th:text="${family.getFamilyName()}">name</td>
+            <td th:text="${family.isCurrent()}">current</td>
+        </tr>
+        </tbody>
+    </table>
+    <a href="/game/addNewFamily" class="btn btn-info" role="button">New family</a>
+
+</div>
+<script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
+</body>
+</html>

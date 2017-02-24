@@ -18,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,18 +35,23 @@ public class GameController {
 
 
     @RequestMapping("/game")
-    public String main(ModelMap model) {
+    public String main(ModelMap model, RedirectAttributes redirectAttributes) {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         model.addAttribute("user", user);
         System.out.println(user.getUserName());
 
         List<Family> families = user.getFamilies();
         if (families.size() == 0) {
-            System.out.println("User doesn't have any family");
-            return "redirect:/addNewFamily";
+            System.out.println("User doesn't have any family, redirect");
+            redirectAttributes.addFlashAttribute("mess", "You have no families, create please!");
+            return "redirect:/game/addNewFamily";
         } else {
-            System.out.println("User has " + families.size() + " families");
-            model.addAttribute("families", families);
+            for (Family family : families) {
+                if (family.isCurrent()) {
+                    System.out.println("Current family: " + family.getFamilyName());
+                    model.addAttribute("currentFamily", family);
+                }
+            }
         }
 
         return "game";
@@ -62,18 +68,32 @@ public class GameController {
         return "redirect:/";
     }
 
-    @GetMapping("/addNewFamily")
-    public String createNewFamily(ModelMap model) {
-        model.addAttribute("familyForm", new Family());
-        return "addNewFamily";
+    @RequestMapping("game/families")
+    public String families(ModelMap model) {
+        User user = userRepository.findByUserName(getAuthUser().getUsername());
+        List<Family> families = user.getFamilies();
+        if (families.size() == 0) {
+            System.out.println("User doesn't have any family");
+            return "redirect:/game/addNewFamily";
+        } else {
+            System.out.println("User has " + families.size() + " families");
+            model.addAttribute("families", families);
+        }
+        return "game/families";
     }
 
-    @PostMapping("/addNewFamily")
+    @GetMapping("game/addNewFamily")
+    public String createNewFamily(ModelMap model) {
+        model.addAttribute("familyForm", new Family());
+        return "game/addNewFamily";
+    }
+
+    @PostMapping("game/addNewFamily")
     public String addNewFamily(ModelMap model, @ModelAttribute("familyForm") @Valid Family family, BindingResult result) {
         System.out.println("post add new family");
 
         if (result.hasErrors()) {
-            return "addNewFamily";
+            return "game/addNewFamily";
         }
 
         User user = userRepository.findByUserName(getAuthUser().getUsername());
@@ -92,7 +112,7 @@ public class GameController {
 
         //TODO: generate characters
 
-        return "redirect:/game";
+        return "redirect:/game/families";
     }
 
 

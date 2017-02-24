@@ -10,23 +10,7 @@
 <div class="container">
     <p>Игра</p>
     <h1 th:inline="text">Hello [[${user.getUserName()}]]!</h1>
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Family name</th>
-            <th>Current</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="family : ${families}">
-            <td th:text="${family.getId()}">1</td>
-            <td th:text="${family.getFamilyName()}">name</td>
-            <td th:text="${family.isCurrent()}">current</td>
-        </tr>
-        </tbody>
-    </table>
-    <a href="/addNewFamily" class="btn btn-info" role="button">New family</a>
+    <p th:inline="text">Current family: [[${currentFamily?.getFamilyName()}]]</p>
 
 </div>
 <script src="webjars/jquery/1.9.1/jquery.min.js"></script>
