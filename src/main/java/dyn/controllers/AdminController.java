@@ -15,6 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 public class AdminController {
@@ -58,6 +62,27 @@ public class AdminController {
 
         model.addAttribute("achievementList", achievementRepository.findAll());
         return "admin/achievements";
+    }
+
+    @RequestMapping("/admin/random")
+    public String achievements(ModelMap model, @RequestParam(value = "sex", required = false) String sex) {
+        if (sex == null || sex.isEmpty()) {
+            System.out.println("Sex is null or empty. Set it to male.");
+            sex = "male";
+        }
+
+        if (!"female".equals(sex)) {
+            sex = "male";
+        }
+
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("sex", sex);
+        map.put("height", heightRepository.getRandom().getName());
+
+
+        model.addAttribute("map", map);
+
+        return "admin/random";
     }
 
 }

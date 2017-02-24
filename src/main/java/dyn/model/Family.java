@@ -95,4 +95,17 @@ public class Family {
     public void setLevel(int level) {
         this.level = level;
     }
+
+    @Override
+    public String toString() {
+        return "Family{" +
+                "id=" + id +
+                ", user=" + user.getUserName() +
+                ", familyName='" + familyName + '\'' +
+                ", current=" + current +
+                ", maleLastname='" + maleLastname + '\'' +
+                ", femaleLastname='" + femaleLastname + '\'' +
+                ", level=" + level +
+                '}';
+    }
 }
