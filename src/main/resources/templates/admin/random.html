@@ -21,19 +21,10 @@
         <a th:case="'male'" href="\" data-toggle="tooltip" title="Male">
             <img th:src="@{/graphics/male.png}"/>
         </a>
-        <a th:case="'female'" href="\" data-toggle="tooltip" title="Female">
-            <img th:src="@{/graphics/female.png}"/>
-        </a>
-        <p th:text="${character.getSkinColor().getName()}"></p>
-        <p class="ava">
-            <img th:src="@{/graphics/female/{path}.png(path=${character.getSkinColor().getName()})}"/>
-            <img th:src="@{/graphics/female/{path}.png(path=${character.getHead().getName()})}" class="head"/>
-            <img th:src="@{/graphics/female/{path}.png(path=${character.getEyes().getName()})}" class="eyes"/>
-            <img th:src="@{/graphics/female/app.pupil.png}" class="pupil"/>
-        </p>
-        <p>
+        <a th:case="'female'" href="\" data-toggle="tooltip"
+           th:alt-title="#{tooltip(#{${character.getSex()}},#{${character.getHeight().getName()}})}">
             <img th:src="@{'data:image/png;base64,'+${character.getEncodedView()}}"/>
-        </p>
+        </a>
 
 
     </div>
