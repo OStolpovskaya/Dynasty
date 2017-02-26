@@ -5,6 +5,11 @@ package dyn.controllers;
  */
 
 
+import dyn.model.Character;
+import dyn.model.appearance.Eyes;
+import dyn.model.appearance.Head;
+import dyn.model.appearance.Height;
+import dyn.model.appearance.SkinColor;
 import dyn.repository.AchievementRepository;
 import dyn.repository.RaceRepository;
 import dyn.repository.appearance.EyesRepository;
@@ -75,10 +80,29 @@ public class AdminController {
             sex = "male";
         }
 
+        Height height = heightRepository.getRandom();
+        SkinColor skinColor = skinColorRepository.getRandom();
+        Head head = headRepository.getRandom();
+        Eyes eyes = eyesRepository.getRandom();
+
+
+        Character character = new Character();
+        character.setSex(sex);
+        character.setHeight(height);
+        character.setHead(head);
+        character.setEyes(eyes);
+        character.setSkinColor(skinColor);
+
+        character.generateView();
+
+        model.addAttribute("character", character);
+
         Map<String, String> map = new HashMap<String, String>();
         map.put("sex", sex);
-        map.put("height", heightRepository.getRandom().getName());
-
+        map.put("height", height.getName());
+        map.put("skinColor", skinColor.getName());
+        map.put("head", head.getName());
+        map.put("eyes", eyes.getName());
 
         model.addAttribute("map", map);
 
