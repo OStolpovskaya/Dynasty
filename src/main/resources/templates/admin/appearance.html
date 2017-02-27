@@ -8,74 +8,10 @@
 <body>
 <div th:replace="fragments/navigation :: nav-for-admin"></div>
 <div class="container">
-    <h3>Eyes</h3>
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Type</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="eyes : ${eyesList}">
-            <td th:text="${eyes.getId()}">1</td>
-            <td th:text="#{${eyes.getName()}}">name</td>
-            <td th:text="${eyes.getType()}">name</td>
-        </tr>
-        </tbody>
-    </table>
-    <h3>Head</h3>
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Type</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="head : ${headList}">
-            <td th:text="${head.getId()}">1</td>
-            <td th:text="#{${head.getName()}}">name</td>
-            <td th:text="${head.getType()}">name</td>
-        </tr>
-        </tbody>
-    </table>
-    <h3>Height</h3>
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Type</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="height : ${heightList}">
-            <td th:text="${height.getId()}">1</td>
-            <td th:text="#{${height.getName()}}">name</td>
-            <td th:text="${height.getType()}">name</td>
-        </tr>
-        </tbody>
-    </table>
-    <h3>Skin color</h3>
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Type</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="skinColor : ${skinColorList}">
-            <td th:text="${skinColor.getId()}">1</td>
-            <td th:text="#{${skinColor.getName()}}">name</td>
-            <td th:text="${skinColor.getType()}">name</td>
-        </tr>
-        </tbody>
-    </table>
+    <div th:replace="fragments/tables :: table-for-appearance (feature='Eyes', list=${eyesList})">...</div>
+    <div th:replace="fragments/tables :: table-for-appearance (feature='Head', list=${headList})">...</div>
+    <div th:replace="fragments/tables :: table-for-appearance (feature='Height', list=${heightList})">...</div>
+    <div th:replace="fragments/tables :: table-for-appearance (feature='Skin color', list=${skinColorList})">...</div>
 </div>
 <script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
