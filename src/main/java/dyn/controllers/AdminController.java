@@ -6,10 +6,6 @@ package dyn.controllers;
 
 
 import dyn.model.Character;
-import dyn.model.appearance.Eyes;
-import dyn.model.appearance.Head;
-import dyn.model.appearance.Height;
-import dyn.model.appearance.SkinColor;
 import dyn.repository.AchievementRepository;
 import dyn.repository.RaceRepository;
 import dyn.repository.appearance.EyesRepository;
@@ -21,9 +17,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Controller
 public class AdminController {
@@ -80,31 +73,16 @@ public class AdminController {
             sex = "male";
         }
 
-        Height height = heightRepository.getRandom();
-        SkinColor skinColor = skinColorRepository.getRandom();
-        Head head = headRepository.getRandom();
-        Eyes eyes = eyesRepository.getRandom();
-
-
         Character character = new Character();
         character.setSex(sex);
-        character.setHeight(height);
-        character.setHead(head);
-        character.setEyes(eyes);
-        character.setSkinColor(skinColor);
+        character.setHeight(heightRepository.getRandom());
+        character.setHead(headRepository.getRandom());
+        character.setEyes(eyesRepository.getRandom());
+        character.setSkinColor(skinColorRepository.getRandom());
 
         character.generateView();
 
         model.addAttribute("character", character);
-
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("sex", sex);
-        map.put("height", height.getName());
-        map.put("skinColor", skinColor.getName());
-        map.put("head", head.getName());
-        map.put("eyes", eyes.getName());
-
-        model.addAttribute("map", map);
 
         return "admin/random";
     }

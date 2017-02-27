@@ -22,18 +22,12 @@
             <img th:src="@{/graphics/male.png}"/>
         </a>
         <a th:case="'female'" href="\" data-toggle="tooltip"
-           th:alt-title="#{tooltip(#{${character.getSex()}},#{${character.getHeight().getName()}})}">
+           th:alt-title="#{tooltip(#{${character.getSex()}},#{${character.getHeight().getName()}},#{${character.getSkinColor().getName()}},#{${character.getHead().getName()}},#{${character.getEyes().getName()}})}">
             <img th:src="@{'data:image/png;base64,'+${character.getEncodedView()}}"/>
         </a>
 
 
     </div>
-    <table>
-        <tr th:each="element : ${map}">
-            <td th:text="${element.key}">keyvalue</td>
-            <td th:text="${element.value}">Some name</td>
-        </tr>
-    </table>
 </div>
 <script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
