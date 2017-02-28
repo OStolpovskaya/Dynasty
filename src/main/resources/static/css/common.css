@@ -1,3 +1,16 @@
 .has-error {
     color: red
 }
+
+.char-view-div {
+    display: inline-block;
+    width: 206px;
+    height: 235px;
+}
+.male {
+    border: 3px solid #4286f4;
+}
+
+.female {
+    border: 3px solid #e85c94;
+}
