@@ -157,14 +157,19 @@ public class GameController {
     @PostMapping("game/addNewFamily")
     public String addNewFamily(ModelMap model, @ModelAttribute("familyForm") @Valid Family family, BindingResult result) {
         System.out.println("post add new family");
+        User user = userRepository.findByUserName(getAuthUser().getUsername());
+        List<Family> families = user.getFamilies();
+
+        for (Family existingFamily : families) {
+            if (existingFamily.getFamilyName().equalsIgnoreCase(family.getFamilyName())) {
+                result.rejectValue("familyName", "familyName.alreadyExists");
+            }
+        }
 
         if (result.hasErrors()) {
             return "game/addNewFamily";
         }
 
-        User user = userRepository.findByUserName(getAuthUser().getUsername());
-
-        List<Family> families = user.getFamilies();
         for (Family existingFamily : families) {
             existingFamily.setCurrent(false);
             familyRepository.save(existingFamily);
