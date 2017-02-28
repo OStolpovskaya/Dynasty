@@ -4,6 +4,19 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>Game</title>
     <link href="webjars/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"></link>
+    <style>
+        .floating-box {
+            display: inline-block;
+            width: 206px;
+            height: 235px;
+            border: 3px solid #73AD21;
+        }
+
+        .after-box {
+            border: 3px solid red;
+        }
+
+    </style>
 </head>
 <body>
 <div th:replace="fragments/navigation :: nav-for-game"></div>
@@ -11,7 +24,21 @@
     <p>Игра</p>
     <h1 th:inline="text">Hello [[${user.getUserName()}]]!</h1>
     <p th:inline="text">Current family: [[${currentFamily?.getFamilyName()}]]</p>
-
+    <table border="1">
+        <tr>
+            <div th:each="character : ${characters}">
+                <td>
+                    <div class="floating-box">
+                        <div th:replace="fragments/char :: char-view (character=${character})"></div>
+                    </div>
+                    <div class="floating-box">
+                        <div th:if="${character.getSpouse() != null}"
+                             th:replace="fragments/char :: char-view (character=${character.getSpouse()})"></div>
+                    </div>
+                </td>
+            </div>
+        </tr>
+    </table>
 </div>
 <script src="webjars/jquery/1.9.1/jquery.min.js"></script>
 <script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>

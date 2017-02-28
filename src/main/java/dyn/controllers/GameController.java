@@ -5,10 +5,17 @@ package dyn.controllers;
  */
 
 
+import dyn.model.Character;
 import dyn.model.Family;
 import dyn.model.User;
+import dyn.repository.CharacterRepository;
 import dyn.repository.FamilyRepository;
+import dyn.repository.RaceRepository;
 import dyn.repository.UserRepository;
+import dyn.repository.appearance.EyesRepository;
+import dyn.repository.appearance.HeadRepository;
+import dyn.repository.appearance.HeightRepository;
+import dyn.repository.appearance.SkinColorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,11 +35,21 @@ import java.util.List;
 @Controller
 public class GameController {
     @Autowired
+    EyesRepository eyesRepository;
+    @Autowired
+    HeadRepository headRepository;
+    @Autowired
+    HeightRepository heightRepository;
+    @Autowired
+    SkinColorRepository skinColorRepository;
+    @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private FamilyRepository familyRepository;
-
+    @Autowired
+    private CharacterRepository characterRepository;
+    @Autowired
+    private RaceRepository raceRepository;
 
     @RequestMapping("/game")
     public String main(ModelMap model, RedirectAttributes redirectAttributes) {
@@ -50,6 +67,8 @@ public class GameController {
                 if (family.isCurrent()) {
                     System.out.println("Current family: " + family.getFamilyName());
                     model.addAttribute("currentFamily", family);
+                    List<Character> characters = characterRepository.findByFamilyAndLevel(family, family.getLevel());
+                    model.addAttribute("characters", characters);
                 }
             }
         }
@@ -111,8 +130,38 @@ public class GameController {
         familyRepository.save(family);
 
         //TODO: generate characters
+        Character male = new Character();
+        male.setName(characterRepository.getRandomNameMale());
+        male.setSex("male");
+        male.setFamily(family);
+        male.setLevel(0);
+        male.setHeight(heightRepository.getRandomUsual());
+        male.setHead(headRepository.getRandomUsual());
+        male.setEyes(eyesRepository.getRandomUsual());
+        male.setSkinColor(skinColorRepository.getRandomUsual());
+        male.setRace(raceRepository.findByName("race.human"));
 
-        return "redirect:/game/families";
+        male.generateView();
+        characterRepository.save(male);
+
+        Character female = new Character();
+        female.setName(characterRepository.getRandomNameFemale());
+        female.setSex("female");
+        female.setSpouse(male);
+        female.setLevel(0);
+        female.setHeight(heightRepository.getRandom());
+        female.setHead(headRepository.getRandom());
+        female.setEyes(eyesRepository.getRandom());
+        female.setSkinColor(skinColorRepository.getRandom());
+        female.setRace(raceRepository.findByName("race.human"));
+
+        female.generateView();
+        characterRepository.save(female);
+
+        male.setSpouse(female);
+        characterRepository.save(male);
+
+        return "redirect:/game";
     }
 
 

@@ -11,4 +11,7 @@ public interface EyesRepository extends CrudRepository<Eyes, Long> {
 
     @Query(value = "SELECT * FROM app_eyes ORDER BY RAND() LIMIT 1", nativeQuery = true)
     public Eyes getRandom();
+
+    @Query(value = "SELECT * FROM app_eyes WHERE type='usual' ORDER BY RAND() LIMIT 1", nativeQuery = true)
+    public Eyes getRandomUsual();
 }

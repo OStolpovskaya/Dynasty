@@ -96,6 +96,14 @@ public class Family {
         this.level = level;
     }
 
+    public List<Character> getCharacters() {
+        return characters;
+    }
+
+    public void setCharacters(List<Character> characters) {
+        this.characters = characters;
+    }
+
     @Override
     public String toString() {
         return "Family{" +

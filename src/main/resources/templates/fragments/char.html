@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Index</title>
+    <link href="webjars/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"></link>
+</head>
+<body>
+<div th:fragment="char-view (character)">
+    <div>
+        <p align="center" th:text="${character.getName()}">Character</p>
+        <a href="\" data-toggle="tooltip" th:alt-title="#{tooltip(
+                                                        #{${character.getSex()}},
+                                                        #{${character.getHeight().getName()}},
+                                                        #{${character.getSkinColor().getName()}},
+                                                        #{${character.getHead().getName()}},
+                                                        #{${character.getEyes().getName()}})}">
+            <img th:src="@{'data:image/png;base64,'+${character.getEncodedView()}}"/>
+        </a>
+    </div>
+</div>
+
+<script src="webjars/jquery/1.9.1/jquery.min.js"></script>
+<script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</body>
+</html>

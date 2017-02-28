@@ -18,7 +18,7 @@ import java.io.IOException;
  * Created by OM on 21.02.2017.
  */
 @Entity
-@Table(name = "character")
+@Table(name = "characters")
 public class Character {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -33,21 +33,23 @@ public class Character {
     private String sex;
 
     @OneToOne
-    @JoinColumn(nullable = true)
+    @JoinColumn(name = "father", nullable = true)
     private Character father;
 
     @OneToOne
-    @JoinColumn(nullable = true)
+    @JoinColumn(name = "spouse", nullable = true)
     private Character spouse;
 
     private int level;
 
 
     @OneToOne
+    @JoinColumn(name = "race", nullable = true)
     private Race race;
 
     // ============ APPEARANCE ============
     @OneToOne
+    @JoinColumn(name = "height")
     private Height height;
 
     @OneToOne
@@ -55,9 +57,11 @@ public class Character {
     private SkinColor skinColor;
 
     @OneToOne
+    @JoinColumn(name = "head")
     private Head head;
 
     @OneToOne
+    @JoinColumn(name = "eyes")
     private Eyes eyes;
 
     // ============ VIEW ============

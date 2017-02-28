@@ -11,4 +11,7 @@ public interface SkinColorRepository extends CrudRepository<SkinColor, Long> {
 
     @Query(value = "SELECT * FROM app_skin_color ORDER BY RAND() LIMIT 1", nativeQuery = true)
     public SkinColor getRandom();
+
+    @Query(value = "SELECT * FROM app_skin_color WHERE type='usual' ORDER BY RAND() LIMIT 1", nativeQuery = true)
+    public SkinColor getRandomUsual();
 }
