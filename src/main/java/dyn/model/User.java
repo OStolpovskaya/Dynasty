@@ -106,6 +106,15 @@ public class User implements Serializable {
         return families;
     }
 
+    public Family getCurrentFamily() {
+        for (Family family : families) {
+            if (family.isCurrent()) {
+                return family;
+            }
+        }
+        return null;
+    }
+
     @Override
     public String toString() {
         return "User{" +

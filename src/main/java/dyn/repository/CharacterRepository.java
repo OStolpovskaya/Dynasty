@@ -12,9 +12,13 @@ import java.util.List;
 public interface CharacterRepository extends CrudRepository<Character, Long> {
     public List<Character> findByFamilyAndLevel(Family family, int level);
 
+    public List<Character> findByFamilyAndLevelOrderByFatherAsc(Family family, int level);
+
     @Query(value = "SELECT value FROM names_male ORDER BY RAND() LIMIT 1", nativeQuery = true)
     public String getRandomNameMale();
 
     @Query(value = "SELECT value FROM names_female ORDER BY RAND() LIMIT 1", nativeQuery = true)
     public String getRandomNameFemale();
+
+    List<Character> findByFamilyAndLevelAndSexAndSpouseIsNotNull(Family family, int level, String sex);
 }

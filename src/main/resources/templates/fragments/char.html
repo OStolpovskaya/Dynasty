@@ -15,7 +15,8 @@
                                                         #{${character.getSkinColor().getName()}},
                                                         #{${character.getHead().getName()}},
                                                         #{${character.getEyes().getName()}})}">
-            <img th:src="@{'data:image/png;base64,'+${character.getEncodedView()}}"/>
+            <img th:class="${character.getSex()} == 'male' ? male : female"
+                 th:src="@{'data:image/png;base64,'+${character.getEncodedView()}}"/>
         </a>
     </div>
 </div>

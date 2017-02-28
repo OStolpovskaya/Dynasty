@@ -9,13 +9,14 @@
             display: inline-block;
             width: 206px;
             height: 235px;
-            border: 3px solid #73AD21;
+        }
+        .male {
+            border: 3px solid #4286f4;
         }
 
-        .after-box {
-            border: 3px solid red;
+        .female {
+            border: 3px solid #e85c94;
         }
-
     </style>
 </head>
 <body>
@@ -23,7 +24,8 @@
 <div class="container">
     <p>Игра</p>
     <h1 th:inline="text">Hello [[${user.getUserName()}]]!</h1>
-    <p th:inline="text">Current family: [[${currentFamily?.getFamilyName()}]]</p>
+    <p th:inline="text">Current family: [[${currentFamily?.getFamilyName()}]] Level:
+        [[${currentFamily?.getLevel()}]]</p>
     <table border="1">
         <tr>
             <div th:each="character : ${characters}">
@@ -31,14 +33,18 @@
                     <div class="floating-box">
                         <div th:replace="fragments/char :: char-view (character=${character})"></div>
                     </div>
-                    <div class="floating-box">
-                        <div th:if="${character.getSpouse() != null}"
-                             th:replace="fragments/char :: char-view (character=${character.getSpouse()})"></div>
+                    <div class="floating-box" th:if="${character.getSpouse() != null}">
+                        <div th:replace="fragments/char :: char-view (character=${character.getSpouse()})"></div>
                     </div>
                 </td>
             </div>
         </tr>
     </table>
+    <form th:action="@{/game/turn}" method="post">
+
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Turn!</button>
+
+    </form>
 </div>
 <script src="webjars/jquery/1.9.1/jquery.min.js"></script>
 <script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>

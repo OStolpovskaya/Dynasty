@@ -63,17 +63,64 @@ public class GameController {
             redirectAttributes.addFlashAttribute("mess", "You have no families, create please!");
             return "redirect:/game/addNewFamily";
         } else {
-            for (Family family : families) {
-                if (family.isCurrent()) {
-                    System.out.println("Current family: " + family.getFamilyName());
-                    model.addAttribute("currentFamily", family);
-                    List<Character> characters = characterRepository.findByFamilyAndLevel(family, family.getLevel());
-                    model.addAttribute("characters", characters);
-                }
-            }
+            Family family = user.getCurrentFamily();
+            System.out.println("Current family: " + family.getFamilyName() + ", level: " + family.getLevel());
+            model.addAttribute("currentFamily", family);
+
+            List<Character> characters = characterRepository.findByFamilyAndLevel(family, family.getLevel());
+            model.addAttribute("characters", characters);
         }
 
         return "game";
+    }
+
+    @RequestMapping(value = "/game/turn", method = RequestMethod.POST)
+    public String turn() {
+        User user = userRepository.findByUserName(getAuthUser().getUsername());
+        System.out.println(user.getUserName() + " makes a turn!");
+
+        Family family = user.getCurrentFamily();
+        // TODO: generate children
+        List<Character> characters = characterRepository.findByFamilyAndLevelAndSexAndSpouseIsNotNull(family, family.getLevel(), "male");
+        int newLevel = family.getLevel() + 1;
+        for (Character character : characters) {
+            // percents
+            int min = 1; // amount of children
+            int max = 7; // amount of children
+            double dominantPercent = 0.5; // whose feature is inherited, father or mother
+
+            Character wife = character.getSpouse();
+            int childAmount = min + (int) (Math.random() * max);
+            System.out.println(character.getName() + " marries " + wife.getName() + " and they have " + childAmount + " children");
+
+            for (int i = 0; i < childAmount; i++) {
+                Character child = new Character();
+                if (Math.random() < 0.5) {
+                    child.setSex("male");
+                    child.setName(characterRepository.getRandomNameMale());
+                } else {
+                    child.setSex("female");
+                    child.setName(characterRepository.getRandomNameFemale());
+                }
+                child.setFather(character);
+                child.setFamily(family);
+                child.setLevel(newLevel);
+                // TODO: ask how to make it correct:
+                child.setHeight(Math.random() < dominantPercent ? character.getHeight() : wife.getHeight());
+                child.setHead(Math.random() < dominantPercent ? character.getHead() : wife.getHead());
+                child.setEyes(Math.random() < dominantPercent ? character.getEyes() : wife.getEyes());
+                child.setSkinColor(Math.random() < dominantPercent ? character.getSkinColor() : wife.getSkinColor());
+                child.setRace(raceRepository.findByName("race.human"));
+
+                child.generateView();
+                characterRepository.save(child);
+            }
+
+            family.setLevel(newLevel);
+            familyRepository.save(family);
+        }
+
+        return "redirect:/game";
     }
 
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
@@ -129,7 +176,6 @@ public class GameController {
         System.out.println("SAVE:" + family.toString());
         familyRepository.save(family);
 
-        //TODO: generate characters
         Character male = new Character();
         male.setName(characterRepository.getRandomNameMale());
         male.setSex("male");
