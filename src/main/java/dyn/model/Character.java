@@ -96,6 +96,9 @@ public class Character {
     private Body body;
     */
 
+    public Character() {
+    }
+
     public Long getId() {
         return id;
     }
@@ -233,5 +236,23 @@ public class Character {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Character{" +
+                "id=" + id +
+                ", family=" + (family == null ? "" : family.getFamilyName()) +
+                ", name='" + name + '\'' +
+                ", sex='" + sex + '\'' +
+                ", father=" + (father == null ? "" : family.getFamilyName()) +
+                ", spouse=" + (spouse == null ? "" : spouse.getName()) +
+                ", level=" + level +
+                ", race=" + (race == null ? "" : race.getName()) +
+                ", height=" + (height == null ? "" : height.getName()) +
+                ", skinColor=" + (skinColor == null ? "" : skinColor.getName()) +
+                ", head=" + (head == null ? "" : head.getName()) +
+                ", eyes=" + (eyes == null ? "" : eyes.getName()) +
+                '}';
     }
 }

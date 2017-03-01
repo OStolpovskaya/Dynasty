@@ -1,5 +1,6 @@
 package dyn.controllers;
 
+import dyn.form.FamilyForm;
 import dyn.model.Character;
 import dyn.model.Family;
 import dyn.model.User;
@@ -63,14 +64,49 @@ public class FamilyController {
     }
 
     @GetMapping("game/addNewFamily")
-    public String createNewFamily(ModelMap model) {
-        model.addAttribute("familyForm", new Family());
+    public String createNewFamily(ModelMap model, @ModelAttribute("familyForm") FamilyForm familyForm) {
+        System.out.println("GET game/addNewFamily");
+        Character male = new Character();
+        male.setName(characterRepository.getRandomNameMale());
+        male.setSex("male");
+        male.setHeight(heightRepository.getRandomUsual());
+        male.setHead(headRepository.getRandomUsual());
+        male.setEyes(eyesRepository.getRandomUsual());
+        male.setSkinColor(skinColorRepository.getRandomUsual());
+        male.generateView();
+
+        Character female = new Character();
+        female.setName(characterRepository.getRandomNameFemale());
+        female.setSex("female");
+        female.setHeight(heightRepository.getRandomUsual());
+        female.setHead(headRepository.getRandomUsual());
+        female.setEyes(eyesRepository.getRandomUsual());
+        female.setSkinColor(skinColorRepository.getRandomUsual());
+        female.generateView();
+
+        familyForm.setFounder(male);
+        familyForm.setFoundress(female);
+
+        System.out.println("male = " + female.getName());
         return "game/addNewFamily";
     }
 
     @PostMapping("game/addNewFamily")
-    public String addNewFamily(ModelMap model, @ModelAttribute("familyForm") @Valid Family family, BindingResult result) {
-        System.out.println("post add new family");
+    public String addNewFamily(ModelMap model, @ModelAttribute("familyForm") @Valid FamilyForm familyForm, BindingResult result) {
+        System.out.println("POST game/addNewFamily");
+
+        Family family = familyForm.getFamily();
+        Character founder = familyForm.getFounder();
+        Character foundress = familyForm.getFoundress();
+
+        founder.generateView();
+        foundress.generateView();
+
+        System.out.println("family = " + family);
+        System.out.println("founder = " + founder);
+        System.out.println("foundress = " + foundress);
+
+
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         List<Family> families = user.getFamilies();
 
@@ -95,45 +131,28 @@ public class FamilyController {
         System.out.println("SAVE:" + family.toString());
         familyRepository.save(family);
 
-        Character male = new Character();
-        male.setName(characterRepository.getRandomNameMale());
-        male.setSex("male");
-        male.setFamily(family);
-        male.setLevel(0);
-        male.setHeight(heightRepository.getRandomUsual());
-        male.setHead(headRepository.getRandomUsual());
-        male.setEyes(eyesRepository.getRandomUsual());
-        male.setSkinColor(skinColorRepository.getRandomUsual());
-        male.setRace(raceRepository.findByName("race.human"));
+        founder.setFamily(family);
+        founder.setLevel(0);
+        founder.setRace(raceRepository.findByName("race.human"));
+        characterRepository.save(founder);
 
-        male.generateView();
-        characterRepository.save(male);
+        foundress.setSpouse(founder);
+        foundress.setFamily(null);
+        foundress.setLevel(0);
+        foundress.setRace(raceRepository.findByName("race.human"));
+        characterRepository.save(foundress);
 
-        Character female = new Character();
-        female.setName(characterRepository.getRandomNameFemale());
-        female.setSex("female");
-        female.setSpouse(male);
-        female.setLevel(0);
-        female.setHeight(heightRepository.getRandom());
-        female.setHead(headRepository.getRandom());
-        female.setEyes(eyesRepository.getRandom());
-        female.setSkinColor(skinColorRepository.getRandom());
-        female.setRace(raceRepository.findByName("race.human"));
-
-        female.generateView();
-        characterRepository.save(female);
-
-        male.setSpouse(female);
-        characterRepository.save(male);
+        founder.setSpouse(foundress);
+        characterRepository.save(founder);
 
         return "redirect:/game";
+
     }
 
 
     private UserDetails getAuthUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetail = (UserDetails) auth.getPrincipal();
-        System.out.println(userDetail);
         return userDetail;
     }
 }

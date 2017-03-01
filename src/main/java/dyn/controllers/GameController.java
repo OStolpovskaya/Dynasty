@@ -137,7 +137,6 @@ public class GameController {
     private UserDetails getAuthUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetail = (UserDetails) auth.getPrincipal();
-        System.out.println(userDetail);
         return userDetail;
     }
 

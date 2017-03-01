@@ -39,6 +39,8 @@ public class Family {
     @OneToMany(mappedBy = "family")
     private List<Character> characters;
 
+    public Family() {
+    }
 
     public Long getId() {
         return id;
@@ -108,7 +110,7 @@ public class Family {
     public String toString() {
         return "Family{" +
                 "id=" + id +
-                ", user=" + user.getUserName() +
+                ", user=" + (user == null ? "" : user.getUserName()) +
                 ", familyName='" + familyName + '\'' +
                 ", current=" + current +
                 ", maleLastname='" + maleLastname + '\'' +
