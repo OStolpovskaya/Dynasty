@@ -7,18 +7,16 @@
 </head>
 <body>
 <div th:fragment="char-view (character)">
-    <div>
-        <p align="center" th:text="${character.getName()}">Character</p>
-        <a href="\" data-toggle="tooltip" th:alt-title="#{tooltip(
-                                                        #{${character.getSex()}},
-                                                        #{${character.getHeight().getName()}},
-                                                        #{${character.getSkinColor().getName()}},
-                                                        #{${character.getHead().getName()}},
-                                                        #{${character.getEyes().getName()}})}">
-            <img th:class="${character.getSex()} == 'male' ? male : female"
-                 th:src="@{'data:image/png;base64,'+${character.getEncodedView()}}"/>
-        </a>
-    </div>
+    <p align="center" th:text="${character.getName()}">Character</p>
+    <a href="\" data-toggle="tooltip" th:alt-title="#{tooltip(
+                                                    #{${character.getSex()}},
+                                                    #{${character.getHeight().getName()}},
+                                                    #{${character.getSkinColor().getName()}},
+                                                    #{${character.getHead().getName()}},
+                                                    #{${character.getEyes().getName()}})}">
+        <img th:class="${character.getSex()} == 'male' ? male : female" height="100" width="100"
+             th:src="@{'data:image/png;base64,'+${character.getEncodedView()}}"/>
+    </a>
 </div>
 
 <script src="webjars/jquery/1.9.1/jquery.min.js"></script>

@@ -6,17 +6,24 @@ package dyn.controllers;
 
 
 import dyn.model.Character;
-import dyn.repository.AchievementRepository;
-import dyn.repository.RaceRepository;
+import dyn.model.Family;
+import dyn.model.Fiancee;
+import dyn.model.User;
+import dyn.repository.*;
 import dyn.repository.appearance.EyesRepository;
 import dyn.repository.appearance.HeadRepository;
 import dyn.repository.appearance.HeightRepository;
 import dyn.repository.appearance.SkinColorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class AdminController {
@@ -32,6 +39,12 @@ public class AdminController {
     RaceRepository raceRepository;
     @Autowired
     AchievementRepository achievementRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private FianceeRepository fianceeRepository;
+    @Autowired
+    private CharacterRepository characterRepository;
 
     @RequestMapping("/admin")
     public String admin(ModelMap model) {
@@ -62,6 +75,42 @@ public class AdminController {
         return "admin/achievements";
     }
 
+    @RequestMapping(value = "/admin/generateFiancee", method = RequestMethod.POST)
+    public String generateFiancees(ModelMap model,
+                                   @RequestParam("level") int level,
+                                   RedirectAttributes redirectAttributes) {
+        System.out.println("AdminController.generateFiancees, level=" + level);
+        User user = userRepository.findByUserName(getAuthUser().getUsername());
+        Family family = user.getCurrentFamily();
+
+        StringBuilder names = new StringBuilder();
+        for (int i = 0; i < 5; i++) {
+            Character female = new Character();
+            female.setName(characterRepository.getRandomNameFemale());
+            female.setSex("female");
+            female.setHeight(heightRepository.getRandomUsual());
+            female.setHead(headRepository.getRandomUsual());
+            female.setEyes(eyesRepository.getRandomUsual());
+            female.setSkinColor(skinColorRepository.getRandomUsual());
+
+            female.setFamily(family);
+            female.setLevel(level);
+            female.setRace(raceRepository.findByName("race.human"));
+
+            female.generateView();
+            characterRepository.save(female);
+
+            Fiancee fiancee = new Fiancee();
+            fiancee.setCharacter(female);
+            fiancee.setCost(100);
+            fianceeRepository.save(fiancee);
+
+            names.append(fiancee.getCharacter().getName()).append(" ");
+        }
+        redirectAttributes.addFlashAttribute("mess", "Fiancees are generated: " + names.toString());
+        return "redirect:/admin";
+    }
+
     @RequestMapping("/admin/random")
     public String achievements(ModelMap model, @RequestParam(value = "sex", required = false) String sex) {
         if (sex == null || sex.isEmpty()) {
@@ -85,6 +134,11 @@ public class AdminController {
         model.addAttribute("character", character);
 
         return "admin/random";
+    }
+
+    private UserDetails getAuthUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return (UserDetails) auth.getPrincipal();
     }
 
 }

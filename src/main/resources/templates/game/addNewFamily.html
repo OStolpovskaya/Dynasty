@@ -22,6 +22,8 @@
                         <div th:replace="fragments/char :: char-view (character=*{foundress})"></div>
                     </div>
                 </div>
+                <p align="center"><a href="/game/addNewFamily">Generate again</a></p>
+
                 <input type="hidden" th:field="*{founder.name}"/>
                 <input type="hidden" th:field="*{founder.sex}"/>
                 <input type="hidden" th:field="*{founder.height}"/>
@@ -53,29 +55,6 @@
                     <p th:if="${#fields.hasErrors('family.femaleLastname')}" th:errors="*{family.femaleLastname}">
                         Incorrect</p>
                 </div>
-
-                <!--
-                <div class="form-group" th:classappend="${#fields.hasErrors('familyName')}? 'error'">
-                    <input type="text" class="form-control" id="familyName" name="familyName" placeholder="Family name"
-                           th:field="*{familyName}" th:required="required"></input>
-                    <span class="help-inline" th:if="${#fields.hasErrors('familyName')}"
-                          th:errors="*{familyName}"></span>
-                </div>
-
-                <div class="form-group" th:classappend="${#fields.hasErrors('maleLastname')}? 'error'">
-                    <input type="text" class="form-control" id="maleLastname" name="maleLastname"
-                           placeholder="Male lastname" th:field="*{maleLastname}" th:required="required"></input>
-                    <span class="help-inline" th:if="${#fields.hasErrors('maleLastname')}"
-                          th:errors="*{maleLastname}"></span>
-                </div>
-
-                <div class="form-group" th:classappend="${#fields.hasErrors('femaleLastname')}? 'error'">
-                    <input type="text" class="form-control" id="femaleLastname" name="femaleLastname"
-                           placeholder="Female lastname" th:field="*{femaleLastname}" th:required="required"></input>
-                    <span class="help-inline" th:if="${#fields.hasErrors('femaleLastname')}"
-                          th:errors="*{femaleLastname}"></span>
-                </div>
-                -->
                 <button type="submit" id="submit" name="submit" class="btn btn-primary pull-right">Submit Form</button>
             </form>
         </div>

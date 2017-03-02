@@ -10,27 +10,22 @@
 <div th:replace="fragments/navigation :: nav-for-game"></div>
 <div class="container">
     <p>Игра</p>
+    <p class="has-error" th:text="${mess}"></p>
     <h1 th:inline="text">Hello [[${user.getUserName()}]]!</h1>
-    <p th:inline="text">Current family: [[${currentFamily?.getFamilyName()}]] Level:
-        [[${currentFamily?.getLevel()}]]</p>
-    <table border="1">
-        <tr>
-            <div th:each="character : ${characters}">
-                <td>
-                    <div class="char-view-div">
-                        <div th:replace="fragments/char :: char-view (character=${character})"></div>
-                    </div>
-                    <div class="char-view-div" th:if="${character.getSpouse() != null}">
-                        <div th:replace="fragments/char :: char-view (character=${character.getSpouse()})"></div>
-                    </div>
-                </td>
+    <p th:inline="text">Current family: [[${currentFamily?.getFamilyName()}]] Level: [[${currentFamily?.getLevel()}]]</p>
+    <div style="display: inline-block; height:180px; margin-bottom: 3px; border: 2px solid; vertical-align: top" th:each="character : ${characters}">
+        <div class="char-view-div">
+            <div th:replace="fragments/char :: char-view (character=${character})"></div>
+        </div>
+        <div class="char-view-div" th:if="${character.getSpouse() != null}">
+            <div th:replace="fragments/char :: char-view (character=${character.getSpouse()})"></div>
+        </div>
+        <div th:if="${character.getSex() == 'male' and character.getSpouse() == null}">
+            <a href="/game/chooseFiancee" th:href="@{/game/chooseFiancee(characterId=${character.getId()})}">Choose fiancee</a>
+        </div>
             </div>
-        </tr>
-    </table>
     <form th:action="@{/game/turn}" method="post">
-
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Turn!</button>
-
+        <button class="btn btn-lg btn-primary center-block" type="submit">Turn!</button>
     </form>
 </div>
 <script src="webjars/jquery/1.9.1/jquery.min.js"></script>

@@ -4,8 +4,9 @@
 
 .char-view-div {
     display: inline-block;
-    width: 206px;
-    height: 235px;
+    width: 106px;
+    height: 135px;
+    margin: 5px;
 }
 .male {
     border: 3px solid #4286f4;

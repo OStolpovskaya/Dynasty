@@ -4,13 +4,20 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>Admin</title>
     <link href="webjars/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"></link>
+    <link th:href="@{/css/common.css}" rel="stylesheet"></link>
 </head>
 <body>
 <div th:replace="fragments/navigation :: nav-for-admin"></div>
 <div class="container">
     <h3>Administration</h3>
+    <p class="has-error" th:text="${mess}"></p>
     <p><a href="/admin/random">Random male</a></p>
     <p><a href="/admin/random?sex=female">Random female</a></p>
+    <form action="#" th:action="@{/admin/generateFiancee}" method="post">
+        <label>Level for new fiancees:</label>
+        <input type="text" name="level" value="1"/>
+        <button class="btn-info" type="submit">Generate fiancee</button>
+    </form>
 </div>
 <script src="webjars/jquery/1.9.1/jquery.min.js"></script>
 <script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>

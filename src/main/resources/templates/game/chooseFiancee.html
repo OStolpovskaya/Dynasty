@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Choose feancee</title>
+    <link th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}" rel="stylesheet"></link>
+    <link th:href="@{/css/common.css}" rel="stylesheet"></link>
+    <style>
+        .floating-box {
+            display: inline-block;
+        }
+
+    </style>
+</head>
+<body>
+<div th:replace="fragments/navigation :: nav-for-game"></div>
+<div class="container">
+    <p class="has-error" th:text="${mess}"></p>
+    <form action="#" th:action="@{/game/chooseFiancee}" method="post">
+        <div style="display: inline-block;" th:each="fiancee : ${fianceeList}">
+            <input style="display: inline-block;" type="radio" name="fiancee" th:value="${fiancee.getId()}"/>
+            <div class="char-view-div">
+                <div th:replace="fragments/char :: char-view (character=${fiancee.getCharacter()})"></div>
+            </div>
+        </div>
+        <p>
+            <input type="hidden" name="characterId" th:value="${characterId}"/>
+            <button type="submit" align="center" id="submit" name="submit" class="btn btn-primary center-block">Choose</button>
+        </p>
+    </form>
+</div>
+<script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
+</body>
+</html>

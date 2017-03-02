@@ -7,11 +7,9 @@ package dyn.controllers;
 
 import dyn.model.Character;
 import dyn.model.Family;
+import dyn.model.Fiancee;
 import dyn.model.User;
-import dyn.repository.CharacterRepository;
-import dyn.repository.FamilyRepository;
-import dyn.repository.RaceRepository;
-import dyn.repository.UserRepository;
+import dyn.repository.*;
 import dyn.repository.appearance.EyesRepository;
 import dyn.repository.appearance.HeadRepository;
 import dyn.repository.appearance.HeightRepository;
@@ -25,6 +23,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -49,6 +48,11 @@ public class GameController {
     private CharacterRepository characterRepository;
     @Autowired
     private RaceRepository raceRepository;
+    @Autowired
+    private FianceeRepository fianceeRepository;
+
+    // TODO: make character view
+    // TODO: make parents view in game.html
 
     @RequestMapping("/game")
     public String main(ModelMap model, RedirectAttributes redirectAttributes) {
@@ -79,7 +83,7 @@ public class GameController {
         System.out.println(user.getUserName() + " makes a turn!");
 
         Family family = user.getCurrentFamily();
-        // TODO: generate children
+
         List<Character> characters = characterRepository.findByFamilyAndLevelAndSexAndSpouseIsNotNull(family, family.getLevel(), "male");
         int newLevel = family.getLevel() + 1;
         for (Character character : characters) {
@@ -122,6 +126,43 @@ public class GameController {
         return "redirect:/game";
     }
 
+    @RequestMapping(value = "/game/chooseFiancee", params = "characterId", method = RequestMethod.GET)
+    public String chooseFiancee(ModelMap model,
+                                @RequestParam(value = "characterId") int characterId) {
+        System.out.println("GameController.chooseFiancee GET characterId=" + characterId);
+
+        User user = userRepository.findByUserName(getAuthUser().getUsername());
+        Family family = user.getCurrentFamily();
+
+        List<Fiancee> fianceeList = fianceeRepository.findByCharacterFamilyNotAndCharacterLevel(family, family.getLevel());
+        model.addAttribute("fianceeList", fianceeList);
+        model.addAttribute("characterId", characterId);
+        System.out.println("fianceeList.size() = " + fianceeList.size());
+        return "/game/chooseFiancee";
+    }
+
+    @RequestMapping(value = "/game/chooseFiancee", params = "characterId", method = RequestMethod.POST)
+    public String makeFiancee(ModelMap model, RedirectAttributes redirectAttributes,
+                              @RequestParam(value = "fiancee") Long fianceeId,
+                              @RequestParam(value = "characterId") Long characterId) {
+
+        Character character = characterRepository.findOne(characterId);
+        Fiancee fiancee = fianceeRepository.findOne(fianceeId);
+
+        Character wife = fiancee.getCharacter();
+
+        character.setSpouse(wife);
+        characterRepository.save(character);
+
+        wife.setSpouse(character);
+        characterRepository.save(wife);
+
+        fianceeRepository.delete(fiancee);
+
+        redirectAttributes.addFlashAttribute("mess", "You have chosen spouse " + wife.getName() + " for your character " + character.getName());
+        return "redirect:/game";
+    }
+
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public String logout(HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -136,8 +177,7 @@ public class GameController {
 
     private UserDetails getAuthUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserDetails userDetail = (UserDetails) auth.getPrincipal();
-        return userDetail;
+        return (UserDetails) auth.getPrincipal();
     }
 
 }
