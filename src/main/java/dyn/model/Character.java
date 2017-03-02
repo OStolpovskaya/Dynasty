@@ -13,6 +13,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by OM on 21.02.2017.
@@ -95,6 +96,8 @@ public class Character {
     @OneToOne
     private Body body;
     */
+    @OneToMany(mappedBy = "father")
+    private java.util.List<Character> children;
 
     public Character() {
     }
@@ -206,6 +209,14 @@ public class Character {
     public String getEncodedView() {
         String encodeToString = Base64Utils.encodeToString(view);
         return encodeToString;
+    }
+
+    public java.util.List<Character> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<Character> children) {
+        this.children = children;
     }
 
     public void generateView() {

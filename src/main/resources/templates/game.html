@@ -13,17 +13,31 @@
     <p class="has-error" th:text="${mess}"></p>
     <h1 th:inline="text">Hello [[${user.getUserName()}]]!</h1>
     <p th:inline="text">Current family: [[${currentFamily?.getFamilyName()}]] Level: [[${currentFamily?.getLevel()}]]</p>
-    <div style="display: inline-block; height:180px; margin-bottom: 3px; border: 2px solid; vertical-align: top" th:each="character : ${characters}">
-        <div class="char-view-div">
-            <div th:replace="fragments/char :: char-view (character=${character})"></div>
-        </div>
-        <div class="char-view-div" th:if="${character.getSpouse() != null}">
-            <div th:replace="fragments/char :: char-view (character=${character.getSpouse()})"></div>
-        </div>
-        <div th:if="${character.getSex() == 'male' and character.getSpouse() == null}">
-            <a href="/game/chooseFiancee" th:href="@{/game/chooseFiancee(characterId=${character.getId()})}">Choose fiancee</a>
-        </div>
+    <div style="display: inline-block; margin-bottom: 3px; border: 2px solid; vertical-align: top" th:each="father : ${fathers}">
+        <div align="center">
+            <div class="char-view-div">
+                <div th:replace="fragments/char :: char-view (character=${father})"></div>
             </div>
+            <!--/*@thymesVar id="father" type="dyn.model.Character"*/-->
+            <div class="char-view-div" th:if="${father.getSpouse() != null}">
+                <div th:replace="fragments/char :: char-view (character=${father.getSpouse()})"></div>
+            </div>
+            <br></br>
+        </div>
+        <div style="display: inline-block; height:180px; margin-bottom: 3px; border: 2px solid lightgreen; vertical-align: top" th:each="child : ${father.getChildren()}">
+
+            <div class="char-view-div">
+                <div th:replace="fragments/char :: char-view (character=${child})"></div>
+            </div>
+            <div class="char-view-div" th:if="${child.getSpouse() != null}">
+                <div th:replace="fragments/char :: char-view (character=${child.getSpouse()})"></div>
+            </div>
+            <br></br>
+            <div th:if="${child.getSex() == 'male' and child.getSpouse() == null}">
+                <a href="/game/chooseFiancee" th:href="@{/game/chooseFiancee(characterId=${child.getId()})}">Choose fiancee</a>
+            </div>
+        </div>
+    </div>
     <form th:action="@{/game/turn}" method="post">
         <button class="btn btn-lg btn-primary center-block" type="submit">Turn!</button>
     </form>

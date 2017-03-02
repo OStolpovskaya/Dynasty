@@ -52,7 +52,6 @@ public class GameController {
     private FianceeRepository fianceeRepository;
 
     // TODO: make character view
-    // TODO: make parents view in game.html
 
     @RequestMapping("/game")
     public String main(ModelMap model, RedirectAttributes redirectAttributes) {
@@ -65,14 +64,18 @@ public class GameController {
             System.out.println("User doesn't have any family, redirect");
             redirectAttributes.addFlashAttribute("mess", "You have no families, create please!");
             return "redirect:/game/addNewFamily";
-        } else {
-            Family family = user.getCurrentFamily();
-            System.out.println("Current family: " + family.getFamilyName() + ", level: " + family.getLevel());
-            model.addAttribute("currentFamily", family);
-
-            List<Character> characters = characterRepository.findByFamilyAndLevel(family, family.getLevel());
-            model.addAttribute("characters", characters);
         }
+        Family family = user.getCurrentFamily();
+        System.out.println("Current family: " + family.getFamilyName() + ", level: " + family.getLevel());
+        model.addAttribute("currentFamily", family);
+
+        List<Character> fathers;
+        if (family.getLevel() > 0) {
+            fathers = characterRepository.findByFamilyAndLevelAndSexAndSpouseIsNotNull(family, family.getLevel() - 1, "male");
+        } else {
+            fathers = characterRepository.findByFamilyAndLevel(family, family.getLevel());
+        }
+        model.addAttribute("fathers", fathers);
 
         return "game";
     }
@@ -130,7 +133,7 @@ public class GameController {
     public String chooseFiancee(ModelMap model,
                                 @RequestParam(value = "characterId") int characterId) {
         System.out.println("GameController.chooseFiancee GET characterId=" + characterId);
-
+        // TODO: check if character belongs to user and current family and family's level
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         Family family = user.getCurrentFamily();
 
