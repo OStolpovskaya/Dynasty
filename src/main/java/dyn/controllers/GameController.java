@@ -90,13 +90,11 @@ public class GameController {
         List<Character> characters = characterRepository.findByFamilyAndLevelAndSexAndSpouseIsNotNull(family, family.getLevel(), "male");
         int newLevel = family.getLevel() + 1;
         for (Character character : characters) {
-            // percents
-            int min = 1; // amount of children
-            int max = 7; // amount of children
+            // TODO: clever percentage of amount (see UsefulTest)
             double dominantPercent = 0.5; // whose feature is inherited, father or mother
 
             Character wife = character.getSpouse();
-            int childAmount = min + (int) (Math.random() * max);
+            int childAmount = getAmountOfChildren();
             System.out.println(character.getName() + " marries " + wife.getName() + " and they have " + childAmount + " children");
 
             for (int i = 0; i < childAmount; i++) {
@@ -183,4 +181,29 @@ public class GameController {
         return (UserDetails) auth.getPrincipal();
     }
 
+    private int getAmountOfChildren() {
+        // TODO: make percentage depends on character's buffs (arguments?)
+        double[] percentage = new double[]{0.25, 0.55, 0.80, 0.90, 0.95, 0.98, 1.00}; // normal
+        //double[] percentage = new double[] {0.05, 0.15, 0.30, 0.50, 0.75, 0.90, 1.00}; // buff fertility
+        //double[] percentage = new double[] {0.00, 0.00, 0.00, 0.00, 1.00, 0.00, 0.00}; // buff 5 children
+
+        double random = Math.random();
+        if (0 <= random && random < percentage[0]) {
+            return 1;
+        } else if (percentage[0] <= random && random < percentage[1]) {
+            return 2;
+        } else if (percentage[1] <= random && random < percentage[2]) {
+            return 3;
+        } else if (percentage[2] <= random && random < percentage[3]) {
+            return 4;
+        } else if (percentage[3] <= random && random < percentage[4]) {
+            return 5;
+        } else if (percentage[4] <= random && random < percentage[5]) {
+            return 6;
+        } else if (percentage[5] <= random && random < percentage[6]) {
+            return 7;
+        }
+
+        return 1;
+    }
 }
