@@ -8,12 +8,13 @@
 <body>
 <div th:fragment="char-view (character)">
     <p align="center" th:text="${character.getName()}">Character</p>
-    <a href="\" data-toggle="tooltip" th:alt-title="#{tooltip(
-                                                    #{${character.getSex()}},
-                                                    #{${character.getHeight().getName()}},
-                                                    #{${character.getSkinColor().getName()}},
-                                                    #{${character.getHead().getName()}},
-                                                    #{${character.getEyes().getName()}})}">
+    <a href="/game/character" th:href="@{/game/character(characterId=${character.getId()})}"
+       data-toggle="tooltip" th:alt-title="#{tooltip(
+                                           #{${character.getSex()}},
+                                           #{${character.getHeight().getName()}},
+                                           #{${character.getSkinColor().getName()}},
+                                           #{${character.getHead().getName()}},
+                                           #{${character.getEyes().getName()}})}">
         <img th:class="${character.getSex()} == 'male' ? male : female" height="100" width="100"
              th:src="@{'data:image/png;base64,'+${character.getEncodedView()}}"/>
     </a>

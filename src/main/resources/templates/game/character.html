@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Character view</title>
+    <link th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}" rel="stylesheet"></link>
+    <link th:href="@{/css/common.css}" rel="stylesheet"></link>
+    <style>
+        .floating-box {
+            display: inline-block;
+        }
+
+    </style>
+</head>
+<body>
+<div th:replace="fragments/navigation :: nav-for-game"></div>
+<div class="container">
+    <p class="has-error" th:text="${mess}"></p>
+    <!--/*@thymesVar id="character" type="dyn.model.Character"*/-->
+    <div style="float: left">
+        <p th:inline="text">
+            Family: [[${character.getFamily().getFamilyName()}]]<br/>
+            Name: [[${character.getName()}]]<br/>
+            Level: [[${character.getLevel()}]]<br/>
+            Height: [[#{${character.getHeight().getName()}}]]<br/>
+        </p>
+    </div>
+    <div style="float: right" align="center">
+        <div class="char-view-div" th:if="${character.getFather() != null}">
+            <div th:replace="fragments/char :: char-view (character=${character.getFather()})"></div>
+        </div>
+        <div class="char-view-div" th:if="${character.getFather() != null}">
+            <div th:replace="fragments/char :: char-view (character=${character.getFather().getSpouse()})"></div>
+        </div>
+        <br></br>
+        <div class="char-view-div">
+            <div th:replace="fragments/char :: char-view (character=${character})"></div>
+        </div>
+        <div class="char-view-div" th:if="${character.getSpouse() != null}">
+            <div th:replace="fragments/char :: char-view (character=${character.getSpouse()})"></div>
+        </div>
+        <br></br>
+        <div th:switch="${character.getSex()}">
+            <div th:case="'male'">
+                <div style="display: inline-block; height:180px; margin-bottom: 3px; border: 2px solid lightgreen; vertical-align: top" th:each="child : ${character.getChildren()}">
+
+                    <div class="char-view-div">
+                        <div th:replace="fragments/char :: char-view (character=${child})"></div>
+                    </div>
+                    <div class="char-view-div" th:if="${child.getSpouse() != null}">
+                        <div th:replace="fragments/char :: char-view (character=${child.getSpouse()})"></div>
+                    </div>
+                </div>
+            </div>
+            <div th:case="'female'">
+                <div style="display: inline-block; height:180px; margin-bottom: 3px; border: 2px solid lightgreen; vertical-align: top" th:each="child : ${character.getSpouse().getChildren()}">
+                    <div class="char-view-div">
+                        <div th:replace="fragments/char :: char-view (character=${child})"></div>
+                    </div>
+                    <div class="char-view-div" th:if="${child.getSpouse() != null}">
+                        <div th:replace="fragments/char :: char-view (character=${child.getSpouse()})"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+<script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
+</body>
+</html>

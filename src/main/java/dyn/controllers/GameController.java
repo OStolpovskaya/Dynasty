@@ -54,7 +54,6 @@ public class GameController {
     private RaceRepository raceRepository;
     @Autowired
     private FianceeRepository fianceeRepository;
-    // TODO: make character view
 
     @RequestMapping("/game")
     public String main(ModelMap model, RedirectAttributes redirectAttributes) {
@@ -82,6 +81,17 @@ public class GameController {
 
         return "game";
     }
+
+    @RequestMapping("/game/character")
+    public String characterView(ModelMap model, RedirectAttributes redirectAttributes,
+                                @RequestParam(value = "characterId") long characterId) {
+        System.out.println("GameController.characterView GET characterId=" + characterId);
+        Character character = characterRepository.findOne(characterId);
+        model.addAttribute("character", character);
+
+        return "/game/character";
+    }
+
 
     @RequestMapping(value = "/game/turn", method = RequestMethod.POST)
     public String turn() {
@@ -111,7 +121,7 @@ public class GameController {
                 child.setFather(character);
                 child.setFamily(family);
                 child.setLevel(newLevel);
-                // TODO: ask how to make it correct:
+
                 child.setHeight(Math.random() < dominantPercent ? character.getHeight() : wife.getHeight());
                 child.setHead(Math.random() < dominantPercent ? character.getHead() : wife.getHead());
                 child.setEyes(Math.random() < dominantPercent ? character.getEyes() : wife.getEyes());
