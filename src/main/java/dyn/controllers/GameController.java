@@ -15,6 +15,8 @@ import dyn.repository.appearance.HeadRepository;
 import dyn.repository.appearance.HeightRepository;
 import dyn.repository.appearance.SkinColorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -41,6 +43,8 @@ public class GameController {
     @Autowired
     SkinColorRepository skinColorRepository;
     @Autowired
+    MessageSource messageSource;
+    @Autowired
     private UserRepository userRepository;
     @Autowired
     private FamilyRepository familyRepository;
@@ -50,7 +54,6 @@ public class GameController {
     private RaceRepository raceRepository;
     @Autowired
     private FianceeRepository fianceeRepository;
-
     // TODO: make character view
 
     @RequestMapping("/game")
@@ -62,7 +65,7 @@ public class GameController {
         List<Family> families = user.getFamilies();
         if (families.size() == 0) {
             System.out.println("User doesn't have any family, redirect");
-            redirectAttributes.addFlashAttribute("mess", "You have no families, create please!");
+            redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("new.user", null, LocaleContextHolder.getLocale()));
             return "redirect:/game/addNewFamily";
         }
         Family family = user.getCurrentFamily();
@@ -90,7 +93,6 @@ public class GameController {
         List<Character> characters = characterRepository.findByFamilyAndLevelAndSexAndSpouseIsNotNull(family, family.getLevel(), "male");
         int newLevel = family.getLevel() + 1;
         for (Character character : characters) {
-            // TODO: clever percentage of amount (see UsefulTest)
             double dominantPercent = 0.5; // whose feature is inherited, father or mother
 
             Character wife = character.getSpouse();
@@ -128,18 +130,26 @@ public class GameController {
     }
 
     @RequestMapping(value = "/game/chooseFiancee", params = "characterId", method = RequestMethod.GET)
-    public String chooseFiancee(ModelMap model,
+    public String chooseFiancee(ModelMap model, RedirectAttributes redirectAttributes,
                                 @RequestParam(value = "characterId") int characterId) {
         System.out.println("GameController.chooseFiancee GET characterId=" + characterId);
-        // TODO: check if character belongs to user and current family and family's level
+
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         Family family = user.getCurrentFamily();
 
-        List<Fiancee> fianceeList = fianceeRepository.findByCharacterFamilyNotAndCharacterLevel(family, family.getLevel());
-        model.addAttribute("fianceeList", fianceeList);
-        model.addAttribute("characterId", characterId);
-        System.out.println("fianceeList.size() = " + fianceeList.size());
-        return "/game/chooseFiancee";
+        List<Character> characters = characterRepository.findByFamilyAndLevelAndSexAndSpouseIsNull(family, family.getLevel(), "male");
+        for (Character character : characters) {
+            if (character.getId() == characterId) {
+                List<Fiancee> fianceeList = fianceeRepository.findByCharacterFamilyNotAndCharacterLevel(family, family.getLevel()); //TODO: only female?
+                model.addAttribute("fianceeList", fianceeList);
+                model.addAttribute("characterId", characterId);
+                System.out.println("fianceeList.size() = " + fianceeList.size());
+                return "/game/chooseFiancee";
+            }
+        }
+        redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("characterCantChooseFiancee", null, LocaleContextHolder.getLocale()));
+        System.out.println("Character " + characterId + " is not belongs to user's current family singles");
+        return "redirect:/game";
     }
 
     @RequestMapping(value = "/game/chooseFiancee", params = "characterId", method = RequestMethod.POST)

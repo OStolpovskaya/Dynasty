@@ -21,4 +21,6 @@ public interface CharacterRepository extends CrudRepository<Character, Long> {
     public String getRandomNameFemale();
 
     List<Character> findByFamilyAndLevelAndSexAndSpouseIsNotNull(Family family, int level, String sex);
+
+    List<Character> findByFamilyAndLevelAndSexAndSpouseIsNull(Family family, int level, String sex);
 }
