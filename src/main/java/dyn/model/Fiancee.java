@@ -37,4 +37,13 @@ public class Fiancee {
     public void setCost(int cost) {
         this.cost = cost;
     }
+
+    @Override
+    public String toString() {
+        return "Fiancee{" +
+                "id=" + id +
+                ", character=" + character +
+                ", cost=" + cost +
+                '}';
+    }
 }

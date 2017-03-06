@@ -35,6 +35,9 @@ public class Family {
     @Column(name = "level")
     private int level;
 
+    @Column(name = "money")
+    private int money;
+
     // ===================================
     @OneToMany(mappedBy = "family")
     private List<Character> characters;
@@ -96,6 +99,14 @@ public class Family {
 
     public void setLevel(int level) {
         this.level = level;
+    }
+
+    public int getMoney() {
+        return money;
+    }
+
+    public void setMoney(int money) {
+        this.money = money;
     }
 
     public List<Character> getCharacters() {

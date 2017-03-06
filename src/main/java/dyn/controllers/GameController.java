@@ -151,6 +151,7 @@ public class GameController {
         for (Character character : characters) {
             if (character.getId() == characterId) {
                 List<Fiancee> fianceeList = fianceeRepository.findByCharacterFamilyNotAndCharacterLevel(family, family.getLevel()); //TODO: only female?
+                model.addAttribute("character", character);
                 model.addAttribute("fianceeList", fianceeList);
                 model.addAttribute("characterId", characterId);
                 System.out.println("fianceeList.size() = " + fianceeList.size());
@@ -170,6 +171,13 @@ public class GameController {
         Character character = characterRepository.findOne(characterId);
         Fiancee fiancee = fianceeRepository.findOne(fianceeId);
 
+        Family family = character.getFamily();
+
+        if (family.getMoney() < fiancee.getCost()) {
+            redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("chooseFiancee.notEnoughMoney", null, LocaleContextHolder.getLocale()));
+            return "redirect:/game/chooseFiancee";
+        }
+
         Character wife = fiancee.getCharacter();
 
         character.setSpouse(wife);
@@ -180,7 +188,41 @@ public class GameController {
 
         fianceeRepository.delete(fiancee);
 
-        redirectAttributes.addFlashAttribute("mess", "You have chosen spouse " + wife.getName() + " for your character " + character.getName());
+        family.setMoney(family.getMoney() - fiancee.getCost());
+        familyRepository.save(family);
+
+        Family wifeFamily = wife.getFamily();
+        wifeFamily.setMoney(wifeFamily.getMoney() + fiancee.getCost());
+        familyRepository.save(wifeFamily);
+
+        redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("chooseFiancee.success", new Object[]{character.getName(), wife.getName(), fiancee.getCost()}, LocaleContextHolder.getLocale()));
+        return "redirect:/game";
+    }
+
+    @RequestMapping(value = "/game/putUpForFiancee", method = RequestMethod.POST)
+    public String setToFiancee(ModelMap model, RedirectAttributes redirectAttributes,
+                               @RequestParam(value = "cost") int cost,
+                               @RequestParam(value = "female") long characterId) {
+        System.out.println("GameController.setToFiancee POST cost=" + cost + ", characterId=" + characterId);
+        User user = userRepository.findByUserName(getAuthUser().getUsername());
+        Family family = user.getCurrentFamily();
+
+        List<Character> characters = characterRepository.findByFamilyAndLevelAndSexAndSpouseIsNull(family, family.getLevel(), "female");
+        for (Character character : characters) {
+            if (character.getId() == characterId && character.isFiancee() == false) {
+                Fiancee fiancee = new Fiancee();
+                fiancee.setCharacter(character);
+                fiancee.setCost(cost);
+                fianceeRepository.save(fiancee);
+
+                redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("characterBecomeFiancee", null, LocaleContextHolder.getLocale()));
+                System.out.println("Character " + characterId + " become fiancee");
+                return "redirect:/game";
+            }
+        }
+
+        redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("characterCantBecomeFiancee", null, LocaleContextHolder.getLocale()));
+        System.out.println("Character " + characterId + " can not belongs to user's current family female singles or is already feiancee");
         return "redirect:/game";
     }
 

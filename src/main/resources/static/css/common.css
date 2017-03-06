@@ -15,3 +15,8 @@
 .female {
     border: 3px solid #e85c94;
 }
+
+.tooltip-inner {
+    white-space: pre-wrap;
+    text-align: left;
+}

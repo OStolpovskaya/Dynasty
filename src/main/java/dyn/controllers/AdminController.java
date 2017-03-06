@@ -102,7 +102,7 @@ public class AdminController {
 
             Fiancee fiancee = new Fiancee();
             fiancee.setCharacter(female);
-            fiancee.setCost(100);
+            fiancee.setCost(10);
             fianceeRepository.save(fiancee);
 
             names.append(fiancee.getCharacter().getName()).append(" ");

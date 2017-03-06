@@ -16,16 +16,26 @@
 <div th:replace="fragments/navigation :: nav-for-game"></div>
 <div class="container">
     <p class="has-error" th:text="${mess}"></p>
+    <!--/*@thymesVar id="character" type="dyn.model.Character"*/-->
+    <h3 th:text="#{chooseFiancee.yourCharacter}">Your character:</h3>
+    <div class="char-view-div">
+        <div th:replace="fragments/char :: char-view (character=${character})"></div>
+    </div>
+    <h3 th:text="#{chooseFiancee.familyMoney}">Your money:</h3>
+    <p th:text="#{cost(${character.getFamily().getMoney()})}">money</p>
+    <h3 th:text="#{chooseFiancee.chooseFiancee}">Choose fiancee:</h3>
     <form action="#" th:action="@{/game/chooseFiancee}" method="post">
         <div style="display: inline-block;" th:each="fiancee : ${fianceeList}">
-            <input style="display: inline-block;" type="radio" name="fiancee" th:value="${fiancee.getId()}"/>
+            <!--/*@thymesVar id="fiancee" type="dyn.model.Fiancee"*/-->
+            <input style="display: inline-block;" type="radio" name="fiancee" th:value="${fiancee.getId()}" th:disabled="${character.getFamily().getMoney() lt fiancee.getCost()}"/>
             <div class="char-view-div">
                 <div th:replace="fragments/char :: char-view (character=${fiancee.getCharacter()})"></div>
+                <label th:text="#{cost(${fiancee.getCost()})}">Cost</label>
             </div>
         </div>
         <p>
             <input type="hidden" name="characterId" th:value="${characterId}"/>
-            <button type="submit" align="center" id="submit" name="submit" class="btn btn-primary center-block">Choose</button>
+            <button type="submit" align="center" id="submit" name="submit" class="btn btn-primary center-block" th:text="#{chooseFiancee.choose}">Choose</button>
         </p>
     </form>
 </div>

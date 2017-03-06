@@ -128,6 +128,7 @@ public class FamilyController {
         family.setUser(user);
         family.setCurrent(true);
         family.setLevel(0);
+        family.setMoney(100);
         System.out.println("SAVE:" + family.toString());
         familyRepository.save(family);
 

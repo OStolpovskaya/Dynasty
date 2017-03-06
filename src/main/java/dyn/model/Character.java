@@ -96,8 +96,12 @@ public class Character {
     @OneToOne
     private Body body;
     */
+    // ============ RELATIONS ============
     @OneToMany(mappedBy = "father")
     private java.util.List<Character> children;
+
+    @OneToOne(mappedBy = "character")
+    private Fiancee fiancee;
 
     public Character() {
     }
@@ -219,6 +223,10 @@ public class Character {
         this.children = children;
     }
 
+    public Fiancee getFiancee() {
+        return fiancee;
+    }
+
     public void generateView() {
         try {
             // load source images
@@ -247,6 +255,17 @@ public class Character {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean isFiancee() {
+        if (getFiancee() == null) {
+            return false;
+        }
+        return true;
+    }
+
+    public void setFiancee(Fiancee fiancee) {
+        this.fiancee = fiancee;
     }
 
     @Override
