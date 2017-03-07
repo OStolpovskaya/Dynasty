@@ -1612,3 +1612,16 @@ INSERT INTO `user_roles` (`user_role_id`, `userid`, `role`) VALUES
 --
 ALTER TABLE `user_roles`
   ADD CONSTRAINT `fk_userid` FOREIGN KEY (`userid`) REFERENCES `users` (`userid`);
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `characters_buffs`
+--
+
+CREATE TABLE IF NOT EXISTS `characters_buffs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `character_id` int(11) NOT NULL,
+  `buff_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
