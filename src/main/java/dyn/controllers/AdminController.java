@@ -40,6 +40,9 @@ public class AdminController {
     @Autowired
     AchievementRepository achievementRepository;
     @Autowired
+    BuffRepository buffRepository;
+
+    @Autowired
     private UserRepository userRepository;
     @Autowired
     private FianceeRepository fianceeRepository;
@@ -73,6 +76,13 @@ public class AdminController {
 
         model.addAttribute("achievementList", achievementRepository.findAll());
         return "admin/achievements";
+    }
+
+    @RequestMapping("/admin/buffs")
+    public String buffs(ModelMap model) {
+
+        model.addAttribute("buffList", buffRepository.findAll());
+        return "admin/buffs";
     }
 
     @RequestMapping(value = "/admin/generateFiancee", method = RequestMethod.POST)

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Buffs</title>
+    <link th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}" rel="stylesheet"></link>
+</head>
+<body>
+<div th:replace="fragments/navigation :: nav-for-admin"></div>
+<div class="container">
+    <h3>Buffs</h3>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Type</th>
+            <th>Contradictory</th>
+            <th>Description</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="buff : ${buffList}">
+            <!--/*@thymesVar id="buff" type="dyn.model.Buff"*/-->
+            <td th:text="${buff.getId()}">id</td>
+            <td th:text="#{${buff.getTitle()}}">title</td>
+            <td th:text="${buff.getType().toString()}">type</td>
+            <td th:if="${buff.getContradictory()!=null}" th:text="#{${buff.getContradictory().getTitle()}}">Contradictory</td>
+            <td th:unless="${buff.getContradictory()!=null}">-</td>
+            <td th:text="#{${buff.getDescription()}}">Description</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
+</body>
+</html>

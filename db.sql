@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1
--- Время создания: Мар 06 2017 г., 19:57
+-- Время создания: Мар 08 2017 г., 00:10
 -- Версия сервера: 5.5.25
 -- Версия PHP: 5.3.13
 
@@ -147,6 +147,35 @@ INSERT INTO `app_skin_color` (`id`, `type`, `name`) VALUES
 (7, 'rare', 'app.skin_color.light_green'),
 (8, 'rare', 'app.skin_color.green'),
 (9, 'rare', 'app.skin_color.bluish');
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `buff`
+--
+
+CREATE TABLE IF NOT EXISTS `buff` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(30) NOT NULL,
+  `type` enum('usual','rare') NOT NULL,
+  `contradictory` int(11) DEFAULT NULL,
+  `description` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id` (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
+
+--
+-- Дамп данных таблицы `buff`
+--
+
+INSERT INTO `buff` (`id`, `title`, `type`, `contradictory`, `description`) VALUES
+(1, 'buffs.title.fertility', 'usual', NULL, 'buffs.description.fertility'),
+(2, 'buffs.title.fiveChildren', 'rare', NULL, 'buffs.description.fiveChildren'),
+(3, 'buffs.title.dominantFather', 'usual', 4, 'buffs.description.dominantFather'),
+(4, 'buffs.title.dominantMother', 'usual', 3, 'buffs.description.dominantMother'),
+(5, 'buffs.title.manySons', 'usual', 6, 'buffs.description.manySons'),
+(6, 'buffs.title.manyDaughters', 'usual', 5, 'buffs.description.manyDaughters'),
+(7, 'buffs.title.geneticMod', 'usual', NULL, 'buffs.description.geneticMod');
 
 -- --------------------------------------------------------
 
