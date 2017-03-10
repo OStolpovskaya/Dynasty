@@ -5,13 +5,13 @@ package dyn.controllers;
  */
 
 
-import dyn.model.*;
 import dyn.model.Character;
-import dyn.repository.*;
-import dyn.repository.appearance.EyesRepository;
-import dyn.repository.appearance.HeadRepository;
-import dyn.repository.appearance.HeightRepository;
-import dyn.repository.appearance.SkinColorRepository;
+import dyn.model.Family;
+import dyn.model.User;
+import dyn.repository.CharacterRepository;
+import dyn.repository.FamilyRepository;
+import dyn.repository.RaceRepository;
+import dyn.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -28,24 +28,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 @Controller
 public class GameController {
     @Autowired
-    EyesRepository eyesRepository;
-    @Autowired
-    HeadRepository headRepository;
-    @Autowired
-    HeightRepository heightRepository;
-    @Autowired
-    SkinColorRepository skinColorRepository;
-    @Autowired
     MessageSource messageSource;
-    @Autowired
-    BuffRepository buffRepository;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -54,8 +43,6 @@ public class GameController {
     private CharacterRepository characterRepository;
     @Autowired
     private RaceRepository raceRepository;
-    @Autowired
-    private FianceeRepository fianceeRepository;
 
     public static Locale loc() {
         return LocaleContextHolder.getLocale();
@@ -146,78 +133,6 @@ public class GameController {
             familyRepository.save(family);
         }
 
-        return "redirect:/game";
-    }
-
-    // ========================================
-
-    // ============ CHOOSING BUFFS ============
-    @RequestMapping(value = "/game/chooseBuffs", params = "characterId", method = RequestMethod.GET)
-    public String chooseBuffs(ModelMap model, RedirectAttributes redirectAttributes,
-                              @RequestParam(value = "characterId") int characterId) {
-        System.out.println("GameController.chooseBuffs GET characterId=" + characterId);
-
-        User user = userRepository.findByUserName(getAuthUser().getUsername());
-        Family family = user.getCurrentFamily();
-
-        List<Character> characters = characterRepository.findByFamilyAndLevelAndSexAndSpouseIsNotNull(family, family.getLevel(), "male");
-        for (Character character : characters) {
-            if (character.getId() == characterId) {
-                List<Buff> buffList = buffRepository.findByType(BuffType.usual);
-                List<Buff> resultBuffs = new ArrayList<>();
-                for (Buff buff : buffList) {
-                    if (!character.getBuffs().contains(buff) && !character.getBuffs().contains(buff.getContradictory())) {
-                        resultBuffs.add(buff);
-                    }
-                }
-                model.addAttribute("character", character);
-                model.addAttribute("buffList", resultBuffs);
-                model.addAttribute("characterId", characterId);
-                return "/game/chooseBuffs";
-            }
-        }
-        redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("game.chooseBuffs.characterCantChooseBuffs", null, loc()));
-        System.out.println("Character " + characterId + " is not belongs to user's current family fiances");
-        return "redirect:/game";
-    }
-
-    @RequestMapping(value = "/game/chooseBuffs", params = "characterId", method = RequestMethod.POST)
-    public String applyBuff(ModelMap model, RedirectAttributes redirectAttributes,
-                            @RequestParam(value = "buff") Long buffId,
-                            @RequestParam(value = "characterId") Long characterId) {
-        User user = userRepository.findByUserName(getAuthUser().getUsername());
-        Family family = user.getCurrentFamily();
-
-        Character character = characterRepository.findByIdAndFamilyAndLevelAndSexAndSpouseIsNotNull(characterId, family, family.getLevel(), "male");
-        if (character != null) {
-            Buff buff = buffRepository.findOne(buffId);
-            if (!character.getBuffs().contains(buff) && !character.getBuffs().contains(buff.getContradictory())) {
-                if (family.getMoney() >= buff.getCost()) {
-                    family.setMoney(family.getMoney() - buff.getCost());
-                    familyRepository.save(family);
-
-                    character.getBuffs().add(buff);
-                    characterRepository.save(character);
-
-                    Object[] messageArguments = {character.getName(), messageSource.getMessage(buff.getTitle(), null, loc()), buff.getCost()};
-                    redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("game.chooseBuffs.success", messageArguments, loc()));
-                    System.out.println("Character " + characterId + " now has buff " + buff.getTitle());
-                    return "redirect:/game";
-                } else {
-                    redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("game.chooseBuffs.notEnoughMoney", null, loc()));
-                    System.out.println("Not enough money for this buff " + buff.getTitle());
-                    return "redirect:/game";
-                }
-
-            } else {
-                redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("game.chooseBuffs.characterHasThisBuffOrContradictoryToThisBuff", null, loc()));
-                System.out.println("Character " + characterId + " has this buff or contradictory to this buff");
-                return "redirect:/game";
-            }
-
-        }
-        redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("game.chooseBuffs.characterCantChooseBuffs", null, loc()));
-        System.out.println("Character " + characterId + " is not belongs to user's current family fiances");
         return "redirect:/game";
     }
 
