@@ -13,7 +13,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by OM on 21.02.2017.
@@ -103,6 +104,15 @@ public class Character {
     @OneToOne(mappedBy = "character")
     private Fiancee fiancee;
 
+    // ============ Buffs ============
+
+    @ManyToMany
+    @JoinTable(name = "characters_buffs",
+            joinColumns = {@JoinColumn(name = "character_id")},
+            inverseJoinColumns = {@JoinColumn(name = "buff_id")})
+    private Set<Buff> buffs = new HashSet<Buff>();
+
+    // ===============================
     public Character() {
     }
 
@@ -219,12 +229,8 @@ public class Character {
         return children;
     }
 
-    public void setChildren(List<Character> children) {
-        this.children = children;
-    }
-
-    public Fiancee getFiancee() {
-        return fiancee;
+    public Set<Buff> getBuffs() {
+        return buffs;
     }
 
     public void generateView() {
@@ -258,15 +264,12 @@ public class Character {
     }
 
     public boolean isFiancee() {
-        if (getFiancee() == null) {
+        if (fiancee == null) {
             return false;
         }
         return true;
     }
 
-    public void setFiancee(Fiancee fiancee) {
-        this.fiancee = fiancee;
-    }
 
     @Override
     public String toString() {

@@ -17,7 +17,13 @@
                                            #{${character.getSkinColor().getName()}},
                                            #{${character.getHead().getName()}},
                                            #{${character.getEyes().getName()}})}" data-placement="right"/>
+
     </a>
+    <div style="display: inline-block;" th:each="buff : ${character.getBuffs()}">
+        <img th:src="@{'/graphics/buffs/'+${buff.getTitle()}+'.png' }"
+             data-toggle="tooltip" th:alt-title="#{${buff.getTitle()}}">
+        </img>
+    </div>
 </div>
 
 <script src="webjars/jquery/1.9.1/jquery.min.js"></script>

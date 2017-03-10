@@ -5,10 +5,8 @@ package dyn.controllers;
  */
 
 
+import dyn.model.*;
 import dyn.model.Character;
-import dyn.model.Family;
-import dyn.model.Fiancee;
-import dyn.model.User;
 import dyn.repository.*;
 import dyn.repository.appearance.EyesRepository;
 import dyn.repository.appearance.HeadRepository;
@@ -30,7 +28,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @Controller
 public class GameController {
@@ -44,6 +44,8 @@ public class GameController {
     SkinColorRepository skinColorRepository;
     @Autowired
     MessageSource messageSource;
+    @Autowired
+    BuffRepository buffRepository;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -64,7 +66,7 @@ public class GameController {
         List<Family> families = user.getFamilies();
         if (families.size() == 0) {
             System.out.println("User doesn't have any family, redirect");
-            redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("new.user", null, LocaleContextHolder.getLocale()));
+            redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("new.user", null, loc()));
             return "redirect:/game/addNewFamily";
         }
         Family family = user.getCurrentFamily();
@@ -158,7 +160,7 @@ public class GameController {
                 return "/game/chooseFiancee";
             }
         }
-        redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("characterCantChooseFiancee", null, LocaleContextHolder.getLocale()));
+        redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("characterCantChooseFiancee", null, loc()));
         System.out.println("Character " + characterId + " is not belongs to user's current family singles");
         return "redirect:/game";
     }
@@ -167,14 +169,14 @@ public class GameController {
     public String makeFiancee(ModelMap model, RedirectAttributes redirectAttributes,
                               @RequestParam(value = "fiancee") Long fianceeId,
                               @RequestParam(value = "characterId") Long characterId) {
-
+        // TODO: check valid user and caharacter and fiancee
         Character character = characterRepository.findOne(characterId);
         Fiancee fiancee = fianceeRepository.findOne(fianceeId);
 
         Family family = character.getFamily();
 
         if (family.getMoney() < fiancee.getCost()) {
-            redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("chooseFiancee.notEnoughMoney", null, LocaleContextHolder.getLocale()));
+            redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("chooseFiancee.notEnoughMoney", null, loc()));
             return "redirect:/game/chooseFiancee";
         }
 
@@ -195,7 +197,7 @@ public class GameController {
         wifeFamily.setMoney(wifeFamily.getMoney() + fiancee.getCost());
         familyRepository.save(wifeFamily);
 
-        redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("chooseFiancee.success", new Object[]{character.getName(), wife.getName(), fiancee.getCost()}, LocaleContextHolder.getLocale()));
+        redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("chooseFiancee.success", new Object[]{character.getName(), wife.getName(), fiancee.getCost()}, loc()));
         return "redirect:/game";
     }
 
@@ -215,15 +217,91 @@ public class GameController {
                 fiancee.setCost(cost);
                 fianceeRepository.save(fiancee);
 
-                redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("characterBecomeFiancee", null, LocaleContextHolder.getLocale()));
+                redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("characterBecomeFiancee", null, loc()));
                 System.out.println("Character " + characterId + " become fiancee");
                 return "redirect:/game";
             }
         }
 
-        redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("characterCantBecomeFiancee", null, LocaleContextHolder.getLocale()));
+        redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("characterCantBecomeFiancee", null, loc()));
         System.out.println("Character " + characterId + " can not belongs to user's current family female singles or is already feiancee");
         return "redirect:/game";
+    }
+
+    // ============ CHOOSING BUFFS ============
+    @RequestMapping(value = "/game/chooseBuffs", params = "characterId", method = RequestMethod.GET)
+    public String chooseBuffs(ModelMap model, RedirectAttributes redirectAttributes,
+                              @RequestParam(value = "characterId") int characterId) {
+        System.out.println("GameController.chooseBuffs GET characterId=" + characterId);
+
+        User user = userRepository.findByUserName(getAuthUser().getUsername());
+        Family family = user.getCurrentFamily();
+
+        List<Character> characters = characterRepository.findByFamilyAndLevelAndSexAndSpouseIsNotNull(family, family.getLevel(), "male");
+        for (Character character : characters) {
+            if (character.getId() == characterId) {
+                List<Buff> buffList = buffRepository.findByType(BuffType.usual);
+                List<Buff> resultBuffs = new ArrayList<>();
+                for (Buff buff : buffList) {
+                    if (!character.getBuffs().contains(buff) && !character.getBuffs().contains(buff.getContradictory())) {
+                        resultBuffs.add(buff);
+                    }
+                }
+                model.addAttribute("character", character);
+                model.addAttribute("buffList", resultBuffs);
+                model.addAttribute("characterId", characterId);
+                return "/game/chooseBuffs";
+            }
+        }
+        redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("game.chooseBuffs.characterCantChooseBuffs", null, loc()));
+        System.out.println("Character " + characterId + " is not belongs to user's current family fiances");
+        return "redirect:/game";
+    }
+
+    @RequestMapping(value = "/game/chooseBuffs", params = "characterId", method = RequestMethod.POST)
+    public String applyBuff(ModelMap model, RedirectAttributes redirectAttributes,
+                            @RequestParam(value = "buff") Long buffId,
+                            @RequestParam(value = "characterId") Long characterId) {
+        User user = userRepository.findByUserName(getAuthUser().getUsername());
+        Family family = user.getCurrentFamily();
+
+        Character character = characterRepository.findByIdAndFamilyAndLevelAndSexAndSpouseIsNotNull(characterId, family, family.getLevel(), "male");
+        if (character != null) {
+            Buff buff = buffRepository.findOne(buffId);
+            if (!character.getBuffs().contains(buff) && !character.getBuffs().contains(buff.getContradictory())) {
+                if (family.getMoney() >= buff.getCost()) {
+                    family.setMoney(family.getMoney() - buff.getCost());
+                    familyRepository.save(family);
+
+                    character.getBuffs().add(buff);
+                    characterRepository.save(character);
+
+                    Object[] messageArguments = {character.getName(), messageSource.getMessage(buff.getTitle(), null, loc()), buff.getCost()};
+                    redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("game.chooseBuffs.success", messageArguments, loc()));
+                    System.out.println("Character " + characterId + " now has buff " + buff.getTitle());
+                    return "redirect:/game";
+                } else {
+                    redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("game.chooseBuffs.notEnoughMoney", null, loc()));
+                    System.out.println("Not enough money for this buff " + buff.getTitle());
+                    return "redirect:/game";
+                }
+
+            } else {
+                redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("game.chooseBuffs.characterHasThisBuffOrContradictoryToThisBuff", null, loc()));
+                System.out.println("Character " + characterId + " has this buff or contradictory to this buff");
+                return "redirect:/game";
+            }
+
+        }
+        redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("game.chooseBuffs.characterCantChooseBuffs", null, loc()));
+        System.out.println("Character " + characterId + " is not belongs to user's current family fiances");
+        return "redirect:/game";
+    }
+
+    // ========================================
+
+    public Locale loc() {
+        return LocaleContextHolder.getLocale();
     }
 
     @RequestMapping(value = "/logout", method = RequestMethod.GET)

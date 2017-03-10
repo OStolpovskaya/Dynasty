@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Choose buffs</title>
+    <link th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}" rel="stylesheet"></link>
+    <link th:href="@{/css/common.css}" rel="stylesheet"></link>
+    <style>
+        .floating-box {
+            display: inline-block;
+        }
+
+    </style>
+</head>
+<body>
+<div th:replace="fragments/navigation :: nav-for-game"></div>
+<div class="container">
+    <p class="has-error" th:text="${mess}"></p>
+    <!--/*@thymesVar id="character" type="dyn.model.Character"*/-->
+    <h3 th:text="#{chooseBuffs.yourCharacters}">Your character:</h3>
+    <div class="char-view-div">
+        <div th:replace="fragments/char :: char-view (character=${character})"></div>
+    </div>
+    <div class="char-view-div" style="vertical-align: top;">
+        <div th:replace="fragments/char :: char-view (character=${character.getSpouse()})"></div>
+    </div>
+    <h3 th:text="#{chooseBuffs.familyMoney}">Your money:</h3>
+    <p th:text="#{cost(${character.getFamily().getMoney()})}">money</p>
+    <h3 th:text="#{chooseBuffs.chooseBuffs}">Choose buff:</h3>
+    <form action="#" th:action="@{/game/chooseBuffs}" method="post">
+        <div th:each="buff : ${buffList}">
+            <!--/*@thymesVar id="buff" type="dyn.model.Buff"*/-->
+            <input type="radio" name="buff" th:value="${buff.getId()}" th:disabled="${character.getFamily().getMoney() lt buff.getCost()}" th:inline="text">[[#{${buff.getTitle()}}]] ([[#{cost(${buff.getCost()})}]])
+            [[#{${buff.getDescription()}}]]</input>
+        </div>
+        <p>
+            <input type="hidden" name="characterId" th:value="${characterId}"/>
+            <button type="submit" align="center" id="submit" name="submit" class="btn btn-primary center-block" th:text="#{chooseBuffs.choose}">Choose</button>
+        </p>
+    </form>
+</div>
+<script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
+</body>
+</html>

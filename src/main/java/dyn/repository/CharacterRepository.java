@@ -23,4 +23,6 @@ public interface CharacterRepository extends CrudRepository<Character, Long> {
     List<Character> findByFamilyAndLevelAndSexAndSpouseIsNotNull(Family family, int level, String sex);
 
     List<Character> findByFamilyAndLevelAndSexAndSpouseIsNull(Family family, int level, String sex);
+
+    Character findByIdAndFamilyAndLevelAndSexAndSpouseIsNotNull(Long characterId, Family family, int level, String sex);
 }

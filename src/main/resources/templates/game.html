@@ -26,15 +26,18 @@
         </div>
         <div style="display: inline-block; height:180px; margin-bottom: 3px; border: 2px solid lightgreen; vertical-align: top" th:each="child : ${father.getChildren()}">
             <!--/*@thymesVar id="child" type="dyn.model.Character"*/-->
-            <div class="char-view-div">
+            <div class="char-view-div" style="vertical-align: top;">
                 <div th:replace="fragments/char :: char-view (character=${child})"></div>
             </div>
             <div class="char-view-div" th:if="${child.getSpouse() != null}">
                 <div th:replace="fragments/char :: char-view (character=${child.getSpouse()})"></div>
             </div>
             <br></br>
-            <div th:if="${child.getSex() == 'male' and child.getSpouse() == null}">
-                <a href="/game/chooseFiancee" th:href="@{/game/chooseFiancee(characterId=${child.getId()})}">Choose fiancee</a>
+            <div style="text-align: center;" th:if="${child.getSex() == 'male' and child.getSpouse() == null}">
+                <a href="/game/chooseFiancee" th:href="@{/game/chooseFiancee(characterId=${child.getId()})}" th:text="#{game.chooseFiancee}">Choose fiancee</a>
+            </div>
+            <div style="text-align: center; margin-top: 10px;" th:if="${child.getSex() == 'male' and child.getSpouse() != null}">
+                <a href="/game/chooseBuffs" th:href="@{/game/chooseBuffs(characterId=${child.getId()})}" th:text="#{game.chooseBuffs}">Choose buffs</a>
             </div>
             <div th:if="${child.getSex() == 'female' and child.getSpouse() == null and child.isFiancee() == false}">
                 <form class="form-inline" th:action="@{/game/putUpForFiancee}" method="post">

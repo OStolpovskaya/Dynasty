@@ -2,11 +2,6 @@ package dyn.model;
 
 import javax.persistence.*;
 
-enum BuffType {
-    usual,
-    rare
-}
-
 @Entity
 @Table(name = "buff")
 public class Buff {
@@ -23,6 +18,8 @@ public class Buff {
     @OneToOne
     @JoinColumn(name = "contradictory", nullable = true)
     private Buff contradictory;
+
+    private int cost;
 
     @Column(name = "description")
     private String description;
@@ -57,6 +54,14 @@ public class Buff {
 
     public void setContradictory(Buff contradictory) {
         this.contradictory = contradictory;
+    }
+
+    public int getCost() {
+        return cost;
+    }
+
+    public void setCost(int cost) {
+        this.cost = cost;
     }
 
     public String getDescription() {
