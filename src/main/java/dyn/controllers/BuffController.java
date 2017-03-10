@@ -8,12 +8,10 @@ package dyn.controllers;
 import dyn.model.*;
 import dyn.model.Character;
 import dyn.repository.*;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,10 +21,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
+
+import static dyn.controllers.GameController.getAuthUser;
+import static dyn.controllers.GameController.loc;
 
 @Controller
 public class BuffController {
+    private static final Logger logger = LogManager.getLogger(FamilyController.class);
     @Autowired
     MessageSource messageSource;
     @Autowired
@@ -40,42 +41,30 @@ public class BuffController {
     @Autowired
     private RaceRepository raceRepository;
 
-    public static Locale loc() {
-        return LocaleContextHolder.getLocale();
-    }
-
-    public static UserDetails getAuthUser() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return (UserDetails) auth.getPrincipal();
-    }
-
     // ============ CHOOSING BUFFS ============
     @RequestMapping(value = "/game/chooseBuffs", params = "characterId", method = RequestMethod.GET)
     public String chooseBuffs(ModelMap model, RedirectAttributes redirectAttributes,
-                              @RequestParam(value = "characterId") int characterId) {
-        System.out.println("GameController.chooseBuffs GET characterId=" + characterId);
-
+                              @RequestParam(value = "characterId") long characterId) {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         Family family = user.getCurrentFamily();
 
-        List<Character> characters = characterRepository.findByFamilyAndLevelAndSexAndSpouseIsNotNull(family, family.getLevel(), "male");
-        for (Character character : characters) {
-            if (character.getId() == characterId) {
-                List<Buff> buffList = buffRepository.findByType(BuffType.usual);
-                List<Buff> resultBuffs = new ArrayList<>();
-                for (Buff buff : buffList) {
-                    if (!character.getBuffs().contains(buff) && !character.getBuffs().contains(buff.getContradictory())) {
-                        resultBuffs.add(buff);
-                    }
+        Character character = characterRepository.findByIdAndFamilyAndLevelAndSexAndSpouseIsNotNull(characterId, family, family.getLevel(), "male");
+        if (character != null) {
+            List<Buff> buffList = buffRepository.findByType(BuffType.usual);
+            List<Buff> resultBuffs = new ArrayList<>();
+            for (Buff buff : buffList) {
+                if (!character.getBuffs().contains(buff) && !character.getBuffs().contains(buff.getContradictory())) {
+                    resultBuffs.add(buff);
                 }
-                model.addAttribute("character", character);
-                model.addAttribute("buffList", resultBuffs);
-                model.addAttribute("characterId", characterId);
-                return "/game/chooseBuffs";
             }
+            model.addAttribute("character", character);
+            model.addAttribute("buffList", resultBuffs);
+            model.addAttribute("characterId", characterId);
+            return "/game/chooseBuffs";
         }
+
         redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("game.chooseBuffs.characterCantChooseBuffs", null, loc()));
-        System.out.println("Character " + characterId + " is not belongs to user's current family fiances");
+        logger.error(user.getUserName() + "'s character " + characterId + " is not belongs to user's current family fiances");
         return "redirect:/game";
     }
 
@@ -99,23 +88,23 @@ public class BuffController {
 
                     Object[] messageArguments = {character.getName(), messageSource.getMessage(buff.getTitle(), null, loc()), buff.getCost()};
                     redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("game.chooseBuffs.success", messageArguments, loc()));
-                    System.out.println("Character " + characterId + " now has buff " + buff.getTitle());
+                    logger.debug(user.getUserName() + "'s character " + characterId + " now has buff " + buff.getTitle());
                     return "redirect:/game";
                 } else {
                     redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("game.chooseBuffs.notEnoughMoney", null, loc()));
-                    System.out.println("Not enough money for this buff " + buff.getTitle());
+                    logger.error(user.getUserName() + ": not enough money for buff " + buff.getTitle());
                     return "redirect:/game";
                 }
 
             } else {
                 redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("game.chooseBuffs.characterHasThisBuffOrContradictoryToThisBuff", null, loc()));
-                System.out.println("Character " + characterId + " has this buff or contradictory to this buff");
+                logger.error(user.getUserName() + "'s character " + characterId + " has this buff or contradictory to this buff");
                 return "redirect:/game";
             }
 
         }
         redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("game.chooseBuffs.characterCantChooseBuffs", null, loc()));
-        System.out.println("Character " + characterId + " is not belongs to user's current family fiances");
+        logger.error(user.getUserName() + "'s character " + characterId + " is not belongs to user's current family fiances");
         return "redirect:/game";
     }
 

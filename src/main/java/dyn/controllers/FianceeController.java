@@ -13,6 +13,8 @@ import dyn.repository.CharacterRepository;
 import dyn.repository.FamilyRepository;
 import dyn.repository.FianceeRepository;
 import dyn.repository.UserRepository;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
@@ -29,6 +31,7 @@ import static dyn.controllers.GameController.loc;
 
 @Controller
 public class FianceeController {
+    private static final Logger logger = LogManager.getLogger(FianceeController.class);
     @Autowired
     MessageSource messageSource;
     @Autowired
@@ -42,25 +45,21 @@ public class FianceeController {
 
     @RequestMapping(value = "/game/chooseFiancee", params = "characterId", method = RequestMethod.GET)
     public String chooseFiancee(ModelMap model, RedirectAttributes redirectAttributes,
-                                @RequestParam(value = "characterId") int characterId) {
-        System.out.println("GameController.chooseFiancee GET characterId=" + characterId);
-
+                                @RequestParam(value = "characterId") long characterId) {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         Family family = user.getCurrentFamily();
 
-        List<Character> characters = characterRepository.findByFamilyAndLevelAndSexAndSpouseIsNull(family, family.getLevel(), "male");
-        for (Character character : characters) {
-            if (character.getId() == characterId) {
-                List<Fiancee> fianceeList = fianceeRepository.findByCharacterFamilyNotAndCharacterLevel(family, family.getLevel()); //TODO: only female?
-                model.addAttribute("character", character);
-                model.addAttribute("fianceeList", fianceeList);
-                model.addAttribute("characterId", characterId);
-                System.out.println("fianceeList.size() = " + fianceeList.size());
-                return "/game/chooseFiancee";
-            }
+        Character character = characterRepository.findByIdAndFamilyAndLevelAndSexAndSpouseIsNull(characterId, family, family.getLevel(), "male");
+        if (character != null) {
+            List<Fiancee> fianceeList = fianceeRepository.findByCharacterFamilyNotAndCharacterLevel(family, family.getLevel()); //TODO: only female?
+            model.addAttribute("character", character);
+            model.addAttribute("fianceeList", fianceeList);
+            model.addAttribute("characterId", characterId);
+            return "/game/chooseFiancee";
         }
-        redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("characterCantChooseFiancee", null, loc()));
-        System.out.println("Character " + characterId + " is not belongs to user's current family singles");
+
+        redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("chooseFiancee.characterCantChooseFiancee", null, loc()));
+        logger.error(user.getUserName() + "'s character " + characterId + " is not belongs to user's current family singles");
         return "redirect:/game";
     }
 
@@ -68,62 +67,70 @@ public class FianceeController {
     public String makeFiancee(ModelMap model, RedirectAttributes redirectAttributes,
                               @RequestParam(value = "fiancee") Long fianceeId,
                               @RequestParam(value = "characterId") Long characterId) {
-        // TODO: check valid user and caharacter and fiancee
-        Character character = characterRepository.findOne(characterId);
+        User user = userRepository.findByUserName(getAuthUser().getUsername());
+        Family family = user.getCurrentFamily();
+
+        Character character = characterRepository.findByIdAndFamilyAndLevelAndSexAndSpouseIsNull(characterId, family, family.getLevel(), "male");
         Fiancee fiancee = fianceeRepository.findOne(fianceeId);
 
-        Family family = character.getFamily();
+        if (character != null && fiancee != null) {
+            Character wife = fiancee.getCharacter();
+            if (family.getMoney() >= fiancee.getCost()) {
 
-        if (family.getMoney() < fiancee.getCost()) {
-            redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("chooseFiancee.notEnoughMoney", null, loc()));
-            return "redirect:/game/chooseFiancee";
+                character.setSpouse(wife);
+                characterRepository.save(character);
+
+                wife.setSpouse(character);
+                characterRepository.save(wife);
+
+                fianceeRepository.delete(fiancee);
+
+                family.setMoney(family.getMoney() - fiancee.getCost());
+                familyRepository.save(family);
+
+                Family wifeFamily = wife.getFamily();
+                wifeFamily.setMoney(wifeFamily.getMoney() + fiancee.getCost());
+                familyRepository.save(wifeFamily);
+
+                logger.info(user.getUserName() + " has chosen fiancee " + wife.getName());
+                redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("chooseFiancee.success", new Object[]{character.getName(), wife.getName(), fiancee.getCost()}, loc()));
+                return "redirect:/game";
+            } else {
+                logger.error(user.getUserName() + " hasn't enough money to choose fiancee " + wife.getName());
+                redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("chooseFiancee.notEnoughMoney", null, loc()));
+                return "redirect:/game/chooseFiancee";
+            }
         }
 
-        Character wife = fiancee.getCharacter();
-
-        character.setSpouse(wife);
-        characterRepository.save(character);
-
-        wife.setSpouse(character);
-        characterRepository.save(wife);
-
-        fianceeRepository.delete(fiancee);
-
-        family.setMoney(family.getMoney() - fiancee.getCost());
-        familyRepository.save(family);
-
-        Family wifeFamily = wife.getFamily();
-        wifeFamily.setMoney(wifeFamily.getMoney() + fiancee.getCost());
-        familyRepository.save(wifeFamily);
-
-        redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("chooseFiancee.success", new Object[]{character.getName(), wife.getName(), fiancee.getCost()}, loc()));
+        redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("chooseFiancee.characterCantChooseFiancee", null, loc()));
+        logger.error(user.getUserName() + "'s character " + characterId + " is not belongs to user's current family singles");
         return "redirect:/game";
+
     }
 
     @RequestMapping(value = "/game/putUpForFiancee", method = RequestMethod.POST)
     public String setToFiancee(ModelMap model, RedirectAttributes redirectAttributes,
                                @RequestParam(value = "cost") int cost,
                                @RequestParam(value = "female") long characterId) {
-        System.out.println("GameController.setToFiancee POST cost=" + cost + ", characterId=" + characterId);
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         Family family = user.getCurrentFamily();
 
-        List<Character> characters = characterRepository.findByFamilyAndLevelAndSexAndSpouseIsNull(family, family.getLevel(), "female");
-        for (Character character : characters) {
-            if (character.getId() == characterId && character.isFiancee() == false) {
-                Fiancee fiancee = new Fiancee();
-                fiancee.setCharacter(character);
-                fiancee.setCost(cost);
-                fianceeRepository.save(fiancee);
+        Character character = characterRepository.findByIdAndFamilyAndLevelAndSexAndSpouseIsNull(characterId, family, family.getLevel(), "female");
 
-                redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("characterBecomeFiancee", null, loc()));
-                System.out.println("Character " + characterId + " become fiancee");
-                return "redirect:/game";
-            }
+        if (character != null && character.isFiancee() == false) {
+            Fiancee fiancee = new Fiancee();
+            fiancee.setCharacter(character);
+            fiancee.setCost(cost);
+            fianceeRepository.save(fiancee);
+
+            redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("becomeFiancee.characterBecomeFiancee", null, loc()));
+            logger.info(user.getUserName() + "'s character " + character.getName() + " become fiancee");
+            return "redirect:/game";
         }
 
-        redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("characterCantBecomeFiancee", null, loc()));
-        System.out.println("Character " + characterId + " can not belongs to user's current family female singles or is already feiancee");
+
+        redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("becomeFiancee.characterCantBecomeFiancee", null, loc()));
+        logger.error(user.getUserName() + "'s character " + characterId + " can not belongs to user's current family female singles or is already feancee");
         return "redirect:/game";
     }
 

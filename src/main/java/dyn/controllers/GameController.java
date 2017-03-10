@@ -12,6 +12,8 @@ import dyn.repository.CharacterRepository;
 import dyn.repository.FamilyRepository;
 import dyn.repository.RaceRepository;
 import dyn.repository.UserRepository;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -33,6 +35,7 @@ import java.util.Locale;
 
 @Controller
 public class GameController {
+    private static final Logger logger = LogManager.getLogger(GameController.class);
     @Autowired
     MessageSource messageSource;
     @Autowired
@@ -57,16 +60,15 @@ public class GameController {
     public String main(ModelMap model, RedirectAttributes redirectAttributes) {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         model.addAttribute("user", user);
-        System.out.println(user.getUserName());
 
         List<Family> families = user.getFamilies();
         if (families.size() == 0) {
-            System.out.println("User doesn't have any family, redirect");
+            logger.info(user.getUserName() + " doesn't have any family, redirect to create the first family");
             redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("new.user", null, loc()));
             return "redirect:/game/addNewFamily";
         }
         Family family = user.getCurrentFamily();
-        System.out.println("Current family: " + family.getFamilyName() + ", level: " + family.getLevel());
+        logger.debug(user.getUserName() + " Current family: " + family.getFamilyName() + ", level: " + family.getLevel());
         model.addAttribute("currentFamily", family);
 
         List<Character> fathers;
@@ -83,7 +85,6 @@ public class GameController {
     @RequestMapping("/game/character")
     public String characterView(ModelMap model, RedirectAttributes redirectAttributes,
                                 @RequestParam(value = "characterId") long characterId) {
-        System.out.println("GameController.characterView GET characterId=" + characterId);
         Character character = characterRepository.findOne(characterId);
         model.addAttribute("character", character);
 
@@ -93,7 +94,7 @@ public class GameController {
     @RequestMapping(value = "/game/turn", method = RequestMethod.POST)
     public String turn() {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
-        System.out.println(user.getUserName() + " makes a turn!");
+        logger.info(user.getUserName() + " makes a turn!");
 
         Family family = user.getCurrentFamily();
 
@@ -104,7 +105,7 @@ public class GameController {
 
             Character wife = character.getSpouse();
             int childAmount = getAmountOfChildren();
-            System.out.println(character.getName() + " marries " + wife.getName() + " and they have " + childAmount + " children");
+            logger.info(user.getUserName() + "'s character " + character.getName() + " marries " + wife.getName() + " and they have " + childAmount + " children");
 
             for (int i = 0; i < childAmount; i++) {
                 Character child = new Character();

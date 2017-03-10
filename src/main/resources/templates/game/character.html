@@ -53,12 +53,14 @@
                 </div>
             </div>
             <div th:case="'female'">
-                <div style="display: inline-block; height:180px; margin-bottom: 3px; border: 2px solid lightgreen; vertical-align: top" th:each="child : ${character.getSpouse().getChildren()}">
-                    <div class="char-view-div">
-                        <div th:replace="fragments/char :: char-view (character=${child})"></div>
-                    </div>
-                    <div class="char-view-div" th:if="${child.getSpouse() != null}">
-                        <div th:replace="fragments/char :: char-view (character=${child.getSpouse()})"></div>
+                <div th:if="${character.getSpouse() != null}">
+                    <div style="display: inline-block; height:180px; margin-bottom: 3px; border: 2px solid lightgreen; vertical-align: top" th:each="child : ${character.getSpouse().getChildren()}">
+                        <div class="char-view-div">
+                            <div th:replace="fragments/char :: char-view (character=${child})"></div>
+                        </div>
+                        <div class="char-view-div" th:if="${child.getSpouse() != null}">
+                            <div th:replace="fragments/char :: char-view (character=${child.getSpouse()})"></div>
+                        </div>
                     </div>
                 </div>
             </div>

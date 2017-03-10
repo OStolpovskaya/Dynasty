@@ -51,7 +51,6 @@ public class RegistrationController {
 
     @PostMapping("/reg")
     public String reg(ModelMap model, @ModelAttribute("regUser") @Valid User regUser, BindingResult result, HttpServletRequest request) {
-        System.out.println(regUser.toString());
         if (!regUser.getPassword().equals(regUser.getPasswordConfirm())) {
             result.rejectValue("passwordConfirm", "password.doNotMatch");
         }
@@ -69,18 +68,18 @@ public class RegistrationController {
 
         regUser.setEnabled(true);
         regUser.setPassword(passwordEncoder.encode(regUser.getPassword()));
-        logger.debug("SAVE:" + regUser.toString());
+        logger.info("SAVE USER:" + regUser.toString());
 
         userRepository.save(regUser);
 
         UserRole userRole = new UserRole();
         userRole.setUserid(regUser.getUserid());
         userRole.setRole("ROLE_USER");
-        logger.debug("SAVE:" + userRole.toString());
+        logger.info("SAVE ROLE:" + userRole.toString());
 
         userRolesRepository.save(userRole);
 
-        logger.info("Autologin " + regUser.getUserName() + " " + regUser.getPasswordConfirm());
+        logger.info("AUTOLOGIN " + regUser.getUserName() + " " + regUser.getPasswordConfirm());
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(regUser.getUserName(), regUser.getPasswordConfirm());
 
         // generate session if one doesn't exist

@@ -5,6 +5,8 @@ package dyn.controllers;
  */
 
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.ErrorAttributes;
 import org.springframework.boot.autoconfigure.web.ErrorController;
@@ -24,6 +26,7 @@ import java.util.Map;
 @Controller
 public class IndexController implements ErrorController {
     private static final String PATH = "/error";
+    private static final Logger logger = LogManager.getLogger(IndexController.class);
     @Autowired
     MessageSource messageSource;
     @Autowired
@@ -32,13 +35,12 @@ public class IndexController implements ErrorController {
     @RequestMapping("/")
     public String index() {
         Locale locale = LocaleContextHolder.getLocale();
-        System.out.println("Index current locale: " + locale + ". Message: " + messageSource.getMessage("welcome", null, locale));
+        logger.debug("Index current locale: " + locale + ". Message: " + messageSource.getMessage("welcome", null, locale));
         return "index";
     }
 
     @RequestMapping("/login")
     public String login() {
-        System.out.println("Login");
         return "login";
     }
 

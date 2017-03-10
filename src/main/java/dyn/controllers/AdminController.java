@@ -14,6 +14,8 @@ import dyn.repository.appearance.EyesRepository;
 import dyn.repository.appearance.HeadRepository;
 import dyn.repository.appearance.HeightRepository;
 import dyn.repository.appearance.SkinColorRepository;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,6 +29,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class AdminController {
+    private static final Logger logger = LogManager.getLogger(FianceeController.class);
     @Autowired
     EyesRepository eyesRepository;
     @Autowired
@@ -41,7 +44,6 @@ public class AdminController {
     AchievementRepository achievementRepository;
     @Autowired
     BuffRepository buffRepository;
-
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -89,7 +91,7 @@ public class AdminController {
     public String generateFiancees(ModelMap model,
                                    @RequestParam("level") int level,
                                    RedirectAttributes redirectAttributes) {
-        System.out.println("AdminController.generateFiancees, level=" + level);
+        logger.debug("AdminController.generateFiancees, level=" + level);
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         Family family = user.getCurrentFamily();
 
@@ -123,12 +125,7 @@ public class AdminController {
 
     @RequestMapping("/admin/random")
     public String achievements(ModelMap model, @RequestParam(value = "sex", required = false) String sex) {
-        if (sex == null || sex.isEmpty()) {
-            System.out.println("Sex is null or empty. Set it to male.");
-            sex = "male";
-        }
-
-        if (!"female".equals(sex)) {
+        if (sex == null || sex.isEmpty() || !sex.equals("female")) {
             sex = "male";
         }
 

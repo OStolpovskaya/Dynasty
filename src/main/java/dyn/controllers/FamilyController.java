@@ -12,6 +12,8 @@ import dyn.repository.appearance.EyesRepository;
 import dyn.repository.appearance.HeadRepository;
 import dyn.repository.appearance.HeightRepository;
 import dyn.repository.appearance.SkinColorRepository;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,6 +34,7 @@ import java.util.List;
  */
 @Controller
 public class FamilyController {
+    private static final Logger logger = LogManager.getLogger(FamilyController.class);
     @Autowired
     EyesRepository eyesRepository;
     @Autowired
@@ -54,10 +57,9 @@ public class FamilyController {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         List<Family> families = user.getFamilies();
         if (families.size() == 0) {
-            System.out.println("User doesn't have any family");
+            logger.debug(user.getUserName() + " doesn't have any family");
             return "redirect:/game/addNewFamily";
         } else {
-            System.out.println("User has " + families.size() + " families");
             model.addAttribute("families", families);
         }
         return "game/families";
@@ -65,7 +67,7 @@ public class FamilyController {
 
     @GetMapping("game/addNewFamily")
     public String createNewFamily(ModelMap model, @ModelAttribute("familyForm") FamilyForm familyForm) {
-        System.out.println("GET game/addNewFamily");
+
         Character male = new Character();
         male.setName(characterRepository.getRandomNameMale());
         male.setSex("male");
@@ -87,25 +89,17 @@ public class FamilyController {
         familyForm.setFounder(male);
         familyForm.setFoundress(female);
 
-        System.out.println("male = " + female.getName());
         return "game/addNewFamily";
     }
 
     @PostMapping("game/addNewFamily")
     public String addNewFamily(ModelMap model, @ModelAttribute("familyForm") @Valid FamilyForm familyForm, BindingResult result) {
-        System.out.println("POST game/addNewFamily");
-
         Family family = familyForm.getFamily();
         Character founder = familyForm.getFounder();
         Character foundress = familyForm.getFoundress();
 
         founder.generateView();
         foundress.generateView();
-
-        System.out.println("family = " + family);
-        System.out.println("founder = " + founder);
-        System.out.println("foundress = " + foundress);
-
 
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         List<Family> families = user.getFamilies();
@@ -129,7 +123,7 @@ public class FamilyController {
         family.setCurrent(true);
         family.setLevel(0);
         family.setMoney(100);
-        System.out.println("SAVE:" + family.toString());
+        logger.info(user.getUserName() + " adds new family:" + family.toString());
         familyRepository.save(family);
 
         founder.setFamily(family);
