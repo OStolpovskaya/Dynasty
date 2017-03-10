@@ -49,7 +49,7 @@
         </div>
     </div>
     <form th:action="@{/game/turn}" method="post">
-        <button class="btn btn-lg btn-primary center-block" type="submit">Turn!</button>
+        <button class="btn btn-lg btn-primary center-block" type="submit" th:text="#{game.turn}">Turn!</button>
     </form>
 </div>
 <script src="webjars/jquery/1.9.1/jquery.min.js"></script>

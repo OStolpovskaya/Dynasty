@@ -57,6 +57,15 @@ public class GameController {
     @Autowired
     private FianceeRepository fianceeRepository;
 
+    public static Locale loc() {
+        return LocaleContextHolder.getLocale();
+    }
+
+    public static UserDetails getAuthUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return (UserDetails) auth.getPrincipal();
+    }
+
     @RequestMapping("/game")
     public String main(ModelMap model, RedirectAttributes redirectAttributes) {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
@@ -93,7 +102,6 @@ public class GameController {
 
         return "/game/character";
     }
-
 
     @RequestMapping(value = "/game/turn", method = RequestMethod.POST)
     public String turn() {
@@ -141,92 +149,7 @@ public class GameController {
         return "redirect:/game";
     }
 
-    @RequestMapping(value = "/game/chooseFiancee", params = "characterId", method = RequestMethod.GET)
-    public String chooseFiancee(ModelMap model, RedirectAttributes redirectAttributes,
-                                @RequestParam(value = "characterId") int characterId) {
-        System.out.println("GameController.chooseFiancee GET characterId=" + characterId);
-
-        User user = userRepository.findByUserName(getAuthUser().getUsername());
-        Family family = user.getCurrentFamily();
-
-        List<Character> characters = characterRepository.findByFamilyAndLevelAndSexAndSpouseIsNull(family, family.getLevel(), "male");
-        for (Character character : characters) {
-            if (character.getId() == characterId) {
-                List<Fiancee> fianceeList = fianceeRepository.findByCharacterFamilyNotAndCharacterLevel(family, family.getLevel()); //TODO: only female?
-                model.addAttribute("character", character);
-                model.addAttribute("fianceeList", fianceeList);
-                model.addAttribute("characterId", characterId);
-                System.out.println("fianceeList.size() = " + fianceeList.size());
-                return "/game/chooseFiancee";
-            }
-        }
-        redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("characterCantChooseFiancee", null, loc()));
-        System.out.println("Character " + characterId + " is not belongs to user's current family singles");
-        return "redirect:/game";
-    }
-
-    @RequestMapping(value = "/game/chooseFiancee", params = "characterId", method = RequestMethod.POST)
-    public String makeFiancee(ModelMap model, RedirectAttributes redirectAttributes,
-                              @RequestParam(value = "fiancee") Long fianceeId,
-                              @RequestParam(value = "characterId") Long characterId) {
-        // TODO: check valid user and caharacter and fiancee
-        Character character = characterRepository.findOne(characterId);
-        Fiancee fiancee = fianceeRepository.findOne(fianceeId);
-
-        Family family = character.getFamily();
-
-        if (family.getMoney() < fiancee.getCost()) {
-            redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("chooseFiancee.notEnoughMoney", null, loc()));
-            return "redirect:/game/chooseFiancee";
-        }
-
-        Character wife = fiancee.getCharacter();
-
-        character.setSpouse(wife);
-        characterRepository.save(character);
-
-        wife.setSpouse(character);
-        characterRepository.save(wife);
-
-        fianceeRepository.delete(fiancee);
-
-        family.setMoney(family.getMoney() - fiancee.getCost());
-        familyRepository.save(family);
-
-        Family wifeFamily = wife.getFamily();
-        wifeFamily.setMoney(wifeFamily.getMoney() + fiancee.getCost());
-        familyRepository.save(wifeFamily);
-
-        redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("chooseFiancee.success", new Object[]{character.getName(), wife.getName(), fiancee.getCost()}, loc()));
-        return "redirect:/game";
-    }
-
-    @RequestMapping(value = "/game/putUpForFiancee", method = RequestMethod.POST)
-    public String setToFiancee(ModelMap model, RedirectAttributes redirectAttributes,
-                               @RequestParam(value = "cost") int cost,
-                               @RequestParam(value = "female") long characterId) {
-        System.out.println("GameController.setToFiancee POST cost=" + cost + ", characterId=" + characterId);
-        User user = userRepository.findByUserName(getAuthUser().getUsername());
-        Family family = user.getCurrentFamily();
-
-        List<Character> characters = characterRepository.findByFamilyAndLevelAndSexAndSpouseIsNull(family, family.getLevel(), "female");
-        for (Character character : characters) {
-            if (character.getId() == characterId && character.isFiancee() == false) {
-                Fiancee fiancee = new Fiancee();
-                fiancee.setCharacter(character);
-                fiancee.setCost(cost);
-                fianceeRepository.save(fiancee);
-
-                redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("characterBecomeFiancee", null, loc()));
-                System.out.println("Character " + characterId + " become fiancee");
-                return "redirect:/game";
-            }
-        }
-
-        redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("characterCantBecomeFiancee", null, loc()));
-        System.out.println("Character " + characterId + " can not belongs to user's current family female singles or is already feiancee");
-        return "redirect:/game";
-    }
+    // ========================================
 
     // ============ CHOOSING BUFFS ============
     @RequestMapping(value = "/game/chooseBuffs", params = "characterId", method = RequestMethod.GET)
@@ -298,12 +221,6 @@ public class GameController {
         return "redirect:/game";
     }
 
-    // ========================================
-
-    public Locale loc() {
-        return LocaleContextHolder.getLocale();
-    }
-
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public String logout(HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -313,12 +230,6 @@ public class GameController {
             request.getSession().invalidate();
         }
         return "redirect:/";
-    }
-
-
-    private UserDetails getAuthUser() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return (UserDetails) auth.getPrincipal();
     }
 
     private int getAmountOfChildren() {

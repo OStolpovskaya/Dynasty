@@ -5,14 +5,11 @@ package dyn.controllers;
  */
 
 
-import dyn.repository.CharacterRepository;
-import dyn.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.ErrorAttributes;
 import org.springframework.boot.autoconfigure.web.ErrorController;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,25 +25,19 @@ import java.util.Map;
 public class IndexController implements ErrorController {
     private static final String PATH = "/error";
     @Autowired
-    PasswordEncoder passwordEncoder;
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
     MessageSource messageSource;
-    @Autowired
-    private CharacterRepository characterRepository;
     @Autowired
     private ErrorAttributes errorAttributes;
 
     @RequestMapping("/")
-    public String index(ModelMap model) {
+    public String index() {
         Locale locale = LocaleContextHolder.getLocale();
         System.out.println("Index current locale: " + locale + ". Message: " + messageSource.getMessage("welcome", null, locale));
         return "index";
     }
 
     @RequestMapping("/login")
-    public String login(ModelMap model) {
+    public String login() {
         System.out.println("Login");
         return "login";
     }
