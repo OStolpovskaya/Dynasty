@@ -19,7 +19,7 @@
                 <div th:replace="fragments/char :: char-view (character=${father})"></div>
             </div>
             <!--/*@thymesVar id="father" type="dyn.model.Character"*/-->
-            <div class="char-view-div" th:if="${father.getSpouse() != null}">
+            <div class="char-view-div" style="vertical-align: top" th:if="${father.getSpouse() != null}">
                 <div th:replace="fragments/char :: char-view (character=${father.getSpouse()})"></div>
             </div>
             <br></br>

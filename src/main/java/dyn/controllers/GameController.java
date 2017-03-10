@@ -5,13 +5,12 @@ package dyn.controllers;
  */
 
 
+import dyn.model.Buff;
 import dyn.model.Character;
 import dyn.model.Family;
 import dyn.model.User;
-import dyn.repository.CharacterRepository;
-import dyn.repository.FamilyRepository;
-import dyn.repository.RaceRepository;
-import dyn.repository.UserRepository;
+import dyn.repository.*;
+import dyn.service.AppearanceService;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,12 +31,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 @Controller
 public class GameController {
     private static final Logger logger = LogManager.getLogger(GameController.class);
     @Autowired
     MessageSource messageSource;
+    @Autowired
+    BuffRepository buffRepository;
+    @Autowired
+    AppearanceService app;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -101,15 +105,37 @@ public class GameController {
         List<Character> characters = characterRepository.findByFamilyAndLevelAndSexAndSpouseIsNotNull(family, family.getLevel(), "male");
         int newLevel = family.getLevel() + 1;
         for (Character character : characters) {
+            Set<Buff> buffs = character.getBuffs();
+
             double dominantPercent = 0.5; // whose feature is inherited, father or mother
+            if (buffs.contains(buffRepository.findByTitle(Buff.DOMINANT_MOTHER))) {
+                dominantPercent = 0.2;
+            }
+            if (buffs.contains(buffRepository.findByTitle(Buff.DOMINANT_FATHER))) {
+                dominantPercent = 0.8;
+            }
+
+            double sonOrDaughterPercent = 0.5; // male or female child
+            if (buffs.contains(buffRepository.findByTitle(Buff.MANY_SONS))) {
+                sonOrDaughterPercent = 0.8;
+            }
+            if (buffs.contains(buffRepository.findByTitle(Buff.MANY_DAUGHTERS))) {
+                sonOrDaughterPercent = 0.2;
+            }
+
+            double genModPercent = 0.05; // percentage of genetic modification
+            if (buffs.contains(buffRepository.findByTitle(Buff.GENETIC_MOD))) {
+                genModPercent = 0.40;
+            }
 
             Character wife = character.getSpouse();
-            int childAmount = getAmountOfChildren();
+            int childAmount = getAmountOfChildren(buffs);
+
             logger.info(user.getUserName() + "'s character " + character.getName() + " marries " + wife.getName() + " and they have " + childAmount + " children");
 
             for (int i = 0; i < childAmount; i++) {
                 Character child = new Character();
-                if (Math.random() < 0.5) {
+                if (Math.random() < sonOrDaughterPercent) {
                     child.setSex("male");
                     child.setName(characterRepository.getRandomNameMale());
                 } else {
@@ -120,10 +146,18 @@ public class GameController {
                 child.setFamily(family);
                 child.setLevel(newLevel);
 
-                child.setHeight(Math.random() < dominantPercent ? character.getHeight() : wife.getHeight());
-                child.setHead(Math.random() < dominantPercent ? character.getHead() : wife.getHead());
-                child.setEyes(Math.random() < dominantPercent ? character.getEyes() : wife.getEyes());
-                child.setSkinColor(Math.random() < dominantPercent ? character.getSkinColor() : wife.getSkinColor());
+                int featureToGenMod = 0; // which feature will have genetic modification
+                if (Math.random() < genModPercent) {
+                    featureToGenMod = (int) (1 + Math.random() * 4);
+                }
+                logger.info("child: " + child.getName() + ", genModFeature = " + featureToGenMod);
+
+                child.setHeight(featureToGenMod == 1 ? app.getRandomRareHeight() : (Math.random() < dominantPercent ? character.getHeight() : wife.getHeight()));
+                child.setHead(featureToGenMod == 2 ? app.getRandomRareHead() : (Math.random() < dominantPercent ? character.getHead() : wife.getHead()));
+                child.setEyes(featureToGenMod == 3 ? app.getRandomRareEyes() : (Math.random() < dominantPercent ? character.getEyes() : wife.getEyes()));
+                child.setSkinColor(featureToGenMod == 4 ? app.getRandomRareSkinColor() : (Math.random() < dominantPercent ? character.getSkinColor() : wife.getSkinColor()));
+
+                //TODO: race computation
                 child.setRace(raceRepository.findByName("race.human"));
 
                 child.generateView();
@@ -148,11 +182,14 @@ public class GameController {
         return "redirect:/";
     }
 
-    private int getAmountOfChildren() {
-        // TODO: make percentage depends on character's buffs (arguments?)
+    private int getAmountOfChildren(Set<Buff> buffs) {
         double[] percentage = new double[]{0.25, 0.55, 0.80, 0.90, 0.95, 0.98, 1.00}; // normal
-        //double[] percentage = new double[] {0.05, 0.15, 0.30, 0.50, 0.75, 0.90, 1.00}; // buff fertility
-        //double[] percentage = new double[] {0.00, 0.00, 0.00, 0.00, 1.00, 0.00, 0.00}; // buff 5 children
+        if (buffs.contains(buffRepository.findByTitle(Buff.FERTILITY))) {
+            percentage = new double[]{0.05, 0.15, 0.30, 0.50, 0.75, 0.90, 1.00}; // buff fertility
+        }
+        if (buffs.contains(buffRepository.findByTitle(Buff.FIVE_CHILDREN))) {
+            percentage = new double[]{0.00, 0.00, 0.00, 0.00, 1.00, 0.00, 0.00}; // buff 5 children
+        }
 
         double random = Math.random();
         if (0 <= random && random < percentage[0]) {

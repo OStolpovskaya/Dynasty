@@ -5,6 +5,14 @@ import javax.persistence.*;
 @Entity
 @Table(name = "buff")
 public class Buff {
+    public static final String FERTILITY = "buffs.title.fertility";
+    public static final String FIVE_CHILDREN = "buffs.title.fiveChildren";
+    public static final String DOMINANT_MOTHER = "buffs.title.dominantMother";
+    public static final String DOMINANT_FATHER = "buffs.title.dominantFather";
+    public static final String MANY_SONS = "buffs.title.manySons";
+    public static final String MANY_DAUGHTERS = "buffs.title.manyDaughters";
+    public static final String GENETIC_MOD = "buffs.title.geneticMod";
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;

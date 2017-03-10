@@ -14,4 +14,7 @@ public interface HeightRepository extends CrudRepository<Height, Long> {
 
     @Query(value = "SELECT * FROM app_height WHERE type='usual' ORDER BY RAND() LIMIT 1", nativeQuery = true)
     public Height getRandomUsual();
+
+    @Query(value = "SELECT * FROM app_height WHERE type='rare' ORDER BY RAND() LIMIT 1", nativeQuery = true)
+    public Height getRandomRare();
 }

@@ -7,7 +7,10 @@ package dyn.controllers;
 
 import dyn.model.*;
 import dyn.model.Character;
-import dyn.repository.*;
+import dyn.repository.BuffRepository;
+import dyn.repository.CharacterRepository;
+import dyn.repository.FamilyRepository;
+import dyn.repository.UserRepository;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +41,6 @@ public class BuffController {
     private FamilyRepository familyRepository;
     @Autowired
     private CharacterRepository characterRepository;
-    @Autowired
-    private RaceRepository raceRepository;
 
     // ============ CHOOSING BUFFS ============
     @RequestMapping(value = "/game/chooseBuffs", params = "characterId", method = RequestMethod.GET)

@@ -14,4 +14,7 @@ public interface HeadRepository extends CrudRepository<Head, Long> {
 
     @Query(value = "SELECT * FROM app_head WHERE type='usual' ORDER BY RAND() LIMIT 1", nativeQuery = true)
     public Head getRandomUsual();
+
+    @Query(value = "SELECT * FROM app_head WHERE type='rare' ORDER BY RAND() LIMIT 1", nativeQuery = true)
+    public Head getRandomRare();
 }
