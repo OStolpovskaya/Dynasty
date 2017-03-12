@@ -12,6 +12,7 @@
     <p class="has-error" th:text="${mess}"></p>
     <div class="col-md-5">
         <div class="form-area">
+            <!--/*@thymesVar id="familyForm" type="dyn.form.FamilyForm"*/-->
             <form class="form-horizontal" th:action="@{/game/addNewFamily}" th:object="${familyForm}" method="POST">
                 <h3>Family form</h3>
                 <div>
@@ -26,17 +27,35 @@
 
                 <input type="hidden" th:field="*{founder.name}"/>
                 <input type="hidden" th:field="*{founder.sex}"/>
-                <input type="hidden" th:field="*{founder.height}"/>
-                <input type="hidden" th:field="*{founder.skinColor}"/>
-                <input type="hidden" th:field="*{founder.head}"/>
+                <input type="hidden" th:field="*{founder.body}"/>
+                <input type="hidden" th:field="*{founder.ears}"/>
+                <input type="hidden" th:field="*{founder.eyebrows}"/>
+                <input type="hidden" th:field="*{founder.eyeColor}"/>
                 <input type="hidden" th:field="*{founder.eyes}"/>
+                <input type="hidden" th:field="*{founder.hairColor}"/>
+                <input type="hidden" th:field="*{founder.hairStyle}"/>
+                <input type="hidden" th:field="*{founder.hairType}"/>
+                <input type="hidden" th:field="*{founder.head}"/>
+                <input type="hidden" th:field="*{founder.height}"/>
+                <input type="hidden" th:field="*{founder.mouth}"/>
+                <input type="hidden" th:field="*{founder.nose}"/>
+                <input type="hidden" th:field="*{founder.skinColor}"/>
 
                 <input type="hidden" th:field="*{foundress.name}"/>
                 <input type="hidden" th:field="*{foundress.sex}"/>
-                <input type="hidden" th:field="*{foundress.height}"/>
-                <input type="hidden" th:field="*{foundress.skinColor}"/>
-                <input type="hidden" th:field="*{foundress.head}"/>
+                <input type="hidden" th:field="*{foundress.body}"/>
+                <input type="hidden" th:field="*{foundress.ears}"/>
+                <input type="hidden" th:field="*{foundress.eyebrows}"/>
+                <input type="hidden" th:field="*{foundress.eyeColor}"/>
                 <input type="hidden" th:field="*{foundress.eyes}"/>
+                <input type="hidden" th:field="*{foundress.hairColor}"/>
+                <input type="hidden" th:field="*{foundress.hairStyle}"/>
+                <input type="hidden" th:field="*{foundress.hairType}"/>
+                <input type="hidden" th:field="*{foundress.head}"/>
+                <input type="hidden" th:field="*{foundress.height}"/>
+                <input type="hidden" th:field="*{foundress.mouth}"/>
+                <input type="hidden" th:field="*{foundress.nose}"/>
+                <input type="hidden" th:field="*{foundress.skinColor}"/>
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('family.familyName')}? 'has-error'">
                     <label>Family name:</label>

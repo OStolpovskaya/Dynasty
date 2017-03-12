@@ -8,10 +8,19 @@
 <body>
 <div th:replace="fragments/navigation :: nav-for-admin"></div>
 <div class="container">
+    <div th:replace="fragments/tables :: table-for-appearance (feature='Body', list=${bodyList})">...</div>
+    <div th:replace="fragments/tables :: table-for-appearance (feature='Ears', list=${earsList})">...</div>
+    <div th:replace="fragments/tables :: table-for-appearance (feature='Eyebrows', list=${eyebrowsList})">...</div>
+    <div th:replace="fragments/tables :: table-for-appearance (feature='EyeColor', list=${eyeColorList})">...</div>
     <div th:replace="fragments/tables :: table-for-appearance (feature='Eyes', list=${eyesList})">...</div>
+    <div th:replace="fragments/tables :: table-for-appearance-color (feature='Hair color', list=${hairColorList})">...</div>
+    <div th:replace="fragments/tables :: table-for-appearance-hairstyle (feature='Hair style', list=${hairStyleList})">...</div>
+    <div th:replace="fragments/tables :: table-for-appearance (feature='Hair type', list=${hairTypeList})">...</div>
     <div th:replace="fragments/tables :: table-for-appearance (feature='Head', list=${headList})">...</div>
     <div th:replace="fragments/tables :: table-for-appearance (feature='Height', list=${heightList})">...</div>
-    <div th:replace="fragments/tables :: table-for-appearance (feature='Skin color', list=${skinColorList})">...</div>
+    <div th:replace="fragments/tables :: table-for-appearance (feature='Mouth', list=${mouthList})">...</div>
+    <div th:replace="fragments/tables :: table-for-appearance (feature='Nose', list=${noseList})">...</div>
+    <div th:replace="fragments/tables :: table-for-appearance-color (feature='Skin color', list=${skinColorList})">...</div>
 </div>
 <script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>

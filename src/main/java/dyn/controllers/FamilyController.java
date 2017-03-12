@@ -8,10 +8,7 @@ import dyn.repository.CharacterRepository;
 import dyn.repository.FamilyRepository;
 import dyn.repository.RaceRepository;
 import dyn.repository.UserRepository;
-import dyn.repository.appearance.EyesRepository;
-import dyn.repository.appearance.HeadRepository;
-import dyn.repository.appearance.HeightRepository;
-import dyn.repository.appearance.SkinColorRepository;
+import dyn.service.AppearanceService;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,13 +33,7 @@ import java.util.List;
 public class FamilyController {
     private static final Logger logger = LogManager.getLogger(FamilyController.class);
     @Autowired
-    EyesRepository eyesRepository;
-    @Autowired
-    HeadRepository headRepository;
-    @Autowired
-    HeightRepository heightRepository;
-    @Autowired
-    SkinColorRepository skinColorRepository;
+    AppearanceService app;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -71,19 +62,41 @@ public class FamilyController {
         Character male = new Character();
         male.setName(characterRepository.getRandomNameMale());
         male.setSex("male");
-        male.setHeight(heightRepository.getRandomUsual());
-        male.setHead(headRepository.getRandomUsual());
-        male.setEyes(eyesRepository.getRandomUsual());
-        male.setSkinColor(skinColorRepository.getRandomUsual());
+
+        male.setBody(app.getRandomBody(app.USUAL));
+        male.setEars(app.getRandomEars(app.USUAL));
+        male.setEyebrows(app.getRandomEyeBrows(app.USUAL));
+        male.setEyeColor(app.getRandomEyeColor(app.USUAL));
+        male.setEyes(app.getRandomEyes(app.USUAL));
+        male.setHairColor(app.getRandomHairColor(app.USUAL));
+        male.setHairType(app.getRandomHairType(app.USUAL));
+        male.setHairStyle(app.getRandomHairStyle(male.getSex(), male.getHairType()));
+        male.setHead(app.getRandomHead(app.USUAL));
+        male.setHeight(app.getRandomHeight(app.USUAL));
+        male.setMouth(app.getRandomMouth(app.USUAL));
+        male.setNose(app.getRandomNose(app.USUAL));
+        male.setSkinColor(app.getRandomSkinColor(app.USUAL));
+
         male.generateView();
 
         Character female = new Character();
         female.setName(characterRepository.getRandomNameFemale());
         female.setSex("female");
-        female.setHeight(heightRepository.getRandomUsual());
-        female.setHead(headRepository.getRandomUsual());
-        female.setEyes(eyesRepository.getRandomUsual());
-        female.setSkinColor(skinColorRepository.getRandomUsual());
+
+        female.setBody(app.getRandomBody(app.USUAL));
+        female.setEars(app.getRandomEars(app.USUAL));
+        female.setEyebrows(app.getRandomEyeBrows(app.USUAL));
+        female.setEyeColor(app.getRandomEyeColor(app.USUAL));
+        female.setEyes(app.getRandomEyes(app.USUAL));
+        female.setHairColor(app.getRandomHairColor(app.USUAL));
+        female.setHairType(app.getRandomHairType(app.USUAL));
+        female.setHairStyle(app.getRandomHairStyle(female.getSex(), female.getHairType()));
+        female.setHead(app.getRandomHead(app.USUAL));
+        female.setHeight(app.getRandomHeight(app.USUAL));
+        female.setMouth(app.getRandomMouth(app.USUAL));
+        female.setNose(app.getRandomNose(app.USUAL));
+        female.setSkinColor(app.getRandomSkinColor(app.USUAL));
+
         female.generateView();
 
         familyForm.setFounder(male);
@@ -129,12 +142,14 @@ public class FamilyController {
         founder.setFamily(family);
         founder.setLevel(0);
         founder.setRace(raceRepository.findByName("race.human"));
+        System.out.println(founder.toString());
         characterRepository.save(founder);
 
         foundress.setSpouse(founder);
         foundress.setFamily(null);
         foundress.setLevel(0);
         foundress.setRace(raceRepository.findByName("race.human"));
+        System.out.println(foundress.toString());
         characterRepository.save(foundress);
 
         founder.setSpouse(foundress);

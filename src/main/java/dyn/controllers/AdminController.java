@@ -50,9 +50,18 @@ public class AdminController {
     @RequestMapping("/admin/appearance")
     public String appearance(ModelMap model) {
 
-        model.addAttribute("heightList", app.getHeightList(app.ALL));
-        model.addAttribute("headList", app.getHeadList(app.ALL));
+        model.addAttribute("bodyList", app.getBodyList(app.ALL));
+        model.addAttribute("earsList", app.getEarsList(app.ALL));
+        model.addAttribute("eyebrowsList", app.getEyebrowsList(app.ALL));
+        model.addAttribute("eyeColorList", app.getEyeColorList(app.ALL));
         model.addAttribute("eyesList", app.getEyesList(app.ALL));
+        model.addAttribute("hairColorList", app.getHairColorList(app.ALL));
+        model.addAttribute("hairStyleList", app.getHairStyleList(app.ALL));
+        model.addAttribute("hairTypeList", app.getHairTypeList(app.ALL));
+        model.addAttribute("headList", app.getHeadList(app.ALL));
+        model.addAttribute("heightList", app.getHeightList(app.ALL));
+        model.addAttribute("mouthList", app.getMouthList(app.ALL));
+        model.addAttribute("noseList", app.getNoseList(app.ALL));
         model.addAttribute("skinColorList", app.getSkinColorList(app.ALL));
         return "admin/appearance";
     }
@@ -92,9 +101,18 @@ public class AdminController {
             female.setName(characterRepository.getRandomNameFemale());
             female.setSex("female");
 
-            female.setHeight(app.getRandomHeight(app.USUAL));
-            female.setHead(app.getRandomHead(app.USUAL));
+            female.setBody(app.getRandomBody(app.USUAL));
+            female.setEars(app.getRandomEars(app.USUAL));
+            female.setEyebrows(app.getRandomEyeBrows(app.USUAL));
+            female.setEyeColor(app.getRandomEyeColor(app.USUAL));
             female.setEyes(app.getRandomEyes(app.USUAL));
+            female.setHairColor(app.getRandomHairColor(app.USUAL));
+            female.setHairType(app.getRandomHairType(app.USUAL));
+            female.setHairStyle(app.getRandomHairStyle(female.getSex(), female.getHairType()));
+            female.setHead(app.getRandomHead(app.USUAL));
+            female.setHeight(app.getRandomHeight(app.USUAL));
+            female.setMouth(app.getRandomMouth(app.USUAL));
+            female.setNose(app.getRandomNose(app.USUAL));
             female.setSkinColor(app.getRandomSkinColor(app.USUAL));
 
             female.setFamily(family);
@@ -123,9 +141,18 @@ public class AdminController {
 
         Character character = new Character();
         character.setSex(sex);
-        character.setHeight(app.getRandomHeight(app.ALL));
-        character.setHead(app.getRandomHead(app.ALL));
+        character.setBody(app.getRandomBody(app.ALL));
+        character.setEars(app.getRandomEars(app.ALL));
+        character.setEyebrows(app.getRandomEyeBrows(app.ALL));
+        character.setEyeColor(app.getRandomEyeColor(app.ALL));
         character.setEyes(app.getRandomEyes(app.ALL));
+        character.setHairColor(app.getRandomHairColor(app.ALL));
+        character.setHairType(app.getRandomHairType(app.ALL));
+        character.setHairStyle(app.getRandomHairStyle(sex, character.getHairType()));
+        character.setHead(app.getRandomHead(app.ALL));
+        character.setHeight(app.getRandomHeight(app.ALL));
+        character.setMouth(app.getRandomMouth(app.ALL));
+        character.setNose(app.getRandomNose(app.ALL));
         character.setSkinColor(app.getRandomSkinColor(app.ALL));
 
         character.generateView();

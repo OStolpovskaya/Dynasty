@@ -246,14 +246,9 @@ public class AppearanceService {
     }
 
     public List<HairStyle> getHairStyleList(String type) {
-        switch (type) {
-            case USUAL:
-                return hairStyleRepository.findByType(AppearanceType.usual);
-            case RARE:
-                return hairStyleRepository.findByType(AppearanceType.rare);
-            default:
-                return (List<HairStyle>) hairStyleRepository.findAll();
-        }
+
+        return (List<HairStyle>) hairStyleRepository.findAll();
+
     }
 
     public List<HairType> getHairTypeList(String type) {

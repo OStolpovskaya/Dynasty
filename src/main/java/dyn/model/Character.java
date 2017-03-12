@@ -8,6 +8,7 @@ import javax.imageio.ImageIO;
 import javax.persistence.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.WritableRaster;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashSet;
@@ -72,7 +73,7 @@ public class Character {
     private HairColor hairColor;
 
     @OneToOne
-    @JoinColumn(name = "hair_style")
+    @JoinColumn(name = "hairstyle")
     private HairStyle hairStyle;
 
     @OneToOne
@@ -311,22 +312,56 @@ public class Character {
         return buffs;
     }
 
+    public boolean isFiancee() {
+        if (fiancee == null) {
+            return false;
+        }
+        return true;
+    }
+
+    // =============================================================================
     public void generateView() {
         try {
+
             // load source images
-            BufferedImage skinColorImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/female/" + getSkinColor().getName() + ".png"));
-            BufferedImage headImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/female/" + getHead().getName() + ".png"));
-            BufferedImage eyesImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/female/" + getEyes().getName() + ".png"));
+            BufferedImage bodyImageSub = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + sex + "/" + getBody().getName() + "_sub.png"));
+            bodyImageSub = colorImage(bodyImageSub, getSkinColor().getColor());
+            BufferedImage bodyImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + sex + "/" + getBody().getName() + ".png"));
+            BufferedImage earsImageSub = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + sex + "/" + getEars().getName() + "_sub.png"));
+            earsImageSub = colorImage(earsImageSub, getSkinColor().getColor());
+            BufferedImage earsImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + sex + "/" + getEars().getName() + ".png"));
+            BufferedImage eyebrowsImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + sex + "/" + getEyebrows().getName() + ".png"));
+            BufferedImage eyesImageSub = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + sex + "/" + getEyes().getName() + "_sub.png"));
+            BufferedImage eyeColorImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + sex + "/" + getEyeColor().getName() + ".png"));
+            BufferedImage eyesImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + sex + "/" + getEyes().getName() + ".png"));
+            BufferedImage hairStyleImageSub = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + sex + "/" + getHairStyle().getName() + "_sub.png"));
+            hairStyleImageSub = colorImage(hairStyleImageSub, getHairColor().getColor());
+            BufferedImage hairStyleImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + sex + "/" + getHairStyle().getName() + ".png"));
+            BufferedImage headImageSub = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + sex + "/" + getHead().getName() + "_sub.png"));
+            headImageSub = colorImage(headImageSub, getSkinColor().getColor());
+            BufferedImage headImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + sex + "/" + getHead().getName() + ".png"));
+            BufferedImage mouthImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + sex + "/" + getMouth().getName() + ".png"));
+            BufferedImage noseImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + sex + "/" + getNose().getName() + ".png"));
 
             // create the new image, canvas size is the max. of both image sizes
             BufferedImage combined = new BufferedImage(200, 200, BufferedImage.TYPE_INT_ARGB);
 
-            // paint both images, preserving the alpha channels
+            // paint images, preserving the alpha channels
             Graphics g = combined.getGraphics();
-            g.drawImage(skinColorImage, 0, 0, null);
+            g.drawImage(bodyImageSub, 0, 0, null);
+            g.drawImage(bodyImage, 0, 0, null);
+            g.drawImage(headImageSub, 0, 0, null);
             g.drawImage(headImage, 0, 0, null);
+            g.drawImage(eyebrowsImage, 0, 0, null);
+            g.drawImage(eyesImageSub, 0, 0, null);
+            g.drawImage(eyeColorImage, 0, 0, null);
             g.drawImage(eyesImage, 0, 0, null);
-
+            g.drawImage(mouthImage, 0, 0, null);
+            g.drawImage(noseImage, 0, 0, null);
+            g.drawImage(hairStyleImageSub, 0, 0, null);
+            g.drawImage(hairStyleImage, 0, 0, null);
+            g.drawImage(earsImageSub, 0, 0, null);
+            g.drawImage(earsImage, 0, 0, null);
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ImageIO.write(combined, "png", baos);
@@ -341,29 +376,50 @@ public class Character {
         }
     }
 
-    public boolean isFiancee() {
-        if (fiancee == null) {
-            return false;
-        }
-        return true;
-    }
+    private BufferedImage colorImage(BufferedImage image, String colorString) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+        WritableRaster raster = image.getRaster();
 
+        for (int xx = 0; xx < width; xx++) {
+            for (int yy = 0; yy < height; yy++) {
+                int[] pixels = raster.getPixel(xx, yy, (int[]) null);
+                pixels[0] = Integer.valueOf(colorString.substring(0, 2), 16);
+                pixels[1] = Integer.valueOf(colorString.substring(2, 4), 16);
+                pixels[2] = Integer.valueOf(colorString.substring(4, 6), 16);
+                raster.setPixel(xx, yy, pixels);
+            }
+        }
+        return image;
+    }
 
     @Override
     public String toString() {
         return "Character{" +
                 "id=" + id +
-                ", family=" + (family == null ? "" : family.getFamilyName()) +
+                ", family=" + (family != null ? family.getFamilyName() : "") +
                 ", name='" + name + '\'' +
                 ", sex='" + sex + '\'' +
-                ", father=" + (father == null ? "" : family.getFamilyName()) +
-                ", spouse=" + (spouse == null ? "" : spouse.getName()) +
+                ", father=" + (father != null ? father.getName() : "") +
+                ", spouse=" + (spouse != null ? spouse.getName() : "") +
                 ", level=" + level +
-                ", race=" + (race == null ? "" : race.getName()) +
-                ", height=" + (height == null ? "" : height.getName()) +
-                ", skinColor=" + (skinColor == null ? "" : skinColor.getName()) +
-                ", head=" + (head == null ? "" : head.getName()) +
-                ", eyes=" + (eyes == null ? "" : eyes.getName()) +
+                ", race=" + race.getName() +
+                ", body=" + body.getName() +
+                ", ears=" + ears.getName() +
+                ", eyebrows=" + eyebrows.getName() +
+                ", eyeColor=" + eyeColor.getName() +
+                ", eyes=" + eyes.getName() +
+                ", hairColor=" + hairColor.getName() +
+                ", hairStyle=" + hairStyle.getName() +
+                ", hairType=" + hairType.getName() +
+                ", head=" + head.getName() +
+                ", height=" + height.getName() +
+                ", mouth=" + mouth.getName() +
+                ", nose=" + nose.getName() +
+                ", skinColor=" + skinColor.getName() +
+                ", children amount =" + (children != null ? children.size() : "-") +
+                ", fiancee=" + isFiancee() +
+                ", buffs=" + (buffs != null ? buffs.size() : "-") +
                 '}';
     }
 }

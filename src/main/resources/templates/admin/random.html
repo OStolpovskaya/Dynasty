@@ -14,8 +14,23 @@
         <a th:case="'male'" href="\" data-toggle="tooltip" title="Male">
             <img th:src="@{/graphics/male.png}"/>
         </a>
-        <a th:case="'female'" href="\" data-toggle="tooltip"
-           th:alt-title="#{tooltip(#{${character.getSex()}},#{${character.getHeight().getName()}},#{${character.getSkinColor().getName()}},#{${character.getHead().getName()}},#{${character.getEyes().getName()}})}">
+        <a th:case="'female'" href="\"
+           data-toggle="tooltip" th:alt-title="#{tooltip(
+                                           #{${character.getSex()}},
+                                           #{${character.getBody().getName()}},
+                                           #{${character.getEars().getName()}},
+                                           #{${character.getEyebrows().getName()}},
+                                           #{${character.getEyeColor().getName()}},
+                                           #{${character.getEyes().getName()}},
+                                           #{${character.getHairColor().getName()}},
+                                           #{${character.getHairStyle().getName()}},
+                                           #{${character.getHairType().getName()}},
+                                           #{${character.getHead().getName()}},
+                                           #{${character.getHeight().getName()}},
+                                           #{${character.getMouth().getName()}},
+                                           #{${character.getNose().getName()}},
+                                           #{${character.getSkinColor().getName()}})}"
+        >
             <img th:src="@{'data:image/png;base64,'+${character.getEncodedView()}}"/>
         </a>
 

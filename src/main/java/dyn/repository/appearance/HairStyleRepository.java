@@ -1,12 +1,9 @@
 package dyn.repository.appearance;
 
-import dyn.model.appearance.AppearanceType;
 import dyn.model.appearance.HairStyle;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository
 public interface HairStyleRepository extends CrudRepository<HairStyle, Long> {
@@ -20,6 +17,4 @@ public interface HairStyleRepository extends CrudRepository<HairStyle, Long> {
 
     @Query(value = "SELECT * FROM app_hair_style WHERE type='rare' ORDER BY RAND() LIMIT 1", nativeQuery = true)
     public HairStyle getRandomRare();
-
-    List<HairStyle> findByType(AppearanceType type);
 }

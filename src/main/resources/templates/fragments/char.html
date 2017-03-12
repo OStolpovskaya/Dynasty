@@ -13,10 +13,20 @@
              th:src="@{'data:image/png;base64,'+${character.getEncodedView()}}"
              data-toggle="tooltip" th:alt-title="#{tooltip(
                                            #{${character.getSex()}},
-                                           #{${character.getHeight().getName()}},
-                                           #{${character.getSkinColor().getName()}},
+                                           #{${character.getBody().getName()}},
+                                           #{${character.getEars().getName()}},
+                                           #{${character.getEyebrows().getName()}},
+                                           #{${character.getEyeColor().getName()}},
+                                           #{${character.getEyes().getName()}},
+                                           #{${character.getHairColor().getName()}},
+                                           #{${character.getHairStyle().getName()}},
+                                           #{${character.getHairType().getName()}},
                                            #{${character.getHead().getName()}},
-                                           #{${character.getEyes().getName()}})}" data-placement="right"/>
+                                           #{${character.getHeight().getName()}},
+                                           #{${character.getMouth().getName()}},
+                                           #{${character.getNose().getName()}},
+                                           #{${character.getSkinColor().getName()}})}"
+             data-placement="right"/>
 
     </a>
     <div style="display: inline-block;" th:each="buff : ${character.getBuffs()}">

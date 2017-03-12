@@ -28,6 +28,54 @@
     </table>
 </div>
 
+<div th:fragment="table-for-appearance-color (feature, list)">
+    <h3 th:text="${feature}">Feature</h3>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Local name</th>
+            <th>Type</th>
+            <th>Color</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="element : ${list}">
+            <td th:text="${element.getId()}">1</td>
+            <td th:text="${element.getName()}">name</td>
+            <td th:text="#{${element.getName()}}">name</td>
+            <td th:text="${element.getType()}">name</td>
+            <td th:text="${element.getColor()}">name</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div th:fragment="table-for-appearance-hairstyle (feature, list)">
+    <h3 th:text="${feature}">Feature</h3>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Sex</th>
+            <th>Name</th>
+            <th>Local name</th>
+            <th>Hair type</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="element : ${list}">
+            <td th:text="${element.getId()}">1</td>
+            <td th:text="${element.getSex()}">1</td>
+            <td th:text="${element.getName()}">name</td>
+            <td th:text="#{${element.getName()}}">name</td>
+            <td th:text="${element.getHairType().getName()}">name</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
 <script src="webjars/jquery/1.9.1/jquery.min.js"></script>
 <script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 </body>

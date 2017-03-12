@@ -11,9 +11,6 @@ public class HairStyle {
 
     private String name;
 
-    @Enumerated(EnumType.STRING)
-    private AppearanceType type;
-
     private String sex;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -34,14 +31,6 @@ public class HairStyle {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public AppearanceType getType() {
-        return type;
-    }
-
-    public void setType(AppearanceType type) {
-        this.type = type;
     }
 
     public String getSex() {
