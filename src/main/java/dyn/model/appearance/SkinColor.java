@@ -17,6 +17,8 @@ public class SkinColor {
     @Enumerated(EnumType.STRING)
     private AppearanceType type;
 
+    private String color;
+
     public Long getId() {
         return id;
     }
@@ -39,5 +41,13 @@ public class SkinColor {
 
     public void setType(AppearanceType type) {
         this.type = type;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 }

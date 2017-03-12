@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1
--- Время создания: Мар 11 2017 г., 02:53
+-- Время создания: Мар 12 2017 г., 10:03
 -- Версия сервера: 5.5.25
 -- Версия PHP: 5.3.13
 
@@ -45,6 +45,82 @@ INSERT INTO `achievement` (`id`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Структура таблицы `app_body`
+--
+
+CREATE TABLE IF NOT EXISTS `app_body` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` enum('usual','rare') NOT NULL,
+  `name` varchar(35) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
+
+--
+-- Дамп данных таблицы `app_body`
+--
+
+INSERT INTO `app_body` (`id`, `type`, `name`) VALUES
+(1, 'usual', 'app.body.wide_shoulders'),
+(2, 'usual', 'app.body.middle'),
+(3, 'usual', 'app.body.thin_shoulders'),
+(4, 'usual', 'app.body.huge_torso'),
+(5, 'usual', 'app.body.fine_with_butterfly_wings');
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `app_ears`
+--
+
+CREATE TABLE IF NOT EXISTS `app_ears` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` enum('usual','rare') NOT NULL,
+  `name` varchar(30) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
+
+--
+-- Дамп данных таблицы `app_ears`
+--
+
+INSERT INTO `app_ears` (`id`, `type`, `name`) VALUES
+(1, 'usual', 'app.ears.small'),
+(2, 'usual', 'app.ears.moddle'),
+(3, 'usual', 'app.ears.big'),
+(4, 'usual', 'app.ears.protruding'),
+(5, 'rare', 'app.ears.high_long'),
+(6, 'rare', 'app.ears.big_pointed'),
+(7, 'rare', 'app.ears.none');
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `app_eyebrows`
+--
+
+CREATE TABLE IF NOT EXISTS `app_eyebrows` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` enum('usual','rare') NOT NULL,
+  `name` varchar(30) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
+
+--
+-- Дамп данных таблицы `app_eyebrows`
+--
+
+INSERT INTO `app_eyebrows` (`id`, `type`, `name`) VALUES
+(1, 'usual', 'app.eyebrows.arched'),
+(2, 'usual', 'app.eyebrows.ascending'),
+(3, 'usual', 'app.eyebrows.curved'),
+(4, 'usual', 'app.eyebrows.horizontal'),
+(5, 'usual', 'app.eyebrows.houselike'),
+(6, 'usual', 'app.eyebrows.with_break'),
+(7, 'rare', 'app.eyebrows.none');
+
+-- --------------------------------------------------------
+
+--
 -- Структура таблицы `app_eyes`
 --
 
@@ -68,6 +144,128 @@ INSERT INTO `app_eyes` (`id`, `type`, `name`) VALUES
 (6, 'usual', 'app.eyes.heavy_eyelids'),
 (7, 'rare', 'app.eyes.huge'),
 (8, 'rare', 'app.eyes.bee');
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `app_eye_color`
+--
+
+CREATE TABLE IF NOT EXISTS `app_eye_color` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` enum('usual','rare') NOT NULL,
+  `name` varchar(30) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13 ;
+
+--
+-- Дамп данных таблицы `app_eye_color`
+--
+
+INSERT INTO `app_eye_color` (`id`, `type`, `name`) VALUES
+(1, 'usual', 'app.eye_color.aquamarine'),
+(2, 'usual', 'app.eye_color.black'),
+(3, 'usual', 'app.eye_color.blue'),
+(4, 'usual', 'app.eye_color.dark_green'),
+(5, 'usual', 'app.eye_color.green'),
+(6, 'usual', 'app.eye_color.grey'),
+(7, 'usual', 'app.eye_color.light_blue'),
+(8, 'usual', 'app.eye_color.light_green'),
+(9, 'usual', 'app.eye_color.violent'),
+(10, 'usual', 'app.eye_color.walnut'),
+(11, 'rare', 'app.eye_color.lumired'),
+(12, 'rare', 'app.eye_color.lumiyellow');
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `app_hair_color`
+--
+
+CREATE TABLE IF NOT EXISTS `app_hair_color` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` enum('usual','rare') NOT NULL,
+  `name` varchar(30) NOT NULL,
+  `color` varchar(7) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=10 ;
+
+--
+-- Дамп данных таблицы `app_hair_color`
+--
+
+INSERT INTO `app_hair_color` (`id`, `type`, `name`, `color`) VALUES
+(1, 'usual', 'app.hair_color.fair', 'a38a74'),
+(2, 'usual', 'app.hair_color.blond', 'fce8cf'),
+(3, 'usual', 'app.hair_color.red', 'ab4b23'),
+(4, 'usual', 'app.hair_color.auburn', '603628'),
+(5, 'usual', 'app.hair_color.black', '0a0200'),
+(6, 'usual', 'app.hair_color.dark', '18100d'),
+(7, 'rare', 'app.hair_color.white', 'fffcf6'),
+(8, 'rare', 'app.hair_color.blue', '1c3d5c'),
+(9, 'rare', 'app.hair_color.green', '127441');
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `app_hair_style`
+--
+
+CREATE TABLE IF NOT EXISTS `app_hair_style` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `sex` enum('male','female') NOT NULL,
+  `hair_type` int(11) NOT NULL,
+  `name` varchar(35) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=26 ;
+
+--
+-- Дамп данных таблицы `app_hair_style`
+--
+
+INSERT INTO `app_hair_style` (`id`, `sex`, `hair_type`, `name`) VALUES
+(1, 'female', 1, 'app.hair_style.straight.bob'),
+(2, 'female', 1, 'app.hair_style.straight.pony_tail'),
+(3, 'female', 2, 'app.hair_style.curly.falls'),
+(4, 'female', 2, 'app.hair_style.curly.tail'),
+(5, 'female', 3, 'app.hair_style.wavy.falls'),
+(6, 'female', 3, 'app.hair_style.wavy.tail'),
+(7, 'female', 4, 'app.hair_style.thinning.bob'),
+(8, 'female', 5, 'app.hair_style.none.none'),
+(9, 'female', 6, 'app.hair_style.snakes.falls'),
+(10, 'male', 2, 'app.hair_style.curly.falls'),
+(12, 'male', 5, 'app.hair_style.none.none'),
+(14, 'male', 6, 'app.hair_style.snakes.falls'),
+(16, 'male', 1, 'app.hair_style.straight.bob'),
+(18, 'male', 1, 'app.hair_style.straight.pony_tail'),
+(20, 'male', 4, 'app.hair_style.thinning.bob'),
+(22, 'male', 3, 'app.hair_style.wavy.falls'),
+(24, 'male', 3, 'app.hair_style.wavy.tail');
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `app_hair_type`
+--
+
+CREATE TABLE IF NOT EXISTS `app_hair_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` enum('usual','rare') NOT NULL,
+  `name` varchar(30) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
+
+--
+-- Дамп данных таблицы `app_hair_type`
+--
+
+INSERT INTO `app_hair_type` (`id`, `type`, `name`) VALUES
+(1, 'usual', 'app.hair_type.straight'),
+(2, 'usual', 'app.hair_type.curly'),
+(3, 'usual', 'app.hair_type.wavy'),
+(4, 'usual', 'app.hair_type.thinning'),
+(5, 'rare', 'app.hair_type.none'),
+(6, 'rare', 'app.hair_type.snakes');
 
 -- --------------------------------------------------------
 
@@ -123,6 +321,61 @@ INSERT INTO `app_height` (`id`, `type`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Структура таблицы `app_mouth`
+--
+
+CREATE TABLE IF NOT EXISTS `app_mouth` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` enum('usual','rare') NOT NULL,
+  `name` varchar(30) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=11 ;
+
+--
+-- Дамп данных таблицы `app_mouth`
+--
+
+INSERT INTO `app_mouth` (`id`, `type`, `name`) VALUES
+(1, 'usual', 'app.mouth.angular'),
+(2, 'usual', 'app.mouth.chubby'),
+(3, 'usual', 'app.mouth.glamour'),
+(4, 'usual', 'app.mouth.heart'),
+(5, 'usual', 'app.mouth.middle'),
+(6, 'usual', 'app.mouth.notprecise'),
+(7, 'usual', 'app.mouth.straight'),
+(8, 'usual', 'app.mouth.thin'),
+(9, 'rare', 'app.mouth.lower_fangs'),
+(10, 'rare', 'app.mouth.upper_fangs');
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `app_nose`
+--
+
+CREATE TABLE IF NOT EXISTS `app_nose` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` enum('usual','rare') NOT NULL,
+  `name` varchar(30) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
+
+--
+-- Дамп данных таблицы `app_nose`
+--
+
+INSERT INTO `app_nose` (`id`, `type`, `name`) VALUES
+(1, 'usual', 'app.nose.big'),
+(2, 'usual', 'app.nose.fleshy'),
+(3, 'usual', 'app.nose.pointed'),
+(4, 'usual', 'app.nose.straight'),
+(5, 'usual', 'app.nose.upturned'),
+(6, 'usual', 'app.nose.with_hump'),
+(7, 'rare', 'app.nose.wide');
+
+-- --------------------------------------------------------
+
+--
 -- Структура таблицы `app_skin_color`
 --
 
@@ -130,6 +383,7 @@ CREATE TABLE IF NOT EXISTS `app_skin_color` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `type` enum('usual','rare') NOT NULL,
   `name` varchar(30) NOT NULL,
+  `color` varchar(7) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=10 ;
 
@@ -137,16 +391,16 @@ CREATE TABLE IF NOT EXISTS `app_skin_color` (
 -- Дамп данных таблицы `app_skin_color`
 --
 
-INSERT INTO `app_skin_color` (`id`, `type`, `name`) VALUES
-(1, 'usual', 'app.skin_color.fair'),
-(2, 'usual', 'app.skin_color.swarthy'),
-(3, 'usual', 'app.skin_color.dark'),
-(4, 'usual', 'app.skin_color.olive'),
-(5, 'usual', 'app.skin_color.copper'),
-(6, 'rare', 'app.skin_color.pale'),
-(7, 'rare', 'app.skin_color.light_green'),
-(8, 'rare', 'app.skin_color.green'),
-(9, 'rare', 'app.skin_color.bluish');
+INSERT INTO `app_skin_color` (`id`, `type`, `name`, `color`) VALUES
+(1, 'usual', 'app.skin_color.fair', 'e7c6aa'),
+(2, 'usual', 'app.skin_color.swarthy', 'ab8c72'),
+(3, 'usual', 'app.skin_color.dark', '826751'),
+(4, 'usual', 'app.skin_color.olive', 'ebd9a2'),
+(5, 'usual', 'app.skin_color.copper', 'dcb787'),
+(6, 'rare', 'app.skin_color.pale', 'ece6de'),
+(7, 'rare', 'app.skin_color.light_green', 'a1b090'),
+(8, 'rare', 'app.skin_color.green', '61724f'),
+(9, 'rare', 'app.skin_color.bluish', '88bbac');
 
 -- --------------------------------------------------------
 

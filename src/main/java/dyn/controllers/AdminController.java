@@ -10,10 +10,7 @@ import dyn.model.Family;
 import dyn.model.Fiancee;
 import dyn.model.User;
 import dyn.repository.*;
-import dyn.repository.appearance.EyesRepository;
-import dyn.repository.appearance.HeadRepository;
-import dyn.repository.appearance.HeightRepository;
-import dyn.repository.appearance.SkinColorRepository;
+import dyn.service.AppearanceService;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,13 +28,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class AdminController {
     private static final Logger logger = LogManager.getLogger(FianceeController.class);
     @Autowired
-    EyesRepository eyesRepository;
-    @Autowired
-    HeadRepository headRepository;
-    @Autowired
-    HeightRepository heightRepository;
-    @Autowired
-    SkinColorRepository skinColorRepository;
+    AppearanceService app;
     @Autowired
     RaceRepository raceRepository;
     @Autowired
@@ -59,10 +50,10 @@ public class AdminController {
     @RequestMapping("/admin/appearance")
     public String appearance(ModelMap model) {
 
-        model.addAttribute("eyesList", eyesRepository.findAll());
-        model.addAttribute("headList", headRepository.findAll());
-        model.addAttribute("heightList", heightRepository.findAll());
-        model.addAttribute("skinColorList", skinColorRepository.findAll());
+        model.addAttribute("heightList", app.getHeightList(app.ALL));
+        model.addAttribute("headList", app.getHeadList(app.ALL));
+        model.addAttribute("eyesList", app.getEyesList(app.ALL));
+        model.addAttribute("skinColorList", app.getSkinColorList(app.ALL));
         return "admin/appearance";
     }
 
@@ -100,10 +91,11 @@ public class AdminController {
             Character female = new Character();
             female.setName(characterRepository.getRandomNameFemale());
             female.setSex("female");
-            female.setHeight(heightRepository.getRandomUsual());
-            female.setHead(headRepository.getRandomUsual());
-            female.setEyes(eyesRepository.getRandomUsual());
-            female.setSkinColor(skinColorRepository.getRandomUsual());
+
+            female.setHeight(app.getRandomHeight(app.USUAL));
+            female.setHead(app.getRandomHead(app.USUAL));
+            female.setEyes(app.getRandomEyes(app.USUAL));
+            female.setSkinColor(app.getRandomSkinColor(app.USUAL));
 
             female.setFamily(family);
             female.setLevel(level);
@@ -131,10 +123,10 @@ public class AdminController {
 
         Character character = new Character();
         character.setSex(sex);
-        character.setHeight(heightRepository.getRandom());
-        character.setHead(headRepository.getRandom());
-        character.setEyes(eyesRepository.getRandom());
-        character.setSkinColor(skinColorRepository.getRandom());
+        character.setHeight(app.getRandomHeight(app.ALL));
+        character.setHead(app.getRandomHead(app.ALL));
+        character.setEyes(app.getRandomEyes(app.ALL));
+        character.setSkinColor(app.getRandomSkinColor(app.ALL));
 
         character.generateView();
 
@@ -142,6 +134,7 @@ public class AdminController {
 
         return "admin/random";
     }
+
 
     private UserDetails getAuthUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

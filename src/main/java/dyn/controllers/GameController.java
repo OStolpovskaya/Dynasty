@@ -152,10 +152,10 @@ public class GameController {
                 }
                 logger.info("child: " + child.getName() + ", genModFeature = " + featureToGenMod);
 
-                child.setHeight(featureToGenMod == 1 ? app.getRandomRareHeight() : (Math.random() < dominantPercent ? character.getHeight() : wife.getHeight()));
-                child.setHead(featureToGenMod == 2 ? app.getRandomRareHead() : (Math.random() < dominantPercent ? character.getHead() : wife.getHead()));
-                child.setEyes(featureToGenMod == 3 ? app.getRandomRareEyes() : (Math.random() < dominantPercent ? character.getEyes() : wife.getEyes()));
-                child.setSkinColor(featureToGenMod == 4 ? app.getRandomRareSkinColor() : (Math.random() < dominantPercent ? character.getSkinColor() : wife.getSkinColor()));
+                child.setHeight(featureToGenMod == 1 ? app.getRandomHeight(app.RARE) : (Math.random() < dominantPercent ? character.getHeight() : wife.getHeight()));
+                child.setHead(featureToGenMod == 2 ? app.getRandomHead(app.RARE) : (Math.random() < dominantPercent ? character.getHead() : wife.getHead()));
+                child.setEyes(featureToGenMod == 3 ? app.getRandomEyes(app.RARE) : (Math.random() < dominantPercent ? character.getEyes() : wife.getEyes()));
+                child.setSkinColor(featureToGenMod == 4 ? app.getRandomSkinColor(app.RARE) : (Math.random() < dominantPercent ? character.getSkinColor() : wife.getSkinColor()));
 
                 //TODO: race computation
                 child.setRace(raceRepository.findByName("race.human"));
