@@ -7,25 +7,28 @@
 </head>
 <body>
 <div th:fragment="char-view (character)">
-    <p align="center" th:text="${character.getName()}">Character</p>
+    <p align="center">
+        <span th:if="${character.hasRareFeatures()}" th:text="${character.getName()+'*'}"></span>
+        <span th:unless="${character.hasRareFeatures()}" th:text="${character.getName()}"></span>
+    </p>
     <a href="/game/character" th:href="@{/game/character(characterId=${character.getId()})}">
         <img th:class="${character.getSex()} == 'male' ? male : female" height="100" width="100"
              th:src="@{'data:image/png;base64,'+${character.getEncodedView()}}"
              data-toggle="tooltip" th:alt-title="#{tooltip(
                                            #{${character.getSex()}},
-                                           #{${character.getBody().getName()}},
-                                           #{${character.getEars().getName()}},
-                                           #{${character.getEyebrows().getName()}},
-                                           #{${character.getEyeColor().getName()}},
-                                           #{${character.getEyes().getName()}},
-                                           #{${character.getHairColor().getName()}},
+                                           #{${character.getBody().getName()}}+${character.getBody().isRare()?'*':''},
+                                           #{${character.getEars().getName()}}+${character.getEars().isRare()?'*':''},
+                                           #{${character.getEyebrows().getName()}}+${character.getEyebrows().isRare()?'*':''},
+                                           #{${character.getEyeColor().getName()}}+${character.getEyeColor().isRare()?'*':''},
+                                           #{${character.getEyes().getName()}}+${character.getEyes().isRare()?'*':''},
+                                           #{${character.getHairColor().getName()}}+${character.getHairColor().isRare()?'*':''},
                                            #{${character.getHairStyle().getName()}},
-                                           #{${character.getHairType().getName()}},
-                                           #{${character.getHead().getName()}},
-                                           #{${character.getHeight().getName()}},
-                                           #{${character.getMouth().getName()}},
-                                           #{${character.getNose().getName()}},
-                                           #{${character.getSkinColor().getName()}})}"
+                                           #{${character.getHairType().getName()}}+${character.getHairType().isRare()?'*':''},
+                                           #{${character.getHead().getName()}}+${character.getHead().isRare()?'*':''},
+                                           #{${character.getHeight().getName()}}+${character.getHeight().isRare()?'*':''},
+                                           #{${character.getMouth().getName()}}+${character.getMouth().isRare()?'*':''},
+                                           #{${character.getNose().getName()}}+${character.getNose().isRare()?'*':''},
+                                           #{${character.getSkinColor().getName()}}+${character.getSkinColor().isRare()?'*':''})}"
              data-placement="right"/>
 
     </a>

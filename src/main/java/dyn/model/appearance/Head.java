@@ -41,4 +41,8 @@ public class Head {
     public void setType(AppearanceType type) {
         this.type = type;
     }
+
+    public boolean isRare() {
+        return type.equals(AppearanceType.rare);
+    }
 }

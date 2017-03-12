@@ -50,4 +50,8 @@ public class SkinColor {
     public void setColor(String color) {
         this.color = color;
     }
+
+    public boolean isRare() {
+        return type.equals(AppearanceType.rare);
+    }
 }

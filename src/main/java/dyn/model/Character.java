@@ -319,6 +319,23 @@ public class Character {
         return true;
     }
 
+    public boolean hasRareFeatures() {
+
+        boolean result = body.isRare() ||
+                ears.isRare() ||
+                eyebrows.isRare() ||
+                eyeColor.isRare() ||
+                eyes.isRare() ||
+                hairColor.isRare() ||
+                hairType.isRare() ||
+                head.isRare() ||
+                height.isRare() ||
+                mouth.isRare() ||
+                nose.isRare() ||
+                skinColor.isRare();
+        return result;
+    }
+
     // =============================================================================
     public void generateView() {
         try {
