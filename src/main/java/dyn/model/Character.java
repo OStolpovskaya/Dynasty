@@ -1,9 +1,6 @@
 package dyn.model;
 
-import dyn.model.appearance.Eyes;
-import dyn.model.appearance.Head;
-import dyn.model.appearance.Height;
-import dyn.model.appearance.SkinColor;
+import dyn.model.appearance.*;
 import org.springframework.util.Base64Utils;
 import org.springframework.util.ResourceUtils;
 
@@ -51,52 +48,61 @@ public class Character {
 
     // ============ APPEARANCE ============
     @OneToOne
-    @JoinColumn(name = "height")
-    private Height height;
+    @JoinColumn(name = "body")
+    private Body body;
 
     @OneToOne
-    @JoinColumn(name = "skin_color")
-    private SkinColor skinColor;
+    @JoinColumn(name = "ears")
+    private Ears ears;
+
+    @OneToOne
+    @JoinColumn(name = "eyebrows")
+    private Eyebrows eyebrows;
+
+    @OneToOne
+    @JoinColumn(name = "eye_color")
+    private EyeColor eyeColor;
+
+    @OneToOne
+    @JoinColumn(name = "eyes")
+    private Eyes eyes;
+
+    @OneToOne
+    @JoinColumn(name = "hair_color")
+    private HairColor hairColor;
+
+    @OneToOne
+    @JoinColumn(name = "hair_style")
+    private HairStyle hairStyle;
+
+    @OneToOne
+    @JoinColumn(name = "hair_type")
+    private HairType hairType;
 
     @OneToOne
     @JoinColumn(name = "head")
     private Head head;
 
     @OneToOne
-    @JoinColumn(name = "eyes")
-    private Eyes eyes;
+    @JoinColumn(name = "height")
+    private Height height;
+
+    @OneToOne
+    @JoinColumn(name = "mouth")
+    private Mouth mouth;
+
+    @OneToOne
+    @JoinColumn(name = "nose")
+    private Nose nose;
+
+    @OneToOne
+    @JoinColumn(name = "skin_color")
+    private SkinColor skinColor;
 
     // ============ VIEW ============
     @Lob
     private byte[] view;
-    /*
-    @OneToOne
-    @JoinColumn(name="hair_color")
-    private HairColor hairColor;
 
-    @OneToOne
-    @JoinColumn(name="hairstyle")
-    private HairStyle hairStyle;
-
-    @OneToOne
-    private Ears ears;
-
-    @OneToOne
-    private Eyebrows eyebrows;
-
-    @OneToOne
-    @JoinColumn(name="eye_color")
-    private EyeColor eyeColor;
-
-    @OneToOne
-    private Nose nose;
-
-    @OneToOne
-    private Mouth mouth;
-
-    @OneToOne
-    private Body body;
-    */
     // ============ RELATIONS ============
     @OneToMany(mappedBy = "father")
     private java.util.List<Character> children;
@@ -210,6 +216,78 @@ public class Character {
 
     public void setEyes(Eyes eyes) {
         this.eyes = eyes;
+    }
+
+    public Body getBody() {
+        return body;
+    }
+
+    public void setBody(Body body) {
+        this.body = body;
+    }
+
+    public Ears getEars() {
+        return ears;
+    }
+
+    public void setEars(Ears ears) {
+        this.ears = ears;
+    }
+
+    public Eyebrows getEyebrows() {
+        return eyebrows;
+    }
+
+    public void setEyebrows(Eyebrows eyebrows) {
+        this.eyebrows = eyebrows;
+    }
+
+    public EyeColor getEyeColor() {
+        return eyeColor;
+    }
+
+    public void setEyeColor(EyeColor eyeColor) {
+        this.eyeColor = eyeColor;
+    }
+
+    public HairColor getHairColor() {
+        return hairColor;
+    }
+
+    public void setHairColor(HairColor hairColor) {
+        this.hairColor = hairColor;
+    }
+
+    public HairStyle getHairStyle() {
+        return hairStyle;
+    }
+
+    public void setHairStyle(HairStyle hairStyle) {
+        this.hairStyle = hairStyle;
+    }
+
+    public HairType getHairType() {
+        return hairType;
+    }
+
+    public void setHairType(HairType hairType) {
+        this.hairType = hairType;
+    }
+
+    public Mouth getMouth() {
+        return mouth;
+    }
+
+    public void setMouth(Mouth mouth) {
+        this.mouth = mouth;
+    }
+
+    public Nose getNose() {
+        return nose;
+    }
+
+    public void setNose(Nose nose) {
+        this.nose = nose;
     }
 
     public byte[] getView() {
