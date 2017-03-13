@@ -51,7 +51,7 @@ public class FianceeController {
 
         Character character = characterRepository.findByIdAndFamilyAndLevelAndSexAndSpouseIsNull(characterId, family, family.getLevel(), "male");
         if (character != null) {
-            List<Fiancee> fianceeList = fianceeRepository.findByCharacterFamilyNotAndCharacterLevel(family, family.getLevel()); //TODO: only female?
+            List<Fiancee> fianceeList = fianceeRepository.findByCharacterFamilyNotAndCharacterLevel(family, family.getLevel());
             model.addAttribute("character", character);
             model.addAttribute("fianceeList", fianceeList);
             model.addAttribute("characterId", characterId);

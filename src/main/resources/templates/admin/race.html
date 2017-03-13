@@ -23,6 +23,29 @@
         </tr>
         </tbody>
     </table>
+    <form action="#" th:action="@{/admin/generateRace}" method="post">
+        <input type="checkbox" th:name="body" th:value="null" checked="checked">Любое тело</input>
+        <div th:each="body : ${bodyList}">
+            <!--/*@thymesVar id="body" type="dyn.model.appearance.Body"*/-->
+            <input type="checkbox" th:name="body" th:value="${body.getId()}" th:text="#{${body.getName()}}+${body.isRare()?'*':''}"></input>
+        </div>
+        <br/>
+        <input type="checkbox" th:name="ears" th:value="null" checked="checked">Любые уши</input>
+        <div th:each="ears : ${earsList}">
+            <!--/*@thymesVar id="ears" type="dyn.model.appearance.Ears"*/-->
+            <input type="checkbox" th:name="ears" th:value="${ears.getId()}" th:text="#{${ears.getName()}}+${ears.isRare()?'*':''}"></input>
+        </div>
+        <br/>
+        <input type="checkbox" th:name="eyebrows" th:value="null" checked="checked">Любые брови</input>
+        <div th:each="eyebrows : ${eyebrowsList}">
+            <!--/*@thymesVar id="eyebrows" type="dyn.model.appearance.Eyebrows"*/-->
+            <input type="checkbox" th:name="eyebrows" th:value="${eyebrows.getId()}" th:text="#{${eyebrows.getName()}}+${eyebrows.isRare()?'*':''}"></input>
+        </div>
+        <p>
+            <input type="hidden" name="characterId" th:value="${characterId}"/>
+            <button type="submit" align="center" id="submit" name="submit" class="btn btn-primary center-block">Generate</button>
+        </p>
+    </form>
 </div>
 <script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>

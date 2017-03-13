@@ -9,8 +9,12 @@ import dyn.model.Character;
 import dyn.model.Family;
 import dyn.model.Fiancee;
 import dyn.model.User;
+import dyn.model.appearance.Body;
+import dyn.model.appearance.Ears;
+import dyn.model.appearance.Eyebrows;
 import dyn.repository.*;
 import dyn.service.AppearanceService;
+import dyn.utils.CartesianIterator;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +27,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.ArrayList;
 
 @Controller
 public class AdminController {
@@ -68,8 +74,21 @@ public class AdminController {
 
     @RequestMapping("/admin/race")
     public String race(ModelMap model) {
-
         model.addAttribute("raceList", raceRepository.findAll());
+
+        model.addAttribute("bodyList", app.getBodyList(app.ALL));
+        model.addAttribute("earsList", app.getEarsList(app.ALL));
+        model.addAttribute("eyebrowsList", app.getEyebrowsList(app.ALL));
+        model.addAttribute("eyeColorList", app.getEyeColorList(app.ALL));
+        model.addAttribute("eyesList", app.getEyesList(app.ALL));
+        model.addAttribute("hairColorList", app.getHairColorList(app.ALL));
+        model.addAttribute("hairStyleList", app.getHairStyleList(app.ALL));
+        model.addAttribute("hairTypeList", app.getHairTypeList(app.ALL));
+        model.addAttribute("headList", app.getHeadList(app.ALL));
+        model.addAttribute("heightList", app.getHeightList(app.ALL));
+        model.addAttribute("mouthList", app.getMouthList(app.ALL));
+        model.addAttribute("noseList", app.getNoseList(app.ALL));
+        model.addAttribute("skinColorList", app.getSkinColorList(app.ALL));
         return "admin/race";
     }
 
@@ -162,6 +181,38 @@ public class AdminController {
         return "admin/random";
     }
 
+    @RequestMapping(value = "/admin/generateRace", method = RequestMethod.POST)
+    public String generateRace(ModelMap model,
+                               @RequestParam("body") ArrayList<Body> bodyList,
+                               @RequestParam("ears") ArrayList<Ears> earsList,
+                               @RequestParam("eyebrows") ArrayList<Eyebrows> eyebrowsList,
+                               RedirectAttributes redirectAttributes) {
+        for (Body body : bodyList) {
+            System.out.println("body = " + body.getName());
+        }
+        for (Ears ears : earsList) {
+            System.out.println("ears = " + ears.getName());
+        }
+        for (Eyebrows eyebrows : eyebrowsList) {
+            System.out.println("eyebrows = " + eyebrows.getName());
+        }
+        if (earsList.isEmpty()) {
+            System.out.println("earsList.isEmpty()");
+            earsList.add(null);
+        }
+        CartesianIterator it = new CartesianIterator(
+                bodyList,
+                earsList,
+                eyebrowsList);
+        while (it.hasNext()) {
+            Object[] objects = it.next();
+            Body b = (Body) objects[0];
+            Ears e = (Ears) objects[1];
+            Eyebrows w = (Eyebrows) objects[2];
+            System.out.println("b=" + b.getName() + ", e = " + (e == null ? "null" : e.getName()) + ", w = " + w.getName());
+        }
+        return "redirect:/admin/race";
+    }
 
     private UserDetails getAuthUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
