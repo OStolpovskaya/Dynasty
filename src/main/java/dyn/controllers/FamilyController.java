@@ -142,14 +142,14 @@ public class FamilyController {
         founder.setFamily(family);
         founder.setLevel(0);
         founder.setRace(raceRepository.findByName("race.human"));
-        System.out.println(founder.toString());
+        logger.debug(founder.toString());
         characterRepository.save(founder);
 
         foundress.setSpouse(founder);
         foundress.setFamily(null);
         foundress.setLevel(0);
         foundress.setRace(raceRepository.findByName("race.human"));
-        System.out.println(foundress.toString());
+        logger.debug(foundress.toString());
         characterRepository.save(foundress);
 
         founder.setSpouse(foundress);

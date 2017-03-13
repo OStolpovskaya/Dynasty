@@ -7,3 +7,5 @@
 пройтись по set и get head например
 messages.tooltip и список параметров к нему
 addNewFamily.html
+raceappearanceform
+admincontroller apperance and race

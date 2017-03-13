@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1
--- Время создания: Мар 12 2017 г., 15:24
+-- Время создания: Мар 14 2017 г., 00:33
 -- Версия сервера: 5.5.25
 -- Версия PHP: 5.3.13
 
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS `achievement` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(30) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=11 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=15 ;
 
 --
 -- Дамп данных таблицы `achievement`
@@ -40,7 +40,11 @@ INSERT INTO `achievement` (`id`, `name`) VALUES
 (7, 'achiev.first_dwarf'),
 (8, 'achiev.first_vampire'),
 (9, 'achiev.first_pixy'),
-(10, 'achiev.first_troll');
+(10, 'achiev.first_troll'),
+(11, 'achiev.first_medusa'),
+(12, 'achiev.first_alien'),
+(13, 'achiev.first_werewolf'),
+(14, 'achiev.first_demon');
 
 -- --------------------------------------------------------
 
@@ -77,7 +81,7 @@ CREATE TABLE IF NOT EXISTS `app_ears` (
   `type` enum('usual','rare') NOT NULL,
   `name` varchar(30) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
 
 --
 -- Дамп данных таблицы `app_ears`
@@ -90,7 +94,8 @@ INSERT INTO `app_ears` (`id`, `type`, `name`) VALUES
 (4, 'usual', 'app.ears.protruding'),
 (5, 'rare', 'app.ears.high_long'),
 (6, 'rare', 'app.ears.big_pointed'),
-(7, 'rare', 'app.ears.none');
+(7, 'rare', 'app.ears.none'),
+(8, 'rare', 'app.ears.small_horns');
 
 -- --------------------------------------------------------
 
@@ -1760,7 +1765,7 @@ CREATE TABLE IF NOT EXISTS `race` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(30) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=16 ;
 
 --
 -- Дамп данных таблицы `race`
@@ -1777,8 +1782,154 @@ INSERT INTO `race` (`id`, `name`) VALUES
 (8, 'race.dwarf'),
 (9, 'race.vampire'),
 (10, 'race.pixy'),
-(11, 'race.troll');
+(11, 'race.troll'),
+(12, 'race.medusa'),
+(13, 'race.alien'),
+(14, 'race.werewolf'),
+(15, 'race.demon');
 
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `race_appearance`
+--
+
+CREATE TABLE IF NOT EXISTS `race_appearance` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `race_id` int(11) NOT NULL,
+  `body` int(4) DEFAULT NULL,
+  `ears` int(4) DEFAULT NULL,
+  `eyebrows` int(4) DEFAULT NULL,
+  `eye_color` int(4) DEFAULT NULL,
+  `eyes` int(4) DEFAULT NULL,
+  `hair_color` int(4) DEFAULT NULL,
+  `hair_type` int(4) DEFAULT NULL,
+  `head` int(4) DEFAULT NULL,
+  `height` int(4) DEFAULT NULL,
+  `mouth` int(4) DEFAULT NULL,
+  `nose` int(4) DEFAULT NULL,
+  `skin_color` int(4) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=76 ;
+
+--
+-- Дамп данных таблицы `race_appearance`
+--
+
+INSERT INTO `race_appearance` (`id`, `race_id`, `body`, `ears`, `eyebrows`, `eye_color`, `eyes`, `hair_color`, `hair_type`, `head`, `height`, `mouth`, `nose`, `skin_color`) VALUES
+(4, 5, 2, 5, NULL, NULL, NULL, NULL, NULL, 1, 7, NULL, 3, NULL),
+(5, 5, 2, 5, NULL, NULL, NULL, NULL, NULL, 1, 7, NULL, 4, NULL),
+(6, 5, 2, 5, NULL, NULL, NULL, NULL, NULL, 1, 7, NULL, 5, NULL),
+(7, 5, 2, 5, NULL, NULL, NULL, NULL, NULL, 2, 7, NULL, 3, NULL),
+(8, 5, 2, 5, NULL, NULL, NULL, NULL, NULL, 2, 7, NULL, 4, NULL),
+(9, 5, 2, 5, NULL, NULL, NULL, NULL, NULL, 2, 7, NULL, 5, NULL),
+(10, 5, 2, 5, NULL, NULL, NULL, NULL, NULL, 3, 7, NULL, 3, NULL),
+(11, 5, 2, 5, NULL, NULL, NULL, NULL, NULL, 3, 7, NULL, 4, NULL),
+(12, 5, 2, 5, NULL, NULL, NULL, NULL, NULL, 3, 7, NULL, 5, NULL),
+(13, 5, 3, 5, NULL, NULL, NULL, NULL, NULL, 1, 7, NULL, 3, NULL),
+(14, 5, 3, 5, NULL, NULL, NULL, NULL, NULL, 1, 7, NULL, 4, NULL),
+(15, 5, 3, 5, NULL, NULL, NULL, NULL, NULL, 1, 7, NULL, 5, NULL),
+(16, 5, 3, 5, NULL, NULL, NULL, NULL, NULL, 2, 7, NULL, 3, NULL),
+(17, 5, 3, 5, NULL, NULL, NULL, NULL, NULL, 2, 7, NULL, 4, NULL),
+(18, 5, 3, 5, NULL, NULL, NULL, NULL, NULL, 2, 7, NULL, 5, NULL),
+(19, 5, 3, 5, NULL, NULL, NULL, NULL, NULL, 3, 7, NULL, 3, NULL),
+(20, 5, 3, 5, NULL, NULL, NULL, NULL, NULL, 3, 7, NULL, 4, NULL),
+(21, 5, 3, 5, NULL, NULL, NULL, NULL, NULL, 3, 7, NULL, 5, NULL),
+(22, 3, NULL, NULL, NULL, NULL, 2, 5, 1, NULL, 1, NULL, NULL, 4),
+(23, 3, NULL, NULL, NULL, NULL, 2, 5, 1, NULL, 2, NULL, NULL, 4),
+(24, 2, NULL, NULL, NULL, NULL, NULL, 5, 2, NULL, NULL, 2, 7, 3),
+(25, 4, 1, NULL, NULL, NULL, NULL, 5, 1, NULL, 3, NULL, 3, 5),
+(26, 4, 1, NULL, NULL, NULL, NULL, 5, 1, NULL, 3, NULL, 4, 5),
+(27, 4, 1, NULL, NULL, NULL, NULL, 5, 1, NULL, 3, NULL, 6, 5),
+(28, 4, 1, NULL, NULL, NULL, NULL, 5, 1, NULL, 4, NULL, 3, 5),
+(29, 4, 1, NULL, NULL, NULL, NULL, 5, 1, NULL, 4, NULL, 4, 5),
+(30, 4, 1, NULL, NULL, NULL, NULL, 5, 1, NULL, 4, NULL, 6, 5),
+(31, 4, 2, NULL, NULL, NULL, NULL, 5, 1, NULL, 3, NULL, 3, 5),
+(32, 4, 2, NULL, NULL, NULL, NULL, 5, 1, NULL, 3, NULL, 4, 5),
+(33, 4, 2, NULL, NULL, NULL, NULL, 5, 1, NULL, 3, NULL, 6, 5),
+(34, 4, 2, NULL, NULL, NULL, NULL, 5, 1, NULL, 4, NULL, 3, 5),
+(35, 4, 2, NULL, NULL, NULL, NULL, 5, 1, NULL, 4, NULL, 4, 5),
+(36, 4, 2, NULL, NULL, NULL, NULL, 5, 1, NULL, 4, NULL, 6, 5),
+(37, 6, 4, 6, NULL, NULL, NULL, NULL, NULL, 4, 7, 9, NULL, 7),
+(38, 6, 4, 6, NULL, NULL, NULL, NULL, NULL, 5, 7, 9, NULL, 7),
+(39, 7, 2, 6, NULL, NULL, NULL, NULL, NULL, NULL, 6, NULL, NULL, 8),
+(40, 7, 3, 6, NULL, NULL, NULL, NULL, NULL, NULL, 6, NULL, NULL, 8),
+(41, 8, 4, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 6, NULL, 1, NULL),
+(42, 8, 4, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 6, NULL, 2, NULL),
+(43, 8, 4, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 6, NULL, 6, NULL),
+(44, 9, NULL, NULL, NULL, 11, NULL, NULL, NULL, NULL, NULL, 10, NULL, 6),
+(45, 10, 5, 1, NULL, NULL, NULL, NULL, NULL, NULL, 6, NULL, 4, NULL),
+(46, 10, 5, 1, NULL, NULL, NULL, NULL, NULL, NULL, 6, NULL, 5, NULL),
+(47, 10, 5, 2, NULL, NULL, NULL, NULL, NULL, NULL, 6, NULL, 4, NULL),
+(48, 10, 5, 2, NULL, NULL, NULL, NULL, NULL, NULL, 6, NULL, 5, NULL),
+(49, 11, NULL, 5, NULL, NULL, NULL, NULL, NULL, NULL, 7, 9, NULL, 9),
+(50, 12, NULL, NULL, NULL, 12, NULL, NULL, 6, NULL, 4, NULL, NULL, 9),
+(51, 12, NULL, NULL, NULL, 12, NULL, NULL, 6, NULL, 5, NULL, NULL, 9),
+(52, 13, 2, 7, 7, NULL, 8, NULL, 5, 6, 6, 5, NULL, 6),
+(53, 13, 2, 7, 7, NULL, 8, NULL, 5, 6, 6, 7, NULL, 6),
+(54, 13, 2, 7, 7, NULL, 8, NULL, 5, 6, 6, 8, NULL, 6),
+(55, 13, 3, 7, 7, NULL, 8, NULL, 5, 6, 6, 5, NULL, 6),
+(56, 13, 3, 7, 7, NULL, 8, NULL, 5, 6, 6, 7, NULL, 6),
+(57, 13, 3, 7, 7, NULL, 8, NULL, 5, 6, 6, 8, NULL, 6),
+(58, 14, 4, 6, NULL, 12, NULL, NULL, NULL, NULL, 4, 9, NULL, NULL),
+(59, 14, 4, 6, NULL, 12, NULL, NULL, NULL, NULL, 5, 9, NULL, NULL),
+(60, 15, NULL, 8, 2, 11, NULL, NULL, NULL, NULL, 6, 10, 3, NULL),
+(61, 15, NULL, 8, 2, 11, NULL, NULL, NULL, NULL, 6, 10, 4, NULL),
+(62, 15, NULL, 8, 2, 11, NULL, NULL, NULL, NULL, 6, 10, 5, NULL),
+(63, 15, NULL, 8, 2, 11, NULL, NULL, NULL, NULL, 6, 10, 6, NULL),
+(64, 15, NULL, 8, 2, 12, NULL, NULL, NULL, NULL, 6, 10, 3, NULL),
+(65, 15, NULL, 8, 2, 12, NULL, NULL, NULL, NULL, 6, 10, 4, NULL),
+(66, 15, NULL, 8, 2, 12, NULL, NULL, NULL, NULL, 6, 10, 5, NULL),
+(67, 15, NULL, 8, 2, 12, NULL, NULL, NULL, NULL, 6, 10, 6, NULL),
+(68, 15, NULL, 8, 6, 11, NULL, NULL, NULL, NULL, 6, 10, 3, NULL),
+(69, 15, NULL, 8, 6, 11, NULL, NULL, NULL, NULL, 6, 10, 4, NULL),
+(70, 15, NULL, 8, 6, 11, NULL, NULL, NULL, NULL, 6, 10, 5, NULL),
+(71, 15, NULL, 8, 6, 11, NULL, NULL, NULL, NULL, 6, 10, 6, NULL),
+(72, 15, NULL, 8, 6, 12, NULL, NULL, NULL, NULL, 6, 10, 3, NULL),
+(73, 15, NULL, 8, 6, 12, NULL, NULL, NULL, NULL, 6, 10, 4, NULL),
+(74, 15, NULL, 8, 6, 12, NULL, NULL, NULL, NULL, 6, 10, 5, NULL),
+(75, 15, NULL, 8, 6, 12, NULL, NULL, NULL, NULL, 6, 10, 6, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Дублирующая структура для представления `race_appearance_sum`
+--
+CREATE TABLE IF NOT EXISTS `race_appearance_sum` (
+`title` varchar(30)
+,`height` varchar(30)
+,`skin_color` varchar(30)
+,`hair_color` varchar(30)
+,`hair_type` varchar(30)
+,`head` varchar(30)
+,`ears` varchar(30)
+,`eyebrowse` varchar(30)
+,`eyes` varchar(30)
+,`eye_color` varchar(30)
+,`nose` varchar(30)
+,`mouth` varchar(30)
+,`body` varchar(35)
+);
+-- --------------------------------------------------------
+
+--
+-- Дублирующая структура для представления `race_appearance_summary`
+--
+CREATE TABLE IF NOT EXISTS `race_appearance_summary` (
+`title` varchar(30)
+,`height` text
+,`skin color` text
+,`hair color` text
+,`hair type` text
+,`head` text
+,`ears` text
+,`eyebrowse` text
+,`eyes` text
+,`eye_color` text
+,`nose` text
+,`mouth` text
+,`body` text
+);
 -- --------------------------------------------------------
 
 --
@@ -1833,6 +1984,24 @@ INSERT INTO `user_roles` (`user_role_id`, `userid`, `role`) VALUES
 (13, 12, 'ROLE_USER'),
 (14, 13, 'ROLE_USER'),
 (2, 1, 'ROLE_ADMIN');
+
+-- --------------------------------------------------------
+
+--
+-- Структура для представления `race_appearance_sum`
+--
+DROP TABLE IF EXISTS `race_appearance_sum`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `race_appearance_sum` AS select `t_race`.`name` AS `title`,`t_height`.`name` AS `height`,`t_skin_color`.`name` AS `skin_color`,`t_hair_color`.`name` AS `hair_color`,`t_hair_type`.`name` AS `hair_type`,`t_head`.`name` AS `head`,`t_ears`.`name` AS `ears`,`t_eyebrows`.`name` AS `eyebrowse`,`t_eyes`.`name` AS `eyes`,`t_eye_color`.`name` AS `eye_color`,`t_nose`.`name` AS `nose`,`t_mouth`.`name` AS `mouth`,`t_body`.`name` AS `body` from (((((((((((((`race_appearance` `r` left join `race` `t_race` on((`r`.`race_id` = `t_race`.`id`))) left join `app_height` `t_height` on((`r`.`height` = `t_height`.`id`))) left join `app_skin_color` `t_skin_color` on((`r`.`skin_color` = `t_skin_color`.`id`))) left join `app_hair_color` `t_hair_color` on((`r`.`hair_color` = `t_hair_color`.`id`))) left join `app_hair_type` `t_hair_type` on((`r`.`hair_type` = `t_hair_type`.`id`))) left join `app_head` `t_head` on((`r`.`head` = `t_head`.`id`))) left join `app_ears` `t_ears` on((`r`.`ears` = `t_ears`.`id`))) left join `app_eyebrows` `t_eyebrows` on((`r`.`eyebrows` = `t_eyebrows`.`id`))) left join `app_eyes` `t_eyes` on((`r`.`eyes` = `t_eyes`.`id`))) left join `app_eye_color` `t_eye_color` on((`r`.`eye_color` = `t_eye_color`.`id`))) left join `app_nose` `t_nose` on((`r`.`nose` = `t_nose`.`id`))) left join `app_mouth` `t_mouth` on((`r`.`mouth` = `t_mouth`.`id`))) left join `app_body` `t_body` on((`r`.`body` = `t_body`.`id`)));
+
+-- --------------------------------------------------------
+
+--
+-- Структура для представления `race_appearance_summary`
+--
+DROP TABLE IF EXISTS `race_appearance_summary`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `race_appearance_summary` AS select `race_appearance_sum`.`title` AS `title`,group_concat(distinct `race_appearance_sum`.`height` separator ',') AS `height`,group_concat(distinct `race_appearance_sum`.`skin_color` separator ',') AS `skin color`,group_concat(distinct `race_appearance_sum`.`hair_color` separator ',') AS `hair color`,group_concat(distinct `race_appearance_sum`.`hair_type` separator ',') AS `hair type`,group_concat(distinct `race_appearance_sum`.`head` separator ',') AS `head`,group_concat(distinct `race_appearance_sum`.`ears` separator ',') AS `ears`,group_concat(distinct `race_appearance_sum`.`eyebrowse` separator ',') AS `eyebrowse`,group_concat(distinct `race_appearance_sum`.`eyes` separator ',') AS `eyes`,group_concat(distinct `race_appearance_sum`.`eye_color` separator ',') AS `eye_color`,group_concat(distinct `race_appearance_sum`.`nose` separator ',') AS `nose`,group_concat(distinct `race_appearance_sum`.`mouth` separator ',') AS `mouth`,group_concat(distinct `race_appearance_sum`.`body` separator ',') AS `body` from `race_appearance_sum` group by `race_appearance_sum`.`title`;
 
 --
 -- Ограничения внешнего ключа сохраненных таблиц
