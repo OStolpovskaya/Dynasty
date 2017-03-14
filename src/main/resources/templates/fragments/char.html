@@ -7,9 +7,14 @@
 </head>
 <body>
 <div th:fragment="char-view (character)">
-    <p align="center">
+    <!--/*@thymesVar id="character" type="dyn.model.Character"*/-->
+    <p align="center" style="margin-bottom: 3px;">
         <span th:if="${character.hasRareFeatures()}" th:text="${character.getName()+'*'}"></span>
         <span th:unless="${character.hasRareFeatures()}" th:text="${character.getName()}"></span>
+    </p>
+    <p align="center" style="font-size: 10px; margin: 0px;">
+        <span th:if="${character.getRace().getName() == 'race.human'}" th:text="#{${character.getRace().getName()}}"></span>
+        <span style="color:DarkOrchid" th:unless="${character.getRace().getName() == 'race.human'}" th:text="#{${character.getRace().getName()}}"></span>
     </p>
     <a href="/game/character" th:href="@{/game/character(characterId=${character.getId()})}">
         <img th:class="${character.getSex()} == 'male' ? male : female" height="100" width="100"

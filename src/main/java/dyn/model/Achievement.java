@@ -14,6 +14,11 @@ public class Achievement {
 
     private String name;
 
+    @Enumerated(EnumType.STRING)
+    private AchievementType type;
+
+    private String forWhat;
+
     public Long getId() {
         return id;
     }
@@ -28,5 +33,21 @@ public class Achievement {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public AchievementType getType() {
+        return type;
+    }
+
+    public void setType(AchievementType type) {
+        this.type = type;
+    }
+
+    public String getForWhat() {
+        return forWhat;
+    }
+
+    public void setForWhat(String forWhat) {
+        this.forWhat = forWhat;
     }
 }

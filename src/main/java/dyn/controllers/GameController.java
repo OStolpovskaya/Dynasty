@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 @Controller
 public class GameController {
@@ -50,6 +51,8 @@ public class GameController {
     private RaceRepository raceRepository;
     @Autowired
     private RaceAppearanceRepository raceAppearanceRepository;
+    @Autowired
+    private AchievementRepository achievementRepository;
     @Autowired
     private DriverManagerDataSource dataSource;
 
@@ -88,13 +91,22 @@ public class GameController {
         return "game";
     }
 
+    @RequestMapping("/game/achievements")
+    public String characterView(ModelMap model, RedirectAttributes redirectAttributes) {
+        User user = userRepository.findByUserName(getAuthUser().getUsername());
+        Set<Achievement> achievements = user.getAchievements();
+
+        model.addAttribute("achievements", achievements);
+        return "/game/awarded";
+    }
+
+
     @RequestMapping("/game/character")
     public String characterView(ModelMap model, RedirectAttributes redirectAttributes,
                                 @RequestParam(value = "characterId") long characterId) {
         Character character = characterRepository.findOne(characterId);
         model.addAttribute("character", character);
 
-        Race race = checkRace(character);
         return "/game/character";
     }
 
@@ -197,8 +209,15 @@ public class GameController {
                 child.setRace(race);
 
                 child.generateView();
-                logger.info("child: " + child.getName() + ", genModFeature = " + featureToGenMod + ", race: " + race.getName());
+                logger.info("   child: " + child.getName() + ", genModFeature = " + featureToGenMod + ", race: " + race.getName());
                 characterRepository.save(child);
+
+                Achievement achievement = achievementRepository.findByTypeAndForWhat(AchievementType.newborn, race.getName());
+                if (!user.getAchievements().contains(achievement)) {
+                    user.getAchievements().add(achievement);
+                    logger.info(user.getUserName() + " is awarded! Achievement: " + achievement.getName());
+                    userRepository.save(user);
+                }
             }
 
             family.setLevel(newLevel);

@@ -6,7 +6,9 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -41,6 +43,12 @@ public class User implements Serializable {
 
     @OneToMany(mappedBy = "user")
     private List<Family> families;
+
+    @ManyToMany
+    @JoinTable(name = "user_achievements",
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "achievement_id")})
+    private Set<Achievement> achievements = new HashSet<Achievement>();
 
     public User() {
 
@@ -104,6 +112,10 @@ public class User implements Serializable {
 
     public List<Family> getFamilies() {
         return families;
+    }
+
+    public Set<Achievement> getAchievements() {
+        return achievements;
     }
 
     public Family getCurrentFamily() {

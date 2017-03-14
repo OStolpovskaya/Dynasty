@@ -23,6 +23,7 @@
             Имя: [[${character.getName()}]]<br/>
             Уровень: [[${character.getLevel()}]]<br/>
             Пол: [[${character.getSex()}]]<br/>
+            Раса: [[#{${character.getRace().getName()}}]]<br/>
         </p>
         <p>Баффы:
             <th:block th:each="buff : ${character.getBuffs()}">

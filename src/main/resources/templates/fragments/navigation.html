@@ -9,18 +9,13 @@
 <div th:fragment="nav-for-index">
     <nav role="navigation" class="navbar navbar-default">
         <div>
-            <a href="http://www.yandex.ru" class="navbar-brand">Dynasty</a>
+            <a href="/" class="navbar-brand">Dynasty</a>
         </div>
         <div>
             <ul class="nav navbar-nav">
-                <li th:classappend="${#httpServletRequest.getRequestURI() == '/' ? 'active':''}"><a href="/">Home</a>
-                </li>
-                <li th:classappend="${#httpServletRequest.getRequestURI() == '/about' ? 'active':''}"><a href="/about">About</a>
-                </li>
-                <li th:classappend="${#httpServletRequest.getRequestURI() == '/login' ? 'active':''}"><a href="/login">Login</a>
-                </li>
-                <li th:classappend="${#httpServletRequest.getRequestURI() == '/reg' ? 'active':''}"><a href="/reg">Registration</a>
-                </li>
+                <li th:classappend="${#httpServletRequest.getRequestURI() == '/login' ? 'active':''}"><a href="/login">Game</a></li>
+                <li th:classappend="${#httpServletRequest.getRequestURI() == '/reg' ? 'active':''}"><a href="/reg">Registration</a></li>
+                <li th:classappend="${#httpServletRequest.getRequestURI() == '/about' ? 'active':''}"><a href="/about">About</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="?language=en">en</a></li>
@@ -32,13 +27,13 @@
 <div th:fragment="nav-for-game">
     <nav role="navigation" class="navbar navbar-default">
         <div>
-            <a href="http://www.yandex.ru" class="navbar-brand">Dynasty</a>
+            <a href="/" class="navbar-brand">Dynasty</a>
         </div>
         <div>
             <ul class="nav navbar-nav">
-                <li><a href="/">Home</a></li>
                 <li><a href="/game">Game</a></li>
                 <li><a href="/game/families">Families</a></li>
+                <li><a href="/game/achievements">Achievements</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="?language=en">en</a></li>
@@ -51,11 +46,10 @@
 <div th:fragment="nav-for-admin">
     <nav role="navigation" class="navbar navbar-default">
         <div>
-            <a href="http://www.yandex.ru" class="navbar-brand">Dynasty</a>
+            <a href="/" class="navbar-brand">Dynasty</a>
         </div>
         <div>
             <ul class="nav navbar-nav">
-                <li><a href="/">Home</a></li>
                 <li><a href="/admin">Admin</a></li>
                 <li><a href="/admin/appearance">Appearance</a></li>
                 <li><a href="/admin/race">Race</a></li>
