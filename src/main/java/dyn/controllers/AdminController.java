@@ -126,6 +126,25 @@ public class AdminController {
         return "redirect:/admin";
     }
 
+    @RequestMapping(value = "/admin/reGenerateView", method = RequestMethod.POST)
+    public String reGenerateView(ModelMap model,
+                                 @RequestParam("character_id") long characterId,
+                                 RedirectAttributes redirectAttributes) {
+        logger.debug("AdminController.generateFiancees, characterId=" + characterId);
+
+        Character character = characterRepository.findOne(characterId);
+        if (character != null) {
+            character.generateView();
+            characterRepository.save(character);
+        } else {
+            redirectAttributes.addFlashAttribute("mess", "ОШИБКА! Персонаж с id=" + characterId + " не найден!");
+            return "redirect:/admin";
+        }
+
+        redirectAttributes.addFlashAttribute("mess", "Персонаж обновлен: " + character.getName());
+        return "redirect:/admin";
+    }
+
     @RequestMapping("/admin/random")
     public String achievements(ModelMap model, @RequestParam(value = "sex", required = false) String sex) {
         if (sex == null || sex.isEmpty() || !sex.equals("female")) {

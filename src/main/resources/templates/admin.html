@@ -18,6 +18,11 @@
         <input type="text" name="level" value="1"/>
         <button class="btn-info" type="submit">Generate fiancee</button>
     </form>
+    <form action="#" th:action="@{/admin/reGenerateView}" method="post">
+        <label>Обновить view у персонажа:</label>
+        <input type="text" name="character_id" value="0"/>
+        <button class="btn-info" type="submit">Обновить</button>
+    </form>
 </div>
 <script src="webjars/jquery/1.9.1/jquery.min.js"></script>
 <script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>

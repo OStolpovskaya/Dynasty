@@ -5,20 +5,18 @@ package dyn.controllers;
  */
 
 
-import dyn.model.Buff;
+import dyn.model.*;
 import dyn.model.Character;
-import dyn.model.Family;
-import dyn.model.User;
-import dyn.repository.CharacterRepository;
-import dyn.repository.FamilyRepository;
-import dyn.repository.RaceRepository;
-import dyn.repository.UserRepository;
+import dyn.repository.*;
 import dyn.service.AppearanceService;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -50,6 +48,10 @@ public class GameController {
     private CharacterRepository characterRepository;
     @Autowired
     private RaceRepository raceRepository;
+    @Autowired
+    private RaceAppearanceRepository raceAppearanceRepository;
+    @Autowired
+    private DriverManagerDataSource dataSource;
 
     public static Locale loc() {
         return LocaleContextHolder.getLocale();
@@ -92,6 +94,7 @@ public class GameController {
         Character character = characterRepository.findOne(characterId);
         model.addAttribute("character", character);
 
+        Race race = checkRace(character);
         return "/game/character";
     }
 
@@ -174,7 +177,6 @@ public class GameController {
                         genModded = true;
                     }
                 }
-                logger.info("child: " + child.getName() + ", genModFeature = " + featureToGenMod);
 
                 child.setBody(featureToGenMod == 1 ? app.getRandomBody(app.RARE) : (Math.random() < dominantPercent ? character.getBody() : wife.getBody()));
                 child.setEars(featureToGenMod == 2 ? app.getRandomEars(app.RARE) : (Math.random() < dominantPercent ? character.getEars() : wife.getEars()));
@@ -191,10 +193,11 @@ public class GameController {
 
                 child.setHairStyle(app.getRandomHairStyle(child.getSex(), child.getHairType()));
 
-                //TODO: race computation
-                child.setRace(raceRepository.findByName("race.human"));
+                Race race = checkRace(child);
+                child.setRace(race);
 
                 child.generateView();
+                logger.info("child: " + child.getName() + ", genModFeature = " + featureToGenMod + ", race: " + race.getName());
                 characterRepository.save(child);
             }
 
@@ -203,6 +206,31 @@ public class GameController {
         }
 
         return "redirect:/game";
+    }
+
+    private Race checkRace(Character character) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+
+        StringBuilder query = new StringBuilder("SELECT id FROM `race_appearance` WHERE ").
+                append(String.format("(`%1$s` = %2$s OR (`%1$s` is null AND %3$s)) AND ", "body", character.getBody().getId(), !character.getBody().isRare())).
+                append(String.format("(`%1$s` = %2$s OR (`%1$s` is null AND %3$s)) AND ", "ears", character.getEars().getId(), !character.getEars().isRare())).
+                append(String.format("(`%1$s` = %2$s OR (`%1$s` is null AND %3$s)) AND ", "eyebrows", character.getEyebrows().getId(), !character.getEyebrows().isRare())).
+                append(String.format("(`%1$s` = %2$s OR (`%1$s` is null AND %3$s)) AND ", "eye_color", character.getEyeColor().getId(), !character.getEyeColor().isRare())).
+                append(String.format("(`%1$s` = %2$s OR (`%1$s` is null AND %3$s)) AND ", "eyes", character.getEyes().getId(), !character.getEyes().isRare())).
+                append(String.format("(`%1$s` = %2$s OR (`%1$s` is null AND %3$s)) AND ", "hair_color", character.getHairColor().getId(), !character.getHairColor().isRare())).
+                append(String.format("(`%1$s` = %2$s OR (`%1$s` is null AND %3$s)) AND ", "hair_type", character.getHairType().getId(), !character.getHairType().isRare())).
+                append(String.format("(`%1$s` = %2$s OR (`%1$s` is null AND %3$s)) AND ", "head", character.getHead().getId(), !character.getHead().isRare())).
+                append(String.format("(`%1$s` = %2$s OR (`%1$s` is null AND %3$s)) AND ", "height", character.getHeight().getId(), !character.getHeight().isRare())).
+                append(String.format("(`%1$s` = %2$s OR (`%1$s` is null AND %3$s)) AND ", "mouth", character.getMouth().getId(), !character.getMouth().isRare())).
+                append(String.format("(`%1$s` = %2$s OR (`%1$s` is null AND %3$s)) AND ", "nose", character.getNose().getId(), !character.getNose().isRare())).
+                append(String.format("(`%1$s` = %2$s OR (`%1$s` is null AND %3$s))", "skin_color", character.getSkinColor().getId(), !character.getSkinColor().isRare()));
+        try {
+            Long raceAppearanceId = jdbcTemplate.queryForObject(query.toString(), Long.class);
+            RaceAppearance raceAppearance = raceAppearanceRepository.findOne(raceAppearanceId);
+            return raceRepository.findOne(raceAppearance.getRace().getId());
+        } catch (EmptyResultDataAccessException e) {
+            return raceRepository.findByName("race.human");
+        }
     }
 
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
