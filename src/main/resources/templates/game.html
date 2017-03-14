@@ -8,49 +8,52 @@
 </head>
 <body>
 <div th:replace="fragments/navigation :: nav-for-game"></div>
-<div class="container">
+<div style="margin: 10px;">
     <p>Игра</p>
     <p class="has-error" th:text="${mess}"></p>
     <h1 th:inline="text">Hello [[${user.getUserName()}]]!</h1>
     <p th:inline="text">Current family: [[${currentFamily?.getFamilyName()}]] Level: [[${currentFamily?.getLevel()}]] Money: [[${currentFamily?.getMoney()}]]</p>
-    <div style="display: inline-block; margin-bottom: 3px; border: 2px solid; vertical-align: top" th:each="father : ${fathers}">
-        <div align="center">
-            <div class="char-view-div">
-                <div th:replace="fragments/char :: char-view (character=${father})"></div>
+    <div style="margin:10px; overflow-x: scroll; white-space: nowrap;">
+
+        <div align="center" style="display: inline-block; margin-bottom: 3px; border: 2px solid; vertical-align: top" th:each="father : ${fathers}">
+            <div align="center">
+                <div class="char-view-div">
+                    <div th:replace="fragments/char :: char-view (character=${father})"></div>
+                </div>
+                <!--/*@thymesVar id="father" type="dyn.model.Character"*/-->
+                <div class="char-view-div" style="vertical-align: top" th:if="${father.getSpouse() != null}">
+                    <div th:replace="fragments/char :: char-view (character=${father.getSpouse()})"></div>
+                </div>
+                <br></br>
             </div>
-            <!--/*@thymesVar id="father" type="dyn.model.Character"*/-->
-            <div class="char-view-div" style="vertical-align: top" th:if="${father.getSpouse() != null}">
-                <div th:replace="fragments/char :: char-view (character=${father.getSpouse()})"></div>
+            <div style="display: inline-block; height:180px; margin-bottom: 3px; border: 2px solid lightgreen; vertical-align: top" th:each="child : ${father.getChildren()}">
+                <!--/*@thymesVar id="child" type="dyn.model.Character"*/-->
+                <div class="char-view-div" style="vertical-align: top;">
+                    <div th:replace="fragments/char :: char-view (character=${child})"></div>
+                </div>
+                <div class="char-view-div" th:if="${child.getSpouse() != null}">
+                    <div th:replace="fragments/char :: char-view (character=${child.getSpouse()})"></div>
+                </div>
+                <br></br>
+                <div style="text-align: center;" th:if="${child.getSex() == 'male' and child.getSpouse() == null}">
+                    <a href="/game/chooseFiancee" th:href="@{/game/chooseFiancee(characterId=${child.getId()})}" th:text="#{game.chooseFiancee}">Choose fiancee</a>
+                </div>
+                <div style="text-align: center; margin-top: 10px;" th:if="${child.getSex() == 'male' and child.getSpouse() != null}">
+                    <a href="/game/chooseBuffs" th:href="@{/game/chooseBuffs(characterId=${child.getId()})}" th:text="#{game.chooseBuffs}">Choose buffs</a>
+                </div>
+                <div th:if="${child.getSex() == 'female' and child.getSpouse() == null and child.isFiancee() == false}">
+                    <form class="form-inline" th:action="@{/game/putUpForFiancee}" method="post">
+                        <input type="text" name="cost" class="form-control" value="50" style="width: 60px;height: 23px;margin-left: 4px;" data-toggle="tooltip" th:title="#{postFiancee.tooltip.cost}"/>
+                        <input type="hidden" name="female" th:value="${child.getId()}"/>
+                        <button class="btn btn-xs btn-primary" type="submit" data-toggle="tooltip" th:title="#{postFiancee.tooltip.button}">V</button>
+                    </form>
+                </div>
             </div>
-            <br></br>
         </div>
-        <div style="display: inline-block; height:180px; margin-bottom: 3px; border: 2px solid lightgreen; vertical-align: top" th:each="child : ${father.getChildren()}">
-            <!--/*@thymesVar id="child" type="dyn.model.Character"*/-->
-            <div class="char-view-div" style="vertical-align: top;">
-                <div th:replace="fragments/char :: char-view (character=${child})"></div>
-            </div>
-            <div class="char-view-div" th:if="${child.getSpouse() != null}">
-                <div th:replace="fragments/char :: char-view (character=${child.getSpouse()})"></div>
-            </div>
-            <br></br>
-            <div style="text-align: center;" th:if="${child.getSex() == 'male' and child.getSpouse() == null}">
-                <a href="/game/chooseFiancee" th:href="@{/game/chooseFiancee(characterId=${child.getId()})}" th:text="#{game.chooseFiancee}">Choose fiancee</a>
-            </div>
-            <div style="text-align: center; margin-top: 10px;" th:if="${child.getSex() == 'male' and child.getSpouse() != null}">
-                <a href="/game/chooseBuffs" th:href="@{/game/chooseBuffs(characterId=${child.getId()})}" th:text="#{game.chooseBuffs}">Choose buffs</a>
-            </div>
-            <div th:if="${child.getSex() == 'female' and child.getSpouse() == null and child.isFiancee() == false}">
-                <form class="form-inline" th:action="@{/game/putUpForFiancee}" method="post">
-                    <input type="text" name="cost" class="form-control" value="50" style="width: 60px;height: 23px;margin-left: 4px;" data-toggle="tooltip" th:title="#{postFiancee.tooltip.cost}"/>
-                    <input type="hidden" name="female" th:value="${child.getId()}"/>
-                    <button class="btn btn-xs btn-primary" type="submit" data-toggle="tooltip" th:title="#{postFiancee.tooltip.button}">V</button>
-                </form>
-            </div>
-        </div>
+        <form th:action="@{/game/turn}" method="post">
+            <button class="btn btn-lg btn-primary center-block" type="submit" th:text="#{game.turn}" style="margin-bottom: 10px; margin-top: 10px;">Turn!</button>
+        </form>
     </div>
-    <form th:action="@{/game/turn}" method="post">
-        <button class="btn btn-lg btn-primary center-block" type="submit" th:text="#{game.turn}">Turn!</button>
-    </form>
 </div>
 <script src="webjars/jquery/1.9.1/jquery.min.js"></script>
 <script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>

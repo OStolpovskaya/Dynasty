@@ -213,7 +213,7 @@ public class GameController {
                 characterRepository.save(child);
 
                 Achievement achievement = achievementRepository.findByTypeAndForWhat(AchievementType.newborn, race.getName());
-                if (!user.getAchievements().contains(achievement)) {
+                if (achievement != null && !user.getAchievements().contains(achievement)) {
                     user.getAchievements().add(achievement);
                     logger.info(user.getUserName() + " is awarded! Achievement: " + achievement.getName());
                     userRepository.save(user);

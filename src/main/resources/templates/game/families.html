@@ -4,6 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>Families</title>
     <link th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}" rel="stylesheet"></link>
+    <link th:href="@{/css/common.css}" rel="stylesheet"></link>
 </head>
 <body>
 <div th:replace="fragments/navigation :: nav-for-game"></div>
@@ -26,7 +27,33 @@
         </tbody>
     </table>
     <a href="/game/addNewFamily" class="btn btn-info" role="button">New family</a>
-
+    <h3>Current family history:</h3>
+</div>
+<div style="margin:10px; overflow-x: scroll; white-space: nowrap;">
+    <div align="center" th:each="level : ${levels}">
+        <div style="display: inline-block; margin-bottom: 3px; border: 2px solid; vertical-align: top" th:each="father : ${level}">
+            <div align="center">
+                <div class="char-view-div">
+                    <div th:replace="fragments/char :: char-view (character=${father})"></div>
+                </div>
+                <!--/*@thymesVar id="father" type="dyn.model.Character"*/-->
+                <div class="char-view-div" style="vertical-align: top" th:if="${father.getSpouse() != null}">
+                    <div th:replace="fragments/char :: char-view (character=${father.getSpouse()})"></div>
+                </div>
+                <br></br>
+            </div>
+            <div style="display: inline-block; height:180px; margin-bottom: 3px; border: 2px solid lightgreen; vertical-align: top" th:each="child : ${father.getChildren()}">
+                <!--/*@thymesVar id="child" type="dyn.model.Character"*/-->
+                <div class="char-view-div" style="vertical-align: top;">
+                    <div th:replace="fragments/char :: char-view (character=${child})"></div>
+                </div>
+                <div class="char-view-div" th:if="${child.getSpouse() != null}">
+                    <div th:replace="fragments/char :: char-view (character=${child.getSpouse()})"></div>
+                </div>
+                <br></br>
+            </div>
+        </div>
+    </div>
 </div>
 <script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>

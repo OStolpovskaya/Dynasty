@@ -52,6 +52,7 @@ public class FamilyController {
             return "redirect:/game/addNewFamily";
         } else {
             model.addAttribute("families", families);
+            model.addAttribute("levels", user.getCurrentFamily().getLevelOrderedFathers());
         }
         return "game/families";
     }

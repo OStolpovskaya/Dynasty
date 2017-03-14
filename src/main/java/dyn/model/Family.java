@@ -2,6 +2,7 @@ package dyn.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -115,6 +116,23 @@ public class Family {
 
     public void setCharacters(List<Character> characters) {
         this.characters = characters;
+    }
+
+    public List<List<Character>> getLevelOrderedFathers() {
+        List<List<Character>> array = new ArrayList<>(getLevel());
+        for (int i = 0; i < level; i++) {
+            array.add(new ArrayList<>());
+        }
+        System.out.println("array.size() = " + array.size());
+        System.out.println("array.get(0) = " + array.get(0));
+        System.out.println("array.get(0).size() = " + array.get(0).size());
+
+        for (Character character : characters) {
+            if (character.getSex().equals("male") && character.getSpouse() != null) {
+                array.get(character.getLevel()).add(character);
+            }
+        }
+        return array;
     }
 
     @Override
