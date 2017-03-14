@@ -19,18 +19,22 @@
     <!--/*@thymesVar id="character" type="dyn.model.Character"*/-->
     <div style="float: left">
         <p th:inline="text">
-            Family: [[${character.getFamily().getFamilyName()}]]<br/>
-            Name: [[${character.getName()}]]<br/>
-            Level: [[${character.getLevel()}]]<br/>
-            Sex: [[${character.getSex()}]]<br/>
-            Height: [[#{${character.getHeight().getName()}}]]<br/>
+            Династия: [[${character.getFamily().getFamilyName()}]]<br/>
+            Имя: [[${character.getName()}]]<br/>
+            Уровень: [[${character.getLevel()}]]<br/>
+            Пол: [[${character.getSex()}]]<br/>
+        </p>
+        <p>Баффы:
+            <th:block th:each="buff : ${character.getBuffs()}">
+                <li th:text="#{${buff.getTitle()}}"></li>
+            </th:block>
         </p>
     </div>
     <div style="float: right" align="center">
         <div class="char-view-div" th:if="${character.getFather() != null}">
             <div th:replace="fragments/char :: char-view (character=${character.getFather()})"></div>
         </div>
-        <div class="char-view-div" th:if="${character.getFather() != null}">
+        <div class="char-view-div" style="vertical-align: top" th:if="${character.getFather() != null}">
             <div th:replace="fragments/char :: char-view (character=${character.getFather().getSpouse()})"></div>
         </div>
         <br></br>

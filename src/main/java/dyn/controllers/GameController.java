@@ -9,7 +9,10 @@ import dyn.model.Buff;
 import dyn.model.Character;
 import dyn.model.Family;
 import dyn.model.User;
-import dyn.repository.*;
+import dyn.repository.CharacterRepository;
+import dyn.repository.FamilyRepository;
+import dyn.repository.RaceRepository;
+import dyn.repository.UserRepository;
 import dyn.service.AppearanceService;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -31,15 +34,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 @Controller
 public class GameController {
     private static final Logger logger = LogManager.getLogger(GameController.class);
     @Autowired
     MessageSource messageSource;
-    @Autowired
-    BuffRepository buffRepository;
     @Autowired
     AppearanceService app;
     @Autowired
@@ -105,50 +105,74 @@ public class GameController {
         List<Character> characters = characterRepository.findByFamilyAndLevelAndSexAndSpouseIsNotNull(family, family.getLevel(), "male");
         int newLevel = family.getLevel() + 1;
         for (Character character : characters) {
-            Set<Buff> buffs = character.getBuffs();
 
             double dominantPercent = 0.5; // whose feature is inherited, father or mother
-            if (buffs.contains(buffRepository.findByTitle(Buff.DOMINANT_MOTHER))) {
+            if (character.isBuffedBy(Buff.DOMINANT_MOTHER)) {
                 dominantPercent = 0.2;
             }
-            if (buffs.contains(buffRepository.findByTitle(Buff.DOMINANT_FATHER))) {
+            if (character.isBuffedBy(Buff.DOMINANT_FATHER)) {
                 dominantPercent = 0.8;
             }
 
             double sonOrDaughterPercent = 0.5; // male or female child
-            if (buffs.contains(buffRepository.findByTitle(Buff.MANY_SONS))) {
+            if (character.isBuffedBy(Buff.MANY_SONS)) {
                 sonOrDaughterPercent = 0.8;
             }
-            if (buffs.contains(buffRepository.findByTitle(Buff.MANY_DAUGHTERS))) {
+            if (character.isBuffedBy(Buff.MANY_DAUGHTERS)) {
                 sonOrDaughterPercent = 0.2;
             }
 
             double genModPercent = 0.05; // percentage of genetic modification
-            if (buffs.contains(buffRepository.findByTitle(Buff.GENETIC_MOD))) {
+            if (character.isBuffedBy(Buff.GENETIC_MOD)) {
                 genModPercent = 0.40;
+            }
+            if (character.isBuffedBy(Buff.FIVE_CHILDREN)) {
+                genModPercent = 1.00;
             }
 
             Character wife = character.getSpouse();
-            int childAmount = getAmountOfChildren(buffs);
+            int childAmount;
+            if (character.isBuffedBy(Buff.FIVE_CHILDREN)) {
+                childAmount = 5;
+            } else {
+                childAmount = getAmountOfChildren(character);
+            }
 
             logger.info(user.getUserName() + "'s character " + character.getName() + " marries " + wife.getName() + " and they have " + childAmount + " children");
+            boolean genModded = false;
 
             for (int i = 0; i < childAmount; i++) {
                 Character child = new Character();
-                if (Math.random() < sonOrDaughterPercent) {
-                    child.setSex("male");
+                if (character.isBuffedBy(Buff.FIVE_CHILDREN)) {
+                    if (i < 3) {
+                        child.setSex("male");
+                    } else {
+                        child.setSex("female");
+                    }
+                } else {
+                    if (Math.random() < sonOrDaughterPercent) {
+                        child.setSex("male");
+                    } else {
+                        child.setSex("female");
+                    }
+                }
+
+                if (child.getSex().equals("male")) {
                     child.setName(characterRepository.getRandomNameMale());
                 } else {
-                    child.setSex("female");
                     child.setName(characterRepository.getRandomNameFemale());
                 }
+
                 child.setFather(character);
                 child.setFamily(family);
                 child.setLevel(newLevel);
 
                 int featureToGenMod = 0; // which feature will have genetic modification
-                if (Math.random() < genModPercent) {
+                if (genModded == false && Math.random() < genModPercent) {
                     featureToGenMod = (int) (1 + Math.random() * 12);
+                    if (character.isBuffedBy(Buff.FIVE_CHILDREN)) {
+                        genModded = true;
+                    }
                 }
                 logger.info("child: " + child.getName() + ", genModFeature = " + featureToGenMod);
 
@@ -192,13 +216,10 @@ public class GameController {
         return "redirect:/";
     }
 
-    private int getAmountOfChildren(Set<Buff> buffs) {
+    private int getAmountOfChildren(Character character) {
         double[] percentage = new double[]{0.25, 0.55, 0.80, 0.90, 0.95, 0.98, 1.00}; // normal
-        if (buffs.contains(buffRepository.findByTitle(Buff.FERTILITY))) {
+        if (character.isBuffedBy(Buff.FERTILITY)) {
             percentage = new double[]{0.05, 0.15, 0.30, 0.50, 0.75, 0.90, 1.00}; // buff fertility
-        }
-        if (buffs.contains(buffRepository.findByTitle(Buff.FIVE_CHILDREN))) {
-            percentage = new double[]{0.00, 0.00, 0.00, 0.00, 1.00, 0.00, 0.00}; // buff 5 children
         }
 
         double random = Math.random();

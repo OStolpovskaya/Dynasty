@@ -312,6 +312,15 @@ public class Character {
         return buffs;
     }
 
+    public boolean isBuffedBy(String buffName) {
+        for (Buff buff : buffs) {
+            if (buff.getTitle().equals(buffName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public boolean isFiancee() {
         if (fiancee == null) {
             return false;

@@ -1,13 +1,11 @@
 package dyn.controllers;
 
 import dyn.form.FamilyForm;
+import dyn.model.Buff;
 import dyn.model.Character;
 import dyn.model.Family;
 import dyn.model.User;
-import dyn.repository.CharacterRepository;
-import dyn.repository.FamilyRepository;
-import dyn.repository.RaceRepository;
-import dyn.repository.UserRepository;
+import dyn.repository.*;
 import dyn.service.AppearanceService;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -42,6 +40,8 @@ public class FamilyController {
     private CharacterRepository characterRepository;
     @Autowired
     private RaceRepository raceRepository;
+    @Autowired
+    private BuffRepository buffRepository;
 
     @RequestMapping("game/families")
     public String families(ModelMap model) {
@@ -142,6 +142,10 @@ public class FamilyController {
         founder.setFamily(family);
         founder.setLevel(0);
         founder.setRace(raceRepository.findByName("race.human"));
+
+        Buff buff = buffRepository.findByTitle(Buff.FIVE_CHILDREN);
+        founder.getBuffs().add(buff);
+
         logger.debug(founder.toString());
         characterRepository.save(founder);
 
