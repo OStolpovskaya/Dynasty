@@ -115,9 +115,15 @@ public class FianceeController {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         Family family = user.getCurrentFamily();
 
+        if (cost < 50 * family.getLevel()) {
+            redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("becomeFiancee.costMustBeGreater", null, loc()));
+            logger.error(user.getUserName() + "'s character " + characterId + " can not become fiancee because small cost");
+            return "redirect:/game";
+        }
+
         Character character = characterRepository.findByIdAndFamilyAndLevelAndSexAndSpouseIsNull(characterId, family, family.getLevel(), "female");
 
-        if (character != null && character.isFiancee() == false) {
+        if (character != null && !character.isFiancee()) {
             Fiancee fiancee = new Fiancee();
             fiancee.setCharacter(character);
             fiancee.setCost(cost);

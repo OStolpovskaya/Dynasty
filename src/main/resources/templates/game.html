@@ -43,7 +43,7 @@
                 </div>
                 <div th:if="${child.getSex() == 'female' and child.getSpouse() == null and child.isFiancee() == false}">
                     <form class="form-inline" th:action="@{/game/putUpForFiancee}" method="post">
-                        <input type="text" name="cost" class="form-control" value="50" style="width: 60px;height: 23px;margin-left: 4px;" data-toggle="tooltip" th:title="#{postFiancee.tooltip.cost}"/>
+                        <input type="text" name="cost" class="form-control" th:value="${currentFamily.getLevel()}*50" style="width: 60px;height: 23px;margin-left: 4px;" data-toggle="tooltip" th:title="#{postFiancee.tooltip.cost}"/>
                         <input type="hidden" name="female" th:value="${child.getId()}"/>
                         <button class="btn btn-xs btn-primary" type="submit" data-toggle="tooltip" th:title="#{postFiancee.tooltip.button}">V</button>
                     </form>
