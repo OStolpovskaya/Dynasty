@@ -210,6 +210,23 @@ public class GameController {
                 child.setNose(featureToGenMod == 11 ? app.getRandomNose(app.RARE) : (Math.random() < dominantPercent ? character.getNose() : wife.getNose()));
                 child.setSkinColor(featureToGenMod == 12 ? app.getRandomSkinColor(app.RARE) : (Math.random() < dominantPercent ? character.getSkinColor() : wife.getSkinColor()));
 
+                if (featureToGenMod > 0) {
+                    String genModefeature = "";
+                    if (featureToGenMod == 1) genModefeature = messageSource.getMessage("app.body", null, loc());
+                    if (featureToGenMod == 2) genModefeature = messageSource.getMessage("app.ears", null, loc());
+                    if (featureToGenMod == 3) genModefeature = messageSource.getMessage("app.eyebrows", null, loc());
+                    if (featureToGenMod == 4) genModefeature = messageSource.getMessage("app.eye_color", null, loc());
+                    if (featureToGenMod == 5) genModefeature = messageSource.getMessage("app.eyes", null, loc());
+                    if (featureToGenMod == 6) genModefeature = messageSource.getMessage("app.hair_color", null, loc());
+                    if (featureToGenMod == 7) genModefeature = messageSource.getMessage("app.hair_type", null, loc());
+                    if (featureToGenMod == 8) genModefeature = messageSource.getMessage("app.head", null, loc());
+                    if (featureToGenMod == 9) genModefeature = messageSource.getMessage("app.height", null, loc());
+                    if (featureToGenMod == 10) genModefeature = messageSource.getMessage("app.mouth", null, loc());
+                    if (featureToGenMod == 11) genModefeature = messageSource.getMessage("app.nose", null, loc());
+                    if (featureToGenMod == 12) genModefeature = messageSource.getMessage("app.skin_color", null, loc());
+                    sb.append(messageSource.getMessage("turn.genModObtained", new Object[]{genModefeature}, loc()));
+                }
+
                 child.setHairStyle(app.getRandomHairStyle(child.getSex(), child.getHairType()));
 
                 Race race = raceService.defineRace(child);
