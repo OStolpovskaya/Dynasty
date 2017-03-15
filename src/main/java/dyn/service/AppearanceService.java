@@ -1,10 +1,12 @@
 package dyn.service;
 
+import dyn.form.RaceAppearanceForm;
 import dyn.model.appearance.*;
 import dyn.repository.appearance.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -315,5 +317,22 @@ public class AppearanceService {
             default:
                 return (List<SkinColor>) skinColorRepository.findAll();
         }
+    }
+
+    // =================================================================
+    public RaceAppearanceForm fillRaceAppearanceForm(RaceAppearanceForm form) {
+        form.setBodyList((ArrayList<Body>) getBodyList(ALL));
+        form.setEarsList((ArrayList<Ears>) getEarsList(ALL));
+        form.setEyebrowsList((ArrayList<Eyebrows>) getEyebrowsList(ALL));
+        form.setEyeColorList((ArrayList<EyeColor>) getEyeColorList(ALL));
+        form.setEyesList((ArrayList<Eyes>) getEyesList(ALL));
+        form.setHairColorList((ArrayList<HairColor>) getHairColorList(ALL));
+        form.setHairTypeList((ArrayList<HairType>) getHairTypeList(ALL));
+        form.setHeadList((ArrayList<Head>) getHeadList(ALL));
+        form.setHeightList((ArrayList<Height>) getHeightList(ALL));
+        form.setMouthList((ArrayList<Mouth>) getMouthList(ALL));
+        form.setNoseList((ArrayList<Nose>) getNoseList(ALL));
+        form.setSkinColorList((ArrayList<SkinColor>) getSkinColorList(ALL));
+        return form;
     }
 }

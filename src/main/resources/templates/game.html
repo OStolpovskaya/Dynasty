@@ -10,7 +10,7 @@
 <div th:replace="fragments/navigation :: nav-for-game"></div>
 <div style="margin: 10px;">
     <p>Игра</p>
-    <p class="has-error" th:text="${mess}"></p>
+    <p class="has-error" th:utext="${mess}"></p>
     <h1 th:inline="text">Hello [[${user.getUserName()}]]!</h1>
     <p th:inline="text">Current family: [[${currentFamily?.getFamilyName()}]] Level: [[${currentFamily?.getLevel()}]] Money: [[${currentFamily?.getMoney()}]]</p>
     <div style="margin:10px; overflow-x: scroll; white-space: nowrap;">

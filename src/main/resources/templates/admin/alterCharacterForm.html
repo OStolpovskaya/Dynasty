@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Alter character</title>
+    <link th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}" rel="stylesheet"></link>
+    <link th:href="@{/css/common.css}" rel="stylesheet"></link>
+</head>
+<body>
+<div th:replace="fragments/navigation :: nav-for-admin"></div>
+<div class="container">
+    <!--/*@thymesVar id="character" type="dyn.model.Character"*/-->
+    <div class="char-view-div" style="margin-left: 180px; margin-bottom: 10px;">
+        <div th:replace="fragments/char :: char-view (character=${character}, imsize=200)"></div>
+    </div>
+    <!--/*@thymesVar id="form" type="dyn.form.RaceAppearanceForm"*/-->
+    <form class="form-horizontal" th:action="@{/admin/alterCharacter}" method="post" th:object="${form}">
+        <div class="form-group">
+            <label class="control-label col-sm-2">Тело:</label>
+            <select th:field="${character.body}" class="form-control" style="width:250px;">
+                <option th:each="body : *{getBodyList()}" th:value="${body.getId()}" th:text="#{${body.getName()}}+${body.isRare()?'*':''}"></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">Уши:</label>
+            <select th:field="${character.ears}" class="form-control" style="width:250px;">
+                <option th:each="ears : *{getEarsList()}" th:value="${ears.getId()}" th:text="#{${ears.getName()}}+${ears.isRare()?'*':''}"></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">Брови:</label>
+            <select th:field="${character.eyebrows}" class="form-control" style="width:250px;">
+                <option th:each="eyebrows : *{getEyebrowsList()}" th:value="${eyebrows.getId()}" th:text="#{${eyebrows.getName()}}+${eyebrows.isRare()?'*':''}"></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">Цвет глаз:</label>
+            <select th:field="${character.eyeColor}" class="form-control" style="width:250px;">
+                <option th:each="eyeColor : *{getEyeColorList()}" th:value="${eyeColor.getId()}" th:text="#{${eyeColor.getName()}}+${eyeColor.isRare()?'*':''}"></option>
+            </select></div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">Глаза:</label>
+            <select th:field="${character.eyes}" class="form-control" style="width:250px;">
+                <option th:each="eyes : *{getEyesList()}" th:value="${eyes.getId()}" th:text="#{${eyes.getName()}}+${eyes.isRare()?'*':''}"></option>
+            </select></div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">Цвет волос:</label>
+            <select th:field="${character.hairColor}" class="form-control" style="width:250px;">
+                <option th:each="hairColor : *{getHairColorList()}" th:value="${hairColor.getId()}" th:text="#{${hairColor.getName()}}+${hairColor.isRare()?'*':''}"></option>
+            </select></div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">Тип волос:</label>
+            <select th:field="${character.hairType}" class="form-control" style="width:250px;">
+                <option th:each="hairType : *{getHairTypeList()}" th:value="${hairType.getId()}" th:text="#{${hairType.getName()}}+${hairType.isRare()?'*':''}"></option>
+            </select></div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">Голова:</label>
+            <select th:field="${character.head}" class="form-control" style="width:250px;">
+                <option th:each="head : *{getHeadList()}" th:value="${head.getId()}" th:text="#{${head.getName()}}+${head.isRare()?'*':''}"></option>
+            </select></div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">Рост:</label>
+            <select th:field="${character.height}" class="form-control" style="width:250px;">
+                <option th:each="height : *{getHeightList()}" th:value="${height.getId()}" th:text="#{${height.getName()}}+${height.isRare()?'*':''}"></option>
+            </select></div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">Рот:</label>
+            <select th:field="${character.mouth}" class="form-control" style="width:250px;">
+                <option th:each="mouth : *{getMouthList()}" th:value="${mouth.getId()}" th:text="#{${mouth.getName()}}+${mouth.isRare()?'*':''}"></option>
+            </select></div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">Нос:</label>
+            <select th:field="${character.nose}" class="form-control" style="width:250px;">
+                <option th:each="nose : *{getNoseList()}" th:value="${nose.getId()}" th:text="#{${nose.getName()}}+${nose.isRare()?'*':''}"></option>
+            </select></div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">Цвет кожи:</label>
+            <select th:field="${character.skinColor}" class="form-control" style="width:250px;">
+                <option th:each="skinColor : *{getSkinColorList()}" th:value="${skinColor.getId()}" th:text="#{${skinColor.getName()}}+${skinColor.isRare()?'*':''}"></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <input type="hidden" name="character_id" th:value="${character.getId()}"/>
+                <button type="submit" class="btn btn-default">Изменить</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
+</body>
+</html>

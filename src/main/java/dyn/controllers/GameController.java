@@ -7,16 +7,17 @@ package dyn.controllers;
 
 import dyn.model.*;
 import dyn.model.Character;
-import dyn.repository.*;
+import dyn.repository.AchievementRepository;
+import dyn.repository.CharacterRepository;
+import dyn.repository.FamilyRepository;
+import dyn.repository.UserRepository;
 import dyn.service.AppearanceService;
+import dyn.service.RaceService;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -39,22 +40,22 @@ public class GameController {
     private static final Logger logger = LogManager.getLogger(GameController.class);
     @Autowired
     MessageSource messageSource;
+
     @Autowired
     AppearanceService app;
+    @Autowired
+    RaceService raceService;
+
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private FamilyRepository familyRepository;
     @Autowired
     private CharacterRepository characterRepository;
-    @Autowired
-    private RaceRepository raceRepository;
-    @Autowired
-    private RaceAppearanceRepository raceAppearanceRepository;
+
     @Autowired
     private AchievementRepository achievementRepository;
-    @Autowired
-    private DriverManagerDataSource dataSource;
+
 
     public static Locale loc() {
         return LocaleContextHolder.getLocale();
@@ -111,9 +112,11 @@ public class GameController {
     }
 
     @RequestMapping(value = "/game/turn", method = RequestMethod.POST)
-    public String turn() {
+    public String turn(ModelMap model, RedirectAttributes redirectAttributes) {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         logger.info(user.getUserName() + " makes a turn!");
+
+        StringBuilder sb = new StringBuilder();
 
         Family family = user.getCurrentFamily();
 
@@ -154,6 +157,8 @@ public class GameController {
             }
 
             logger.info(user.getUserName() + "'s character " + character.getName() + " marries " + wife.getName() + " and they have " + childAmount + " children");
+            sb.append(messageSource.getMessage("turn.marriage", new Object[]{character.getName(), wife.getName(), childAmount}, loc()));
+            sb.append("<br>");
             boolean genModded = false;
 
             for (int i = 0; i < childAmount; i++) {
@@ -177,6 +182,8 @@ public class GameController {
                 } else {
                     child.setName(characterRepository.getRandomNameFemale());
                 }
+                sb.append(child.getName());
+
 
                 child.setFather(character);
                 child.setFamily(family);
@@ -205,7 +212,7 @@ public class GameController {
 
                 child.setHairStyle(app.getRandomHairStyle(child.getSex(), child.getHairType()));
 
-                Race race = checkRace(child);
+                Race race = raceService.defineRace(child);
                 child.setRace(race);
 
                 child.generateView();
@@ -216,40 +223,19 @@ public class GameController {
                 if (achievement != null && !user.getAchievements().contains(achievement)) {
                     user.getAchievements().add(achievement);
                     logger.info(user.getUserName() + " is awarded! Achievement: " + achievement.getName());
+                    String locAchievementName = messageSource.getMessage(achievement.getName(), null, loc());
+                    sb.append(messageSource.getMessage("turn.achievement", new Object[]{locAchievementName}, loc()));
                     userRepository.save(user);
                 }
+                sb.append("<br>");
             }
+            sb.append("<br>");
 
             family.setLevel(newLevel);
             familyRepository.save(family);
         }
-
+        redirectAttributes.addFlashAttribute("mess", sb.toString());
         return "redirect:/game";
-    }
-
-    private Race checkRace(Character character) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-
-        StringBuilder query = new StringBuilder("SELECT id FROM `race_appearance` WHERE ").
-                append(String.format("(`%1$s` = %2$s OR (`%1$s` is null AND %3$s)) AND ", "body", character.getBody().getId(), !character.getBody().isRare())).
-                append(String.format("(`%1$s` = %2$s OR (`%1$s` is null AND %3$s)) AND ", "ears", character.getEars().getId(), !character.getEars().isRare())).
-                append(String.format("(`%1$s` = %2$s OR (`%1$s` is null AND %3$s)) AND ", "eyebrows", character.getEyebrows().getId(), !character.getEyebrows().isRare())).
-                append(String.format("(`%1$s` = %2$s OR (`%1$s` is null AND %3$s)) AND ", "eye_color", character.getEyeColor().getId(), !character.getEyeColor().isRare())).
-                append(String.format("(`%1$s` = %2$s OR (`%1$s` is null AND %3$s)) AND ", "eyes", character.getEyes().getId(), !character.getEyes().isRare())).
-                append(String.format("(`%1$s` = %2$s OR (`%1$s` is null AND %3$s)) AND ", "hair_color", character.getHairColor().getId(), !character.getHairColor().isRare())).
-                append(String.format("(`%1$s` = %2$s OR (`%1$s` is null AND %3$s)) AND ", "hair_type", character.getHairType().getId(), !character.getHairType().isRare())).
-                append(String.format("(`%1$s` = %2$s OR (`%1$s` is null AND %3$s)) AND ", "head", character.getHead().getId(), !character.getHead().isRare())).
-                append(String.format("(`%1$s` = %2$s OR (`%1$s` is null AND %3$s)) AND ", "height", character.getHeight().getId(), !character.getHeight().isRare())).
-                append(String.format("(`%1$s` = %2$s OR (`%1$s` is null AND %3$s)) AND ", "mouth", character.getMouth().getId(), !character.getMouth().isRare())).
-                append(String.format("(`%1$s` = %2$s OR (`%1$s` is null AND %3$s)) AND ", "nose", character.getNose().getId(), !character.getNose().isRare())).
-                append(String.format("(`%1$s` = %2$s OR (`%1$s` is null AND %3$s))", "skin_color", character.getSkinColor().getId(), !character.getSkinColor().isRare()));
-        try {
-            Long raceAppearanceId = jdbcTemplate.queryForObject(query.toString(), Long.class);
-            RaceAppearance raceAppearance = raceAppearanceRepository.findOne(raceAppearanceId);
-            return raceRepository.findOne(raceAppearance.getRace().getId());
-        } catch (EmptyResultDataAccessException e) {
-            return raceRepository.findByName("race.human");
-        }
     }
 
     @RequestMapping(value = "/logout", method = RequestMethod.GET)

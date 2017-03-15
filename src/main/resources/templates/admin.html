@@ -13,16 +13,26 @@
     <p class="has-error" th:text="${mess}"></p>
     <p><a href="/admin/random">Random male</a></p>
     <p><a href="/admin/random?sex=female">Random female</a></p>
+    <h3>Создать невест:</h3>
     <form action="#" th:action="@{/admin/generateFiancee}" method="post">
-        <label>Level for new fiancees:</label>
+        <label>Уровень новых невест:</label>
         <input type="text" name="level" value="1"/>
-        <button class="btn-info" type="submit">Generate fiancee</button>
+        <button class="btn-info" type="submit">Создать</button>
     </form>
-    <form action="#" th:action="@{/admin/reGenerateView}" method="post">
-        <label>Обновить view у персонажа:</label>
+    <h3>Обновить персонажа:</h3>
+    <form action="#" th:action="@{/admin/updateCharacter}" method="post">
+        <label>ID персонажа:</label>
         <input type="text" name="character_id" value="0"/>
         <button class="btn-info" type="submit">Обновить</button>
     </form>
+    <h3>Изменить персонажа:</h3>
+    <form action="#" th:action="@{/admin/alterCharacterForm}" method="post">
+        <label>ID персонажа:</label>
+        <input type="text" name="character_id" value="0"/>
+        <button class="btn-info" type="submit">Изменить</button>
+    </form>
+
+
 </div>
 <script src="webjars/jquery/1.9.1/jquery.min.js"></script>
 <script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>

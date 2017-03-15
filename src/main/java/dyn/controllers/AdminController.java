@@ -5,12 +5,12 @@ package dyn.controllers;
  */
 
 
+import dyn.form.RaceAppearanceForm;
 import dyn.model.Character;
-import dyn.model.Family;
-import dyn.model.Fiancee;
-import dyn.model.User;
+import dyn.model.*;
 import dyn.repository.*;
 import dyn.service.AppearanceService;
+import dyn.service.RaceService;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,6 +30,9 @@ public class AdminController {
     private static final Logger logger = LogManager.getLogger(AdminController.class);
     @Autowired
     AppearanceService app;
+    @Autowired
+    RaceService raceService;
+
     @Autowired
     RaceRepository raceRepository;
     @Autowired
@@ -126,16 +130,15 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @RequestMapping(value = "/admin/reGenerateView", method = RequestMethod.POST)
-    public String reGenerateView(ModelMap model,
-                                 @RequestParam("character_id") long characterId,
-                                 RedirectAttributes redirectAttributes) {
+    @RequestMapping(value = "/admin/updateCharacter", method = RequestMethod.POST)
+    public String updateCharacterRequest(ModelMap model,
+                                         @RequestParam("character_id") long characterId,
+                                         RedirectAttributes redirectAttributes) {
         logger.debug("AdminController.generateFiancees, characterId=" + characterId);
 
         Character character = characterRepository.findOne(characterId);
         if (character != null) {
-            character.generateView();
-            characterRepository.save(character);
+            updateCharacter(character);
         } else {
             redirectAttributes.addFlashAttribute("mess", "ОШИБКА! Персонаж с id=" + characterId + " не найден!");
             return "redirect:/admin";
@@ -143,6 +146,112 @@ public class AdminController {
 
         redirectAttributes.addFlashAttribute("mess", "Персонаж обновлен: " + character.getName());
         return "redirect:/admin";
+    }
+
+    @RequestMapping(value = "/admin/alterCharacterForm", method = RequestMethod.POST)
+    public String alterCharacterForm(ModelMap model,
+                                     @RequestParam("character_id") long characterId,
+                                     RedirectAttributes redirectAttributes) {
+        Character character = characterRepository.findOne(characterId);
+        if (character != null) {
+            model.addAttribute("character", character);
+
+            RaceAppearanceForm raceAppearanceForm = new RaceAppearanceForm();
+            raceAppearanceForm = app.fillRaceAppearanceForm(raceAppearanceForm);
+            model.addAttribute("form", raceAppearanceForm);
+            return "admin/alterCharacterForm";
+        } else {
+            redirectAttributes.addFlashAttribute("mess", "Персонаж не найден: " + characterId);
+            return "redirect:/admin";
+        }
+
+    }
+
+    @RequestMapping(value = "/admin/alterCharacter", method = RequestMethod.POST)
+    public String alterCharacter(ModelMap model,
+                                 @RequestParam("character_id") long characterId,
+                                 @ModelAttribute("character") Character formCharacter,
+                                 RedirectAttributes redirectAttributes) {
+        String username = getAuthUser().getUsername();
+        Character character = characterRepository.findOne(characterId);
+        boolean updated = false;
+        if (character != null) {
+            logger.info(username + " changes " + character.getName());
+            if (character.getBody() != formCharacter.getBody()) {
+                logger.debug("   body changed:" + character.getBody() + " -> " + formCharacter.getBody());
+                character.setBody(formCharacter.getBody());
+                updated = true;
+            }
+            if (character.getEars() != formCharacter.getEars()) {
+                logger.debug("   ears changed:" + character.getEars() + " -> " + formCharacter.getEars());
+                character.setEars(formCharacter.getEars());
+                updated = true;
+            }
+            if (character.getEyebrows() != formCharacter.getEyebrows()) {
+                logger.debug("   eyebrows changed:" + character.getEyebrows() + " -> " + formCharacter.getEyebrows());
+                character.setEyebrows(formCharacter.getEyebrows());
+                updated = true;
+            }
+            if (character.getEyeColor() != formCharacter.getEyeColor()) {
+                logger.debug("   eyeColor changed:" + character.getEyeColor() + " -> " + formCharacter.getEyeColor());
+                character.setEyeColor(formCharacter.getEyeColor());
+                updated = true;
+            }
+            if (character.getEyes() != formCharacter.getEyes()) {
+                logger.debug("   eyes changed:" + character.getEyes() + " -> " + formCharacter.getEyes());
+                character.setEyes(formCharacter.getEyes());
+                updated = true;
+            }
+            if (character.getHairColor() != formCharacter.getHairColor()) {
+                logger.debug("   hairColor changed:" + character.getHairColor() + " -> " + formCharacter.getHairColor());
+                character.setHairColor(formCharacter.getHairColor());
+                updated = true;
+            }
+            if (character.getHairType() != formCharacter.getHairType()) {
+                logger.debug("   hairType changed:" + character.getHairType() + " -> " + formCharacter.getHairType());
+                character.setHairType(formCharacter.getHairType());
+                character.setHairStyle(app.getRandomHairStyle(character.getSex(), character.getHairType()));
+                updated = true;
+            }
+            if (character.getHead() != formCharacter.getHead()) {
+                logger.debug("   head changed:" + character.getHead() + " -> " + formCharacter.getHead());
+                character.setHead(formCharacter.getHead());
+                updated = true;
+            }
+            if (character.getHeight() != formCharacter.getHeight()) {
+                logger.debug("   height changed:" + character.getHeight() + " -> " + formCharacter.getHeight());
+                character.setHeight(formCharacter.getHeight());
+                updated = true;
+            }
+            if (character.getMouth() != formCharacter.getMouth()) {
+                logger.debug("   mouth changed:" + character.getMouth() + " -> " + formCharacter.getMouth());
+                character.setMouth(formCharacter.getMouth());
+                updated = true;
+            }
+            if (character.getNose() != formCharacter.getNose()) {
+                logger.debug("   nose changed:" + character.getNose() + " -> " + formCharacter.getNose());
+                character.setNose(formCharacter.getNose());
+                updated = true;
+            }
+            if (character.getSkinColor() != formCharacter.getSkinColor()) {
+                logger.debug("   skinColor changed:" + character.getSkinColor() + " -> " + formCharacter.getSkinColor());
+                character.setSkinColor(formCharacter.getSkinColor());
+                updated = true;
+            }
+
+            if (updated) {
+                updateCharacter(character);
+                redirectAttributes.addFlashAttribute("mess", "Персонаж обновлен: " + character.getName());
+                return "redirect:/admin";
+            } else {
+                redirectAttributes.addFlashAttribute("mess", "Персонаж не был изменен: " + character.getName());
+                return "redirect:/admin";
+            }
+
+        } else {
+            redirectAttributes.addFlashAttribute("mess", "Персонаж не найден: " + characterId);
+            return "redirect:/admin";
+        }
     }
 
     @RequestMapping("/admin/random")
@@ -173,6 +282,16 @@ public class AdminController {
 
         return "admin/random";
     }
+
+    public void updateCharacter(Character character) {
+        character.generateView();
+
+        Race race = raceService.defineRace(character);
+        character.setRace(race);
+
+        characterRepository.save(character);
+    }
+
 
     private UserDetails getAuthUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

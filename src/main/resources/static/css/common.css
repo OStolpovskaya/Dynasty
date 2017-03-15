@@ -4,7 +4,7 @@
 
 .char-view-div {
     display: inline-block;
-    width: 106px;
+    /*width: auto;*/
     margin: 5px;
 }
 .male {

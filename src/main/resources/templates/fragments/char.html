@@ -17,7 +17,7 @@
         <span style="color:DarkOrchid" th:unless="${character.getRace().getName() == 'race.human'}" th:text="#{${character.getRace().getName()}}"></span>
     </p>
     <a href="/game/character" th:href="@{/game/character(characterId=${character.getId()})}">
-        <img th:class="${character.getSex()} == 'male' ? male : female" height="100" width="100"
+        <img th:class="${character.getSex()} == 'male' ? male : female" th:height="${imsize}==null?100:${imsize}" th:width="${imsize}==null?100:${imsize}"
              th:src="@{'data:image/png;base64,'+${character.getEncodedView()}}"
              data-toggle="tooltip" th:alt-title="#{tooltip(
                                            #{${character.getSex()}},
