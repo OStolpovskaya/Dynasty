@@ -152,7 +152,7 @@ public class FamilyController {
         characterRepository.save(founder);
 
         foundress.setSpouse(founder);
-        foundress.setFamily(null);
+        foundress.setFamily(familyRepository.findOne(1L));
         logger.debug(foundress.toString());
         characterRepository.save(foundress);
 

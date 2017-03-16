@@ -44,7 +44,7 @@ public class Character {
 
 
     @OneToOne
-    @JoinColumn(name = "race", nullable = true)
+    @JoinColumn(name = "race")
     private Race race;
 
     // ============ APPEARANCE ============
