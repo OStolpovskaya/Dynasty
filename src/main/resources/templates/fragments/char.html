@@ -20,7 +20,7 @@
         <img th:class="${character.getSex()} == 'male' ? male : female" th:height="${imsize}==null?100:${imsize}" th:width="${imsize}==null?100:${imsize}"
              th:src="@{'data:image/png;base64,'+${character.getEncodedView()}}"
              data-toggle="tooltip" th:alt-title="#{tooltip(
-                                           #{${character.getSex()}},
+                                           ${character.getFullName()},
                                            #{${character.getBody().getName()}}+${character.getBody().isRare()?'*':''},
                                            #{${character.getEars().getName()}}+${character.getEars().isRare()?'*':''},
                                            #{${character.getEyebrows().getName()}}+${character.getEyebrows().isRare()?'*':''},

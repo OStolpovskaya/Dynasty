@@ -345,6 +345,20 @@ public class Character {
         return result;
     }
 
+    public String getFullName() {
+        String lastname;
+        if (family == null) {
+            lastname = "";
+        } else {
+            if (sex.equals("male")) {
+                lastname = family.getMaleLastname();
+            } else {
+                lastname = family.getFemaleLastname();
+            }
+        }
+        return lastname + " " + name;
+    }
+
     // =============================================================================
     public void generateView() {
         try {
