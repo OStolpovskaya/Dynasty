@@ -121,6 +121,11 @@ public class GameController {
         Family family = user.getCurrentFamily();
 
         List<Character> characters = characterRepository.findByFamilyAndLevelAndSexAndSpouseIsNotNull(family, family.getLevel(), "male");
+        if (characters.isEmpty()) {
+            redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("turn.noCouplesToContinueTheDinasty", null, loc()));
+            return "redirect:/game";
+        }
+
         int newLevel = family.getLevel() + 1;
         for (Character character : characters) {
 

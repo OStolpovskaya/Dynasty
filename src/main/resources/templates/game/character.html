@@ -19,7 +19,7 @@
     <!--/*@thymesVar id="character" type="dyn.model.Character"*/-->
     <div style="float: left">
         <p th:inline="text">
-            Династия: [[${character.getFamily().getFamilyName()}]]<br/>
+            Династия: [[${character.getFamily()==null?'-':character.getFamily().getFamilyName()}]]<br/>
             Имя: [[${character.getName()}]]<br/>
             Уровень: [[${character.getLevel()}]]<br/>
             Пол: [[${character.getSex()}]]<br/>
@@ -39,7 +39,7 @@
             <div th:replace="fragments/char :: char-view (character=${character.getFather().getSpouse()})"></div>
         </div>
         <br></br>
-        <div class="char-view-div">
+        <div class="char-view-div" style="vertical-align: top">
             <div th:replace="fragments/char :: char-view (character=${character})"></div>
         </div>
         <div class="char-view-div" th:if="${character.getSpouse() != null}">

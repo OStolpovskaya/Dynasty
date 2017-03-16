@@ -19,17 +19,17 @@ public class Family {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Size(min = 6, max = 30, message = "{field.size6-30}")
+    @Size(min = 2, max = 30, message = "{field.size2-30}")
     @Column(name = "family_name")
     private String familyName;
 
     private boolean current;
 
-    @Size(min = 6, max = 30, message = "{field.size6-30}")
+    @Size(min = 2, max = 30, message = "{field.size2-30}")
     @Column(name = "male_lastname")
     private String maleLastname;
 
-    @Size(min = 6, max = 30, message = "{field.size6-30}")
+    @Size(min = 2, max = 30, message = "{field.size2-30}")
     @Column(name = "female_lastname")
     private String femaleLastname;
 
@@ -120,12 +120,13 @@ public class Family {
 
     public List<List<Character>> getLevelOrderedFathers() {
         List<List<Character>> array = new ArrayList<>(getLevel());
-        for (int i = 0; i < level; i++) {
+        if (level > 0) {
+            for (int i = 0; i < level; i++) {
+                array.add(new ArrayList<>());
+            }
+        } else {
             array.add(new ArrayList<>());
         }
-        System.out.println("array.size() = " + array.size());
-        System.out.println("array.get(0) = " + array.get(0));
-        System.out.println("array.get(0).size() = " + array.get(0).size());
 
         for (Character character : characters) {
             if (character.getSex().equals("male") && character.getSpouse() != null) {

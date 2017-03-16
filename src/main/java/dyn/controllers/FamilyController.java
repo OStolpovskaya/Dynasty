@@ -1,10 +1,8 @@
 package dyn.controllers;
 
 import dyn.form.FamilyForm;
-import dyn.model.Buff;
+import dyn.model.*;
 import dyn.model.Character;
-import dyn.model.Family;
-import dyn.model.User;
 import dyn.repository.*;
 import dyn.service.AppearanceService;
 import org.apache.log4j.LogManager;
@@ -59,10 +57,13 @@ public class FamilyController {
 
     @GetMapping("game/addNewFamily")
     public String createNewFamily(ModelMap model, @ModelAttribute("familyForm") FamilyForm familyForm) {
+        Race race = raceRepository.findByName(Race.RACE_HUMAN);
 
         Character male = new Character();
         male.setName(characterRepository.getRandomNameMale());
         male.setSex("male");
+        male.setRace(race);
+        male.setLevel(0);
 
         male.setBody(app.getRandomBody(app.USUAL));
         male.setEars(app.getRandomEars(app.USUAL));
@@ -83,6 +84,8 @@ public class FamilyController {
         Character female = new Character();
         female.setName(characterRepository.getRandomNameFemale());
         female.setSex("female");
+        female.setRace(race);
+        female.setLevel(0);
 
         female.setBody(app.getRandomBody(app.USUAL));
         female.setEars(app.getRandomEars(app.USUAL));
@@ -141,8 +144,6 @@ public class FamilyController {
         familyRepository.save(family);
 
         founder.setFamily(family);
-        founder.setLevel(0);
-        founder.setRace(raceRepository.findByName("race.human"));
 
         Buff buff = buffRepository.findByTitle(Buff.FIVE_CHILDREN);
         founder.getBuffs().add(buff);
@@ -152,8 +153,6 @@ public class FamilyController {
 
         foundress.setSpouse(founder);
         foundress.setFamily(null);
-        foundress.setLevel(0);
-        foundress.setRace(raceRepository.findByName("race.human"));
         logger.debug(foundress.toString());
         characterRepository.save(foundress);
 

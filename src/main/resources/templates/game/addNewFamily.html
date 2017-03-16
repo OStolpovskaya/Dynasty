@@ -17,16 +17,18 @@
                 <h3>Family form</h3>
                 <div>
                     <div class="char-view-div">
-                        <div th:replace="fragments/char :: char-view (character=*{founder})"></div>
+                        <div th:replace="fragments/char :: char-view (character=*{founder}, nolink=true)"></div>
                     </div>
                     <div class="char-view-div">
-                        <div th:replace="fragments/char :: char-view (character=*{foundress})"></div>
+                        <div th:replace="fragments/char :: char-view (character=*{foundress}, nolink=true)"></div>
                     </div>
                 </div>
                 <p align="center"><a href="/game/addNewFamily">Generate again</a></p>
 
                 <input type="hidden" th:field="*{founder.name}"/>
                 <input type="hidden" th:field="*{founder.sex}"/>
+                <input type="hidden" th:field="*{founder.race}"/>
+                <input type="hidden" th:field="*{founder.level}"/>
                 <input type="hidden" th:field="*{founder.body}"/>
                 <input type="hidden" th:field="*{founder.ears}"/>
                 <input type="hidden" th:field="*{founder.eyebrows}"/>
@@ -43,6 +45,8 @@
 
                 <input type="hidden" th:field="*{foundress.name}"/>
                 <input type="hidden" th:field="*{foundress.sex}"/>
+                <input type="hidden" th:field="*{foundress.race}"/>
+                <input type="hidden" th:field="*{foundress.level}"/>
                 <input type="hidden" th:field="*{foundress.body}"/>
                 <input type="hidden" th:field="*{foundress.ears}"/>
                 <input type="hidden" th:field="*{foundress.eyebrows}"/>
