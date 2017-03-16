@@ -114,7 +114,7 @@ public class AdminController {
 
             female.setFamily(family);
             female.setLevel(level);
-            female.setRace(raceRepository.findByName("race.human"));
+            female.setRace(raceRepository.findByName(Race.RACE_HUMAN));
 
             female.generateView();
             characterRepository.save(female);

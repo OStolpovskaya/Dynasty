@@ -12,6 +12,7 @@ import java.util.List;
 @Table(name = "race")
 public class Race {
     public static final String RACE_HUMAN = "race.human";
+    public static final String RACE_GM_HUMAN = "race.gm-human";
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

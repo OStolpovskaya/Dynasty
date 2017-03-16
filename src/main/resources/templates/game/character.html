@@ -19,7 +19,7 @@
     <!--/*@thymesVar id="character" type="dyn.model.Character"*/-->
     <div style="float: left">
         <p th:inline="text">
-            Династия: [[${character.getFamily()==null?'-':character.getFamily().getFamilyName()}]] (Игрок: [[${character.getFamily()==null?'-':character.getFamily().getUser().getUsername()}]])<br/>
+            Династия: [[${character.getFamily()==null?'-':character.getFamily().getFamilyName()}]] (Игрок: [[${character.getFamily()==null?'-':character.getFamily().getUser().getUserName()}]])<br/>
             Имя: [[${character.getName()}]]<br/>
             Уровень: [[${character.getLevel()}]]<br/>
             Пол: [[${character.getSex()}]]<br/>
