@@ -1,6 +1,7 @@
 package dyn.model;
 
 import dyn.model.appearance.*;
+import dyn.model.career.Career;
 import org.springframework.util.Base64Utils;
 import org.springframework.util.ResourceUtils;
 
@@ -42,10 +43,13 @@ public class Character {
 
     private int level;
 
-
     @OneToOne
     @JoinColumn(name = "race")
     private Race race;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "career")
+    private Career career;
 
     // ============ APPEARANCE ============
     @OneToOne
@@ -114,7 +118,7 @@ public class Character {
     // ============ Buffs ============
 
     @ManyToMany
-    @JoinTable(name = "characters_buffs",
+    @JoinTable(name = "character_buffs",
             joinColumns = {@JoinColumn(name = "character_id")},
             inverseJoinColumns = {@JoinColumn(name = "buff_id")})
     private Set<Buff> buffs = new HashSet<Buff>();
@@ -319,6 +323,14 @@ public class Character {
             }
         }
         return false;
+    }
+
+    public Career getCareer() {
+        return career;
+    }
+
+    public void setCareer(Career career) {
+        this.career = career;
     }
 
     public boolean isFiancee() {

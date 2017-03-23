@@ -16,6 +16,15 @@
         <span th:if="${character.getRace().getName() == 'race.human'}" th:text="#{${character.getRace().getName()}}"></span>
         <span th:unless="${character.getRace().getName() == 'race.human'}" th:text="#{${character.getRace().getName()}}" style="color:DarkOrchid"></span>
     </p>
+    <p align="center" style="font-size: 8px; margin: 0px;">
+        <span th:text="#{${character.getCareer().getEducation().getName()}}"></span><br/>
+        <span th:text="${character.getCareer().getVocation().getName()}"></span><br/>
+        Ин: <span th:text="${character.getCareer().getIntelligence()}"></span>&nbsp;
+        Хр: <span th:text="${character.getCareer().getCharisma()}"></span>&nbsp;
+        Сл: <span th:text="${character.getCareer().getStrength()}"></span>&nbsp;
+        Тв: <span th:text="${character.getCareer().getCreativity()}"></span><br/>
+        <span th:text="${character.getCareer().getProfession()?.getName()}" style="color:midnightblue"></span><br/>
+    </p>
     <a href="/game/character" th:href="${nolink}==null?@{/game/character(characterId=${character.getId()})}:''">
         <img th:class="${character.getSex()} == 'male' ? male : female" th:height="${imsize}==null?100:${imsize}" th:width="${imsize}==null?100:${imsize}"
              th:src="@{'data:image/png;base64,'+${character.getEncodedView()}}"

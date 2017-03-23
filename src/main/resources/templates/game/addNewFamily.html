@@ -43,6 +43,13 @@
                 <input type="hidden" th:field="*{founder.nose}"/>
                 <input type="hidden" th:field="*{founder.skinColor}"/>
 
+                <input type="hidden" th:field="*{founder.career.vocation}"/>
+                <input type="hidden" th:field="*{founder.career.intelligence}"/>
+                <input type="hidden" th:field="*{founder.career.charisma}"/>
+                <input type="hidden" th:field="*{founder.career.strength}"/>
+                <input type="hidden" th:field="*{founder.career.creativity}"/>
+                <input type="hidden" th:field="*{founder.career.education}"/>
+
                 <input type="hidden" th:field="*{foundress.name}"/>
                 <input type="hidden" th:field="*{foundress.sex}"/>
                 <input type="hidden" th:field="*{foundress.race}"/>
@@ -60,6 +67,13 @@
                 <input type="hidden" th:field="*{foundress.mouth}"/>
                 <input type="hidden" th:field="*{foundress.nose}"/>
                 <input type="hidden" th:field="*{foundress.skinColor}"/>
+
+                <input type="hidden" th:field="*{foundress.career.vocation}"/>
+                <input type="hidden" th:field="*{foundress.career.intelligence}"/>
+                <input type="hidden" th:field="*{foundress.career.charisma}"/>
+                <input type="hidden" th:field="*{foundress.career.strength}"/>
+                <input type="hidden" th:field="*{foundress.career.creativity}"/>
+                <input type="hidden" th:field="*{foundress.career.education}"/>
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('family.familyName')}? 'has-error'">
                     <label>Family name:</label>

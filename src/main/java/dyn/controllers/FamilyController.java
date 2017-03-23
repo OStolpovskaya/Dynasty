@@ -5,6 +5,7 @@ import dyn.model.*;
 import dyn.model.Character;
 import dyn.repository.*;
 import dyn.service.AppearanceService;
+import dyn.service.CareerService;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,10 @@ public class FamilyController {
     private static final Logger logger = LogManager.getLogger(FamilyController.class);
     @Autowired
     AppearanceService app;
+
+    @Autowired
+    CareerService careerService;
+
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -65,6 +70,8 @@ public class FamilyController {
         male.setRace(race);
         male.setLevel(0);
 
+        male.setCareer(careerService.generateCareerForFounders());
+
         male.setBody(app.getRandomBody(app.USUAL));
         male.setEars(app.getRandomEars(app.USUAL));
         male.setEyebrows(app.getRandomEyeBrows(app.USUAL));
@@ -86,6 +93,8 @@ public class FamilyController {
         female.setSex("female");
         female.setRace(race);
         female.setLevel(0);
+
+        female.setCareer(careerService.generateCareerForFounders());
 
         female.setBody(app.getRandomBody(app.USUAL));
         female.setEars(app.getRandomEars(app.USUAL));
