@@ -30,6 +30,15 @@
                 <li th:text="#{${buff.getTitle()}}"></li>
             </th:block>
         </p>
+        <p th:if="${character.getCareer().getProfession() == null}">
+            <th:block th:each="profession : ${@careerService.getAvailableProfessions(character.getCareer())}">
+                <li th:text="${profession.getName()}"></li>
+            </th:block>
+        </p>
+        <p>
+            Повысить уровень образования:
+            <th:block th:text="${@careerService.mayImproveEducation(character.getCareer())}"></th:block>
+        </p>
     </div>
     <div style="float: right" align="center">
         <div class="char-view-div" th:if="${character.getFather() != null}">

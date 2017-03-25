@@ -474,4 +474,8 @@ public class Character {
                 ", buffs=" + (buffs != null ? buffs.size() : "-") +
                 '}';
     }
+
+    public boolean hasSpouse() {
+        return (spouse != null);
+    }
 }

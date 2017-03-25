@@ -7,11 +7,13 @@ package dyn.controllers;
 
 import dyn.model.*;
 import dyn.model.Character;
+import dyn.model.career.Career;
 import dyn.repository.AchievementRepository;
 import dyn.repository.CharacterRepository;
 import dyn.repository.FamilyRepository;
 import dyn.repository.UserRepository;
 import dyn.service.AppearanceService;
+import dyn.service.CareerService;
 import dyn.service.RaceService;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -45,6 +47,8 @@ public class GameController {
     AppearanceService app;
     @Autowired
     RaceService raceService;
+    @Autowired
+    CareerService careerService;
 
     @Autowired
     private UserRepository userRepository;
@@ -111,6 +115,37 @@ public class GameController {
         return "/game/character";
     }
 
+    @RequestMapping("/game/improveEducation")
+    public String improveEducation(ModelMap model, RedirectAttributes redirectAttributes,
+                                   @RequestParam(value = "character") long characterId) {
+        User user = userRepository.findByUserName(getAuthUser().getUsername());
+        Family family = user.getCurrentFamily();
+
+        Character character = characterRepository.findByIdAndFamilyAndLevel(characterId, family, family.getLevel());
+        if (character != null && careerService.mayImproveEducation(character.getCareer())) {
+            if (family.getMoney() >= Career.IMPROVE_COST) {
+
+                careerService.improveEducation(character.getCareer());
+                characterRepository.save(character);
+
+                family.setMoney(family.getMoney() - Career.IMPROVE_COST);
+                familyRepository.save(family);
+
+                redirectAttributes.addFlashAttribute("mess", "Персонаж " + character.getName() + " повысил свое образование. Потрачено: " + Career.IMPROVE_COST);
+                logger.info(user.getUserName() + " improve the education!");
+                return "redirect:/game";
+            } else {
+                logger.error(user.getUserName() + " hasn't enough money to improve education");
+                redirectAttributes.addFlashAttribute("mess", "Недостаточно денег");
+                return "redirect:/game";
+            }
+
+        }
+        redirectAttributes.addFlashAttribute("mess", "Персонаж не найден");
+        logger.error(user.getUserName() + "'s character " + characterId + " can not belongs to user's current family");
+        return "redirect:/game";
+    }
+
     @RequestMapping(value = "/game/turn", method = RequestMethod.POST)
     public String turn(ModelMap model, RedirectAttributes redirectAttributes) {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
@@ -120,6 +155,32 @@ public class GameController {
 
         Family family = user.getCurrentFamily();
 
+        // profession
+        List<Character> workers = characterRepository.findByFamilyAndLevel(family, family.getLevel());
+        for (Character worker : workers) {
+            if (worker.getSex().equals("male")) {
+                careerService.generateProfession(worker);
+                int salary = worker.getCareer().getResultSalary();
+                family.setMoney(family.getMoney() + salary);
+                sb.append(worker.getName() + " приобретает профессию " + worker.getCareer().getProfession().getName() + " и зарабатывает " + salary + "<br>");
+                if (worker.hasSpouse()) {
+                    Character workerWife = worker.getSpouse();
+                    careerService.generateProfession(workerWife);
+                    int wifeSalary = workerWife.getCareer().getResultSalary();
+                    family.setMoney(family.getMoney() + wifeSalary);
+                    sb.append("Его жена " + workerWife.getName() + " приобретает профессию " + workerWife.getCareer().getProfession().getName() + " и зарабатывает " + wifeSalary + "<br>");
+                }
+            } else {
+                if (!worker.isFiancee() && !worker.hasSpouse()) {
+                    careerService.generateProfession(worker);
+                    int salary = worker.getCareer().getResultSalary();
+                    family.setMoney(family.getMoney() + salary);
+                    sb.append(worker.getName() + " приобретает профессию " + worker.getCareer().getProfession().getName() + " и зарабатывает " + salary + "<br>");
+                }
+            }
+        }
+
+        // children
         List<Character> characters = characterRepository.findByFamilyAndLevelAndSexAndSpouseIsNotNull(family, family.getLevel(), "male");
         if (characters.isEmpty()) {
             redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("turn.noCouplesToContinueTheDinasty", null, loc()));
@@ -236,6 +297,10 @@ public class GameController {
 
                 Race race = raceService.defineRace(child);
                 child.setRace(race);
+
+                // vocation and skills
+                child.setCareer(new Career());
+                careerService.inheritVocationAndSkills(child.getCareer(), character.getCareer(), wife.getCareer());
 
                 child.generateView();
                 logger.info("   child: " + child.getName() + ", genModFeature = " + featureToGenMod + ", race: " + race.getName());

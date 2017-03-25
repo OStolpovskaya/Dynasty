@@ -7,6 +7,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "character_career")
 public class Career {
+    public static final int IMPROVE_COST = 350;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -104,5 +105,24 @@ public class Career {
 
     public void setProfession(Profession profession) {
         this.profession = profession;
+    }
+
+    public int getResultSalary() {
+        return getProfession().getLevel() * getVocation().getStartSalary();
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Career{");
+        sb.append("id=").append(id);
+        sb.append(", vocation=").append(vocation.getName());
+        sb.append(", intelligence=").append(intelligence);
+        sb.append(", charisma=").append(charisma);
+        sb.append(", strength=").append(strength);
+        sb.append(", creativity=").append(creativity);
+        sb.append(", education=").append(education.getName());
+        sb.append(", profession=").append(profession == null ? "" : profession.getName());
+        sb.append('}');
+        return sb.toString();
     }
 }

@@ -10,6 +10,7 @@ import dyn.model.Character;
 import dyn.model.*;
 import dyn.repository.*;
 import dyn.service.AppearanceService;
+import dyn.service.CareerService;
 import dyn.service.RaceService;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -32,6 +33,8 @@ public class AdminController {
     AppearanceService app;
     @Autowired
     RaceService raceService;
+    @Autowired
+    CareerService careerService;
 
     @Autowired
     RaceRepository raceRepository;
@@ -117,6 +120,9 @@ public class AdminController {
             female.setRace(raceRepository.findByName(Race.RACE_HUMAN));
 
             female.generateView();
+
+            female.setCareer(careerService.generateCareerForFounders());
+
             characterRepository.save(female);
 
             Fiancee fiancee = new Fiancee();

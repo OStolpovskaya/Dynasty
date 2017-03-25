@@ -20,6 +20,7 @@ public class Profession {
     private Education education;
 
     private int level;
+
     private int intelligence;
     private int charisma;
     private int strength;

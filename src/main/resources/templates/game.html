@@ -26,13 +26,14 @@
                 </div>
                 <br></br>
             </div>
-            <div style="display: inline-block; height:180px; margin-bottom: 3px; border: 2px solid lightgreen; vertical-align: top" th:each="child : ${father.getChildren()}">
+            <div style="display: inline-block; margin-bottom: 3px; border: 2px solid lightgreen; vertical-align: top"
+                 th:each="child : ${father.getChildren()}">
                 <!--/*@thymesVar id="child" type="dyn.model.Character"*/-->
                 <div class="char-view-div" style="vertical-align: top;">
-                    <div th:replace="fragments/char :: char-view (character=${child})"></div>
+                    <div th:replace="fragments/char :: char-view (character=${child}, education=${@careerService.mayImproveEducation(child.getCareer())})"></div>
                 </div>
                 <div class="char-view-div" th:if="${child.getSpouse() != null}">
-                    <div th:replace="fragments/char :: char-view (character=${child.getSpouse()})"></div>
+                    <div th:replace="fragments/char :: char-view (character=${child.getSpouse()}, education=${@careerService.mayImproveEducation(child.getSpouse().getCareer())})"></div>
                 </div>
                 <br></br>
                 <div style="text-align: center;" th:if="${child.getSex() == 'male' and child.getSpouse() == null}">
