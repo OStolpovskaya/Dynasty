@@ -12,6 +12,7 @@ import dyn.repository.AchievementRepository;
 import dyn.repository.CharacterRepository;
 import dyn.repository.FamilyRepository;
 import dyn.repository.UserRepository;
+import dyn.service.AchievementService;
 import dyn.service.AppearanceService;
 import dyn.service.CareerService;
 import dyn.service.RaceService;
@@ -49,6 +50,8 @@ public class GameController {
     RaceService raceService;
     @Autowired
     CareerService careerService;
+    @Autowired
+    AchievementService achievementService;
 
     @Autowired
     private UserRepository userRepository;
@@ -163,12 +166,22 @@ public class GameController {
                 int salary = worker.getCareer().getResultSalary();
                 family.setMoney(family.getMoney() + salary);
                 sb.append(worker.getName() + " приобретает профессию " + worker.getCareer().getProfession().getName() + " и зарабатывает " + salary + "<br>");
+                Achievement achievement = achievementService.checkAchievement(AchievementType.vocation10level, user, worker);
+                if (achievement != null) {
+                    String locAchievementName = messageSource.getMessage(achievement.getName(), null, loc());
+                    sb.append(messageSource.getMessage("turn.achievement", new Object[]{locAchievementName}, loc()));
+                }
                 if (worker.hasSpouse()) {
                     Character workerWife = worker.getSpouse();
                     careerService.generateProfession(workerWife);
                     int wifeSalary = workerWife.getCareer().getResultSalary();
                     family.setMoney(family.getMoney() + wifeSalary);
                     sb.append("Его жена " + workerWife.getName() + " приобретает профессию " + workerWife.getCareer().getProfession().getName() + " и зарабатывает " + wifeSalary + "<br>");
+                    achievement = achievementService.checkAchievement(AchievementType.vocation10level, user, workerWife);
+                    if (achievement != null) {
+                        String locAchievementName = messageSource.getMessage(achievement.getName(), null, loc());
+                        sb.append(messageSource.getMessage("turn.achievement", new Object[]{locAchievementName}, loc()));
+                    }
                 }
             } else {
                 if (!worker.isFiancee() && !worker.hasSpouse()) {
@@ -176,6 +189,11 @@ public class GameController {
                     int salary = worker.getCareer().getResultSalary();
                     family.setMoney(family.getMoney() + salary);
                     sb.append(worker.getName() + " приобретает профессию " + worker.getCareer().getProfession().getName() + " и зарабатывает " + salary + "<br>");
+                    Achievement achievement = achievementService.checkAchievement(AchievementType.vocation10level, user, worker);
+                    if (achievement != null) {
+                        String locAchievementName = messageSource.getMessage(achievement.getName(), null, loc());
+                        sb.append(messageSource.getMessage("turn.achievement", new Object[]{locAchievementName}, loc()));
+                    }
                 }
             }
         }
@@ -306,6 +324,12 @@ public class GameController {
                 logger.info("   child: " + child.getName() + ", genModFeature = " + featureToGenMod + ", race: " + race.getName());
                 characterRepository.save(child);
 
+                Achievement achievement = achievementService.checkAchievement(AchievementType.newborn, user, child);
+                if (achievement != null) {
+                    String locAchievementName = messageSource.getMessage(achievement.getName(), null, loc());
+                    sb.append(messageSource.getMessage("turn.achievement", new Object[]{locAchievementName}, loc()));
+                }
+                /*
                 Achievement achievement = achievementRepository.findByTypeAndForWhat(AchievementType.newborn, race.getName());
                 if (achievement != null && !user.getAchievements().contains(achievement)) {
                     user.getAchievements().add(achievement);
@@ -314,6 +338,7 @@ public class GameController {
                     sb.append(messageSource.getMessage("turn.achievement", new Object[]{locAchievementName}, loc()));
                     userRepository.save(user);
                 }
+                */
                 sb.append("<br>");
             }
             sb.append("<br>");

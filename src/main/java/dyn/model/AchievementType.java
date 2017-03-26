@@ -5,5 +5,6 @@ package dyn.model;
  */
 public enum AchievementType {
     newborn,
-    famous_people
+    famous_people,
+    vocation10level
 }
