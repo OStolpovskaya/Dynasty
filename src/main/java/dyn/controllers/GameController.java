@@ -8,7 +8,6 @@ package dyn.controllers;
 import dyn.model.*;
 import dyn.model.Character;
 import dyn.model.career.Career;
-import dyn.repository.AchievementRepository;
 import dyn.repository.CharacterRepository;
 import dyn.repository.FamilyRepository;
 import dyn.repository.UserRepository;
@@ -59,10 +58,6 @@ public class GameController {
     private FamilyRepository familyRepository;
     @Autowired
     private CharacterRepository characterRepository;
-
-    @Autowired
-    private AchievementRepository achievementRepository;
-
 
     public static Locale loc() {
         return LocaleContextHolder.getLocale();

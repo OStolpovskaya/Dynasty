@@ -9,35 +9,52 @@
 <div th:fragment="char-view (character)">
     <!--/*@thymesVar id="character" type="dyn.model.Character"*/-->
     <p align="center" style="margin-bottom: 3px;">
-        <span th:if="${character.hasRareFeatures()}" th:text="${character.getName()+'*'}"></span>
-        <span th:unless="${character.hasRareFeatures()}" th:text="${character.getName()}"></span>
+        <span th:text="${character.getName()}" data-toggle="tooltip" th:alt-title="${character.getFullName()}"></span>
     </p>
-    <p align="center" style="font-size: 10px; margin: 0px;">
-        <span th:if="${character.getRace().getName() == 'race.human'}"
-              th:text="#{${character.getRace().getName()}}"></span>
-        <span th:unless="${character.getRace().getName() == 'race.human'}" th:text="#{${character.getRace().getName()}}"
-              style="color:DarkOrchid"></span>
+    <p align="center" style="font-size: 10px; margin: 0px;" data-toggle="tooltip" th:alt-title="${'Раса'}">
+        <span th:if="${character.getRace().getName() == 'race.human'}" th:text="#{${character.getRace().getName()}}"></span>
+        <span th:unless="${character.getRace().getName() == 'race.human'}" th:text="#{${character.getRace().getName()}}" style="color:DarkOrchid"></span>
     </p>
-    <div align="center" style="font-size: 8px; margin: 0px;">
-        <span th:text="#{${character.getCareer().getEducation().getName()}}" style="float:left"></span>
+    <div align="center" style="font-size: 10px; margin: 0px;">
+        <!--<span th:text="#{${character.getCareer().getEducation().getName()}}" style="float:left"></span>
         <th:block th:if="${education==true}">
             <form th:action="@{/game/improveEducation}" method="post" style="float:right">
                 <input type="hidden" name="character" th:value="${character.getId()}"/>
-                <!--<a href='#' onClick='submit()' style="font-size: 8px; margin: 0px; color:red;">Повысить</a>-->
+                &lt;!&ndash;<a href='#' onClick='submit()' style="font-size: 8px; margin: 0px; color:red;">Повысить</a>&ndash;&gt;
                 <button class="btn btn-xs btn-primary" type="submit" data-toggle="tooltip" th:title="Повысить">^
                 </button>
             </form>
         </th:block>
 
+        <br/>-->
+        <img th:src="@{'/graphics/vocation/vocation'+${character.getCareer().getVocation().getId()}+'.png' }"
+             data-toggle="tooltip" th:alt-title="${'Призвание: ' + character.getCareer().getVocation().getName()}"
+             th:height="${imsize}==null?20:50">
+        </img>
+        <span th:text="${character.getCareer().getIntelligence()}" data-toggle="tooltip" title="Интеллект"></span>|
+        <span th:text="${character.getCareer().getCharisma()}" data-toggle="tooltip" title="Харизма"></span>|
+        <span th:text="${character.getCareer().getStrength()}" data-toggle="tooltip" title="Сила"></span>|
+        <span th:text="${character.getCareer().getCreativity()}" data-toggle="tooltip" title="Творчество"></span>
+        <img th:src="@{'/graphics/education/'+${character.getCareer().getEducation().getName()}+'.png' }"
+             data-toggle="tooltip" th:alt-title="'Образование: '+#{${character.getCareer().getEducation().getName()}}"
+             th:height="${imsize}==null?20:50">
+        </img>
+        <th:block th:if="${education==true}">
+            <form th:action="@{/game/improveEducation}" method="post" style="float:right">
+                <input type="hidden" name="character" th:value="${character.getId()}"/>
+                <!--<a href='#' onClick='submit()' style="font-size: 8px; margin: 0px; color:red;">Повысить</a>-->
+                <!--<button class="btn btn-xs btn-primary" type="submit" data-toggle="tooltip" th:title="Повысить">^</button>-->
+                <input type="image" th:src="@{'/graphics/button_improve.png'}"
+                       data-toggle="tooltip" title="Повысить образование"
+                       th:height="${imsize}==null?20:50"/>
+            </form>
+        </th:block>
         <br/>
-        <span th:text="${character.getCareer().getVocation().getName()}"></span><br/>
-        Ин: <span th:text="${character.getCareer().getIntelligence()}"></span>&nbsp;
-        Хр: <span th:text="${character.getCareer().getCharisma()}"></span>&nbsp;
-        Сл: <span th:text="${character.getCareer().getStrength()}"></span>&nbsp;
-        Тв: <span th:text="${character.getCareer().getCreativity()}"></span><br/>
-        <span th:text="${character.getCareer().getProfession()?.getName()}" style="color:midnightblue"></span>
-        (<span th:text="${character.getCareer().getProfession()?.getLevel()}" style="color:midnightblue"></span>)
-        <br/>
+        <th:block th:if="${character.getCareer().getProfession()!=null}">
+            <span th:text="${character.getCareer().getProfession().getName()+'(' + character.getCareer().getProfession().getLevel() + ')'}" style="color:midnightblue"
+                  data-toggle="tooltip" th:alt-title="Профессия">
+            </span>
+        </th:block>
     </div>
     <a href="/game/character" th:href="${nolink}==null?@{/game/character(characterId=${character.getId()})}:''">
         <img th:class="${character.getSex()} == 'male' ? male : female" th:height="${imsize}==null?100:${imsize}"
@@ -64,7 +81,8 @@
     <div>
         <div style="display: inline-block;" th:each="buff : ${character.getBuffs()}">
             <img th:src="@{'/graphics/buffs/'+${buff.getTitle()}+'.png' }"
-                 data-toggle="tooltip" th:alt-title="#{${buff.getTitle()}}">
+                 data-toggle="tooltip" th:alt-title="#{${buff.getTitle()}}"
+                 th:height="${imsize}==null?20:50">
             </img>
         </div>
     </div>
