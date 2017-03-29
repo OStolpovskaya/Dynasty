@@ -39,6 +39,9 @@ public class Family {
     @Column(name = "money")
     private int money;
 
+    @OneToOne
+    private House house;
+
     // ===================================
     @OneToMany(mappedBy = "family")
     private List<Character> characters;
@@ -108,6 +111,14 @@ public class Family {
 
     public void setMoney(int money) {
         this.money = money;
+    }
+
+    public House getHouse() {
+        return house;
+    }
+
+    public void setHouse(House house) {
+        this.house = house;
     }
 
     public List<Character> getCharacters() {
