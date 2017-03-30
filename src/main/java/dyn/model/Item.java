@@ -18,6 +18,38 @@ public class Item {
     @OneToOne
     private Family family;
 
-    private ItemPlace place;
+    @Column(name = "interior_id")
+    private int interiorId;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+    public Family getFamily() {
+        return family;
+    }
+
+    public void setFamily(Family family) {
+        this.family = family;
+    }
+
+    public int getInteriorId() {
+        return interiorId;
+    }
+
+    public void setInteriorId(int interiorId) {
+        this.interiorId = interiorId;
+    }
 }

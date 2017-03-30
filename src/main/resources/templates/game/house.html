@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Родовое гнездо</title>
+    <link th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}" rel="stylesheet"></link>
+</head>
+<body>
+<div th:replace="fragments/navigation :: nav-for-game"></div>
+<div class="container">
+    <h3>Родовое гнездо</h3>
+    <p th:inline="text">Родовое гнездо: [[${houseInterior.getHouse().getName()}]] ([[${houseInterior.getHouse().getId()}]])</p>
+    <!--/*@thymesVar id="houseInterior" type="dyn.service.HouseInterior"*/-->
+    <th:block th:each="roomEntry : ${houseInterior.getRoomList()}">
+        <ul>
+            <li>
+                <h4 th:text="${roomEntry.getKey().getName()+'('+roomEntry.getKey().getId()+')'}"></h4>
+                <table class="table table-striped">
+                    <tbody>
+                    <tr th:each="roomInteriorWithItems : ${roomEntry.getValue()}">
+                        <!--/*@thymesVar id="roomInteriorWithItems" type="dyn.service.RoomInteriorWithItems"*/-->
+                        <td th:text="${roomInteriorWithItems.getRoomInterior().getThing().getName()}" class="col-md-3"></td>
+                        <td th:text="${roomInteriorWithItems.getCurrentItem()==null?'Нет вещи':roomInteriorWithItems.getCurrentItem().getProject().getName()}" class="col-md-3"></td>
+                        <td class="col-md-3">
+                            <th:block th:if="${roomInteriorWithItems.getAvailableItems().size()>0}">
+                                <form class="form-inline" th:action="@{/game/setItemToThing}" method="post">
+                                    <div class="form-group">
+                                        <select class="form-control" id="sel1" name="newItem">
+                                            <option th:each="item : ${roomInteriorWithItems.getAvailableItems()}"
+                                                    th:value="${item.getId()}"
+                                                    th:text="${item.getProject().getName()}">
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="btn btn-default">OK</button>
+                                </form>
+                            </th:block>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </li>
+        </ul>
+    </th:block>
+    <h3>Склад:</h3>
+    <ul th:each="item : ${@itemRepository.findByFamily(houseInterior.getFamily())}">
+        <li th:text="${item.getProject().getName()}"></li>
+    </ul>
+</div>
+<script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
+</body>
+</html>

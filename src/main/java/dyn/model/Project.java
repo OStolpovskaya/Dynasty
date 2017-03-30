@@ -20,4 +20,35 @@ public class Project {
     @Lob
     private byte[] view;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Thing getThing() {
+        return thing;
+    }
+
+    public void setThing(Thing thing) {
+        this.thing = thing;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public byte[] getView() {
+        return view;
+    }
+
+    public void setView(byte[] view) {
+        this.view = view;
+    }
 }
