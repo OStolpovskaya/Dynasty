@@ -19,7 +19,7 @@ public class Item {
     private Family family;
 
     @Column(name = "interior_id")
-    private int interiorId;
+    private Long interiorId;
 
     public Long getId() {
         return id;
@@ -45,11 +45,11 @@ public class Item {
         this.family = family;
     }
 
-    public int getInteriorId() {
+    public Long getInteriorId() {
         return interiorId;
     }
 
-    public void setInteriorId(int interiorId) {
+    public void setInteriorId(Long interiorId) {
         this.interiorId = interiorId;
     }
 }

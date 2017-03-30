@@ -20,7 +20,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class HouseController {
@@ -54,6 +56,28 @@ public class HouseController {
         return "game/house";
     }
 
+    @RequestMapping(value = "/game/setItemToThing", method = RequestMethod.POST)
+    public String setItemToRoomInterior(ModelMap model, RedirectAttributes redirectAttributes,
+                                        @RequestParam(value = "itemId") Long itemId,
+                                        @RequestParam(value = "roomInteriorId") Long roomInteriorId) {
+        User user = userRepository.findByUserName(getAuthUser().getUsername());
+        Family family = user.getCurrentFamily();
+
+        houseService.setItemToRoomInterior(family, itemId, roomInteriorId);
+
+        return "redirect:/game/house";
+    }
+
+    @RequestMapping(value = "/game/unsetItem", method = RequestMethod.POST)
+    public String unsetItem(ModelMap model, RedirectAttributes redirectAttributes,
+                            @RequestParam(value = "itemId") Long itemId) {
+        User user = userRepository.findByUserName(getAuthUser().getUsername());
+        Family family = user.getCurrentFamily();
+
+        houseService.unsetItem(family, itemId);
+
+        return "redirect:/game/house";
+    }
 
     private UserDetails getAuthUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

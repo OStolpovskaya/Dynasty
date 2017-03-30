@@ -10,7 +10,11 @@ import java.util.List;
 
 @Repository
 public interface ItemRepository extends CrudRepository<Item, Long> {
-    public List<Item> findByFamilyAndProjectThing(Family family, Thing thing);
+    List<Item> findByFamilyAndProjectThing(Family family, Thing thing);
 
-    public List<Item> findByFamily(Family family);
+    List<Item> findByFamily(Family family);
+
+    Item findByFamilyAndId(Family family, Long itemId);
+
+    Item findByFamilyAndInteriorId(Family family, Long roomInteriorId);
 }
