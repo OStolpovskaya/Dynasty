@@ -111,4 +111,15 @@ public class HouseService {
         itemRepository.save(item);
         return true;
     }
+
+    public List<Item> getItemsInStorage(Family family) {
+        List<Item> itemsInStorage = new ArrayList<>();
+        List<Item> familyItems = itemRepository.findByFamily(family);
+        for (Item familyItem : familyItems) {
+            if (familyItem.getInteriorId() == 0) {
+                itemsInStorage.add(familyItem);
+            }
+        }
+        return itemsInStorage;
+    }
 }

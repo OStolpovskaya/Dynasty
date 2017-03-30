@@ -53,7 +53,7 @@
         </ul>
     </th:block>
     <h3>Склад:</h3>
-    <ul th:each="item : ${@itemRepository.findByFamily(houseInterior.getFamily())}">
+    <ul th:each="item : ${@houseService.getItemsInStorage(houseInterior.getFamily())}">
         <li th:text="${item.getProject().getName()}"></li>
     </ul>
 </div>
