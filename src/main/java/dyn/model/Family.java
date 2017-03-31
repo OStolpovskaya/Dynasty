@@ -3,7 +3,9 @@ package dyn.model;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by OM on 19.02.2017.
@@ -39,9 +41,24 @@ public class Family {
     @Column(name = "money")
     private int money;
 
+    @Column(name = "craft_point")
+    private int craftPoint;
+
     @OneToOne
     private House house;
 
+    // ===================================
+    @ManyToMany
+    @JoinTable(name = "family_craft_thing",
+            joinColumns = {@JoinColumn(name = "family_id")},
+            inverseJoinColumns = {@JoinColumn(name = "thing_id")})
+    private Set<Thing> craftThings = new HashSet<Thing>();
+
+    @ManyToMany
+    @JoinTable(name = "family_craft_project",
+            joinColumns = {@JoinColumn(name = "family_id")},
+            inverseJoinColumns = {@JoinColumn(name = "project_id")})
+    private Set<Project> craftProjects = new HashSet<Project>();
     // ===================================
     @OneToMany(mappedBy = "family")
     private List<Character> characters;
@@ -111,6 +128,30 @@ public class Family {
 
     public void setMoney(int money) {
         this.money = money;
+    }
+
+    public int getCraftPoint() {
+        return craftPoint;
+    }
+
+    public void setCraftPoint(int craftPoint) {
+        this.craftPoint = craftPoint;
+    }
+
+    public Set<Thing> getCraftThings() {
+        return craftThings;
+    }
+
+    public void setCraftThings(Set<Thing> craftThings) {
+        this.craftThings = craftThings;
+    }
+
+    public Set<Project> getCraftProjects() {
+        return craftProjects;
+    }
+
+    public void setCraftProjects(Set<Project> craftProjects) {
+        this.craftProjects = craftProjects;
     }
 
     public House getHouse() {

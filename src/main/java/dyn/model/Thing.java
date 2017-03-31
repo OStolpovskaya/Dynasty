@@ -14,9 +14,17 @@ public class Thing {
 
     private String name;
 
+    @OneToOne
+    @JoinColumn(name = "craft_branch_id")
+    private CraftBranch craftBranch;
+
+    private int craftNumber;
+
     private int width;
 
     private int height;
+
+    // =================================================
 
     public Long getId() {
         return id;

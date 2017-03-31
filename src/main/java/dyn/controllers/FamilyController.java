@@ -6,6 +6,7 @@ import dyn.model.Character;
 import dyn.repository.*;
 import dyn.service.AppearanceService;
 import dyn.service.CareerService;
+import dyn.service.CraftService;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,9 @@ public class FamilyController {
 
     @Autowired
     CareerService careerService;
+
+    @Autowired
+    CraftService craftService;
 
     @Autowired
     private UserRepository userRepository;
@@ -149,6 +153,9 @@ public class FamilyController {
         family.setCurrent(true);
         family.setLevel(0);
         family.setMoney(100);
+
+        craftService.newFamily(family);
+
         logger.info(user.getUserName() + " adds new family:" + family.toString());
         familyRepository.save(family);
 

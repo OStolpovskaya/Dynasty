@@ -339,6 +339,7 @@ public class GameController {
             sb.append("<br>");
 
             family.setLevel(newLevel);
+            family.setCraftPoint(family.getCraftPoint() + 1);
             familyRepository.save(family);
         }
         redirectAttributes.addFlashAttribute("mess", sb.toString());
