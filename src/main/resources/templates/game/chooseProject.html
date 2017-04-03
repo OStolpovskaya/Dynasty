@@ -19,7 +19,7 @@
 
                 <div class="radio" th:each="project : ${familyProjects}">
                     <label>
-                        <input type="radio" name="projectId" th:value="${project.getId()}"/>
+                        <input type="radio" name="projectId" th:value="${project.getId()}" th:required="required"/>
                         <th:block th:text="${project.getName()}"></th:block>
                     </label>
                 </div>
@@ -38,7 +38,7 @@
             <form th:action="@{/game/buyProject}" method="post">
                 <div class="radio" th:each="project : ${projects}">
                     <label>
-                        <input type="radio" name="projectId" th:value="${project.getId()}" th:disabled="${family.getMoney() lt project.getCost()}"/>
+                        <input type="radio" name="projectId" th:value="${project.getId()}" th:required="required" th:disabled="${family.getMoney() lt project.getCost()}"/>
                         <th:block th:text="${project.getName()+' ('+project.getCost() +' р.)'}"></th:block>
                     </label>
                 </div>

@@ -88,7 +88,7 @@ public class CraftController {
                     logger.info("Family " + family.getFamilyName() + " learn thing " + thing.getName() + "(" + thing.getId() + ")");
                     familyRepository.save(family);
                     redirectAttributes.addFlashAttribute("mess", "Ваша семья выучила схему изготовления предмета " + thing.getName());
-                    return "redirect:/game/craft";
+                    return "redirect:/game/chooseProject?thingId=" + thing.getId();
                 } else {
                     logger.error("Family " + family.getFamilyName() + " hasn't enough craft points to learn thing " + thing.getName() + "(" + thing.getId() + ")");
                     redirectAttributes.addFlashAttribute("mess", "Семья " + family.getFamilyName() + " не может выучить схему изготовления предмета " + thing.getName() + ". Недостаточно баллов развития. ");
@@ -171,7 +171,6 @@ public class CraftController {
         return "redirect:/game/craft";
     }
 
-    //makeItem
     @RequestMapping(value = "/game/makeItem", method = RequestMethod.POST)
     public String makeItem(ModelMap model, RedirectAttributes redirectAttributes,
                            @RequestParam(value = "projectId") Long projectId) {
