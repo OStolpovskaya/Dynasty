@@ -324,24 +324,15 @@ public class GameController {
                     String locAchievementName = messageSource.getMessage(achievement.getName(), null, loc());
                     sb.append(messageSource.getMessage("turn.achievement", new Object[]{locAchievementName}, loc()));
                 }
-                /*
-                Achievement achievement = achievementRepository.findByTypeAndForWhat(AchievementType.newborn, race.getName());
-                if (achievement != null && !user.getAchievements().contains(achievement)) {
-                    user.getAchievements().add(achievement);
-                    logger.info(user.getUserName() + " is awarded! Achievement: " + achievement.getName());
-                    String locAchievementName = messageSource.getMessage(achievement.getName(), null, loc());
-                    sb.append(messageSource.getMessage("turn.achievement", new Object[]{locAchievementName}, loc()));
-                    userRepository.save(user);
-                }
-                */
                 sb.append("<br>");
             }
             sb.append("<br>");
 
-            family.setLevel(newLevel);
-            family.setCraftPoint(family.getCraftPoint() + 1);
-            familyRepository.save(family);
         }
+        family.setLevel(newLevel);
+        family.setCraftPoint(family.getCraftPoint() + 1);
+        familyRepository.save(family);
+
         redirectAttributes.addFlashAttribute("mess", sb.toString());
         return "redirect:/game";
     }

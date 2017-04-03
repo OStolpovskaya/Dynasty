@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Магазин проектов</title>
+    <link th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}" rel="stylesheet"></link>
+    <link th:href="@{/css/common.css}" rel="stylesheet"></link>
+</head>
+<body>
+<div th:replace="fragments/navigation :: nav-for-game"></div>
+<div class="container">
+    <h3>Деньги:</h3>
+    <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
+    <p th:text="${family.getMoney()}"></p>
+    <!--/*@thymesVar id="thing" type="dyn.model.Thing"*/-->
+    <h2>Выберите проект предмета
+        <th:block th:text="${thing.getName()}"></th:block>
+    </h2>
+    <form th:action="@{/game/buyProject}" method="post">
+        <!--/*@thymesVar id="project" type="dyn.model.Project"*/-->
+        <div class="radio" th:each="project : ${projects}">
+            <label>
+                <input type="radio" name="projectId" th:value="${project.getId()}" th:disabled="${family.getMoney() lt project.getCost()}"/>
+                <th:block th:text="${project.getName()+' ('+project.getCost() +' р.)'}"></th:block>
+            </label>
+        </div>
+        <button type="submit" class="btn btn-default btn-md">Приобрести проект</button>
+    </form>
+</div>
+<script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
+</body>
+</html>

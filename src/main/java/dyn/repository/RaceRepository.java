@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RaceRepository extends CrudRepository<Race, Long> {
-    public Race findByName(String name);
+    Race findByName(String name);
 }

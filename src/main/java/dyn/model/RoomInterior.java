@@ -12,13 +12,13 @@ public class RoomInterior {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     private Room room;
 
     @OneToOne
     private Thing thing;
 
-    @OneToOne
+    @ManyToOne
     private House house;
 
     private int x;
@@ -26,6 +26,8 @@ public class RoomInterior {
     private int y;
 
     private int layer;
+
+    //===========================================================
 
     public Long getId() {
         return id;

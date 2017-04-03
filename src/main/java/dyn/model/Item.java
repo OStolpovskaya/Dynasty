@@ -12,14 +12,16 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     private Project project;
 
-    @OneToOne
+    @ManyToOne
     private Family family;
 
     @Column(name = "interior_id")
     private Long interiorId;
+
+    //=======================================================
 
     public Long getId() {
         return id;

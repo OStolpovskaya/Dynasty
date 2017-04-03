@@ -1,6 +1,7 @@
 package dyn.model;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by OM on 21.02.2017.
@@ -12,13 +13,21 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     private Thing thing;
 
     private String name;
 
+    private int cost;
+
     @Lob
     private byte[] view;
+
+    // =================================================
+    @OneToMany(mappedBy = "project")
+    private List<Item> items;
+
+    // =================================================
 
     public Long getId() {
         return id;
@@ -42,6 +51,14 @@ public class Project {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getCost() {
+        return cost;
+    }
+
+    public void setCost(int cost) {
+        this.cost = cost;
     }
 
     public byte[] getView() {

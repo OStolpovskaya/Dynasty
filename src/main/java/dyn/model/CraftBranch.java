@@ -1,6 +1,7 @@
 package dyn.model;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by OM on 31.03.2017.
@@ -15,6 +16,11 @@ public class CraftBranch {
     private String name;
     private int point;
 
+    //=========================
+    @OneToMany(mappedBy = "craftBranch")
+    @OrderBy("craftNumber ASC")
+    private List<Thing> things;
+    //=========================
 
     public int getId() {
         return id;
@@ -38,5 +44,9 @@ public class CraftBranch {
 
     public void setPoint(int point) {
         this.point = point;
+    }
+
+    public List<Thing> getThings() {
+        return things;
     }
 }

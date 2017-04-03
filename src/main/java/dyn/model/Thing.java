@@ -1,6 +1,7 @@
 package dyn.model;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by OM on 21.02.2017.
@@ -8,22 +9,22 @@ import javax.persistence.*;
 @Entity
 @Table(name = "thing")
 public class Thing {
+    // =================================================
+    @Transient
+    public int familyStatus;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
     private String name;
-
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "craft_branch_id")
     private CraftBranch craftBranch;
-
     private int craftNumber;
-
     private int width;
-
     private int height;
-
+    // =================================================
+    @OneToMany(mappedBy = "thing")
+    private List<Project> projects;
     // =================================================
 
     public Long getId() {
@@ -56,5 +57,25 @@ public class Thing {
 
     public void setHeight(int height) {
         this.height = height;
+    }
+
+    public CraftBranch getCraftBranch() {
+        return craftBranch;
+    }
+
+    public void setCraftBranch(CraftBranch craftBranch) {
+        this.craftBranch = craftBranch;
+    }
+
+    public int getCraftNumber() {
+        return craftNumber;
+    }
+
+    public void setCraftNumber(int craftNumber) {
+        this.craftNumber = craftNumber;
+    }
+
+    public List<Project> getProjects() {
+        return projects;
     }
 }

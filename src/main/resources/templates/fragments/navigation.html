@@ -22,6 +22,7 @@
                 <li><a href="?language=ru">ru</a></li>
             </ul>
         </div>
+        <div class="alert alert-warning" th:if="${mess!=null}" th:utext="${mess}"></div>
     </nav>
 </div>
 <div th:fragment="nav-for-game">
@@ -35,6 +36,7 @@
                 <li><a href="/game/families">Семья</a></li>
                 <li><a href="/game/achievements">Достижения</a></li>
                 <li><a href="/game/house">Родовое гнездо</a></li>
+                <li><a href="/game/craft">Крафт</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="?language=en">en</a></li>
@@ -43,6 +45,7 @@
             </ul>
         </div>
     </nav>
+    <div class="alert alert-warning" th:if="${mess!=null}" th:utext="${mess}"></div>
 </div>
 <div th:fragment="nav-for-admin">
     <nav role="navigation" class="navbar navbar-default">
@@ -64,6 +67,7 @@
             </ul>
         </div>
     </nav>
+    <div class="alert alert-warning" th:if="${mess!=null}" th:utext="${mess}"></div>
 </div>
 <script src="webjars/jquery/1.9.1/jquery.min.js"></script>
 <script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>

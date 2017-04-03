@@ -1,6 +1,7 @@
 package dyn.model;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by OM on 21.02.2017.
@@ -17,6 +18,9 @@ public class Room {
     @Column(name = "house_id")
     private long houseId;
 
+    //==============================================================
+    @OneToMany(mappedBy = "room")
+    private List<RoomInterior> roomInteriors;
     //==============================================================
 
     public Long getId() {

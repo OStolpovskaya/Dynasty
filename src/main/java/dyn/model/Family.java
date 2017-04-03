@@ -58,10 +58,16 @@ public class Family {
     @JoinTable(name = "family_craft_project",
             joinColumns = {@JoinColumn(name = "family_id")},
             inverseJoinColumns = {@JoinColumn(name = "project_id")})
+    @OrderBy("name")
     private Set<Project> craftProjects = new HashSet<Project>();
     // ===================================
     @OneToMany(mappedBy = "family")
     private List<Character> characters;
+
+    @OneToMany(mappedBy = "family")
+    private List<Item> items;
+
+    // ===================================
 
     public Family() {
     }
@@ -173,7 +179,7 @@ public class Family {
     public List<List<Character>> getLevelOrderedFathers() {
         List<List<Character>> array = new ArrayList<>(getLevel());
         if (level > 0) {
-            for (int i = 0; i < level; i++) {
+            for (int i = 0; i <= level; i++) {
                 array.add(new ArrayList<>());
             }
         } else {
@@ -188,6 +194,25 @@ public class Family {
         return array;
     }
 
+    public List<Project> getCraftProjectsForThing(Thing thing) {
+        List<Project> craftProjectsForThing = new ArrayList<>();
+        for (Project craftProject : craftProjects) {
+            if (craftProject.getThing() == thing) {
+                craftProjectsForThing.add(craftProject);
+            }
+        }
+        return craftProjectsForThing;
+    }
+
+    public boolean canBuyThing(Thing thing) {
+        for (Thing craftThing : craftThings) {
+            if (craftThing.getCraftNumber() + 1 == thing.getCraftNumber()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public String toString() {
         return "Family{" +
@@ -199,5 +224,14 @@ public class Family {
                 ", femaleLastname='" + femaleLastname + '\'' +
                 ", level=" + level +
                 '}';
+    }
+
+    public boolean hasCraftThing(CraftBranch craftBranch, int craftNumber) {
+        for (Thing craftThing : craftThings) {
+            if (craftThing.getCraftBranch() == craftBranch && craftThing.getCraftNumber() == craftNumber) {
+                return true;
+            }
+        }
+        return false;
     }
 }
