@@ -1,12 +1,10 @@
 package dyn.service;
 
 import dyn.model.Family;
+import dyn.model.Item;
 import dyn.model.Project;
 import dyn.model.Thing;
-import dyn.repository.CraftBranchRepository;
-import dyn.repository.FamilyRepository;
-import dyn.repository.ProjectRepository;
-import dyn.repository.ThingRepository;
+import dyn.repository.*;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +25,8 @@ public class CraftService {
     private CraftBranchRepository craftBranchRepository;
     @Autowired
     private FamilyRepository familyRepository;
+    @Autowired
+    private ItemRepository itemRepository;
 
     public void newFamily(Family family) {
         family.setCraftPoint(3);
@@ -40,5 +40,14 @@ public class CraftService {
 
     public Project getProject(Long projectId) {
         return projectRepository.findOne(projectId);
+    }
+
+    public Item createItem(Project project, Family family, long interiorId) {
+        Item item = new Item();
+        item.setProject(project);
+        item.setFamily(family);
+        item.setInteriorId(interiorId);
+        itemRepository.save(item);
+        return item;
     }
 }

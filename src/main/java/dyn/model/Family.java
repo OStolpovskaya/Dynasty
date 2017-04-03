@@ -204,13 +204,8 @@ public class Family {
         return craftProjectsForThing;
     }
 
-    public boolean canBuyThing(Thing thing) {
-        for (Thing craftThing : craftThings) {
-            if (craftThing.getCraftNumber() + 1 == thing.getCraftNumber()) {
-                return true;
-            }
-        }
-        return false;
+    public List<Item> getItems() {
+        return items;
     }
 
     @Override

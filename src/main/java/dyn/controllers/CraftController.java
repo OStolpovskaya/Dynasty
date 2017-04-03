@@ -87,7 +87,7 @@ public class CraftController {
                     family.getCraftThings().add(thing);
                     logger.info("Family " + family.getFamilyName() + " learn thing " + thing.getName() + "(" + thing.getId() + ")");
                     familyRepository.save(family);
-                    redirectAttributes.addFlashAttribute("mess", "Семья " + family.getFamilyName() + " выучила схему изготовления предмета " + thing.getName());
+                    redirectAttributes.addFlashAttribute("mess", "Ваша семья выучила схему изготовления предмета " + thing.getName());
                     return "redirect:/game/craft";
                 } else {
                     logger.error("Family " + family.getFamilyName() + " hasn't enough craft points to learn thing " + thing.getName() + "(" + thing.getId() + ")");
@@ -101,13 +101,14 @@ public class CraftController {
         return "redirect:/game/craft";
     }
 
-    @RequestMapping(value = "/game/chooseProject", method = RequestMethod.POST)
+
+    @RequestMapping(value = "/game/chooseProject", method = RequestMethod.GET)
     public String chooseProject(ModelMap model, RedirectAttributes redirectAttributes,
                                 @RequestParam(value = "thingId") Long thingId) {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         Family family = user.getCurrentFamily();
 
-        Thing thing = craftService.getThing(thingId);//buyProject(family, thingId);
+        Thing thing = craftService.getThing(thingId);
         if (thing != null) {
             if (family.getCraftThings().contains(thing)) {
                 List<Project> availableProjects = thing.getProjects();
@@ -119,6 +120,7 @@ public class CraftController {
                     }
                 }
                 model.addAttribute("family", family);
+                model.addAttribute("familyProjects", familyCraftProjects);
                 model.addAttribute("projects", projects);
                 model.addAttribute("thing", thing);
                 return "game/chooseProject";
@@ -148,16 +150,16 @@ public class CraftController {
                         family.setMoney(family.getMoney() - project.getCost());
                         family.getCraftProjects().add(project);
                         familyRepository.save(family);
-                        logger.info("Family " + family.getFamilyName() + " buy project:" + project.getName());
+                        logger.info("Family " + family.getFamilyName() + " buy project: '" + project.getName() + "' for thing " + thing.getName());
                         redirectAttributes.addFlashAttribute("mess", "Ваша семья приобретает проект " + project.getName() + " предмета " + thing.getName() + ". Потрачено: " + project.getCost() + ". Время производить!");
-                        return "redirect:/game/craft";
+                        return "redirect:/game/chooseProject?thingId=" + thing.getId();
                     }
-                    logger.error("Family " + family.getFamilyName() + " doesn't have enough money to buy project:" + project.getName());
+                    logger.error("Family " + family.getFamilyName() + " doesn't have enough money to buy project: '" + project.getName() + "' for thing " + thing.getName());
                     redirectAttributes.addFlashAttribute("mess", "Ваша семья не может приобрести проект " + project.getName() + ". Недостаточно денег!");
                     return "redirect:/game/craft";
                 }
                 logger.error("Family " + family.getFamilyName() + " already has project " + project.getName());
-                redirectAttributes.addFlashAttribute("mess", "Ваша семья еще владеет таким проектом: " + project.getName());
+                redirectAttributes.addFlashAttribute("mess", "Ваша семья уже владеет таким проектом: " + project.getName());
                 return "redirect:/game/craft";
             }
             logger.error("Family " + family.getFamilyName() + " doesn't know the thing to buy projects:" + thing.getName());
@@ -165,6 +167,34 @@ public class CraftController {
             return "redirect:/game/craft";
         }
         logger.error("Family " + family.getFamilyName() + " want to buy non-existing project id=" + projectId);
+        redirectAttributes.addFlashAttribute("mess", "Такого проекта нет");
+        return "redirect:/game/craft";
+    }
+
+    //makeItem
+    @RequestMapping(value = "/game/makeItem", method = RequestMethod.POST)
+    public String makeItem(ModelMap model, RedirectAttributes redirectAttributes,
+                           @RequestParam(value = "projectId") Long projectId) {
+        User user = userRepository.findByUserName(getAuthUser().getUsername());
+        Family family = user.getCurrentFamily();
+
+        Project project = craftService.getProject(projectId);
+        if (project != null) {
+            if (family.getCraftProjects().contains(project)) {
+                Item item = craftService.createItem(project, family, 0L);
+                family.getItems().add(item);
+                familyRepository.save(family);
+
+                logger.info("Family " + family.getFamilyName() + " makes the item for project:" + project.getName());
+                redirectAttributes.addFlashAttribute("mess", "Ваша семья изготавливает предмет по проекту '" + project.getName() + "' предмета " + project.getThing().getName() + ". Загляните на ваш склад!");
+                return "redirect:/game/house";
+
+            }
+            logger.error("Family " + family.getFamilyName() + " doesn't have the project:" + project.getName());
+            redirectAttributes.addFlashAttribute("mess", "Ваша семья не владеет таким проектом: " + project.getName());
+            return "redirect:/game/craft";
+        }
+        logger.error("Family " + family.getFamilyName() + " want to make item for non-existing project id=" + projectId);
         redirectAttributes.addFlashAttribute("mess", "Такого проекта нет");
         return "redirect:/game/craft";
     }
