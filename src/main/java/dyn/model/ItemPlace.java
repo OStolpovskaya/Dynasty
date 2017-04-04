@@ -5,5 +5,6 @@ package dyn.model;
  */
 public enum ItemPlace {
     home,
-    storage
+    storage,
+    store
 }

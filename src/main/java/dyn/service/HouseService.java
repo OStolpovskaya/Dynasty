@@ -8,6 +8,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -100,6 +101,13 @@ public class HouseService {
             return false;
         }
 
+        if (item.getInteriorId() < 0) {
+            item.setInteriorId(0L);
+            logger.debug("Family " + family.getFamilyName() + " put item " + item.getProject().getName() + "(" + item.getId() + ") back from store to storage");
+            itemRepository.save(item);
+            return true;
+        }
+
         RoomInterior roomInterior = roomInteriorRepository.findOne(item.getInteriorId());
         if (roomInterior == null) {
             logger.error("RoomInterior not found: roomInterior.id=" + item.getInteriorId());
@@ -121,5 +129,25 @@ public class HouseService {
             }
         }
         return itemsInStorage;
+    }
+
+    public List<Item> getItemsInStore(Family family) {
+        List<Item> itemsInStore = new ArrayList<>();
+        List<Item> familyItems = family.getItems();
+        for (Item familyItem : familyItems) {
+            if (familyItem.getInteriorId() < 0) {
+                itemsInStore.add(familyItem);
+            }
+        }
+        return itemsInStore;
+    }
+
+    public Item getItem(Long itemId) {
+        return itemRepository.findOne(itemId);
+    }
+
+    @Transactional
+    public void putItemInStore(Item item) {
+        itemRepository.putItemIntoStore(item.getId());
     }
 }

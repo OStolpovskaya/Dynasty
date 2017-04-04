@@ -6,6 +6,7 @@ package dyn.controllers;
 
 
 import dyn.model.Family;
+import dyn.model.Item;
 import dyn.model.User;
 import dyn.repository.FamilyRepository;
 import dyn.repository.UserRepository;
@@ -74,8 +75,44 @@ public class HouseController {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         Family family = user.getCurrentFamily();
 
-        houseService.unsetItem(family, itemId);
+        boolean result = houseService.unsetItem(family, itemId);
+        if (result) {
+            redirectAttributes.addFlashAttribute("mess", "Вещь вернулась на склад");
+        } else {
+            redirectAttributes.addFlashAttribute("mess", "Ошибка при возвращении вещи на склад!");
+        }
 
+        return "redirect:/game/house";
+    }
+
+    //putItemToStore
+    @RequestMapping(value = "/game/putItemToStore", method = RequestMethod.POST)
+    public String putItemToStore(ModelMap model, RedirectAttributes redirectAttributes,
+                                 @RequestParam(value = "itemId") Long itemId,
+                                 @RequestParam(value = "cost") int cost) {
+        // Todo: cost. Новыя таблица? Или новый стоолбец в таблице item?
+        User user = userRepository.findByUserName(getAuthUser().getUsername());
+        Family family = user.getCurrentFamily();
+
+        Item item = houseService.getItem(itemId);
+        if (item != null) {
+            if (family.getItems().contains(item)) {
+                if (item.getInteriorId() == 0) {
+                    houseService.putItemInStore(item);
+                    logger.info("Family " + family.getFamilyName() + " put item to store: " + item.getProject().getName() + "(" + item.getId() + ")");
+                    redirectAttributes.addFlashAttribute("mess", "Вещь выставлена на продажу: " + item.getProject().getName() + "(" + item.getId() + ")");
+                    return "redirect:/game/house";
+                }
+                logger.error("Family " + family.getFamilyName() + " want to put in store item, which is not in the storage: " + item.getProject().getName() + "(" + item.getId() + "), interior_id=" + item.getInteriorId());
+                redirectAttributes.addFlashAttribute("mess", "Вещь, выставляемая на продажу, должна быть на складе: " + item.getProject().getName() + "(" + item.getId() + ")");
+                return "redirect:/game/house";
+            }
+            logger.error("Family " + family.getFamilyName() + " has not item: " + item.getProject().getName() + "(" + item.getId() + ")");
+            redirectAttributes.addFlashAttribute("mess", "Вы не владеете такой вещью: " + item.getProject().getName() + "(" + item.getId() + ")");
+            return "redirect:/game/house";
+        }
+        logger.error("Family " + family.getFamilyName() + " want to put in store non existing item: " + itemId);
+        redirectAttributes.addFlashAttribute("mess", "Вещь не найдена");
         return "redirect:/game/house";
     }
 
