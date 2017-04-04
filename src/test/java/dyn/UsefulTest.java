@@ -1,6 +1,11 @@
 package dyn;
 
 import org.junit.Test;
+import org.springframework.util.StringUtils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by OM on 03.03.2017.
@@ -24,6 +29,20 @@ public class UsefulTest {
         for (int i = 0; i < am.length; i++) {
             System.out.println((i + 1) + ":" + am[i]);
         }
+    }
+
+    @Test
+    public void Test2() {
+        List<String> resources = new ArrayList<>();
+        if (5 > 0) resources.add("'Дерево'");
+        if (0 > 0) resources.add("'Металл'");
+        if (0 > 0) resources.add("'Пластик, резина'");
+        if (5 > 0) resources.add("'Микроэлектроника'");
+        if (0 > 0) resources.add("'Ткань, кожа, бумага'");
+        if (1 > 0) resources.add("'Камень, стекло, керамика'");
+        if (0 > 0) resources.add("'Химия, краски'");
+        System.out.println(StringUtils.arrayToDelimitedString(resources.toArray(), ", "));
+        System.out.println(Arrays.toString(resources.toArray()));
     }
 
 }

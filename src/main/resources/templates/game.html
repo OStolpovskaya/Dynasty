@@ -13,8 +13,8 @@
     <p th:text="${@careerService.getRandomFromMinToMax(1,100)}"></p>
     <h1 th:text="${user.getUserName()}"></h1>
     <p th:inline="text">Семья: [[${currentFamily?.getFamilyName()}]] Уровень: [[${currentFamily?.getLevel()}]] Деньги: [[${currentFamily?.getMoney()}]]</p>
-    <p th:inline="text">Родовое гнездо: [[${currentFamily?.getHouse().getName()}]]</p>
-    <p th:inline="text">Баллы развития: [[${currentFamily?.getCraftPoint()}]]</p>
+    <p th:inline="text">Ваш дом: [[${currentFamily?.getHouse().getName()}]]</p>
+    <p th:inline="text">Баллы крафта: [[${currentFamily?.getCraftPoint()}]]</p>
     <div style="margin:10px; overflow-x: scroll; white-space: nowrap;">
 
         <div align="center" style="display: inline-block; margin-bottom: 3px; border: 2px solid; vertical-align: top" th:each="father : ${fathers}">

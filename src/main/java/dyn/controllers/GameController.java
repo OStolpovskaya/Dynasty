@@ -160,7 +160,11 @@ public class GameController {
                 careerService.generateProfession(worker);
                 int salary = worker.getCareer().getResultSalary();
                 family.setMoney(family.getMoney() + salary);
-                sb.append(worker.getName() + " приобретает профессию " + worker.getCareer().getProfession().getName() + " и зарабатывает " + salary + "<br>");
+                sb.append(worker.getName() + " приобретает профессию " + worker.getCareer().getProfession().getName() + " и зарабатывает " + salary + ". ");
+
+                family.getFamilyResources().addResFromVocation(worker.getCareer());
+                sb.append("А его призвание приносит ресурсы: " + worker.getCareer().getVocation().getResString() + " в количестве " + worker.getCareer().getProfession().getLevel() + " ед.<br>");
+
                 Achievement achievement = achievementService.checkAchievement(AchievementType.vocation10level, user, worker);
                 if (achievement != null) {
                     String locAchievementName = messageSource.getMessage(achievement.getName(), null, loc());
@@ -171,7 +175,11 @@ public class GameController {
                     careerService.generateProfession(workerWife);
                     int wifeSalary = workerWife.getCareer().getResultSalary();
                     family.setMoney(family.getMoney() + wifeSalary);
-                    sb.append("Его жена " + workerWife.getName() + " приобретает профессию " + workerWife.getCareer().getProfession().getName() + " и зарабатывает " + wifeSalary + "<br>");
+                    sb.append("Его жена " + workerWife.getName() + " приобретает профессию " + workerWife.getCareer().getProfession().getName() + " и зарабатывает " + wifeSalary + ". ");
+
+                    family.getFamilyResources().addResFromVocation(workerWife.getCareer());
+                    sb.append("А ее призвание приносит ресурсы: " + workerWife.getCareer().getVocation().getResString() + " в количестве " + workerWife.getCareer().getProfession().getLevel() + " ед.<br>");
+
                     achievement = achievementService.checkAchievement(AchievementType.vocation10level, user, workerWife);
                     if (achievement != null) {
                         String locAchievementName = messageSource.getMessage(achievement.getName(), null, loc());
@@ -183,7 +191,11 @@ public class GameController {
                     careerService.generateProfession(worker);
                     int salary = worker.getCareer().getResultSalary();
                     family.setMoney(family.getMoney() + salary);
-                    sb.append(worker.getName() + " приобретает профессию " + worker.getCareer().getProfession().getName() + " и зарабатывает " + salary + "<br>");
+                    sb.append(worker.getName() + " приобретает профессию " + worker.getCareer().getProfession().getName() + " и зарабатывает " + salary + ". ");
+
+                    family.getFamilyResources().addResFromVocation(worker.getCareer());
+                    sb.append("А ее призвание приносит ресурсы: " + worker.getCareer().getVocation().getResString() + " в количестве " + worker.getCareer().getProfession().getLevel() + " ед.<br>");
+
                     Achievement achievement = achievementService.checkAchievement(AchievementType.vocation10level, user, worker);
                     if (achievement != null) {
                         String locAchievementName = messageSource.getMessage(achievement.getName(), null, loc());

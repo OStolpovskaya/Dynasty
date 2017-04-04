@@ -1,5 +1,8 @@
 package dyn.model;
 
+import dyn.model.career.Career;
+import dyn.model.career.Vocation;
+
 import javax.persistence.*;
 
 /**
@@ -147,5 +150,17 @@ public class FamilyResources {
                 return false;
         }
         return true;
+    }
+
+    public void addResFromVocation(Career career) {
+        Vocation vocation = career.getVocation();
+        int professionLevel = career.getProfession().getLevel();
+        wood += vocation.getWood() * professionLevel;
+        metall += vocation.getMetall() * professionLevel;
+        plastic += vocation.getPlastic() * professionLevel;
+        microelectronics += vocation.getMicroelectronics() * professionLevel;
+        cloth += vocation.getCloth() * professionLevel;
+        stone += vocation.getStone() * professionLevel;
+        chemical += vocation.getChemical() * professionLevel;
     }
 }
