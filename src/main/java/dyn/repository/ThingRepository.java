@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface ThingRepository extends CrudRepository<Thing, Long> {
     Thing findByName(String thingName);
 
-    Thing findByCraftBranchIdAndCraftNumber(Long craftBranchId, int craftNumber);
+    Thing findByCraftBranchIdAndCraftNumber(int craftBranchId, int craftNumber);
 }

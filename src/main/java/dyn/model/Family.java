@@ -67,6 +67,10 @@ public class Family {
     @OneToMany(mappedBy = "family")
     private List<Item> items;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "resources")
+    private FamilyResources familyResources;
+
     // ===================================
 
     public Family() {
@@ -176,6 +180,14 @@ public class Family {
         this.characters = characters;
     }
 
+    public FamilyResources getFamilyResources() {
+        return familyResources;
+    }
+
+    public void setFamilyResources(FamilyResources familyResources) {
+        this.familyResources = familyResources;
+    }
+
     public List<List<Character>> getLevelOrderedFathers() {
         List<List<Character>> array = new ArrayList<>(getLevel());
         if (level > 0) {
@@ -228,5 +240,15 @@ public class Family {
             }
         }
         return false;
+    }
+
+    public boolean hasResourcesForProject(Project project) {
+        return familyResources.getWood() >= project.getWood() &&
+                familyResources.getMetall() >= project.getMetall() &&
+                familyResources.getPlastic() >= project.getPlastic() &&
+                familyResources.getMicroelectronics() >= project.getMicroelectronics() &&
+                familyResources.getCloth() >= project.getCloth() &&
+                familyResources.getStone() >= project.getStone() &&
+                familyResources.getChemical() >= project.getChemical();
     }
 }

@@ -13,17 +13,109 @@
     <!--/*@thymesVar id="project" type="dyn.model.Project"*/-->
     <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
     <h3 th:text="${#strings.toUpperCase(thing.getName())}"></h3>
+    <div class="well"><h4>Имеющиеся ресурсы:</h4>
+        <table class="table-bordered" width="100%">
+            <thead>
+            <tr>
+                <th>Дерево</th>
+                <th>Металл</th>
+                <th>Пластик, резина</th>
+                <th>Микроэлектроника</th>
+                <th>Ткань, кожа, бумага</th>
+                <th>Камень, стекло, керамика</th>
+                <th>Химия, краски</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td th:text="${family.getFamilyResources().getWood()}">John</td>
+                <td th:text="${family.getFamilyResources().getMetall()}">John</td>
+                <td th:text="${family.getFamilyResources().getPlastic()}">John</td>
+                <td th:text="${family.getFamilyResources().getMicroelectronics()}">John</td>
+                <td th:text="${family.getFamilyResources().getCloth()}">John</td>
+                <td th:text="${family.getFamilyResources().getStone()}">John</td>
+                <td th:text="${family.getFamilyResources().getChemical()}">John</td>
+            </tr>
+            <tr>
+                <td>
+                    <form th:action="@{/game/buyResources}" method="post">
+                        <input type="hidden" name="res" value="wood"/>
+                        <input type="hidden" name="thingId" th:value="${thing.getId()}"/>
+                        <button type="submit" class="btn btn-default btn-xs" th:disabled="${family.getMoney() lt T(dyn.model.FamilyResources).BUYCOST}">Купить 500 р. за 5 ед.</button>
+                    </form>
+                </td>
+                <td>
+                    <form th:action="@{/game/buyResources}" method="post">
+                        <input type="hidden" name="res" value="metall"/>
+                        <input type="hidden" name="thingId" th:value="${thing.getId()}"/>
+                        <button type="submit" class="btn btn-default btn-xs" th:disabled="${family.getMoney() lt T(dyn.model.FamilyResources).BUYCOST}">Купить 500 р. за 5 ед.</button>
+                    </form>
+                </td>
+                <td>
+                    <form th:action="@{/game/buyResources}" method="post">
+                        <input type="hidden" name="res" value="plastic"/>
+                        <input type="hidden" name="thingId" th:value="${thing.getId()}"/>
+                        <button type="submit" class="btn btn-default btn-xs" th:disabled="${family.getMoney() lt T(dyn.model.FamilyResources).BUYCOST}">Купить 500 р. за 5 ед.</button>
+                    </form>
+                </td>
+                <td>
+                    <form th:action="@{/game/buyResources}" method="post">
+                        <input type="hidden" name="res" value="microelectronics"/>
+                        <input type="hidden" name="thingId" th:value="${thing.getId()}"/>
+                        <button type="submit" class="btn btn-default btn-xs" th:disabled="${family.getMoney() lt T(dyn.model.FamilyResources).BUYCOST}">Купить 500 р. за 5 ед.</button>
+                    </form>
+                </td>
+                <td>
+                    <form th:action="@{/game/buyResources}" method="post">
+                        <input type="hidden" name="res" value="cloth"/>
+                        <input type="hidden" name="thingId" th:value="${thing.getId()}"/>
+                        <button type="submit" class="btn btn-default btn-xs" th:disabled="${family.getMoney() lt T(dyn.model.FamilyResources).BUYCOST}">Купить 500 р. за 5 ед.</button>
+                    </form>
+                </td>
+                <td>
+                    <form th:action="@{/game/buyResources}" method="post">
+                        <input type="hidden" name="res" value="stone"/>
+                        <input type="hidden" name="thingId" th:value="${thing.getId()}"/>
+                        <button type="submit" class="btn btn-default btn-xs" th:disabled="${family.getMoney() lt T(dyn.model.FamilyResources).BUYCOST}">Купить 500 р. за 5 ед.</button>
+                    </form>
+                </td>
+                <td>
+                    <form th:action="@{/game/buyResources}" method="post">
+                        <input type="hidden" name="res" value="chemical"/>
+                        <input type="hidden" name="thingId" th:value="${thing.getId()}"/>
+                        <button type="submit" class="btn btn-default btn-xs" th:disabled="${family.getMoney() lt T(dyn.model.FamilyResources).BUYCOST}">Купить 500 р. за 5 ед.</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
     <div class="well"><h4>Изготовление предметов по имеющимся проектам:</h4>
+        <script>
+            function enableMakeItemButton() {
+                $("#makeItemButton").attr("disabled", false);
+            }
+        </script>
         <th:block th:if="${not #lists.isEmpty(familyProjects)}">
             <form th:action="@{/game/makeItem}" method="post">
 
                 <div class="radio" th:each="project : ${familyProjects}">
                     <label>
-                        <input type="radio" name="projectId" th:value="${project.getId()}" th:required="required"/>
+                        <input type="radio" name="projectId" th:value="${project.getId()}" th:required="required" onclick="enableMakeItemButton()" th:disabled="${not family.hasResourcesForProject(project)}"/>
                         <th:block th:text="${project.getName()}"></th:block>
+                        (
+                        <th:block th:text="${project.getWood()>0?' Дерево: '+project.getWood():''}"></th:block>
+                        <th:block th:text="${project.getMetall()>0?' Металл: '+project.getMetall():''}"></th:block>
+                        <th:block th:text="${project.getPlastic()>0?' Пластик, резина: '+project.getPlastic():''}"></th:block>
+                        <th:block th:text="${project.getMicroelectronics()>0?' Микроэлектроника: '+project.getMicroelectronics():''}"></th:block>
+                        <th:block th:text="${project.getCloth()>0?' Ткань, кожа, бумага: '+project.getCloth():''}"></th:block>
+                        <th:block th:text="${project.getStone()>0?' Камень, стекло, керамика: '+project.getStone():''}"></th:block>
+                        <th:block th:text="${project.getChemical()>0?' Химия, краски: '+project.getChemical():''}"></th:block>
+                        )
                     </label>
                 </div>
-                <button type="submit" class="btn btn-default btn-md">Изготовить предмет</button>
+                <button id="makeItemButton" type="submit" class="btn btn-default btn-md" th:disabled="${true}">Изготовить предмет</button>
             </form>
         </th:block>
         <th:block th:unless="${not #lists.isEmpty(familyProjects)}">
@@ -31,18 +123,22 @@
         </th:block>
     </div>
 
-    <div class="well">
-        <h4>Покупка новых проектов:</h4>
+    <div class="well"><h4>Покупка новых проектов:</h4>
+        <script>
+            function enableBuyProjectButton() {
+                $("#buyProjectButton").attr("disabled", false);
+            }
+        </script>
         <p th:text="${'Ваши деньги: '+family.getMoney()+' р.'}"></p>
         <th:block th:if="${not #lists.isEmpty(projects)}">
             <form th:action="@{/game/buyProject}" method="post">
                 <div class="radio" th:each="project : ${projects}">
                     <label>
-                        <input type="radio" name="projectId" th:value="${project.getId()}" th:required="required" th:disabled="${family.getMoney() lt project.getCost()}"/>
+                        <input type="radio" name="projectId" th:value="${project.getId()}" th:required="required" onclick="enableBuyProjectButton()" th:disabled="${family.getMoney() lt project.getCost()}"/>
                         <th:block th:text="${project.getName()+' ('+project.getCost() +' р.)'}"></th:block>
                     </label>
                 </div>
-                <button type="submit" class="btn btn-default btn-md">Приобрести проект</button>
+                <button id="buyProjectButton" type="submit" class="btn btn-default btn-md" th:disabled="${true}">Приобрести проект</button>
             </form>
         </th:block>
         <th:block th:unless="${not #lists.isEmpty(projects)}">

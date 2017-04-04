@@ -30,7 +30,7 @@ public class CraftService {
 
     public void newFamily(Family family) {
         family.setCraftPoint(3);
-        family.getCraftThings().add(thingRepository.findByCraftBranchIdAndCraftNumber(1L, 1)); // кухонный стул
+        family.getCraftThings().add(thingRepository.findByCraftBranchIdAndCraftNumber(1, 1)); // кухонный стул
         family.getCraftProjects().add(projectRepository.findOne(1L)); // простая табуретка
     }
 

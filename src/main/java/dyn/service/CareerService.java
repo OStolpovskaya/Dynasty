@@ -80,24 +80,24 @@ public class CareerService {
         return professions;
     }
 
-    public void inheritVocationAndSkills(Career child, Career father, Career mother) {
+    public void inheritVocationAndSkills(Career childCareer, Career fatherCareer, Career motherCareer) {
         double vocationPercentage = Math.random();
         if (vocationPercentage < 0.4) {
-            child.setVocation(father.getVocation());
+            childCareer.setVocation(fatherCareer.getVocation());
         } else if (vocationPercentage < 0.8) {
-            child.setVocation(mother.getVocation());
+            childCareer.setVocation(motherCareer.getVocation());
         } else {
-            child.setVocation(getRandomVocation());
+            childCareer.setVocation(getRandomVocation());
         }
 
-        child.setEducation(educationRepository.findByName(Education.PRIMARY));
+        childCareer.setEducation(educationRepository.findByName(Education.PRIMARY));
 
         int incCoefficient = 3;
 
-        child.setIntelligence(getRandomFromMinToMax(father.getIntelligence(), mother.getIntelligence()) + incCoefficient);
-        child.setCharisma(getRandomFromMinToMax(father.getCharisma(), mother.getCharisma()) + incCoefficient);
-        child.setStrength(getRandomFromMinToMax(father.getStrength(), mother.getStrength()) + incCoefficient);
-        child.setCreativity(getRandomFromMinToMax(father.getCreativity(), mother.getCreativity()) + incCoefficient);
+        childCareer.setIntelligence(getRandomFromMinToMax(fatherCareer.getIntelligence(), motherCareer.getIntelligence()) + incCoefficient);
+        childCareer.setCharisma(getRandomFromMinToMax(fatherCareer.getCharisma(), motherCareer.getCharisma()) + incCoefficient);
+        childCareer.setStrength(getRandomFromMinToMax(fatherCareer.getStrength(), motherCareer.getStrength()) + incCoefficient);
+        childCareer.setCreativity(getRandomFromMinToMax(fatherCareer.getCreativity(), motherCareer.getCreativity()) + incCoefficient);
     }
 
     public int getRandomFromMinToMax(int first, int second) {
