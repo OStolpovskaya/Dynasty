@@ -157,7 +157,7 @@ public class FamilyController {
         family.setUser(user);
         family.setCurrent(true);
         family.setLevel(0);
-        family.setMoney(100);
+        family.setMoney(1000);
 
         craftService.newFamily(family);
 

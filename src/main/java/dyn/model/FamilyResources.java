@@ -23,6 +23,16 @@ public class FamilyResources {
     private int chemical;
     private Family family;
 
+    public FamilyResources() {
+        wood = 10;
+        metall = 10;
+        plastic = 10;
+        microelectronics = 10;
+        cloth = 10;
+        stone = 10;
+        chemical = 10;
+    }
+
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
