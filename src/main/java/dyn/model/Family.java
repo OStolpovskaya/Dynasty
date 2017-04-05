@@ -220,6 +220,28 @@ public class Family {
         return items;
     }
 
+    public List<Item> getItemsInStorage() {
+        List<Item> itemsInStorage = new ArrayList<>();
+        List<Item> familyItems = getItems();
+        for (Item familyItem : familyItems) {
+            if (familyItem.getPlace().equals(ItemPlace.storage)) {
+                itemsInStorage.add(familyItem);
+            }
+        }
+        return itemsInStorage;
+    }
+
+    public List<Item> getItemsInStore() {
+        List<Item> itemsInStore = new ArrayList<>();
+        List<Item> familyItems = getItems();
+        for (Item familyItem : familyItems) {
+            if (familyItem.getPlace().equals(ItemPlace.store)) {
+                itemsInStore.add(familyItem);
+            }
+        }
+        return itemsInStore;
+    }
+
     @Override
     public String toString() {
         return "Family{" +
@@ -250,5 +272,9 @@ public class Family {
                 familyResources.getCloth() >= project.getCloth() &&
                 familyResources.getStone() >= project.getStone() &&
                 familyResources.getChemical() >= project.getChemical();
+    }
+
+    public String getLogName() {
+        return "Family " + familyName + "(" + id + ") ";
     }
 }

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Магазин вещей</title>
+    <link th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}" rel="stylesheet"></link>
+</head>
+<body>
+<div th:replace="fragments/navigation :: nav-for-game"></div>
+<div class="container">
+    <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
+    <!--/*@thymesVar id="thing" type="dyn.model.Thing"*/-->
+    <!--/*@thymesVar id="item" type="dyn.model.Item"*/-->
+    <h3>Семейный бюджет:</h3>
+    <p th:text="${family.getMoney() + ' р.'}"></p>
+    <h3 th:text="${'Выберите понравившуюся вещь типа '+#strings.toUpperCase(thing.getName())}"></h3>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Предмет</th>
+            <th>Продавец</th>
+            <th>Изготовитель</th>
+            <th>Цена</th>
+            <th>Действия</th>
+        </tr>
+        </thead>
+        <tbody>
+        <th:block th:each="item : ${items}">
+            <tr>
+                <td th:text="${item.getProject().getName()}"></td>
+                <td th:text="${item.getFamily().getFamilyName()+'('+item.getFamily().getUser().getUserName()+')'}"></td>
+                <td th:text="${item.getAuthor().getFamilyName()+'('+item.getAuthor().getUser().getUserName()+')'}"></td>
+                <td th:text="${item.getCost()+' р.'}"></td>
+                <td>
+                    <form th:action="@{/game/buyItem}" method="post">
+                        <input type="hidden" name="itemId" th:value="${item.getId()}"/>
+                        <button type="submit" class="btn btn-default" th:disabled="${family.getMoney() lt item.getCost()}">Купить</button>
+                    </form>
+                </td>
+            </tr>
+        </th:block>
+        </tbody>
+    </table>
+</div>
+<script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
+</body>
+</html>

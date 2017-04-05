@@ -18,10 +18,23 @@ public class Item {
     @ManyToOne
     private Family family;
 
+    @ManyToOne
+    private Family author;
+
+    @Enumerated(EnumType.STRING)
+    private ItemPlace place;
+
     @Column(name = "interior_id")
     private Long interiorId;
 
+    @Column(name = "store_cost")
+    private int cost;
+
     //=======================================================
+
+
+    public Item() {
+    }
 
     public Long getId() {
         return id;
@@ -47,11 +60,35 @@ public class Item {
         this.family = family;
     }
 
+    public Family getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(Family author) {
+        this.author = author;
+    }
+
+    public ItemPlace getPlace() {
+        return place;
+    }
+
+    public void setPlace(ItemPlace place) {
+        this.place = place;
+    }
+
     public Long getInteriorId() {
         return interiorId;
     }
 
     public void setInteriorId(Long interiorId) {
         this.interiorId = interiorId;
+    }
+
+    public int getCost() {
+        return cost;
+    }
+
+    public void setCost(int cost) {
+        this.cost = cost;
     }
 }

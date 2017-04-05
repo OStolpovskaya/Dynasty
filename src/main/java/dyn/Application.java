@@ -41,7 +41,7 @@ public class Application extends WebMvcConfigurerAdapter {
     public JpaVendorAdapter jpaVendorAdapter() {
         HibernateJpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
         jpaVendorAdapter.setGenerateDdl(false);
-        jpaVendorAdapter.setShowSql(false);
+        jpaVendorAdapter.setShowSql(true);
 
         return jpaVendorAdapter;
     }

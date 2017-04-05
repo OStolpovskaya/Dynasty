@@ -1,9 +1,6 @@
 package dyn.service;
 
-import dyn.model.Family;
-import dyn.model.Item;
-import dyn.model.Project;
-import dyn.model.Thing;
+import dyn.model.*;
 import dyn.repository.*;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -42,11 +39,14 @@ public class CraftService {
         return projectRepository.findOne(projectId);
     }
 
-    public Item createItem(Project project, Family family, long interiorId) {
+    public Item createItem(Project project, Family family) {
         Item item = new Item();
         item.setProject(project);
         item.setFamily(family);
-        item.setInteriorId(interiorId);
+        item.setAuthor(family);
+        item.setPlace(ItemPlace.storage);
+        item.setInteriorId(0L);
+        item.setCost(0);
         itemRepository.save(item);
         return item;
     }
