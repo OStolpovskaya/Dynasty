@@ -12,6 +12,14 @@
     <!--/*@thymesVar id="thing" type="dyn.model.Thing"*/-->
     <!--/*@thymesVar id="project" type="dyn.model.Project"*/-->
     <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
+    <th:block th:if="${family.getLevel() == 0}">
+        <div class="alert alert-success">
+            Теперь ваша семья умеет изготавливать кухонный стул. Но, чтобы его изготовить, нужна схема или проект. Давайте приобретем проект табуретки "Самсколотил"! В самом низу страницы выберите проект табуретки и нажмите "Приобрести проект"<br/>
+            Наконец-то можно заняться крафтом! Под заголовком "Изготовление предметов..." выберите вашу табуретку и нажмите кнопку "Изготовить предмет". Обратите внимание, изготовление вещей происходит из накопленных вашей семьей ресурсов (они
+            представлены в таблице). Призвание персонажа определяет какой ресурс будет накоплен за ход, а уровень профессии - его количество.<br/>
+            Изготовленный предмет помещается на ваш склад, а оттуда он может быть установлен в доме или выставлен на продажу.
+        </div>
+    </th:block>
     <h3 th:text="${#strings.toUpperCase(thing.getName())}"></h3>
     <div class="well"><h4>Имеющиеся ресурсы:</h4>
         <table class="table-bordered" width="100%">
@@ -136,6 +144,15 @@
                     <label>
                         <input type="radio" name="projectId" th:value="${project.getId()}" th:required="required" onclick="enableBuyProjectButton()" th:disabled="${family.getMoney() lt project.getCost()}"/>
                         <th:block th:text="${project.getName()+' ('+project.getCost() +' р.)'}"></th:block>
+                        (
+                        <th:block th:text="${project.getWood()>0?' Дерево: '+project.getWood():''}"></th:block>
+                        <th:block th:text="${project.getMetall()>0?' Металл: '+project.getMetall():''}"></th:block>
+                        <th:block th:text="${project.getPlastic()>0?' Пластик, резина: '+project.getPlastic():''}"></th:block>
+                        <th:block th:text="${project.getMicroelectronics()>0?' Микроэлектроника: '+project.getMicroelectronics():''}"></th:block>
+                        <th:block th:text="${project.getCloth()>0?' Ткань, кожа, бумага: '+project.getCloth():''}"></th:block>
+                        <th:block th:text="${project.getStone()>0?' Камень, стекло, керамика: '+project.getStone():''}"></th:block>
+                        <th:block th:text="${project.getChemical()>0?' Химия, краски: '+project.getChemical():''}"></th:block>
+                        )
                     </label>
                 </div>
                 <button id="buyProjectButton" type="submit" class="btn btn-default btn-md" th:disabled="${true}">Приобрести проект</button>

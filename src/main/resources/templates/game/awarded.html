@@ -2,27 +2,39 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>Achievements</title>
+    <title>Достижения</title>
     <link th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}" rel="stylesheet"></link>
 </head>
 <body>
 <div th:replace="fragments/navigation :: nav-for-game"></div>
 <div class="container">
-    <h3>Achievements</h3>
+    <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
+    <th:block th:if="${family.getLevel() == 0}">
+        <div class="alert alert-success">
+            Здесь будут отображены ваши достижения. Например, когда в семье родится первый Эльф, вы будете иметь достижение "Эльф: первый новорожденный!"<br/>
+        </div>
+    </th:block>
+    <h3>Достижения</h3>
+    <th:block th:if="${not #lists.isEmpty(achievements)}">
     <table class="table table-striped">
         <thead>
         <tr>
-            <th>Achievement</th>
+            <th>Достижение</th>
+            <th>Когда получено</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="achievement : ${achievements}">
             <!--/*@thymesVar id="achievement" type="dyn.model.Achievement"*/-->
             <td th:text="#{${achievement.getName()}}">name</td>
+            <td>-</td>
         </tr>
         </tbody>
     </table>
-
+    </th:block>
+    <th:block th:unless="${not #lists.isEmpty(projects)}">
+        <p>Нет достижений</p>
+    </th:block>
 </div>
 <script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>

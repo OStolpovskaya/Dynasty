@@ -61,6 +61,7 @@ public class FamilyController {
             logger.debug(user.getUserName() + " doesn't have any family");
             return "redirect:/game/addNewFamily";
         } else {
+            model.addAttribute("family", user.getCurrentFamily());
             model.addAttribute("families", families);
             model.addAttribute("levels", user.getCurrentFamily().getLevelOrderedFathers());
         }

@@ -48,6 +48,7 @@ public class BuffController {
                               @RequestParam(value = "characterId") long characterId) {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         Family family = user.getCurrentFamily();
+        model.addAttribute("family", family);
 
         Character character = characterRepository.findByIdAndFamilyAndLevelAndSexAndSpouseIsNotNull(characterId, family, family.getLevel(), "male");
         if (character != null) {

@@ -50,10 +50,12 @@ public class HouseController {
                 family = user.getCurrentFamily();
             }
         }
+        model.addAttribute("family", family);
+        model.addAttribute("itemsInStorage", houseService.getItemsInStorage(family));
+        model.addAttribute("itemsInStore", houseService.getItemsInStore(family));
 
         HouseInterior houseInterior = houseService.getHouseInterior(family);
         model.addAttribute("houseInterior", houseInterior);
-        model.addAttribute("family", family);
 
         return "game/house";
     }

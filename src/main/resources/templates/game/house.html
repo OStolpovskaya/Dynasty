@@ -8,14 +8,29 @@
 <body>
 <div th:replace="fragments/navigation :: nav-for-game"></div>
 <div class="container">
-    <h3>Родовое гнездо</h3>
-    <p th:inline="text">Родовое гнездо: [[${houseInterior.getHouse().getName()}]] ([[${houseInterior.getHouse().getId()}]])</p>
+    <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
+    <th:block th:if="${family.getLevel() == 0}">
+        <div class="alert alert-success">
+            Это ваш дом. Пока это только хижина с тремя комнатами, но когда-нибудь вы обязательно построите дворец с гаражом и бассейном! <br/>
+            Сейчас на вашем складе есть стол (список вещей на складе внизу страницы). Найдите в таблице вещей для кухни "кухонный стол", правее выбран стол "Самсколотил", нажмите "Выбрать". Теперь в вашем доме есть хоть какая-то мебель!<br/>
+            Предметы для дома вы можете купить или изготовить самому. Пожалуйста, перейдите в меню на вкладку Крафт.
+        </div>
+    </th:block>
     <!--/*@thymesVar id="houseInterior" type="dyn.service.HouseInterior"*/-->
+    <h3 th:text="${'Ваш дом: '+ houseInterior.getHouse().getName()}">Родовое гнездо</h3>
     <th:block th:each="roomEntry : ${houseInterior.getRoomList()}">
         <ul>
             <li>
-                <h4 th:text="${roomEntry.getKey().getName()+'('+roomEntry.getKey().getId()+')'}"></h4>
+                <h4 th:text="${roomEntry.getKey().getName()}"></h4>
                 <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Тип предмета</th>
+                        <th>Установленная вещь</th>
+                        <th>Выбрать со склада</th>
+                        <th>Купить</th>
+                    </tr>
+                    </thead>
                     <tbody>
                     <tr th:each="roomInteriorWithItems : ${roomEntry.getValue()}">
                         <!--/*@thymesVar id="roomInteriorWithItems" type="dyn.service.RoomInteriorWithItems"*/-->
@@ -66,67 +81,67 @@
     <!--/*@thymesVar id="item" type="dyn.model.Item"*/-->
     <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
     <h3>Склад:</h3>
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>Предмет (тип предмета)</th>
-            <th>Изготовитель</th>
-            <th>Действия</th>
-        </tr>
-        </thead>
-        <tbody>
-        <th:block th:each="item : ${@houseService.getItemsInStorage(family)}">
+    <th:block th:if="${not #lists.isEmpty(itemsInStorage)}">
+        <table class="table table-striped">
+            <thead>
             <tr>
-                <td th:text="${item.getProject().getName()+' ('+item.getProject().getThing().getName()+')'}"></td>
-                <td th:text="${item.getAuthor().getFamilyName()+' ('+item.getAuthor().getUser().getUserName()+')'}"></td>
-                <td>
-                    <form th:action="@{/game/putItemToStore}" method="post" class="form-inline">
-                        <input type="hidden" name="itemId" th:value="${item.getId()}"/>
-                        <input type="text" name="cost" th:value="${houseInterior.getFamily().getLevel()}*100" class="form-control" style="width: 60px;" data-toggle="tooltip" title="Стоимость"/>
-                        <button type="submit" class="btn btn-default">Выставить на продажу</button>
-                    </form>
-                </td>
+                <th>Предмет (тип предмета)</th>
+                <th>Изготовитель</th>
+                <th>Действия</th>
             </tr>
-        </th:block>
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            <th:block th:each="item : ${itemsInStorage}">
+                <tr>
+                    <td th:text="${item.getProject().getName()+' ('+item.getProject().getThing().getName()+')'}"></td>
+                    <td th:text="${item.getAuthor().getFamilyName()+' ('+item.getAuthor().getUser().getUserName()+')'}"></td>
+                    <td>
+                        <form th:action="@{/game/putItemToStore}" method="post" class="form-inline">
+                            <input type="hidden" name="itemId" th:value="${item.getId()}"/>
+                            <input type="text" name="cost" th:value="${family.getLevel()}*100" class="form-control" style="width: 60px;" data-toggle="tooltip" title="Стоимость"/>
+                            <button type="submit" class="btn btn-default">Выставить на продажу</button>
+                        </form>
+                    </td>
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
+    </th:block>
+    <th:block th:unless="${not #lists.isEmpty(itemsInStorage)}">
+        <p>Нет вещей на складе</p>
+    </th:block>
     <h3>Выставлены на продажу:</h3>
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>Предмет (тип предмета)</th>
-            <th>Изготовитель</th>
-            <th>Цена</th>
-            <th>Действия</th>
-        </tr>
-        </thead>
-        <tbody>
-        <th:block th:each="item : ${@houseService.getItemsInStore(family)}">
+    <th:block th:if="${not #lists.isEmpty(itemsInStorage)}">
+        <table class="table table-striped">
+            <thead>
             <tr>
-                <td th:text="${item.getProject().getName()+' ('+item.getProject().getThing().getName()+')'}"></td>
-                <td th:text="${item.getAuthor().getFamilyName()+' ('+item.getAuthor().getUser().getUserName()+')'}"></td>
-                <td th:text="${item.getCost()+' р.'}"></td>
-                <td>
-                    <form th:action="@{/game/unsetItem}" method="post" class="form-inline">
-                        <input type="hidden" name="itemId" th:value="${item.getId()}"/>
-                        <button type="submit" class="btn btn-default">Вернуть на склад</button>
-                    </form>
-                </td>
+                <th>Предмет (тип предмета)</th>
+                <th>Изготовитель</th>
+                <th>Цена</th>
+                <th>Действия</th>
             </tr>
-        </th:block>
-        </tbody>
-    </table>
-    <!--
-    <ul th:each="item : ${@houseService.getItemsInStore(houseInterior.getFamily())}">
-        <li>
-            <form class="form-inline" th:action="@{/game/unsetItem}" method="post">
-                <span th:text="${item.getProject().getName()}"></span>
-                <input type="hidden" name="itemId" th:value="${item.getId()}"/>
-                <button type="submit" class="btn btn-default">Вернуть на склад</button>
-            </form>
-        </li>
-    </ul>
-    -->
+            </thead>
+            <tbody>
+            <th:block th:each="item : ${itemsInStore}">
+                <tr>
+                    <td th:text="${item.getProject().getName()+' ('+item.getProject().getThing().getName()+')'}"></td>
+                    <td th:text="${item.getAuthor().getFamilyName()+' ('+item.getAuthor().getUser().getUserName()+')'}"></td>
+                    <td th:text="${item.getCost()+' р.'}"></td>
+                    <td>
+                        <form th:action="@{/game/unsetItem}" method="post" class="form-inline">
+                            <input type="hidden" name="itemId" th:value="${item.getId()}"/>
+                            <button type="submit" class="btn btn-default">Вернуть на склад</button>
+                        </form>
+                    </td>
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
+    </th:block>
+    <th:block th:unless="${not #lists.isEmpty(itemsInStorage)}">
+        <p>Нет выставленных на продажу вещей</p>
+    </th:block>
+
 </div>
 <script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>

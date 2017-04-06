@@ -28,7 +28,7 @@
 
         <br/>-->
         <img th:src="@{'/graphics/vocation/vocation'+${character.getCareer().getVocation().getId()}+'.png' }"
-             data-toggle="tooltip" th:alt-title="${'Призвание: ' + character.getCareer().getVocation().getName()}"
+             data-toggle="tooltip" th:alt-title="${'Призвание: ' + character.getCareer().getVocation().getName() + '.&#013;Приносит ресурсы: ' + character.getCareer().getVocation().getResString()}"
              th:height="${imsize}==null?20:50">
         </img>
         <span th:text="${character.getCareer().getIntelligence()}" data-toggle="tooltip" title="Интеллект"></span>|

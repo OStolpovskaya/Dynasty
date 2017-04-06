@@ -8,10 +8,13 @@
 <body>
 <div th:replace="fragments/navigation :: nav-for-game"></div>
 <div class="container">
-
-    <h1>Крафт</h1>
     <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
-
+    <th:block th:if="${family.getLevel() == 0}">
+        <div class="alert alert-success">
+            Один балл крафта выдается каждый ход и за какое-нибудь достижение. Пока их у вас три. Но этого хватит, чтобы научиться изготавливать кухонный стул! Октройте список "Мебель". <br/>
+            Кухонный стул первый в списке. Нажмите "Выучить".
+        </div>
+    </th:block>
     <h3>Баллы крафта:</h3>
     <p th:text="${family.getCraftPoint()}"></p>
     <h3>Предметы, которые можно изготовить:</h3>

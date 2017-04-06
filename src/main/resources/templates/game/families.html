@@ -9,53 +9,62 @@
 <body>
 <div th:replace="fragments/navigation :: nav-for-game"></div>
 <div class="container">
-    <h3>Families</h3>
+    <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
+    <th:block th:if="${family.getLevel() == 0}">
+        <div class="alert alert-success">
+            Здесь отображена история вашей семьи. Все поколения, которые появятся в будущем. В самом низу страницы вы можете видеть табличку, где будут показаны все ваши семьи. Вы можете переключаться между ними, когда захотите, или создать новую
+            семью.<br/>
+            Пожалуйста, перейдите в меню на вкладку Дом.
+        </div>
+    </th:block>
+    <h3>История семьи:</h3>
+    <div style="margin:10px; overflow-x: scroll; white-space: nowrap;">
+        <div align="center" th:each="level : ${levels}">
+            <div style="display: inline-block; margin-bottom: 3px; border: 2px solid; vertical-align: top" th:each="father : ${level}">
+                <div align="center">
+                    <div class="char-view-div">
+                        <div th:replace="fragments/char :: char-view (character=${father})"></div>
+                    </div>
+                    <!--/*@thymesVar id="father" type="dyn.model.Character"*/-->
+                    <div class="char-view-div" style="vertical-align: top" th:if="${father.getSpouse() != null}">
+                        <div th:replace="fragments/char :: char-view (character=${father.getSpouse()})"></div>
+                    </div>
+                    <br></br>
+                </div>
+                <div style="display: inline-block; margin-bottom: 3px; border: 2px solid lightgreen; vertical-align: top"
+                     th:each="child : ${father.getChildren()}">
+                    <!--/*@thymesVar id="child" type="dyn.model.Character"*/-->
+                    <div class="char-view-div" style="vertical-align: top;">
+                        <div th:replace="fragments/char :: char-view (character=${child})"></div>
+                    </div>
+                    <div class="char-view-div" th:if="${child.getSpouse() != null}">
+                        <div th:replace="fragments/char :: char-view (character=${child.getSpouse()})"></div>
+                    </div>
+                    <br></br>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h3>Ваши семьи</h3>
     <table class="table table-striped">
         <thead>
         <tr>
-            <th>ID</th>
-            <th>Family name</th>
-            <th>Current</th>
+            <th>Фамилия</th>
+            <th>Уровень</th>
+            <th>Текущий выбор</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="family : ${families}">
-            <td th:text="${family.getId()}">1</td>
             <td th:text="${family.getFamilyName()}">name</td>
+            <td th:text="${family.getLevel()}">1</td>
             <td th:text="${family.isCurrent()}">current</td>
         </tr>
         </tbody>
     </table>
-    <a href="/game/addNewFamily" class="btn btn-info" role="button">New family</a>
-    <h3>Current family history:</h3>
+    <a href="/game/addNewFamily" class="btn btn-info" role="button">Создать новую семью!</a>
 </div>
-<div style="margin:10px; overflow-x: scroll; white-space: nowrap;">
-    <div align="center" th:each="level : ${levels}">
-        <div style="display: inline-block; margin-bottom: 3px; border: 2px solid; vertical-align: top" th:each="father : ${level}">
-            <div align="center">
-                <div class="char-view-div">
-                    <div th:replace="fragments/char :: char-view (character=${father})"></div>
-                </div>
-                <!--/*@thymesVar id="father" type="dyn.model.Character"*/-->
-                <div class="char-view-div" style="vertical-align: top" th:if="${father.getSpouse() != null}">
-                    <div th:replace="fragments/char :: char-view (character=${father.getSpouse()})"></div>
-                </div>
-                <br></br>
-            </div>
-            <div style="display: inline-block; margin-bottom: 3px; border: 2px solid lightgreen; vertical-align: top"
-                 th:each="child : ${father.getChildren()}">
-                <!--/*@thymesVar id="child" type="dyn.model.Character"*/-->
-                <div class="char-view-div" style="vertical-align: top;">
-                    <div th:replace="fragments/char :: char-view (character=${child})"></div>
-                </div>
-                <div class="char-view-div" th:if="${child.getSpouse() != null}">
-                    <div th:replace="fragments/char :: char-view (character=${child.getSpouse()})"></div>
-                </div>
-                <br></br>
-            </div>
-        </div>
-    </div>
-</div>
+
 <script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
 </body>

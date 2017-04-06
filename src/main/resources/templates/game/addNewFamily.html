@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>Add new family</title>
+    <title>Создание новой семьи</title>
     <link th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}" rel="stylesheet"></link>
     <link th:href="@{/css/common.css}" rel="stylesheet"></link>
 </head>
@@ -13,7 +13,8 @@
         <div class="form-area">
             <!--/*@thymesVar id="familyForm" type="dyn.form.FamilyForm"*/-->
             <form class="form-horizontal" th:action="@{/game/addNewFamily}" th:object="${familyForm}" method="POST">
-                <h3>Family form</h3>
+                <h3>Создание семьи</h3>
+                <p>Так будут выглядеть основатели вашей династии:</p>
                 <div>
                     <div class="char-view-div">
                         <div th:replace="fragments/char :: char-view (character=*{founder}, nolink=true)"></div>
@@ -22,7 +23,7 @@
                         <div th:replace="fragments/char :: char-view (character=*{foundress}, nolink=true)"></div>
                     </div>
                 </div>
-                <p align="center"><a href="/game/addNewFamily">Generate again</a></p>
+                <p align="center"><a href="/game/addNewFamily">Сгенерировать заново</a></p>
 
                 <input type="hidden" th:field="*{founder.name}"/>
                 <input type="hidden" th:field="*{founder.sex}"/>
@@ -75,18 +76,18 @@
                 <input type="hidden" th:field="*{foundress.career.education}"/>
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('family.familyName')}? 'has-error'">
-                    <label>Family name:</label>
+                    <label>Фамилия для вашей новой семьи:</label>
                     <input class="form-control" type="text" th:field="*{family.familyName}"/>
                     <p th:if="${#fields.hasErrors('family.familyName')}" th:errors="*{family.familyName}">Incorrect</p>
                 </div>
                 <div class="form-group" th:classappend="${#fields.hasErrors('family.maleLastname')}? 'has-error'">
-                    <label>Family name for males:</label>
+                    <label>Фамилия мужчин:</label>
                     <input class="form-control" type="text" th:field="*{family.maleLastname}"/>
                     <p th:if="${#fields.hasErrors('family.maleLastname')}" th:errors="*{family.maleLastname}">
                         Incorrect</p>
                 </div>
                 <div class="form-group" th:classappend="${#fields.hasErrors('family.femaleLastname')}? 'has-error'">
-                    <label>Family name for females:</label>
+                    <label>Фамилия женщин:</label>
                     <input class="form-control" type="text" th:field="*{family.femaleLastname}"/>
                     <p th:if="${#fields.hasErrors('family.femaleLastname')}" th:errors="*{family.femaleLastname}">
                         Incorrect</p>

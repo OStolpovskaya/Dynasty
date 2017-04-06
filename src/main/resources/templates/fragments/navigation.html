@@ -34,11 +34,13 @@
             <ul class="nav navbar-nav">
                 <li><a href="/game">Игра</a></li>
                 <li><a href="/game/families">Семья</a></li>
-                <li><a href="/game/achievements">Достижения</a></li>
-                <li><a href="/game/house">Родовое гнездо</a></li>
+                <li><a href="/game/house">Дом</a></li>
                 <li><a href="/game/craft">Крафт</a></li>
+                <li><a href="/game/achievements">Достижения</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
+                <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
+                <li th:if="${family != null}"><a href="#" th:text="${family.getFamilyName() + ' ('+family.getUser().getUserName()+')'}"></a></li>
                 <li><a href="?language=en">en</a></li>
                 <li><a href="?language=ru">ru</a></li>
                 <li><a href="/logout">Logout</a></li>

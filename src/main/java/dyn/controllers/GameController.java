@@ -81,7 +81,7 @@ public class GameController {
         }
         Family family = user.getCurrentFamily();
         logger.debug(user.getUserName() + " Current family: " + family.getFamilyName() + ", level: " + family.getLevel());
-        model.addAttribute("currentFamily", family);
+        model.addAttribute("family", family);
 
         List<Character> fathers;
         if (family.getLevel() > 0) {
@@ -97,8 +97,10 @@ public class GameController {
     @RequestMapping("/game/achievements")
     public String characterView(ModelMap model, RedirectAttributes redirectAttributes) {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
-        Set<Achievement> achievements = user.getAchievements();
+        Family family = user.getCurrentFamily();
+        model.addAttribute("family", family);
 
+        Set<Achievement> achievements = user.getAchievements();
         model.addAttribute("achievements", achievements);
         return "/game/awarded";
     }
@@ -107,6 +109,10 @@ public class GameController {
     @RequestMapping("/game/character")
     public String characterView(ModelMap model, RedirectAttributes redirectAttributes,
                                 @RequestParam(value = "characterId") long characterId) {
+        User user = userRepository.findByUserName(getAuthUser().getUsername());
+        Family family = user.getCurrentFamily();
+        model.addAttribute("family", family);
+
         Character character = characterRepository.findOne(characterId);
         model.addAttribute("character", character);
 
@@ -114,6 +120,7 @@ public class GameController {
     }
 
     @RequestMapping("/game/improveEducation")
+    // todo: проверить, это гет-запрос?
     public String improveEducation(ModelMap model, RedirectAttributes redirectAttributes,
                                    @RequestParam(value = "character") long characterId) {
         User user = userRepository.findByUserName(getAuthUser().getUsername());

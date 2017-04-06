@@ -45,7 +45,6 @@ public class CraftController {
     public String craft(ModelMap model) {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         Family family = user.getCurrentFamily();
-
         model.addAttribute("family", family);
 
         Iterable<CraftBranch> craftBranches = craftBranchRepository.findAll();
@@ -107,6 +106,7 @@ public class CraftController {
                                 @RequestParam(value = "thingId") Long thingId) {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         Family family = user.getCurrentFamily();
+        model.addAttribute("family", family);
 
         Thing thing = craftService.getThing(thingId);
         if (thing != null) {
@@ -119,7 +119,6 @@ public class CraftController {
                         projects.add(availableProject);
                     }
                 }
-                model.addAttribute("family", family);
                 model.addAttribute("familyProjects", familyCraftProjects);
                 model.addAttribute("projects", projects);
                 model.addAttribute("thing", thing);
