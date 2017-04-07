@@ -111,7 +111,7 @@
         <p>Нет вещей на складе</p>
     </th:block>
     <h3>Выставлены на продажу:</h3>
-    <th:block th:if="${not #lists.isEmpty(itemsInStorage)}">
+    <th:block th:if="${not #lists.isEmpty(itemsInStore)}">
         <table class="table table-striped">
             <thead>
             <tr>
@@ -138,7 +138,7 @@
             </tbody>
         </table>
     </th:block>
-    <th:block th:unless="${not #lists.isEmpty(itemsInStorage)}">
+    <th:block th:unless="${not #lists.isEmpty(itemsInStore)}">
         <p>Нет выставленных на продажу вещей</p>
     </th:block>
 

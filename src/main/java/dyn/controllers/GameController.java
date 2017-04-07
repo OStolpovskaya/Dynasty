@@ -170,7 +170,7 @@ public class GameController {
                 sb.append(worker.getName() + " приобретает профессию " + worker.getCareer().getProfession().getName() + " и зарабатывает " + salary + " р. ");
 
                 family.getFamilyResources().addResFromVocation(worker.getCareer());
-                sb.append("А его призвание приносит ресурсы: " + worker.getCareer().getVocation().getResString() + " в количестве " + worker.getCareer().getProfession().getLevel() + " ед.<br>");
+                sb.append("А его призвание приносит ресурсы: " + worker.getCareer().getVocation().resString(worker.getCareer().getProfession().getLevel()) + "<br>");
 
                 Achievement achievement = achievementService.checkAchievement(AchievementType.vocation10level, user, worker);
                 if (achievement != null) {
@@ -185,7 +185,7 @@ public class GameController {
                     sb.append("Его жена " + workerWife.getName() + " приобретает профессию " + workerWife.getCareer().getProfession().getName() + " и зарабатывает " + wifeSalary + " р. ");
 
                     family.getFamilyResources().addResFromVocation(workerWife.getCareer());
-                    sb.append("А ее призвание приносит ресурсы: " + workerWife.getCareer().getVocation().getResString() + " в количестве " + workerWife.getCareer().getProfession().getLevel() + " ед.<br>");
+                    sb.append("А ее призвание приносит ресурсы: " + workerWife.getCareer().getVocation().resString(workerWife.getCareer().getProfession().getLevel()) + "<br>");
 
                     achievement = achievementService.checkAchievement(AchievementType.vocation10level, user, workerWife);
                     if (achievement != null) {
@@ -201,7 +201,7 @@ public class GameController {
                     sb.append(worker.getName() + " приобретает профессию " + worker.getCareer().getProfession().getName() + " и зарабатывает " + salary + " р. ");
 
                     family.getFamilyResources().addResFromVocation(worker.getCareer());
-                    sb.append("А ее призвание приносит ресурсы: " + worker.getCareer().getVocation().getResString() + " в количестве " + worker.getCareer().getProfession().getLevel() + " ед.<br>");
+                    sb.append("А ее призвание приносит ресурсы: " + worker.getCareer().getVocation().resString(worker.getCareer().getProfession().getLevel()) + "<br>");
 
                     Achievement achievement = achievementService.checkAchievement(AchievementType.vocation10level, user, worker);
                     if (achievement != null) {

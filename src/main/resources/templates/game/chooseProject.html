@@ -111,16 +111,7 @@
                 <div class="radio" th:each="project : ${familyProjects}">
                     <label>
                         <input type="radio" name="projectId" th:value="${project.getId()}" th:required="required" onclick="enableMakeItemButton()" th:disabled="${not family.hasResourcesForProject(project)}"/>
-                        <th:block th:text="${project.getName()}"></th:block>
-                        (
-                        <th:block th:text="${project.getWood()>0?' Дерево: '+project.getWood():''}"></th:block>
-                        <th:block th:text="${project.getMetall()>0?' Металл: '+project.getMetall():''}"></th:block>
-                        <th:block th:text="${project.getPlastic()>0?' Пластик, резина: '+project.getPlastic():''}"></th:block>
-                        <th:block th:text="${project.getMicroelectronics()>0?' Микроэлектроника: '+project.getMicroelectronics():''}"></th:block>
-                        <th:block th:text="${project.getCloth()>0?' Ткань, кожа, бумага: '+project.getCloth():''}"></th:block>
-                        <th:block th:text="${project.getStone()>0?' Камень, стекло, керамика: '+project.getStone():''}"></th:block>
-                        <th:block th:text="${project.getChemical()>0?' Химия, краски: '+project.getChemical():''}"></th:block>
-                        )
+                        <th:block th:text="${project.getName() + ' ('+project.resString()+')'}"></th:block>
                     </label>
                 </div>
                 <button id="makeItemButton" type="submit" class="btn btn-default btn-md" th:disabled="${true}">Изготовить предмет</button>
@@ -143,16 +134,7 @@
                 <div class="radio" th:each="project : ${projects}">
                     <label>
                         <input type="radio" name="projectId" th:value="${project.getId()}" th:required="required" onclick="enableBuyProjectButton()" th:disabled="${family.getMoney() lt project.getCost()}"/>
-                        <th:block th:text="${project.getName()+' ('+project.getCost() +' р.)'}"></th:block>
-                        (
-                        <th:block th:text="${project.getWood()>0?' Дерево: '+project.getWood():''}"></th:block>
-                        <th:block th:text="${project.getMetall()>0?' Металл: '+project.getMetall():''}"></th:block>
-                        <th:block th:text="${project.getPlastic()>0?' Пластик, резина: '+project.getPlastic():''}"></th:block>
-                        <th:block th:text="${project.getMicroelectronics()>0?' Микроэлектроника: '+project.getMicroelectronics():''}"></th:block>
-                        <th:block th:text="${project.getCloth()>0?' Ткань, кожа, бумага: '+project.getCloth():''}"></th:block>
-                        <th:block th:text="${project.getStone()>0?' Камень, стекло, керамика: '+project.getStone():''}"></th:block>
-                        <th:block th:text="${project.getChemical()>0?' Химия, краски: '+project.getChemical():''}"></th:block>
-                        )
+                        <th:block th:text="${project.getName()+' ('+project.getCost() +' р.) ('+project.resString()+')'}"></th:block>
                     </label>
                 </div>
                 <button id="buyProjectButton" type="submit" class="btn btn-default btn-md" th:disabled="${true}">Приобрести проект</button>

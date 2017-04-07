@@ -2,6 +2,8 @@ package dyn.model;
 
 import dyn.model.career.Career;
 import dyn.model.career.Vocation;
+import dyn.utils.ResourcesHolder;
+import dyn.utils.ResourcesUtils;
 
 import javax.persistence.*;
 
@@ -10,7 +12,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "family_resources", schema = "dyn")
-public class FamilyResources {
+public class FamilyResources implements ResourcesHolder {
     public static final int BUYCOST = 500;
 
     private Long id;
@@ -172,5 +174,9 @@ public class FamilyResources {
         cloth += vocation.getCloth() * professionLevel;
         stone += vocation.getStone() * professionLevel;
         chemical += vocation.getChemical() * professionLevel;
+    }
+
+    public String resString() {
+        return ResourcesUtils.getResString(this);
     }
 }

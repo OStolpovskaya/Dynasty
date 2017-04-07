@@ -1,5 +1,8 @@
 package dyn.model;
 
+import dyn.utils.ResourcesHolder;
+import dyn.utils.ResourcesUtils;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -8,7 +11,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "project")
-public class Project {
+public class Project implements ResourcesHolder {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -131,5 +134,9 @@ public class Project {
 
     public void setChemical(int chemical) {
         this.chemical = chemical;
+    }
+
+    public String resString() {
+        return ResourcesUtils.getResString(this);
     }
 }

@@ -1,10 +1,9 @@
 package dyn.service;
 
-import dyn.model.Achievement;
-import dyn.model.AchievementType;
+import dyn.model.*;
 import dyn.model.Character;
-import dyn.model.User;
 import dyn.repository.AchievementRepository;
+import dyn.repository.FamilyRepository;
 import dyn.repository.UserRepository;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -24,6 +23,9 @@ public class AchievementService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    FamilyRepository familyRepository;
+
 
     public Achievement checkAchievement(AchievementType achievementType, User user, Character character) {
         Achievement achievement = null;
@@ -40,7 +42,12 @@ public class AchievementService {
         if (achievement != null && !user.getAchievements().contains(achievement)) {
             user.getAchievements().add(achievement);
             userRepository.save(user);
-            logger.info(user.getUserName() + " is awarded! Achievement: " + achievement.getName());
+
+            Family family = character.getFamily();
+            family.setCraftPoint(family.getCraftPoint() + 2);
+            familyRepository.save(family);
+
+            logger.info(user.getUserName() + " is awarded! Achievement: " + achievement.getName() + ". Added 2 craft points to family " + family.getFamilyName());
             return achievement;
         }
         return null;

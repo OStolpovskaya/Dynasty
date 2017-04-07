@@ -1,14 +1,13 @@
 package dyn.model.career;
 
-import org.springframework.util.StringUtils;
+import dyn.utils.ResourcesHolder;
+import dyn.utils.ResourcesUtils;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "vocation")
-public class Vocation {
+public class Vocation implements ResourcesHolder {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -104,15 +103,8 @@ public class Vocation {
         this.chemical = chemical;
     }
 
-    public String getResString() {
-        List<String> resources = new ArrayList<>();
-        if (wood > 0) resources.add("Дерево");
-        if (metall > 0) resources.add("Металл");
-        if (plastic > 0) resources.add("Пластик, резина");
-        if (microelectronics > 0) resources.add("Микроэлектроника");
-        if (cloth > 0) resources.add("Ткань, кожа, бумага");
-        if (stone > 0) resources.add("Камень, стекло, керамика");
-        if (chemical > 0) resources.add("Химия, краски");
-        return StringUtils.arrayToDelimitedString(resources.toArray(), ", ");
+    public String resString(int coeff) {
+
+        return ResourcesUtils.getResString(this, coeff);
     }
 }
