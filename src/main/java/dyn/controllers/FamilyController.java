@@ -7,6 +7,7 @@ import dyn.repository.*;
 import dyn.service.AppearanceService;
 import dyn.service.CareerService;
 import dyn.service.CraftService;
+import dyn.service.FamilyLogService;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,9 @@ public class FamilyController {
 
     @Autowired
     CraftService craftService;
+
+    @Autowired
+    FamilyLogService familyLogService;
 
     @Autowired
     private UserRepository userRepository;
@@ -79,7 +83,6 @@ public class FamilyController {
         male.setLevel(0);
 
         male.setCareer(careerService.generateCareerForFounders());
-        System.out.println("male.getCareer().getId() = " + male.getCareer().getId());
 
         male.setBody(app.getRandomBody(app.USUAL));
         male.setEars(app.getRandomEars(app.USUAL));
@@ -131,7 +134,6 @@ public class FamilyController {
     public String addNewFamily(ModelMap model, @ModelAttribute("familyForm") @Valid FamilyForm familyForm, BindingResult result) {
         Family family = familyForm.getFamily();
         Character founder = familyForm.getFounder();
-        System.out.println("founder.getCareer().getId() = " + founder.getCareer().getId());
         Character foundress = familyForm.getFoundress();
 
         founder.generateView();
@@ -165,14 +167,8 @@ public class FamilyController {
         family.setHouse(houseRepository.findOne(1L));
         family.setFamilyResources(new FamilyResources());
 
-        System.out.println("family.getFamilyResources().getId() = " + family.getFamilyResources().getId());
-
         logger.info(user.getUserName() + " adds new family:" + family.toString());
         familyRepository.save(family);
-
-        System.out.println("SAVE family");
-        System.out.println("family.getId() = " + family.getId());
-        System.out.println("family.getFamilyResources().getId() = " + family.getFamilyResources().getId());
 
         founder.setFamily(family);
 
@@ -180,12 +176,7 @@ public class FamilyController {
         founder.getBuffs().add(buff);
 
         logger.debug(founder.toString());
-        System.out.println("founder.getId() = " + founder.getId());
-        System.out.println("founder.getCareer().getId() = " + founder.getCareer().getId());
         characterRepository.save(founder);
-        System.out.println("SAVE founder");
-        System.out.println("founder.getId() = " + founder.getId());
-        System.out.println("founder.getCareer().getId() = " + founder.getCareer().getId());
 
         foundress.setSpouse(founder);
         foundress.setFamily(familyRepository.findOne(1L));
@@ -194,6 +185,9 @@ public class FamilyController {
 
         founder.setSpouse(foundress);
         characterRepository.save(founder);
+
+        familyLogService.createNewFamilyLog(family, founder, foundress);
+
 
         return "redirect:/game";
 

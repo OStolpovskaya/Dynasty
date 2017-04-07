@@ -67,6 +67,9 @@ public class Family {
     @OneToMany(mappedBy = "family")
     private List<Item> items;
 
+    @OneToMany(mappedBy = "family")
+    private List<FamilyLog> familyLogs;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "resources")
     private FamilyResources familyResources;

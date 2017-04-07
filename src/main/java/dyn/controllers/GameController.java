@@ -11,10 +11,7 @@ import dyn.model.career.Career;
 import dyn.repository.CharacterRepository;
 import dyn.repository.FamilyRepository;
 import dyn.repository.UserRepository;
-import dyn.service.AchievementService;
-import dyn.service.AppearanceService;
-import dyn.service.CareerService;
-import dyn.service.RaceService;
+import dyn.service.*;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +48,9 @@ public class GameController {
     CareerService careerService;
     @Autowired
     AchievementService achievementService;
+
+    @Autowired
+    FamilyLogService familyLogService;
 
     @Autowired
     private UserRepository userRepository;
@@ -91,6 +91,7 @@ public class GameController {
         }
         model.addAttribute("fathers", fathers);
 
+        model.addAttribute("familyLog", familyLogService.getLevelFamilyLog(family));
         return "game";
     }
 
@@ -182,7 +183,7 @@ public class GameController {
                     careerService.generateProfession(workerWife);
                     int wifeSalary = workerWife.getCareer().getResultSalary();
                     family.setMoney(family.getMoney() + wifeSalary);
-                    sb.append("Его жена " + workerWife.getName() + " приобретает профессию " + workerWife.getCareer().getProfession().getName() + " и зарабатывает " + wifeSalary + " р. ");
+                    sb.append("   Его жена " + workerWife.getName() + " приобретает профессию " + workerWife.getCareer().getProfession().getName() + " и зарабатывает " + wifeSalary + " р. ");
 
                     family.getFamilyResources().addResFromVocation(workerWife.getCareer());
                     sb.append("А ее призвание приносит ресурсы: " + workerWife.getCareer().getVocation().resString(workerWife.getCareer().getProfession().getLevel()) + "<br>");
@@ -351,6 +352,8 @@ public class GameController {
         family.setLevel(newLevel);
         family.setCraftPoint(family.getCraftPoint() + 1);
         familyRepository.save(family);
+
+        familyLogService.createNewLevelFamilyLog(family, sb.toString());
 
         redirectAttributes.addFlashAttribute("mess", sb.toString());
         return "redirect:/game";
