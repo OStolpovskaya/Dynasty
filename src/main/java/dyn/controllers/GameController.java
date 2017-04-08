@@ -371,7 +371,7 @@ public class GameController {
     }
 
     private int getAmountOfChildren(Character character) {
-        double[] percentage = new double[]{0.25, 0.55, 0.80, 0.90, 0.95, 0.98, 1.00}; // normal
+        double[] percentage = new double[]{0.20, 0.60, 0.85, 0.93, 0.97, 0.99, 1.00}; // normal
         if (character.isBuffedBy(Buff.FERTILITY)) {
             percentage = new double[]{0.05, 0.15, 0.30, 0.50, 0.75, 0.90, 1.00}; // buff fertility
         }

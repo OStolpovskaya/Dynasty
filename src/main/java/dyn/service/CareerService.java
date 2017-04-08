@@ -82,9 +82,9 @@ public class CareerService {
 
     public void inheritVocationAndSkills(Career childCareer, Career fatherCareer, Career motherCareer) {
         double vocationPercentage = Math.random();
-        if (vocationPercentage < 0.4) {
+        if (vocationPercentage < 0.48) {
             childCareer.setVocation(fatherCareer.getVocation());
-        } else if (vocationPercentage < 0.8) {
+        } else if (vocationPercentage < 0.96) {
             childCareer.setVocation(motherCareer.getVocation());
         } else {
             childCareer.setVocation(getRandomVocation());
@@ -92,7 +92,7 @@ public class CareerService {
 
         childCareer.setEducation(educationRepository.findByName(Education.PRIMARY));
 
-        int incCoefficient = 3;
+        int incCoefficient = 2;
 
         childCareer.setIntelligence(getRandomFromMinToMax(fatherCareer.getIntelligence(), motherCareer.getIntelligence()) + incCoefficient);
         childCareer.setCharisma(getRandomFromMinToMax(fatherCareer.getCharisma(), motherCareer.getCharisma()) + incCoefficient);
