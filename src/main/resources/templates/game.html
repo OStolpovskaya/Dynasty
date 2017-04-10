@@ -9,6 +9,7 @@
 <body>
 <div th:replace="fragments/navigation :: nav-for-game"></div>
 <div class="container">
+    <p th:text="${@careerService.getRandomFromMinToMax(1,100)}"></p>
     <!--/*@thymesVar id="user" type="dyn.model.User"*/-->
     <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
     <th:block th:if="${family.getLevel() == 0}">
@@ -39,7 +40,7 @@
             </div>
             <div class="col-md-10">
                 <!--/*@thymesVar id="familyLog" type="dyn.model.FamilyLog"*/-->
-                <pre class="pre-scrollable" style="height: 150px; max-height: 150px;" th:utext="${familyLog.getText()}"></pre>
+                <pre class="pre-scrollable" style="height: 150px; max-height: 150px;" th:utext="${familyLog?.getText()}"></pre>
             </div>
         </div>
 
@@ -68,7 +69,10 @@
                     </div>
                     <br></br>
                     <div style="text-align: center;" th:if="${child.getSex() == 'male' and child.getSpouse() == null}">
-                        <a href="/game/chooseFiancee" th:href="@{/game/chooseFiancee(characterId=${child.getId()})}" th:text="#{game.chooseFiancee}">Choose fiancee</a>
+                        <form th:action="@{/game/chooseFiancee}" method="post">
+                            <input type="hidden" name="characterId" th:value="${child.getId()}"/>
+                            <button class="btn btn-xs btn-primary" type="submit">Выбрать невесту</button>
+                        </form>
                     </div>
                     <div style="text-align: center; margin-top: 10px;" th:if="${child.getSex() == 'male' and child.getSpouse() != null}">
                         <a href="/game/chooseBuffs" th:href="@{/game/chooseBuffs(characterId=${child.getId()})}" th:text="#{game.chooseBuffs}">Choose buffs</a>

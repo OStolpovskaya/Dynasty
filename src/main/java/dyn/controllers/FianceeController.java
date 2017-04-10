@@ -5,6 +5,7 @@ package dyn.controllers;
  */
 
 
+import dyn.form.FianceeFilter;
 import dyn.model.Character;
 import dyn.model.Family;
 import dyn.model.Fiancee;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -43,15 +45,25 @@ public class FianceeController {
     @Autowired
     private FianceeRepository fianceeRepository;
 
-    @RequestMapping(value = "/game/chooseFiancee", params = "characterId", method = RequestMethod.GET)
+    @RequestMapping(value = "/game/chooseFiancee", params = "characterId", method = RequestMethod.POST)
     public String chooseFiancee(ModelMap model, RedirectAttributes redirectAttributes,
-                                @RequestParam(value = "characterId") long characterId) {
+                                @RequestParam(value = "characterId") long characterId,
+                                @ModelAttribute(value = "fianceeFilter") FianceeFilter fianceeFilter) {
+        System.out.println("FianceeController.chooseFiancee");
+        System.out.println("characterId = " + characterId);
+        System.out.println("fianceeFilter = " + fianceeFilter);
+
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         Family family = user.getCurrentFamily();
 
         Character character = characterRepository.findByIdAndFamilyAndLevelAndSexAndSpouseIsNull(characterId, family, family.getLevel(), "male");
         if (character != null) {
-            List<Fiancee> fianceeList = fianceeRepository.findByCharacterFamilyNotAndCharacterLevel(family, family.getLevel());
+            List<Fiancee> fianceeList;
+            if (fianceeFilter.getRace() == null) {
+                fianceeList = fianceeRepository.findByCharacterFamilyNotAndCharacterLevel(family, family.getLevel());
+            } else {
+                fianceeList = fianceeRepository.findByCharacterFamilyNotAndCharacterLevelAndCharacterRace(family, family.getLevel(), fianceeFilter.getRace());
+            }
             model.addAttribute("character", character);
             model.addAttribute("fianceeList", fianceeList);
             model.addAttribute("characterId", characterId);
@@ -63,7 +75,7 @@ public class FianceeController {
         return "redirect:/game";
     }
 
-    @RequestMapping(value = "/game/chooseFiancee", params = "characterId", method = RequestMethod.POST)
+    @RequestMapping(value = "/game/makeFiancee", params = "characterId", method = RequestMethod.POST)
     public String makeFiancee(ModelMap model, RedirectAttributes redirectAttributes,
                               @RequestParam(value = "fiancee") Long fianceeId,
                               @RequestParam(value = "characterId") Long characterId) {

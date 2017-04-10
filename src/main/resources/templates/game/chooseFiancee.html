@@ -5,25 +5,44 @@
     <title>Choose feancee</title>
     <link th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}" rel="stylesheet"></link>
     <link th:href="@{/css/common.css}" rel="stylesheet"></link>
-    <style>
-        .floating-box {
-            display: inline-block;
-        }
-
-    </style>
 </head>
 <body>
 <div th:replace="fragments/navigation :: nav-for-game"></div>
 <div class="container">
     <!--/*@thymesVar id="character" type="dyn.model.Character"*/-->
-    <h3 th:text="#{chooseFiancee.yourCharacter}">Your character:</h3>
-    <div class="char-view-div">
-        <div th:replace="fragments/char :: char-view (character=${character})"></div>
+    <div class="well">
+        <div class="row" align="center">
+            <div class="col-md-6">
+                <h3 th:text="#{chooseFiancee.yourCharacter}">Your character:</h3>
+                <div class="char-view-div">
+                    <div th:replace="fragments/char :: char-view (character=${character})"></div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h3 th:text="#{chooseFiancee.familyMoney}">Your money:</h3>
+                <p th:text="#{cost(${character.getFamily().getMoney()})}">money</p>
+            </div>
+        </div>
     </div>
-    <h3 th:text="#{chooseFiancee.familyMoney}">Your money:</h3>
-    <p th:text="#{cost(${character.getFamily().getMoney()})}">money</p>
+    <div class="well">
+        <p th:text="${fianceeFilter.toString()}"></p>
     <h3 th:text="#{chooseFiancee.chooseFiancee}">Choose fiancee:</h3>
-    <form action="#" th:action="@{/game/chooseFiancee}" method="post">
+        <!--/*@thymesVar id="fianceeFilter" type="dyn.form.FianceeFilter"*/-->
+        <form action="#" th:action="@{/game/chooseFiancee}" th:object="${fianceeFilter}" class="form-inline" method="post">
+            <div class="form-group">
+                <label>Раса:</label>
+                <select th:field="*{race}" class="form-control">
+                    <option value="0">Любая раса</option>
+                    <option th:each="race : ${@raceRepository.findAll()}"
+                            th:value="${race.getId()}"
+                            th:text="#{${race.getName()}}">race
+                    </option>
+                </select>
+            </div>
+            <input type="hidden" name="characterId" th:value="${characterId}"/>
+            <button type="submit" class="btn btn-default">Submit</button>
+        </form>
+        <form th:action="@{/game/makeFiancee}" method="post">
         <div style="display: inline-block;" th:each="fiancee : ${fianceeList}">
             <!--/*@thymesVar id="fiancee" type="dyn.model.Fiancee"*/-->
             <input style="display: inline-block;" type="radio" name="fiancee" th:value="${fiancee.getId()}" th:disabled="${character.getFamily().getMoney() lt fiancee.getCost()}"/>
@@ -37,6 +56,7 @@
             <button type="submit" align="center" id="submit" name="submit" class="btn btn-primary center-block" th:text="#{chooseFiancee.choose}">Choose</button>
         </p>
     </form>
+    </div>
 </div>
 <script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
