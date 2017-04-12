@@ -47,7 +47,7 @@ public class Character {
     @JoinColumn(name = "race")
     private Race race;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "career")
     private Career career;
 
@@ -109,7 +109,7 @@ public class Character {
     private byte[] view;
 
     // ============ RELATIONS ============
-    @OneToMany(mappedBy = "father")
+    @OneToMany(mappedBy = "father", fetch = FetchType.LAZY)
     private java.util.List<Character> children;
 
     @OneToOne(mappedBy = "character")
@@ -117,7 +117,7 @@ public class Character {
 
     // ============ Buffs ============
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "character_buffs",
             joinColumns = {@JoinColumn(name = "character_id")},
             inverseJoinColumns = {@JoinColumn(name = "buff_id")})

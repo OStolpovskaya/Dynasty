@@ -7,9 +7,9 @@ package dyn.controllers;
 
 import dyn.form.FianceeFilter;
 import dyn.model.Character;
-import dyn.model.Family;
-import dyn.model.Fiancee;
-import dyn.model.User;
+import dyn.model.*;
+import dyn.model.career.Career;
+import dyn.model.career.Career_;
 import dyn.repository.CharacterRepository;
 import dyn.repository.FamilyRepository;
 import dyn.repository.FianceeRepository;
@@ -26,6 +26,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.*;
+import java.util.ArrayList;
 import java.util.List;
 
 import static dyn.controllers.GameController.getAuthUser;
@@ -45,28 +50,46 @@ public class FianceeController {
     @Autowired
     private FianceeRepository fianceeRepository;
 
+    @PersistenceContext
+    private EntityManager em;
+
+
     @RequestMapping(value = "/game/chooseFiancee", params = "characterId", method = RequestMethod.POST)
     public String chooseFiancee(ModelMap model, RedirectAttributes redirectAttributes,
                                 @RequestParam(value = "characterId") long characterId,
                                 @ModelAttribute(value = "fianceeFilter") FianceeFilter fianceeFilter) {
-        System.out.println("FianceeController.chooseFiancee");
-        System.out.println("characterId = " + characterId);
-        System.out.println("fianceeFilter = " + fianceeFilter);
-
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         Family family = user.getCurrentFamily();
 
         Character character = characterRepository.findByIdAndFamilyAndLevelAndSexAndSpouseIsNull(characterId, family, family.getLevel(), "male");
         if (character != null) {
-            List<Fiancee> fianceeList;
-            if (fianceeFilter.getRace() == null) {
-                fianceeList = fianceeRepository.findByCharacterFamilyNotAndCharacterLevel(family, family.getLevel());
-            } else {
-                fianceeList = fianceeRepository.findByCharacterFamilyNotAndCharacterLevelAndCharacterRace(family, family.getLevel(), fianceeFilter.getRace());
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<Fiancee> cq = cb.createQuery(Fiancee.class);
+
+            Root<Fiancee> fianceeRoot = cq.from(Fiancee.class);
+            Join<Fiancee, Character> fianceeCharacter = fianceeRoot.join(Fiancee_.character);
+            Join<Character, Career> fianceeCharacterCareer = fianceeCharacter.join(Character_.career);
+
+            List<Predicate> predicates = new ArrayList<>();
+
+            predicates.add(cb.equal(fianceeCharacter.get(Character_.level), family.getLevel()));
+            predicates.add(cb.notEqual(fianceeCharacter.get(Character_.family), family));
+
+            if (!fianceeFilter.isEmpty()) {
+                if (fianceeFilter.getRace() != null) {
+                    predicates.add(cb.equal(fianceeCharacter.get(Character_.race), fianceeFilter.getRace()));
+                }
+                if (fianceeFilter.getVocation() != null) {
+                    predicates.add(cb.equal(fianceeCharacterCareer.get(Career_.vocation), fianceeFilter.getVocation()));
+                }
             }
+            cq.where(cb.and(predicates.toArray(new Predicate[predicates.size()])));
+
+            TypedQuery<Fiancee> q = em.createQuery(cq);
+            List<Fiancee> fianceeList = q.getResultList();
+
             model.addAttribute("character", character);
             model.addAttribute("fianceeList", fianceeList);
-            model.addAttribute("characterId", characterId);
             return "/game/chooseFiancee";
         }
 

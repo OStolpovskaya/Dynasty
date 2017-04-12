@@ -25,8 +25,7 @@
         </div>
     </div>
     <div class="well">
-        <p th:text="${fianceeFilter.toString()}"></p>
-    <h3 th:text="#{chooseFiancee.chooseFiancee}">Choose fiancee:</h3>
+        <h3 th:text="#{chooseFiancee.chooseFiancee}">Choose fiancee:</h3>
         <!--/*@thymesVar id="fianceeFilter" type="dyn.form.FianceeFilter"*/-->
         <form action="#" th:action="@{/game/chooseFiancee}" th:object="${fianceeFilter}" class="form-inline" method="post">
             <div class="form-group">
@@ -39,23 +38,38 @@
                     </option>
                 </select>
             </div>
-            <input type="hidden" name="characterId" th:value="${characterId}"/>
-            <button type="submit" class="btn btn-default">Submit</button>
+            <div class="form-group">
+                <label>Призвание:</label>
+                <select th:field="*{vocation}" class="form-control">
+                    <option value="0">Любое призвание</option>
+                    <option th:each="vocation : ${@vocationRepository.findAll()}"
+                            th:value="${vocation.getId()}"
+                            th:text="${vocation.getName()}">vocation
+                    </option>
+                </select>
+            </div>
+            <input type="hidden" name="characterId" th:value="${character.getId()}"/>
+            <button type="submit" class="btn btn-default">Фильтровать</button>
         </form>
         <form th:action="@{/game/makeFiancee}" method="post">
-        <div style="display: inline-block;" th:each="fiancee : ${fianceeList}">
-            <!--/*@thymesVar id="fiancee" type="dyn.model.Fiancee"*/-->
-            <input style="display: inline-block;" type="radio" name="fiancee" th:value="${fiancee.getId()}" th:disabled="${character.getFamily().getMoney() lt fiancee.getCost()}"/>
-            <div class="char-view-div">
-                <div th:replace="fragments/char :: char-view (character=${fiancee.getCharacter()})"></div>
-                <label th:text="#{cost(${fiancee.getCost()})}">Cost</label>
+            <script>
+                function enableChooseButton() {
+                    $("#chooseFianceeButton").attr("disabled", false);
+                }
+            </script>
+            <div th:each="fiancee : ${fianceeList}" style="display: inline-block;">
+                <!--/*@thymesVar id="fiancee" type="dyn.model.Fiancee"*/-->
+                <input style="display: inline-block;" type="radio" name="fiancee" th:value="${fiancee.getId()}" onclick="enableChooseButton()" th:disabled="${character.getFamily().getMoney() lt fiancee.getCost()}"/>
+                <div class="char-view-div">
+                    <div th:replace="fragments/char :: char-view (character=${fiancee.getCharacter()})"></div>
+                    <label th:text="#{cost(${fiancee.getCost()})}">Cost</label>
+                </div>
             </div>
-        </div>
-        <p>
-            <input type="hidden" name="characterId" th:value="${characterId}"/>
-            <button type="submit" align="center" id="submit" name="submit" class="btn btn-primary center-block" th:text="#{chooseFiancee.choose}">Choose</button>
-        </p>
-    </form>
+            <p>
+                <input type="hidden" name="characterId" th:value="${character.getId()}"/>
+                <button type="submit" id="chooseFianceeButton" name="submit" class="btn btn-primary center-block" th:text="#{chooseFiancee.choose}" th:disabled="${true}" align="center">Choose</button>
+            </p>
+        </form>
     </div>
 </div>
 <script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>

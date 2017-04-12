@@ -17,7 +17,7 @@ public class Family {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -44,33 +44,33 @@ public class Family {
     @Column(name = "craft_point")
     private int craftPoint;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     private House house;
 
     // ===================================
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "family_craft_thing",
             joinColumns = {@JoinColumn(name = "family_id")},
             inverseJoinColumns = {@JoinColumn(name = "thing_id")})
     private Set<Thing> craftThings = new HashSet<Thing>();
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "family_craft_project",
             joinColumns = {@JoinColumn(name = "family_id")},
             inverseJoinColumns = {@JoinColumn(name = "project_id")})
     @OrderBy("name")
     private Set<Project> craftProjects = new HashSet<Project>();
     // ===================================
-    @OneToMany(mappedBy = "family")
+    @OneToMany(mappedBy = "family", fetch = FetchType.LAZY)
     private List<Character> characters;
 
-    @OneToMany(mappedBy = "family")
+    @OneToMany(mappedBy = "family", fetch = FetchType.LAZY)
     private List<Item> items;
 
-    @OneToMany(mappedBy = "family")
+    @OneToMany(mappedBy = "family", fetch = FetchType.LAZY)
     private List<FamilyLog> familyLogs;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "resources")
     private FamilyResources familyResources;
 
