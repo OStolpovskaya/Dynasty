@@ -8,12 +8,12 @@ import javax.persistence.*;
 @Entity
 @Table(name = "house")
 public class House {
+    private Long id;
+    private String name;
+    private int cost;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
-    private String name;
-
     public Long getId() {
         return id;
     }
@@ -30,6 +30,14 @@ public class House {
         this.name = name;
     }
 
+    public int getCost() {
+        return cost;
+    }
+
+    public void setCost(int cost) {
+        this.cost = cost;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("House{");
@@ -37,5 +45,9 @@ public class House {
         sb.append(", name='").append(name).append('\'');
         sb.append('}');
         return sb.toString();
+    }
+
+    public boolean nextHouse() {
+        return id < 10;
     }
 }

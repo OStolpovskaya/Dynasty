@@ -15,7 +15,9 @@ import java.util.Map;
 public class HouseInterior {
     private Family family;
     private House house;
+    private House nextHouse = null;
     private Map<Room, List<RoomInteriorWithItems>> roomList = new LinkedHashMap<>();
+    private boolean full;
 
     public void addRoomInterior(Room room, RoomInteriorWithItems roomInterior) {
         if (roomList.containsKey(room)) {
@@ -43,7 +45,25 @@ public class HouseInterior {
         this.house = house;
     }
 
+    public House getNextHouse() {
+        return nextHouse;
+    }
+
+    public void setNextHouse(House nextHouse) {
+        this.nextHouse = nextHouse;
+    }
+
+    public boolean isFull() {
+        return full;
+    }
+
+    public void setFull(boolean full) {
+        this.full = full;
+    }
+
     public Map<Room, List<RoomInteriorWithItems>> getRoomList() {
         return roomList;
     }
+
+
 }

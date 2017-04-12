@@ -40,6 +40,7 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
+                <li th:if="${family != null}"><a href="#" th:text="${family.getMoney() + ' р.'}"></a></li>
                 <li th:if="${family != null}"><a href="#" th:text="${family.getFamilyName() + ' ('+family.getUser().getUserName()+')'}"></a></li>
                 <li><a href="?language=en">en</a></li>
                 <li><a href="?language=ru">ru</a></li>

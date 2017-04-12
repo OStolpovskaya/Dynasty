@@ -180,6 +180,40 @@ public class HouseController {
 
     }
 
+    //buyNewHouse
+    @RequestMapping(value = "/game/buyNewHouse", method = RequestMethod.POST)
+    public String buyNewHouse(ModelMap model, RedirectAttributes redirectAttributes) {
+        User user = userRepository.findByUserName(getAuthUser().getUsername());
+        Family family = user.getCurrentFamily();
+
+        House currentHouse = family.getHouse();
+
+        if (currentHouse.nextHouse()) {
+            HouseInterior houseInterior = houseService.getHouseInterior(family);
+            if (houseInterior.isFull()) {
+                House nextHouse = houseService.getNextHouse(currentHouse);
+                if (family.getMoney() >= nextHouse.getCost()) {
+                    family.setMoney(family.getMoney() - nextHouse.getCost());
+                    family.setHouse(nextHouse);
+                    familyRepository.save(family);
+
+                    logger.info(family.getLogName() + "buy house: " + nextHouse.getName());
+                    redirectAttributes.addFlashAttribute("mess", "Вы купили новый дом " + nextHouse.getName() + ". Потрачено " + nextHouse.getCost() + " р.");
+                    return "redirect:/game/house";
+                }
+                logger.error(family.getLogName() + "want to buy house, but has not enough money: " + nextHouse.getName());
+                redirectAttributes.addFlashAttribute("mess", "Недостаточно денег для покупки этого дома");
+                return "redirect:/game/house";
+            }
+            logger.error(family.getLogName() + "want to buy house, but current house is not full of items: " + currentHouse.getName());
+            redirectAttributes.addFlashAttribute("mess", "Ваш текущий дом недостаточно обставлен, чтобы покупать новый дом.");
+            return "redirect:/game/house";
+        }
+        logger.error(family.getLogName() + "want to buy house, but there is no next houses : " + currentHouse.getName());
+        redirectAttributes.addFlashAttribute("mess", "У вас уже есть самый крутой дом!");
+        return "redirect:/game/house";
+    }
+
     private UserDetails getAuthUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetail = (UserDetails) auth.getPrincipal();

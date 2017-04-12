@@ -10,6 +10,7 @@ import java.util.List;
  */
 public class RoomInteriorWithItems {
     private RoomInterior roomInterior;
+    private boolean knownThing = false;
     private Item currentItem;
     private List<Item> availableItems;
 
@@ -35,5 +36,13 @@ public class RoomInteriorWithItems {
 
     public void setAvailableItems(List<Item> availableItems) {
         this.availableItems = availableItems;
+    }
+
+    public boolean isKnownThing() {
+        return knownThing;
+    }
+
+    public void setKnownThing(boolean knownThing) {
+        this.knownThing = knownThing;
     }
 }

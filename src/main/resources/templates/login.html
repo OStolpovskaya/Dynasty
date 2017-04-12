@@ -9,21 +9,40 @@
 <div th:replace="fragments/navigation :: nav-for-index"></div>
 <div class="container">
 
+    <div class="col-md-3 col-md-offset-3">
+        <form th:action="@{/login}" method="post" class="form-horizontal">
+            <div class="form-group">
+                <input type="text" name="username" th:object="${username}" class="form-control" placeholder="Username"
+                       autofocus="true"/>
 
-    <form th:action="@{/login}" method="post" class="form-signin">
+            </div>
+            <div class="form-group">
+                <input type="password" name="password" th:object="${password}" class="form-control" placeholder="Password"/>
 
-        <div class="form-group ${param.error != null ? 'has-error' : ''}">
+            </div>
+            <div class="form-group">
+                <button class="btn btn-lg btn-primary btn-block" type="submit">Log In</button>
 
-            <span th:if="${param.error}">Invalid username and password.</span>
-            <span th:if="${param.logout}"> You have been logged out. </span>
-            <input type="text" name="username" th:object="${username}" class="form-control" placeholder="Username"
-                   autofocus="true"/>
-            <input type="password" name="password" th:object="${password}" class="form-control" placeholder="Password"/>
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Log In</button>
-            <h4 class="text-center"><a href="/reg">Create an account</a></h4>
-        </div>
-    </form>
+            </div>
+            <div class="form-group">
+                <h4 class="text-center"><a href="/reg">Create an account</a></h4>
+            </div>
+        </form>
 
+        <!--<form th:action="@{/login}" method="post" class="form-signin">
+
+            <div class="form-group ${param.error != null ? 'has-error' : ''}">
+
+                <span th:if="${param.error}">Invalid username and password.</span>
+                <span th:if="${param.logout}"> You have been logged out. </span>
+                <input type="text" name="username" th:object="${username}" class="form-control" placeholder="Username"
+                       autofocus="true"/>
+                <input type="password" name="password" th:object="${password}" class="form-control" placeholder="Password"/>
+                <button class="btn btn-lg btn-primary btn-block" type="submit">Log In</button>
+                <h4 class="text-center"><a href="/reg">Create an account</a></h4>
+            </div>
+        </form>-->
+    </div>
 </div>
 <script src="webjars/jquery/1.9.1/jquery.min.js"></script>
 <script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>

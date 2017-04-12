@@ -1,10 +1,7 @@
 package dyn.service;
 
 import dyn.model.*;
-import dyn.repository.ItemRepository;
-import dyn.repository.RoomInteriorRepository;
-import dyn.repository.RoomRepository;
-import dyn.repository.ThingRepository;
+import dyn.repository.*;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +24,9 @@ public class HouseService {
     private RoomInteriorRepository roomInteriorRepository;
 
     @Autowired
+    private HouseRepository houseRepository;
+
+    @Autowired
     private ItemRepository itemRepository;
 
     @Autowired
@@ -40,9 +40,10 @@ public class HouseService {
         houseInterior.setFamily(family);
         houseInterior.setHouse(house);
 
+        boolean allItems = true;
         List<Room> rooms = roomRepository.findByHouseIdLessThanEqualOrderById(house.getId());
         for (Room room : rooms) {
-            List<RoomInterior> interiorList = roomInteriorRepository.findByHouseAndRoom(house, room);
+            List<RoomInterior> interiorList = roomInteriorRepository.findByHouseIdLessThanEqualAndRoomOrderById(house.getId(), room);
             for (RoomInterior roomInterior : interiorList) {
                 RoomInteriorWithItems roomInteriorWithItems = new RoomInteriorWithItems(roomInterior);
 
@@ -60,12 +61,26 @@ public class HouseService {
                 }
                 roomInteriorWithItems.setCurrentItem(currentItem);
                 roomInteriorWithItems.setAvailableItems(availableItems);
+                roomInteriorWithItems.setKnownThing(family.getCraftThings().contains(roomInterior.getThing()));
                 houseInterior.addRoomInterior(room, roomInteriorWithItems);
+
+                if (currentItem == null) {
+                    allItems = false;
+                }
             }
 
         }
+        houseInterior.setFull(allItems);
+
+        if (house.nextHouse()) {
+            houseInterior.setNextHouse(getNextHouse(house));
+        }
 
         return houseInterior;
+    }
+
+    public House getNextHouse(House house) {
+        return houseRepository.findOne(house.getId() + 1);
     }
 
     public boolean setItemToRoomInterior(Family family, Long itemId, Long roomInteriorId) {
