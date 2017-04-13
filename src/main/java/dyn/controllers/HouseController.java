@@ -195,6 +195,9 @@ public class HouseController {
                 if (family.getMoney() >= nextHouse.getCost()) {
                     family.setMoney(family.getMoney() - nextHouse.getCost());
                     family.setHouse(nextHouse);
+
+                    family.setCraftPoint(family.getCraftPoint() + 10);
+
                     familyRepository.save(family);
 
                     logger.info(family.getLogName() + "buy house: " + nextHouse.getName());
