@@ -5,15 +5,15 @@ import javax.persistence.*;
 @Entity
 @Table(name = "education")
 public class Education {
-    public static final String PRIMARY = "edu.primary";
-    public static final String SECONDARY = "edu.secondary";
-    public static final String HIGHER = "edu.higher";
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    public static final long PRIMARY = 1;
+    public static final long SECONDARY = 2;
+    public static final long HIGHER = 3;
 
+    private long id;
     private String name;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     public long getId() {
         return id;
     }

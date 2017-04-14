@@ -11,8 +11,8 @@ import java.util.List;
 @Entity
 @Table(name = "race")
 public class Race {
-    public static final String RACE_HUMAN = "race.human";
-    public static final String RACE_GM_HUMAN = "race.gm-human";
+    public static final long RACE_HUMAN = 1;
+    public static final long RACE_GM_HUMAN = 2;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

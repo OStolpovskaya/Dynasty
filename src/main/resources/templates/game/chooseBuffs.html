@@ -26,7 +26,7 @@
     <h3 th:text="#{chooseBuffs.familyMoney}">Your money:</h3>
     <p th:text="#{cost(${character.getFamily().getMoney()})}">money</p>
     <h3 th:text="#{chooseBuffs.chooseBuffs}">Choose buff:</h3>
-    <form action="#" th:action="@{/game/chooseBuffs}" method="post">
+    <form action="#" th:action="@{/game/applyBuff}" method="post">
         <div th:each="buff : ${buffList}">
             <!--/*@thymesVar id="buff" type="dyn.model.Buff"*/-->
             <input type="radio" name="buff" th:value="${buff.getId()}" th:disabled="${character.getFamily().getMoney() lt buff.getCost()}" th:inline="text">[[#{${buff.getTitle()}}]] ([[#{cost(${buff.getCost()})}]])

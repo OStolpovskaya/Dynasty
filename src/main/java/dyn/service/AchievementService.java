@@ -31,11 +31,11 @@ public class AchievementService {
         Achievement achievement = null;
         switch (achievementType) {
             case newborn:
-                achievement = achievementRepository.findByTypeAndForWhat(AchievementType.newborn, character.getRace().getName());
+                achievement = achievementRepository.findByTypeAndForWhat(AchievementType.newborn, character.getRace().getId());
                 break;
             case vocation10level:
                 if (character.getCareer().getProfession().getLevel() == 10) {
-                    achievement = achievementRepository.findByTypeAndForWhat(AchievementType.vocation10level, String.valueOf(character.getCareer().getVocation().getId()));
+                    achievement = achievementRepository.findByTypeAndForWhat(AchievementType.vocation10level, character.getCareer().getVocation().getId());
                 }
                 break;
         }

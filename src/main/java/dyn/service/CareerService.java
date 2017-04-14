@@ -39,7 +39,7 @@ public class CareerService {
         career.setCharisma((int) (1 + Math.random() * 5));
         career.setStrength((int) (1 + Math.random() * 5));
         career.setCreativity((int) (1 + Math.random() * 5));
-        career.setEducation(educationRepository.findByName(Education.PRIMARY));
+        career.setEducation(educationRepository.findOne(Education.PRIMARY));
         career.setProfession(null);
         return career;
     }
@@ -82,15 +82,15 @@ public class CareerService {
 
     public void inheritVocationAndSkills(Career childCareer, Career fatherCareer, Career motherCareer) {
         double vocationPercentage = Math.random();
-        if (vocationPercentage < 0.48) {
+        if (vocationPercentage < 0.49) {
             childCareer.setVocation(fatherCareer.getVocation());
-        } else if (vocationPercentage < 0.96) {
+        } else if (vocationPercentage < 0.98) {
             childCareer.setVocation(motherCareer.getVocation());
         } else {
             childCareer.setVocation(getRandomVocation());
         }
 
-        childCareer.setEducation(educationRepository.findByName(Education.PRIMARY));
+        childCareer.setEducation(educationRepository.findOne(Education.PRIMARY));
 
         int incCoefficient = 2;
 
@@ -108,18 +108,18 @@ public class CareerService {
     }
 
     public boolean mayImproveEducation(Career career) {
-        String educationName;
-        if (career.getEducation().getName().equals(Education.PRIMARY)) {
-            educationName = Education.SECONDARY;
-        } else if (career.getEducation().getName().equals(Education.SECONDARY)) {
-            educationName = Education.HIGHER;
+        long newEducation;
+        if (career.getEducation().getId() == Education.PRIMARY) {
+            newEducation = Education.SECONDARY;
+        } else if (career.getEducation().getId() == Education.SECONDARY) {
+            newEducation = Education.HIGHER;
         } else {
             return false;
         }
 
         List<Profession> professions = professionRepository.findByVocationAndEducationAndIntelligenceLessThanEqualAndCharismaLessThanEqualAndStrengthLessThanEqualAndCreativityLessThanEqual(
                 career.getVocation(),
-                educationRepository.findByName(educationName),
+                educationRepository.findOne(newEducation),
                 career.getIntelligence(),
                 career.getCharisma(),
                 career.getStrength(),
@@ -131,13 +131,13 @@ public class CareerService {
     }
 
     public void improveEducation(Career career) {
-        String educationName = Education.PRIMARY;
-        if (career.getEducation().getName().equals(Education.PRIMARY)) {
-            educationName = Education.SECONDARY;
-        } else if (career.getEducation().getName().equals(Education.SECONDARY)) {
-            educationName = Education.HIGHER;
+        long educationId = Education.PRIMARY;
+        if (career.getEducation().getId() == Education.PRIMARY) {
+            educationId = Education.SECONDARY;
+        } else if (career.getEducation().getId() == Education.SECONDARY) {
+            educationId = Education.HIGHER;
         }
 
-        career.setEducation(educationRepository.findByName(educationName));
+        career.setEducation(educationRepository.findOne(educationId));
     }
 }

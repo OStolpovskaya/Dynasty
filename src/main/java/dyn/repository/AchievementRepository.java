@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 public interface AchievementRepository extends CrudRepository<Achievement, Long> {
     Achievement findByName(String name);
 
-    Achievement findByTypeAndForWhat(AchievementType type, String forWhat);
+    Achievement findByTypeAndForWhat(AchievementType type, long forWhat);
 }

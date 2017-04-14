@@ -19,7 +19,6 @@
         <tr>
             <th>ID</th>
             <th>Name</th>
-            <th>Local</th>
             <th>Body</th>
             <th>Ears</th>
             <th>Eyebrows</th>
@@ -39,7 +38,6 @@
         <tr th:each="race : ${raceList}">
             <td th:text="${race.getId()}">1</td>
             <td th:text="${race.getName()}">name</td>
-            <td th:text="#{${race.getName()}}">name</td>
             <th:block th:object="${race.getSummary()}">
                 <td style="font-size: 10px;">
                     <li th:each="body : *{getBodyList()}" th:text="#{${body.getName()}}+${body.isRare()?'*':''}"></li>
@@ -87,7 +85,7 @@
             <option value="0">Новая раса:</option>
             <option th:each="race : ${raceList}"
                     th:value="${race.getId()}"
-                    th:text="#{${race.getName()}}">Wireframe
+                    th:text="${race.getName()}">Wireframe
             </option>
         </select>
         <input type="text" name="title" placeholder="race.elf"></input>

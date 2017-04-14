@@ -40,8 +40,9 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
-                <li th:if="${family != null}"><a href="#" th:text="${family.getMoney() + ' р.'}"></a></li>
-                <li th:if="${family != null}"><a href="#" th:text="${family.getFamilyName() + ' ('+family.getUser().getUserName()+')'}"></a></li>
+                <li th:if="${family != null}"><span th:text="${family.getMoney() + ' р.'}" class="navbar-brand"></span></li>
+                <li th:if="${family != null}"><span th:text="${family.getFamilyName() + ' ('+family.getUser().getUserName()+') '}" class="navbar-brand"></span></li>
+                <li th:if="${family != null}"><span th:text="${family.getLevel()}" class="navbar-brand"></span></li>
                 <li><a href="?language=en">en</a></li>
                 <li><a href="?language=ru">ru</a></li>
                 <li><a href="/logout">Logout</a></li>

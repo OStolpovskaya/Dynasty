@@ -12,6 +12,7 @@ import dyn.repository.CharacterRepository;
 import dyn.repository.FamilyRepository;
 import dyn.repository.UserRepository;
 import dyn.service.*;
+import dyn.utils.ResourcesUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -162,6 +163,9 @@ public class GameController {
         Family family = user.getCurrentFamily();
 
         // profession
+        ResourcesUtils resourcesUtils = new ResourcesUtils();
+        resourcesUtils.saveInitValues(family);
+
         List<Character> workers = characterRepository.findByFamilyAndLevel(family, family.getLevel());
         for (Character worker : workers) {
             if (worker.getSex().equals("male")) {
@@ -243,14 +247,14 @@ public class GameController {
             if (character.isBuffedBy(Buff.GENETIC_MOD)) {
                 genModPercent = 0.40;
             }
-            if (character.isBuffedBy(Buff.FIVE_CHILDREN)) {
+            if (character.isBuffedBy(Buff.SIX_CHILDREN)) {
                 genModPercent = 1.00;
             }
 
             Character wife = character.getSpouse();
             int childAmount;
-            if (character.isBuffedBy(Buff.FIVE_CHILDREN)) {
-                childAmount = 5;
+            if (character.isBuffedBy(Buff.SIX_CHILDREN)) {
+                childAmount = 6;
             } else {
                 childAmount = getAmountOfChildren(character);
             }
@@ -262,7 +266,7 @@ public class GameController {
 
             for (int i = 0; i < childAmount; i++) {
                 Character child = new Character();
-                if (character.isBuffedBy(Buff.FIVE_CHILDREN)) {
+                if (character.isBuffedBy(Buff.SIX_CHILDREN)) {
                     if (i < 3) {
                         child.setSex("male");
                     } else {
@@ -291,7 +295,7 @@ public class GameController {
                 int featureToGenMod = 0; // which feature will have genetic modification
                 if (genModded == false && Math.random() < genModPercent) {
                     featureToGenMod = (int) (1 + Math.random() * 12);
-                    if (character.isBuffedBy(Buff.FIVE_CHILDREN)) {
+                    if (character.isBuffedBy(Buff.SIX_CHILDREN)) {
                         genModded = true;
                     }
                 }
@@ -352,6 +356,9 @@ public class GameController {
         family.setLevel(newLevel);
         family.setCraftPoint(family.getCraftPoint() + 1);
         familyRepository.save(family);
+
+        sb.append("Всего получено: <br>");
+        sb.append(resourcesUtils.getDifference(family));
 
         familyLogService.createNewLevelFamilyLog(family, sb.toString());
 

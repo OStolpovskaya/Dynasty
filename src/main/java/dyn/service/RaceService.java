@@ -45,9 +45,9 @@ public class RaceService {
             return raceRepository.findOne(raceAppearance.getRace().getId());
         } catch (EmptyResultDataAccessException e) {
             if (character.hasRareFeatures()) {
-                return raceRepository.findByName(Race.RACE_GM_HUMAN);
+                return raceRepository.findOne(Race.RACE_GM_HUMAN);
             } else {
-                return raceRepository.findByName(Race.RACE_HUMAN);
+                return raceRepository.findOne(Race.RACE_HUMAN);
             }
 
         }

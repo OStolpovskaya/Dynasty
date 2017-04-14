@@ -43,7 +43,7 @@ public class BuffController {
     private CharacterRepository characterRepository;
 
     // ============ CHOOSING BUFFS ============
-    @RequestMapping(value = "/game/chooseBuffs", params = "characterId", method = RequestMethod.GET)
+    @RequestMapping(value = "/game/chooseBuffs", params = "characterId", method = RequestMethod.POST)
     public String chooseBuffs(ModelMap model, RedirectAttributes redirectAttributes,
                               @RequestParam(value = "characterId") long characterId) {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
@@ -70,7 +70,7 @@ public class BuffController {
         return "redirect:/game";
     }
 
-    @RequestMapping(value = "/game/chooseBuffs", params = "characterId", method = RequestMethod.POST)
+    @RequestMapping(value = "/game/applyBuff", params = "characterId", method = RequestMethod.POST)
     public String applyBuff(ModelMap model, RedirectAttributes redirectAttributes,
                             @RequestParam(value = "buff") Long buffId,
                             @RequestParam(value = "characterId") Long characterId) {

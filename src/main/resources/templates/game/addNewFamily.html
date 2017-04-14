@@ -92,7 +92,7 @@
                     <p th:if="${#fields.hasErrors('family.femaleLastname')}" th:errors="*{family.femaleLastname}">
                         Incorrect</p>
                 </div>
-                <button type="submit" id="submit" name="submit" class="btn btn-primary pull-right">Submit Form</button>
+                <button type="submit" id="submit" name="submit" class="btn btn-primary pull-right">Создать</button>
             </form>
         </div>
     </div>
@@ -100,5 +100,10 @@
 </div>
 <script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
 </body>
 </html>

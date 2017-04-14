@@ -17,7 +17,7 @@ public class Achievement {
     @Enumerated(EnumType.STRING)
     private AchievementType type;
 
-    private String forWhat;
+    private long forWhat;
 
     public Long getId() {
         return id;
@@ -43,11 +43,11 @@ public class Achievement {
         this.type = type;
     }
 
-    public String getForWhat() {
+    public long getForWhat() {
         return forWhat;
     }
 
-    public void setForWhat(String forWhat) {
+    public void setForWhat(long forWhat) {
         this.forWhat = forWhat;
     }
 }

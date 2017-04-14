@@ -74,7 +74,7 @@ public class FamilyController {
 
     @GetMapping("game/addNewFamily")
     public String createNewFamily(ModelMap model, @ModelAttribute("familyForm") FamilyForm familyForm) {
-        Race race = raceRepository.findByName(Race.RACE_HUMAN);
+        Race race = raceRepository.findOne(Race.RACE_HUMAN);
 
         Character male = new Character();
         male.setName(characterRepository.getRandomNameMale());
@@ -162,8 +162,6 @@ public class FamilyController {
         family.setLevel(0);
         family.setMoney(1000);
 
-        craftService.newFamily(family);
-
         family.setHouse(houseRepository.findOne(1L));
         family.setFamilyResources(new FamilyResources());
 
@@ -172,7 +170,7 @@ public class FamilyController {
 
         founder.setFamily(family);
 
-        Buff buff = buffRepository.findByTitle(Buff.FIVE_CHILDREN);
+        Buff buff = buffRepository.findByTitle(Buff.SIX_CHILDREN);
         founder.getBuffs().add(buff);
 
         logger.debug(founder.toString());
@@ -188,6 +186,8 @@ public class FamilyController {
 
         familyLogService.createNewFamilyLog(family, founder, foundress);
 
+        craftService.newFamily(family);
+        familyRepository.save(family);
 
         return "redirect:/game";
 

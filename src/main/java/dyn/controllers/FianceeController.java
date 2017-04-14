@@ -89,6 +89,7 @@ public class FianceeController {
             TypedQuery<Fiancee> q = em.createQuery(cq);
             List<Fiancee> fianceeList = q.getResultList();
 
+            model.addAttribute("family", family);
             model.addAttribute("character", character);
             model.addAttribute("fianceeList", fianceeList);
             return "/game/chooseFiancee";

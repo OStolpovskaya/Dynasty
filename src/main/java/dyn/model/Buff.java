@@ -6,7 +6,7 @@ import javax.persistence.*;
 @Table(name = "buff")
 public class Buff {
     public static final String FERTILITY = "buffs.title.fertility";
-    public static final String FIVE_CHILDREN = "buffs.title.fiveChildren";
+    public static final String SIX_CHILDREN = "buffs.title.sixChildren";
     public static final String DOMINANT_MOTHER = "buffs.title.dominantMother";
     public static final String DOMINANT_FATHER = "buffs.title.dominantFather";
     public static final String MANY_SONS = "buffs.title.manySons";
