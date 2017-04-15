@@ -25,7 +25,14 @@ public class Thing {
     // =================================================
     @OneToMany(mappedBy = "thing")
     private List<Project> projects;
+
+    @ManyToOne
+    @JoinColumn(name = "parent", nullable = true)
+    private Thing parent;
     // =================================================
+
+    @OneToMany(mappedBy = "parent")
+    private List<Thing> childThings;
 
     public Long getId() {
         return id;
@@ -77,5 +84,13 @@ public class Thing {
 
     public List<Project> getProjects() {
         return projects;
+    }
+
+    public List<Thing> getChildThings() {
+        return childThings;
+    }
+
+    public Thing getParent() {
+        return parent;
     }
 }

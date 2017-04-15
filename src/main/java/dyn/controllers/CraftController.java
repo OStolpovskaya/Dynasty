@@ -71,6 +71,19 @@ public class CraftController {
         return "game/craft";
     }
 
+
+    @RequestMapping("/game/thingTreeView")
+    public String thingTreeView(ModelMap model, RedirectAttributes redirectAttributes) {
+        User user = userRepository.findByUserName(getAuthUser().getUsername());
+
+        Family family = user.getCurrentFamily();
+
+        //model.addAttribute("family", family);
+        model.addAttribute("parentThing", craftService.getThingsForTree());
+
+        return "game/thingTree";
+    }
+
     @RequestMapping(value = "/game/learnThing", method = RequestMethod.POST)
     public String learnThing(ModelMap model, RedirectAttributes redirectAttributes,
                              @RequestParam(value = "thingId") Long thingId) {

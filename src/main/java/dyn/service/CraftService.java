@@ -1,6 +1,7 @@
 package dyn.service;
 
 import dyn.model.*;
+import dyn.repository.CraftBranchRepository;
 import dyn.repository.ItemRepository;
 import dyn.repository.ProjectRepository;
 import dyn.repository.ThingRepository;
@@ -19,12 +20,14 @@ public class CraftService {
     private final ThingRepository thingRepository;
     private final ProjectRepository projectRepository;
     private final ItemRepository itemRepository;
+    private final CraftBranchRepository craftBranchRepository;
 
     @Autowired
-    public CraftService(ThingRepository thingRepository, ProjectRepository projectRepository, ItemRepository itemRepository) {
+    public CraftService(ThingRepository thingRepository, ProjectRepository projectRepository, ItemRepository itemRepository, CraftBranchRepository craftBranchRepository) {
         this.thingRepository = thingRepository;
         this.projectRepository = projectRepository;
         this.itemRepository = itemRepository;
+        this.craftBranchRepository = craftBranchRepository;
     }
 
     public void newFamily(Family family) {
@@ -53,5 +56,9 @@ public class CraftService {
         item.setCost(0);
         itemRepository.save(item);
         return item;
+    }
+
+    public Thing getThingsForTree() {
+        return thingRepository.getParentThing();
     }
 }
