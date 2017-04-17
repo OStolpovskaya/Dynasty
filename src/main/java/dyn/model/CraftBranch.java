@@ -14,11 +14,9 @@ public class CraftBranch {
     private Long id;
 
     private String name;
-    private int point;
 
     //=========================
     @OneToMany(mappedBy = "craftBranch")
-    @OrderBy("craftNumber ASC")
     private List<Thing> things;
     //=========================
 
@@ -36,14 +34,6 @@ public class CraftBranch {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public int getPoint() {
-        return point;
-    }
-
-    public void setPoint(int point) {
-        this.point = point;
     }
 
     public List<Thing> getThings() {

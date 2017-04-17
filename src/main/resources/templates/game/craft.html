@@ -4,49 +4,199 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>Крафт</title>
     <link th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}" rel="stylesheet"></link>
+
+    <style type="text/css">
+        /*Now the CSS*/
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .tree ul {
+            padding-top: 20px;
+            position: relative;
+
+            -transition: all 0.5s;
+            -webkit-transition: all 0.5s;
+            -moz-transition: all 0.5s;
+        }
+
+        .tree li {
+            float: left;
+            text-align: center;
+            list-style-type: none;
+            position: relative;
+            padding: 20px 5px 0 5px;
+
+            -transition: all 0.5s;
+            -webkit-transition: all 0.5s;
+            -moz-transition: all 0.5s;
+        }
+
+        /*We will use ::before and ::after to draw the connectors*/
+
+        .tree li::before, .tree li::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 50%;
+            border-top: 1px solid #ccc;
+            width: 50%;
+            height: 20px;
+        }
+
+        .tree li::after {
+            right: auto;
+            left: 50%;
+            border-left: 1px solid #ccc;
+        }
+
+        /*We need to remove left-right connectors from elements without
+        any siblings*/
+        .tree li:only-child::after, .tree li:only-child::before {
+            display: none;
+        }
+
+        /*Remove space from the top of single children*/
+        .tree li:only-child {
+            padding-top: 0;
+        }
+
+        /*Remove left connector from first child and
+        right connector from last child*/
+        .tree li:first-child::before, .tree li:last-child::after {
+            border: 0 none;
+        }
+
+        /*Adding back the vertical connector to the last nodes*/
+        .tree li:last-child::before {
+            border-right: 1px solid #ccc;
+            border-radius: 0 5px 0 0;
+            -webkit-border-radius: 0 5px 0 0;
+            -moz-border-radius: 0 5px 0 0;
+        }
+
+        .tree li:first-child::after {
+            border-radius: 5px 0 0 0;
+            -webkit-border-radius: 5px 0 0 0;
+            -moz-border-radius: 5px 0 0 0;
+        }
+
+        /*Time to add downward connectors from parents*/
+        .tree ul ul::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            border-left: 1px solid #ccc;
+            width: 0;
+            height: 20px;
+        }
+
+        .tree li a {
+            width: 85px;
+            border: 1px solid #ccc;
+            padding: 5px 10px;
+            text-decoration: none;
+            color: #666;
+            font-family: arial, verdana, tahoma;
+            font-size: 10px;
+            display: inline-block;
+
+            border-radius: 5px;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+
+            -transition: all 0.5s;
+            -webkit-transition: all 0.5s;
+            -moz-transition: all 0.5s;
+        }
+
+        /*
+
+                !*Time for some hover effects*!
+                !*We will apply the hover effect the the lineage of the element also*!
+                .tree li a:hover, .tree li a:hover + ul li a {
+                    background: #c8e4f8;
+                    color: #000;
+                    border: 1px solid #94a0b4;
+                }
+
+                !*Connector styles on hover*!
+                .tree li a:hover + ul li::after,
+                .tree li a:hover + ul li::before,
+                .tree li a:hover + ul::before,
+                .tree li a:hover + ul ul::before {
+                    border-color: #94a0b4;
+                }
+        */
+
+        /*Thats all. I hope you enjoyed it.*/
+    </style>
 </head>
 <body>
 <div th:replace="fragments/navigation :: nav-for-game"></div>
-<div class="container">
+<div class="container" style="width: 1400px;">
     <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
     <th:block th:if="${family.getLevel() == 0}">
         <div class="alert alert-success">
             Три балла крафта даются в начале игры. Каждый ход вы получаете еще один балл крафта. Два балла выдаются за какое-нибудь достижение. При покупке нового дома вы получаете в подарок десять баллов!<br/>
-            Пока у вас три балла. Но этого хватит, чтобы научиться изготавливать кухонный стол! Октройте список "Мебель". <br/>
-            Кухонный стол второй в списке. Нажмите "Выучить".
+            Пока у вас три балла. Но этого хватит, чтобы научиться изготавливать кухонный стул! В ветке развития "Мебель" первым идет как раз "Кухонный стул". Нажмите "Выучить". <br/>
+            Теперь ваша семья умеет изготавливать кухонный стул! Но, чтобы его изготовить, нужна схема или проект. Нажмите на значок Кухонного стула.
         </div>
     </th:block>
     <h3>Баллы крафта:</h3>
     <p th:text="${family.getCraftPoint()}"></p>
     <h3>Предметы, которые можно изготовить:</h3>
-    <!--/*@thymesVar id="craftBranch" type="dyn.model.CraftBranch"*/-->
-    <div class="btn-group-vertical" style="width: 400px;">
-        <th:block th:each="craftBranch : ${craftBranches}">
-            <button type="button" class="btn btn-info" data-toggle="collapse" th:attr="data-target='#branch_'+${craftBranch.getId()}" th:text="${craftBranch.getName()+ '(' + #lists.size(craftBranch.getThings())+')'}">Branch</button>
-            <div th:id="${'branch_'+craftBranch.getId()}" class="collapse">
-                <ul class="list-group">
-                    <th:block th:each="thing : ${craftBranch.getThings()}">
-                        <li class="list-group-item">
-                            <th:block th:if="${thing.familyStatus == 0}">
-                                <span th:text="${thing.getName()}" style="color: darkgray"></span>
-                            </th:block>
-                            <th:block th:if="${thing.familyStatus == 1}">
-                                <a th:href="${'/game/chooseProject?thingId='+thing.getId()}" th:text="${thing.getName()}"></a>
-                            </th:block>
-                            <th:block th:if="${thing.familyStatus == 2}">
-                                <form class="form-inline" th:action="@{/game/learnThing}" method="post">
-                                    <span th:text="${thing.getName()+' ('+craftBranch.getPoint()+' бал.)'}" style="color: #1b6d85"></span>
-                                    <input type="hidden" name="thingId" th:value="${thing.getId()}"/>
-                                    <button type="submit" class="btn btn-default btn-xs" th:disabled="${family.getCraftPoint() lt craftBranch.getPoint()}">Выучить</button>
-                                </form>
-                            </th:block>
-                        </li>
-                    </th:block>
+    <p>Нажмите на значок изученного предмета, чтобы перейти к изготовлдению. Или кнопку "Выучить" под значком для изучения</p>
+    <th:block th:each="parentThing : ${parentThings}">
+        <!--/*@thymesVar id="parentThing" type="dyn.model.Thing"*/-->
+        <div class="well" style="height: 600px;">
+            <h3 th:text="${#strings.capitalize(parentThing.getCraftBranch().getName())}"></h3>
+            <div class="tree">
+                <ul>
+                    <li>
+                        <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
+                        <th:block th:if="${family.getCraftThings().contains(parentThing)}">
+                            <a th:href="${'/game/chooseProject?thingId='+parentThing.getId()}"
+                               th:text="${parentThing.getName()}" data-toggle="tooltip" th:title="${parentThing.getId() + ' ('+parentThing.getCost() + ')'}" style="color: #1b6d85;">Parent</a>
+                        </th:block>
+                        <th:block th:if="${not family.getCraftThings().contains(parentThing)}">
+                            <a th:text="${parentThing.getName()}" data-toggle="tooltip" th:title="${parentThing.getId() + ' ('+parentThing.getCost() + ')'}" style="color: #2BB67E">Parent</a>
+                            <form class="form-inline" th:action="@{/game/learnThing}" method="post">
+                                <input type="hidden" name="thingId" th:value="${parentThing.getId()}"/>
+                                <button type="submit" class="btn btn-info btn-xs" th:disabled="${family.getCraftPoint() lt parentThing.getCost()}" th:text="${'Выучить: '+parentThing.getCost() + ' б.'}">Выучить</button>
+                            </form>
+                        </th:block>
+                        <th:block th:fragment="submenu">
+                            <ul>
+                                <li th:each="thing : ${parentThing.getChildThings()}">
+                                    <th:block th:if="${family.getCraftThings().contains(thing)}">
+                                        <a th:href="${'/game/chooseProject?thingId='+thing.getId()}"
+                                           th:text="${thing.getName()}" data-toggle="tooltip" th:title="${thing.getId() + ' ('+thing.getCost() + ')'}" style="color: #1b6d85;">Parent</a>
+                                    </th:block>
+                                    <th:block th:if="${not family.getCraftThings().contains(thing)}">
+                                        <th:block th:if="${family.getCraftThings().contains(thing.getParent())}">
+                                            <a th:text="${thing.getName()}" data-toggle="tooltip" th:title="${thing.getId()}" style="color: #2BB67E">Parent</a>
+                                            <form class="form-inline" th:action="@{/game/learnThing}" method="post">
+                                                <input type="hidden" name="thingId" th:value="${thing.getId()}"/>
+                                                <button type="submit" class="btn btn-info btn-xs" th:disabled="${family.getCraftPoint() lt thing.getCost()}" th:text="${'Выучить: '+thing.getCost() + ' б.'}">Выучить</button>
+                                            </form>
+                                        </th:block>
+                                        <th:block th:if="${not family.getCraftThings().contains(thing.getParent())}">
+                                            <a th:text="${thing.getName()}" data-toggle="tooltip" th:title="${thing.getId()+ ' ('+thing.getCost() + ')'}">Town hall</a>
+
+                                        </th:block>
+                                    </th:block>
+                                    <th:block th:if="${#lists.size(thing.getChildThings()) > 0}" th:with="parentThing = ${thing}" th:include="this :: submenu"/>
+                                </li>
+                            </ul>
+                        </th:block>
+                    </li>
                 </ul>
             </div>
-
-        </th:block>
-    </div>
+        </div>
+    </th:block>
 </div>
 <script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>

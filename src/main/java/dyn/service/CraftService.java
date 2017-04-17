@@ -1,10 +1,7 @@
 package dyn.service;
 
 import dyn.model.*;
-import dyn.repository.CraftBranchRepository;
-import dyn.repository.ItemRepository;
-import dyn.repository.ProjectRepository;
-import dyn.repository.ThingRepository;
+import dyn.repository.*;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,22 +20,21 @@ public class CraftService {
     private final ThingRepository thingRepository;
     private final ProjectRepository projectRepository;
     private final ItemRepository itemRepository;
-    private final CraftBranchRepository craftBranchRepository;
+    private final FamilyRepository familyRepository;
 
     @Autowired
-    public CraftService(ThingRepository thingRepository, ProjectRepository projectRepository, ItemRepository itemRepository, CraftBranchRepository craftBranchRepository) {
+    public CraftService(ThingRepository thingRepository, ProjectRepository projectRepository, ItemRepository itemRepository, CraftBranchRepository craftBranchRepository, FamilyRepository familyRepository) {
         this.thingRepository = thingRepository;
         this.projectRepository = projectRepository;
         this.itemRepository = itemRepository;
-        this.craftBranchRepository = craftBranchRepository;
+        this.familyRepository = familyRepository;
     }
 
     public void newFamily(Family family) {
         family.setCraftPoint(3);
-        family.getCraftThings().add(thingRepository.findByCraftBranchIdAndCraftNumber(1, 1)); // кухонный стул
-        Project firstChairProject = projectRepository.findOne(1L);
-        family.getCraftProjects().add(firstChairProject); // простая табуретка
-        createItem(firstChairProject, family);
+        Item item = createItem(projectRepository.findOne(4L), familyRepository.findOne(1L)); // дарим новой семье плиту Скоровар
+        item.setFamily(family);
+        itemRepository.save(item);
     }
 
     public Thing getThing(Long thingId) {

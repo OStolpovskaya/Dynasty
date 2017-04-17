@@ -19,7 +19,6 @@ public class Thing {
     @ManyToOne
     @JoinColumn(name = "craft_branch_id")
     private CraftBranch craftBranch;
-    private int craftNumber;
     private int cost;
     private int width;
     private int height;
@@ -73,14 +72,6 @@ public class Thing {
 
     public void setCraftBranch(CraftBranch craftBranch) {
         this.craftBranch = craftBranch;
-    }
-
-    public int getCraftNumber() {
-        return craftNumber;
-    }
-
-    public void setCraftNumber(int craftNumber) {
-        this.craftNumber = craftNumber;
     }
 
     public int getCost() {

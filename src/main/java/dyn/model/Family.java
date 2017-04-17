@@ -258,15 +258,6 @@ public class Family {
                 '}';
     }
 
-    public boolean hasCraftThing(CraftBranch craftBranch, int craftNumber) {
-        for (Thing craftThing : craftThings) {
-            if (craftThing.getCraftBranch() == craftBranch && craftThing.getCraftNumber() == craftNumber) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public boolean hasResourcesForProject(Project project) {
         return familyResources.getWood() >= project.getWood() &&
                 familyResources.getMetall() >= project.getMetall() &&

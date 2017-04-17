@@ -45,7 +45,7 @@ public class ResourcesUtils {
 
     public String getDifference(Family family) {
         StringBuilder sb = new StringBuilder();
-        sb.append(" деньги: ").append(family.getMoney() - initValues.get("Money")).append(" р. <br>");
+        sb.append(" Деньги: ").append(family.getMoney() - initValues.get("Money")).append(" р. <br>");
         sb.append(" Дерево: ").append(family.getFamilyResources().getWood() - initValues.get("Wood")).append(", ");
         sb.append(" Металл: ").append(family.getFamilyResources().getMetall() - initValues.get("Metall")).append(", ");
         sb.append(" Пластик, резина: ").append(family.getFamilyResources().getPlastic() - initValues.get("Plastic")).append(", ");

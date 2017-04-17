@@ -29,8 +29,8 @@
     <form action="#" th:action="@{/game/applyBuff}" method="post">
         <div th:each="buff : ${buffList}">
             <!--/*@thymesVar id="buff" type="dyn.model.Buff"*/-->
-            <input type="radio" name="buff" th:value="${buff.getId()}" th:disabled="${character.getFamily().getMoney() lt buff.getCost()}" th:inline="text">[[#{${buff.getTitle()}}]] ([[#{cost(${buff.getCost()})}]])
-            [[#{${buff.getDescription()}}]]</input>
+            <input type="radio" name="buff" th:value="${buff.getId()}" th:disabled="${character.getFamily().getMoney() lt buff.getCost()}"></input>
+            <th:block th:text="#{${buff.getTitle()}}+' (' +#{cost(${buff.getCost()})}+')'"></th:block>
         </div>
         <p>
             <input type="hidden" name="characterId" th:value="${characterId}"/>
