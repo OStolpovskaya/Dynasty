@@ -11,6 +11,7 @@
 <div class="container">
     <p th:text="${@careerService.getRandomFromMinToMax(1,100)}"></p>
     <a href="/game/thingTreeView">Дерево предметов</a>
+    <a href="/game/thingTreeVerticalView">Дерево предметов Vertical</a>
     <!--/*@thymesVar id="user" type="dyn.model.User"*/-->
     <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
     <th:block th:if="${family.getLevel() == 0}">

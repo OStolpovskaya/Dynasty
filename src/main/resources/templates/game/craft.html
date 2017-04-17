@@ -22,7 +22,7 @@
     <!--/*@thymesVar id="craftBranch" type="dyn.model.CraftBranch"*/-->
     <div class="btn-group-vertical" style="width: 400px;">
         <th:block th:each="craftBranch : ${craftBranches}">
-            <button type="button" class="btn btn-info" data-toggle="collapse" th:attr="data-target='#branch_'+${craftBranch.getId()}" th:text="${craftBranch.getName()}">Branch</button>
+            <button type="button" class="btn btn-info" data-toggle="collapse" th:attr="data-target='#branch_'+${craftBranch.getId()}" th:text="${craftBranch.getName()+ '(' + #lists.size(craftBranch.getThings())+')'}">Branch</button>
             <div th:id="${'branch_'+craftBranch.getId()}" class="collapse">
                 <ul class="list-group">
                     <th:block th:each="thing : ${craftBranch.getThings()}">

@@ -20,6 +20,7 @@ public class Thing {
     @JoinColumn(name = "craft_branch_id")
     private CraftBranch craftBranch;
     private int craftNumber;
+    private int cost;
     private int width;
     private int height;
     // =================================================
@@ -80,6 +81,14 @@ public class Thing {
 
     public void setCraftNumber(int craftNumber) {
         this.craftNumber = craftNumber;
+    }
+
+    public int getCost() {
+        return cost;
+    }
+
+    public void setCost(int cost) {
+        this.cost = cost;
     }
 
     public List<Project> getProjects() {

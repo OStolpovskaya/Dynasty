@@ -10,6 +10,9 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by OM on 30.03.2017.
  */
@@ -58,7 +61,12 @@ public class CraftService {
         return item;
     }
 
-    public Thing getThingsForTree() {
-        return thingRepository.getParentThing();
+    public List<Thing> getThingsForTree() {
+        List<Thing> things = new ArrayList<>();
+        things.add(thingRepository.getParentThingForCraftBranchId(1));
+        things.add(thingRepository.getParentThingForCraftBranchId(2));
+        things.add(thingRepository.getParentThingForCraftBranchId(3));
+        things.add(thingRepository.getParentThingForCraftBranchId(6));
+        return things;
     }
 }

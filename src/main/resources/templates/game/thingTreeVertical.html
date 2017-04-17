@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Крафт VertTree</title>
+    <link th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}" rel="stylesheet"></link>
+    <style>
+        *,
+        *:before,
+        *:after {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        /*body {
+            min-width: 1200px;
+            margin: 0;
+            padding: 50px;
+            color: #eee9dc;
+            font: 16px Verdana, sans-serif;
+            background: #2e6ba7;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }*/
+
+        #wrapper {
+            position: relative;
+        }
+
+        .branch {
+            position: relative;
+            margin-left: 250px;
+        }
+
+        .branch:before {
+            content: "";
+            width: 50px;
+            border-top: 2px solid #777;
+            position: absolute;
+            left: -100px;
+            top: 50%;
+            margin-top: 1px;
+        }
+
+        .entry {
+            position: relative;
+            min-height: 60px;
+        }
+
+        .entry:before {
+            content: "";
+            height: 100%;
+            border-left: 2px solid #777;
+            position: absolute;
+            left: -50px;
+        }
+
+        .entry:after {
+            content: "";
+            width: 50px;
+            border-top: 2px solid #777;
+            position: absolute;
+            left: -50px;
+            top: 50%;
+            margin-top: 1px;
+        }
+
+        .entry:first-child:before {
+            width: 10px;
+            height: 50%;
+            top: 50%;
+            margin-top: 2px;
+            border-radius: 10px 0 0 0;
+        }
+
+        .entry:first-child:after {
+            height: 10px;
+            border-radius: 10px 0 0 0;
+        }
+
+        .entry:last-child:before {
+            width: 10px;
+            height: 50%;
+            border-radius: 0 0 0 10px;
+        }
+
+        .entry:last-child:after {
+            height: 10px;
+            border-top: none;
+            border-bottom: 2px solid #777;
+            border-radius: 0 0 0 10px;
+            margin-top: -9px;
+        }
+
+        .entry.sole:before {
+            display: none;
+        }
+
+        .entry.sole:after {
+            width: 50px;
+            height: 0;
+            margin-top: 1px;
+            border-radius: 0;
+        }
+
+        .label {
+            display: block;
+            width: 150px;
+            padding: 5px 10px;
+            line-height: 20px;
+            text-align: center;
+            border: 2px solid #777;
+            border-radius: 5px;
+            position: absolute;
+            left: 0;
+            top: 50%;
+            margin-top: -15px;
+            color: #000;
+        }
+
+    </style>
+</head>
+<body>
+<div th:replace="fragments/navigation :: nav-for-game"></div>
+<div class="container">
+    <h3>Предметы, которые можно изготовить:</h3>
+
+    <th:block th:each="parentThing : ${parentThings}" th:if="${#lists.size(parentThings) > 0}">
+        <!--/*@thymesVar id="parentThing" type="dyn.model.Thing"*/-->
+        <h3 th:text="${parentThing.getCraftBranch().getName()}"></h3>
+        <div id="wrapper"><span class="label" th:text="${parentThing.getName() + ' ('+parentThing.getCost() + ')'}">Root</span>
+            <th:block th:fragment="submenu">
+                <div class="branch">
+                    <div class="entry" th:classappend="${#lists.size(parentThing.getChildThings()) == 1? 'sole':''}" th:each="thing : ${parentThing.getChildThings()}">
+                        <span class="label" th:text="${thing.getName() + ' ('+ thing.getCost() + ')'}" data-toggle="tooltip" th:title="${thing.getId()+', parent='+thing.getParent().getName()}">Town hall</span>
+                        <th:block th:if="${#lists.size(thing.getChildThings()) > 0}" th:with="parentThing = ${thing}"
+                                  th:include="this :: submenu"/>
+                    </div>
+                </div>
+            </th:block>
+        </div>
+    </th:block>
+
+    <!--
+    <div id="wrapper"><span class="label">Root</span>
+        <div class="branch lv1">
+            <div class="entry"><span class="label">Entry-1</span>
+                <div class="branch lv2">
+                    <div class="entry"><span class="label">Entry-1-1</span>
+                        <div class="branch lv3">
+                            <div class="entry sole"><span class="label">Entry-1-1-1</span></div>
+                        </div>
+                    </div>
+                    <div class="entry"><span class="label">Entry-1-2</span>
+                        <div class="branch lv3">
+                            <div class="entry sole"><span class="label">Entry-1-2-1</span></div>
+                        </div>
+                    </div>
+                    <div class="entry"><span class="label">Entry-1-3</span>
+                        <div class="branch lv3">
+                            <div class="entry sole"><span class="label">Entry-1-3-1</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="entry"><span class="label">Entry-2</span></div>
+            <div class="entry"><span class="label">Entry-3</span>
+                <div class="branch lv2">
+                    <div class="entry"><span class="label">Entry-3-1</span></div>
+                    <div class="entry"><span class="label">Entry-3-2</span></div>
+                    <div class="entry"><span class="label">Entry-3-3</span>
+                        <div class="branch lv3">
+                            <div class="entry"><span class="label">Entry-3-3-1</span></div>
+                            <div class="entry"><span class="label">Entry-3-3-2</span>
+                                <div class="branch lv4">
+                                    <div class="entry"><span class="label">Entry-3-3-2-1</span></div>
+                                    <div class="entry"><span class="label">Entry-3-3-2-2</span></div>
+                                </div>
+                            </div>
+                            <div class="entry"><span class="label">Entry-3-3-3</span></div>
+                        </div>
+                    </div>
+                    <div class="entry"><span class="label">Entry-3-4</span></div>
+                </div>
+            </div>
+            <div class="entry"><span class="label">Entry-4</span></div>
+            <div class="entry"><span class="label">Entry-5</span></div>
+        </div>
+    </div>-->
+</div>
+<script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
+</body>
+</html>

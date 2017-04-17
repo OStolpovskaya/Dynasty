@@ -79,9 +79,21 @@ public class CraftController {
         Family family = user.getCurrentFamily();
 
         //model.addAttribute("family", family);
-        model.addAttribute("parentThing", craftService.getThingsForTree());
+        model.addAttribute("parentThings", craftService.getThingsForTree());
 
         return "game/thingTree";
+    }
+
+    @RequestMapping("/game/thingTreeVerticalView")
+    public String thingTreeVerticalView(ModelMap model, RedirectAttributes redirectAttributes) {
+        User user = userRepository.findByUserName(getAuthUser().getUsername());
+
+        Family family = user.getCurrentFamily();
+
+        //model.addAttribute("family", family);
+        model.addAttribute("parentThings", craftService.getThingsForTree());
+
+        return "game/thingTreeVertical";
     }
 
     @RequestMapping(value = "/game/learnThing", method = RequestMethod.POST)
