@@ -271,4 +271,8 @@ public class Family {
     public String getLogName() {
         return "Family " + familyName + "(" + id + ") ";
     }
+
+    public List<FamilyLog> getFamilyLogs() {
+        return familyLogs;
+    }
 }

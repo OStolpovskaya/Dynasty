@@ -26,6 +26,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Controller
 public class AdminController {
     private static final Logger logger = LogManager.getLogger(AdminController.class);
@@ -42,6 +45,8 @@ public class AdminController {
     AchievementRepository achievementRepository;
     @Autowired
     BuffRepository buffRepository;
+    @Autowired
+    FamilyRepository familyRepository;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -87,6 +92,41 @@ public class AdminController {
         return "admin/buffs";
     }
 
+    @RequestMapping("/admin/fiancees")
+    public String fianceesView(ModelMap model) {
+
+        List<List<Fiancee>> levelList = new ArrayList<>();
+        List<Fiancee> fiancees = fianceeRepository.findAllByOrderByCharacterLevel();
+        int level = 0;
+        for (Fiancee fiancee : fiancees) {
+            if (fiancee.getCharacter().getLevel() != level) {
+                levelList.add(new ArrayList<>());
+                level = fiancee.getCharacter().getLevel();
+            }
+            levelList.get(level - 1).add(fiancee);
+        }
+
+        model.addAttribute("fianceeLevelList", levelList);
+        return "admin/fiancees";
+    }
+
+    @RequestMapping("/admin/families")
+    public String familiesView(ModelMap model) {
+
+        model.addAttribute("familyList", familyRepository.findAll());
+        return "admin/families";
+    }
+
+    @RequestMapping(value = "/admin/family", method = RequestMethod.GET)
+    public String familyView(ModelMap model,
+                             @RequestParam("familyId") Long familyId,
+                             RedirectAttributes redirectAttributes) {
+        Family family = familyRepository.findOne(familyId);
+
+        model.addAttribute("family", family);
+        return "admin/family";
+    }
+
     @RequestMapping(value = "/admin/generateFiancee", method = RequestMethod.POST)
     public String generateFiancees(ModelMap model,
                                    @RequestParam("level") int level,
@@ -95,6 +135,12 @@ public class AdminController {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         Family family = user.getCurrentFamily();
 
+        String names = genFiancees(level, family);
+        redirectAttributes.addFlashAttribute("mess", "Fiancees are generated: " + names);
+        return "redirect:/admin";
+    }
+
+    public String genFiancees(int level, Family family) {
         StringBuilder names = new StringBuilder();
         for (int i = 0; i < 5; i++) {
             Character female = new Character();
@@ -132,8 +178,7 @@ public class AdminController {
 
             names.append(fiancee.getCharacter().getName()).append(" ");
         }
-        redirectAttributes.addFlashAttribute("mess", "Fiancees are generated: " + names.toString());
-        return "redirect:/admin";
+        return names.toString();
     }
 
     @RequestMapping(value = "/admin/updateCharacter", method = RequestMethod.POST)

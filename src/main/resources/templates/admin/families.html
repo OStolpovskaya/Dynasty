@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Семьи</title>
+    <link th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}" rel="stylesheet"></link>
+</head>
+<body>
+<div th:replace="fragments/navigation :: nav-for-admin"></div>
+<div class="container">
+    <h3>Семьи</h3>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Фамилия</th>
+            <th>Уровень</th>
+            <th>Активна</th>
+            <th>Дом</th>
+            <th>Баллы</th>
+            <th>Деньги</th>
+
+            <th>wood</th>
+            <th>metall</th>
+            <th>plastic</th>
+            <th>microel</th>
+            <th>cloth</th>
+            <th>stone</th>
+            <th>chemical</th>
+
+            <th>items</th>
+            <th>projects</th>
+            <th>things</th>
+
+            <th>Лог</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="family : ${familyList}">
+            <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
+            <td th:text="${family.getId()}">id</td>
+            <td th:text="${family.getFamilyName()}">title</td>
+            <td th:text="${family.getLevel()}">type</td>
+            <td th:text="${family.isCurrent()}">type</td>
+            <td th:text="${family.getHouse().getName()}">type</td>
+            <td th:text="${family.getCraftPoint()}">type</td>
+            <td th:text="${family.getMoney()}">type</td>
+
+            <td th:text="${family.getFamilyResources().getWood()}">type</td>
+            <td th:text="${family.getFamilyResources().getMetall()}">type</td>
+            <td th:text="${family.getFamilyResources().getPlastic()}">type</td>
+            <td th:text="${family.getFamilyResources().getMicroelectronics()}">type</td>
+            <td th:text="${family.getFamilyResources().getCloth()}">type</td>
+            <td th:text="${family.getFamilyResources().getStone()}">type</td>
+            <td th:text="${family.getFamilyResources().getChemical()}">type</td>
+
+            <td th:text="${family.getItems().size()}">type</td>
+            <td th:text="${family.getCraftProjects().size()}">type</td>
+            <td th:text="${family.getCraftThings().size()}">type</td>
+
+            <td><a th:href="${'/admin/family?familyId='+family.getId()}">Лог</a></td>
+
+
+        </tr>
+        </tbody>
+    </table>
+</div>
+<script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
+</body>
+</html>

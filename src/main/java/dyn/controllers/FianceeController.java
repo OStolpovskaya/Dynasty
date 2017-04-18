@@ -42,6 +42,8 @@ public class FianceeController {
     @Autowired
     MessageSource messageSource;
     @Autowired
+    AdminController adminController;
+    @Autowired
     private UserRepository userRepository;
     @Autowired
     private FamilyRepository familyRepository;
@@ -49,7 +51,6 @@ public class FianceeController {
     private CharacterRepository characterRepository;
     @Autowired
     private FianceeRepository fianceeRepository;
-
     @PersistenceContext
     private EntityManager em;
 
@@ -63,6 +64,13 @@ public class FianceeController {
 
         Character character = characterRepository.findByIdAndFamilyAndLevelAndSexAndSpouseIsNull(characterId, family, family.getLevel(), "male");
         if (character != null) {
+
+            int size = fianceeRepository.findByCharacterFamilyNotAndCharacterLevel(family, family.getLevel()).size();
+            if (size == 0) {
+                String fiancees = adminController.genFiancees(family.getLevel(), familyRepository.findOne(1L));
+                logger.info(user.getUserName() + " want to choose fiancee, but there was no fiancees in the database. Generated: " + fiancees);
+            }
+
             CriteriaBuilder cb = em.getCriteriaBuilder();
             CriteriaQuery<Fiancee> cq = cb.createQuery(Fiancee.class);
 
@@ -84,7 +92,7 @@ public class FianceeController {
                 }
             }
             cq.where(cb.and(predicates.toArray(new Predicate[predicates.size()])));
-            cq.orderBy(cb.asc(fianceeRoot.get(Fiancee_.cost)));
+            cq.orderBy(cb.asc(fianceeRoot.get(Fiancee_.cost)), cb.asc(fianceeCharacter.get(Character_.race)), cb.asc(fianceeCharacterCareer.get(Career_.vocation)));
 
             TypedQuery<Fiancee> q = em.createQuery(cq);
             List<Fiancee> fianceeList = q.getResultList();

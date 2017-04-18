@@ -13,7 +13,7 @@
         </div>
         <div>
             <ul class="nav navbar-nav">
-                <li th:classappend="${#httpServletRequest.getRequestURI() == '/login' ? 'active':''}"><a href="/login">Game</a></li>
+                <li th:classappend="${#httpServletRequest.getRequestURI() == '/login' ? 'active':''}"><a href="/login" id="navGameLink">Game</a></li>
                 <li th:classappend="${#httpServletRequest.getRequestURI() == '/reg' ? 'active':''}"><a href="/reg">Registration</a></li>
                 <li th:classappend="${#httpServletRequest.getRequestURI() == '/about' ? 'active':''}"><a href="/about">About</a></li>
             </ul>
@@ -45,7 +45,7 @@
                 <li th:if="${family != null}"><span th:text="${family.getLevel()}" class="navbar-brand"></span></li>
                 <li><a href="?language=en">en</a></li>
                 <li><a href="?language=ru">ru</a></li>
-                <li><a href="/logout">Logout</a></li>
+                <li><a href="/logout" name="logouta">Logout</a></li>
             </ul>
         </div>
     </nav>
@@ -59,10 +59,12 @@
         <div>
             <ul class="nav navbar-nav">
                 <li><a href="/admin">Admin</a></li>
-                <li><a href="/admin/appearance">Appearance</a></li>
-                <li><a href="/admin/race">Race</a></li>
-                <li><a href="/admin/achievements">Achievements</a></li>
-                <li><a href="/admin/buffs">Buffs</a></li>
+                <li><a href="/admin/appearance">Апиранс</a></li>
+                <li><a href="/admin/race">Расы</a></li>
+                <li><a href="/admin/achievements">Достижения</a></li>
+                <li><a href="/admin/buffs">Баффы</a></li>
+                <li><a href="/admin/families">Семьи</a></li>
+                <li><a href="/admin/fiancees">Невесты</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="?language=en">en</a></li>

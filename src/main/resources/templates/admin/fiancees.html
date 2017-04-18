@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Невесты</title>
+    <link th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}" rel="stylesheet"></link>
+</head>
+<body>
+<div th:replace="fragments/navigation :: nav-for-admin"></div>
+<div class="container">
+    <h3>Невесты</h3>
+    <th:block th:each="levelList : ${fianceeLevelList}">
+        <div class="well">
+            <h4 th:text="${'Уровень: ' + levelList.get(0).getCharacter().getLevel() + ', количество: ' + #lists.size(levelList)}"></h4>
+            <div th:each="fiancee : ${levelList}" style="display: inline-block">
+                <!--/*@thymesVar id="fiancee" type="dyn.model.Fiancee"*/-->
+                <div class="char-view-div">
+                    <div th:replace="fragments/char :: char-view (character=${fiancee.getCharacter()})"></div>
+                    <label th:text="#{cost(${fiancee.getCost()})}">Cost</label>
+                </div>
+            </div>
+        </div>
+    </th:block>
+
+</div>
+<script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
+</body>
+</html>

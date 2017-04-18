@@ -172,7 +172,7 @@ public class GameController {
                 careerService.generateProfession(worker);
                 int salary = worker.getCareer().getResultSalary();
                 family.setMoney(family.getMoney() + salary);
-                sb.append(worker.getName() + " приобретает профессию " + worker.getCareer().getProfession().getName() + " и зарабатывает " + salary + " р. ");
+                sb.append(worker.getName() + " приобретает профессию " + worker.getCareer().getProfession().getName() + " (" + worker.getCareer().getProfession().getLevel() + ") и зарабатывает " + salary + " р. ");
 
                 family.getFamilyResources().addResFromVocation(worker.getCareer());
                 sb.append("А его призвание приносит ресурсы: " + worker.getCareer().getVocation().resString(worker.getCareer().getProfession().getLevel()) + "<br>");
@@ -187,7 +187,7 @@ public class GameController {
                     careerService.generateProfession(workerWife);
                     int wifeSalary = workerWife.getCareer().getResultSalary();
                     family.setMoney(family.getMoney() + wifeSalary);
-                    sb.append("   Его жена " + workerWife.getName() + " приобретает профессию " + workerWife.getCareer().getProfession().getName() + " и зарабатывает " + wifeSalary + " р. ");
+                    sb.append("   Его жена " + workerWife.getName() + " приобретает профессию " + workerWife.getCareer().getProfession().getName() + " (" + workerWife.getCareer().getProfession().getLevel() + ") и зарабатывает " + wifeSalary + " р. ");
 
                     family.getFamilyResources().addResFromVocation(workerWife.getCareer());
                     sb.append("А ее призвание приносит ресурсы: " + workerWife.getCareer().getVocation().resString(workerWife.getCareer().getProfession().getLevel()) + "<br>");
@@ -203,7 +203,7 @@ public class GameController {
                     careerService.generateProfession(worker);
                     int salary = worker.getCareer().getResultSalary();
                     family.setMoney(family.getMoney() + salary);
-                    sb.append(worker.getName() + " приобретает профессию " + worker.getCareer().getProfession().getName() + " и зарабатывает " + salary + " р. ");
+                    sb.append(worker.getName() + " приобретает профессию " + worker.getCareer().getProfession().getName() + " (" + worker.getCareer().getProfession().getLevel() + ") и зарабатывает " + salary + " р. ");
 
                     family.getFamilyResources().addResFromVocation(worker.getCareer());
                     sb.append("А ее призвание приносит ресурсы: " + worker.getCareer().getVocation().resString(worker.getCareer().getProfession().getLevel()) + "<br>");

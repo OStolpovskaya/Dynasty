@@ -77,7 +77,7 @@
                     <div style="text-align: center;" th:if="${child.getSex() == 'male' and child.getSpouse() == null}">
                         <form th:action="@{/game/chooseFiancee}" method="post">
                             <input type="hidden" name="characterId" th:value="${child.getId()}"/>
-                            <button class="btn btn-xs btn-primary" type="submit">Выбрать невесту</button>
+                            <button class="btn btn-xs btn-primary" type="submit" name="chooseFianceeButton">Выбрать невесту</button>
                         </form>
                     </div>
                     <div style="text-align: center; margin-top: 10px;" th:if="${child.getSex() == 'male' and child.getSpouse() != null}">
@@ -91,7 +91,7 @@
                         <form class="form-inline" th:action="@{/game/putUpForFiancee}" method="post">
                             <input type="text" name="cost" class="form-control" th:value="${family.getLevel()}*50" style="width: 60px;height: 23px;margin-left: 4px;" data-toggle="tooltip" th:title="#{postFiancee.tooltip.cost}"/>
                             <input type="hidden" name="female" th:value="${child.getId()}"/>
-                            <button class="btn btn-xs btn-primary" type="submit" data-toggle="tooltip" th:title="#{postFiancee.tooltip.button}">V</button>
+                            <button class="btn btn-xs btn-primary" name="postFianceeButton" type="submit" data-toggle="tooltip" th:title="#{postFiancee.tooltip.button}">V</button>
                         </form>
                     </div>
                 </div>
@@ -99,7 +99,7 @@
 
         </div>
         <form th:action="@{/game/turn}" method="post">
-            <button class="btn btn-lg btn-primary center-block" type="submit" th:text="#{game.turn}" style="margin-bottom: 10px; margin-top: 10px;">Turn!</button>
+            <button class="btn btn-lg btn-primary center-block" type="submit" name="turn" th:text="#{game.turn}" style="margin-bottom: 10px; margin-top: 10px;">Turn!</button>
         </form>
     </div>
 </div>

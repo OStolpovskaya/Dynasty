@@ -56,7 +56,7 @@
         <form th:action="@{/game/makeFiancee}" method="post">
             <script>
                 function enableChooseButton() {
-                    $("#chooseFianceeButton").attr("disabled", false);
+                    $("#makeFianceeButton").attr("disabled", false);
                 }
             </script>
             <div th:each="fiancee : ${fianceeList}" style="display: inline-block;">
@@ -69,7 +69,7 @@
             </div>
             <p>
                 <input type="hidden" name="characterId" th:value="${character.getId()}"/>
-                <button type="submit" id="chooseFianceeButton" name="submit" class="btn btn-primary center-block" th:text="#{chooseFiancee.choose}" th:disabled="${true}" align="center">Choose</button>
+                <button type="submit" id="makeFianceeButton" name="submit" class="btn btn-primary center-block" th:text="#{chooseFiancee.choose}" th:disabled="${true}" align="center">Choose</button>
             </p>
         </form>
     </div>

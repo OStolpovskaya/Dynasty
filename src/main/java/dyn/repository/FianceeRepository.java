@@ -22,4 +22,6 @@ public interface FianceeRepository extends CrudRepository<Fiancee, Long> {
     List<Fiancee> findByCharacterRace(Race race);
 
     List<Fiancee> findByCharacterFamilyNotAndCharacterLevelAndCharacterRace(Family family, int level, Race race);
+
+    List<Fiancee> findAllByOrderByCharacterLevel();
 }
