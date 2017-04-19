@@ -7,7 +7,7 @@
 </head>
 <body>
 <div th:replace="fragments/navigation :: nav-for-game"></div>
-<div class="container">
+<div class="container" style="min-width: 1140px;">
     <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
     <th:block th:if="${family.getLevel() == 0}">
         <div class="alert alert-success">
@@ -92,6 +92,26 @@
                         </tr>
                         </tbody>
                     </table>
+                    <div style="border: solid 1px lightgreen; width: 1035px; height: 405px; position: relative;">
+                        <th:block th:each="roomInteriorWithItems : ${roomEntry.getValue()}">
+                            <div align="center" style="border: solid 1px darkslategray; display: table; position: absolute; "
+                                 th:styleappend="${'width: '+ roomInteriorWithItems.getRoomInterior().getThing().getWidth() +'px;'+
+                                 'height: ' + roomInteriorWithItems.getRoomInterior().getThing().getHeight()+'px;'+
+                                 'left: ' + roomInteriorWithItems.getRoomInterior().getX()+'px;'+
+                                 'top: ' + roomInteriorWithItems.getRoomInterior().getY()+'px;'}">
+                                <div th:if="${roomInteriorWithItems.getCurrentItem()==null}" th:text="${roomInteriorWithItems.getRoomInterior().getThing().getName()}"
+                                     style="color: dimgrey; display: table-cell; vertical-align: middle;">Нет вещи
+                                </div>
+                                <th:block th:unless="${roomInteriorWithItems.getCurrentItem()==null}">
+                                    <span th:text="${roomInteriorWithItems.getCurrentItem().getProject().getName()}"
+                                          style="color: cornflowerblue;  display: table-cell; vertical-align: middle;"
+                                          data-toggle="tooltip"
+                                          th:title="${roomInteriorWithItems.getCurrentItem().getProject().getThing().getName() + ' '+roomInteriorWithItems.getCurrentItem().getProject().getName()+' от '+roomInteriorWithItems.getCurrentItem().getAuthor().getFamilyName()}"></span>
+                                </th:block>
+
+                            </div>
+                        </th:block>
+                    </div>
                 </li>
             </ul>
         </th:block>

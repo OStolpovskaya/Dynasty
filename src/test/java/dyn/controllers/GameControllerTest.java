@@ -37,7 +37,6 @@ public class GameControllerTest {
 
     @Test
     public void startFromNothing() {
-        // todo: каждый метод начинать с логина. сначала новая семья и ход, потом все постят невест, потом все выбирают невест.
         driver.get("http://localhost:8080/");
         Assert.assertTrue("Not Dynasty page", isDynastyPage());
 
