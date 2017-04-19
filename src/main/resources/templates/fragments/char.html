@@ -16,10 +16,12 @@
         <span th:unless="${character.getRace().getId() == 1}" th:text="${character.getRace().getName()}" style="color:DarkOrchid"></span>
     </p>
     <div align="center" style="font-size: 10px; margin: 0px;">
-        <img th:src="@{'/graphics/vocation/vocations_'+${character.getCareer().getVocation().getId()}+'.png' }" data-toggle="tooltip"
-             th:alt-title="${'Призвание: ' + character.getCareer().getVocation().getName() + '. Приносит ресурсы: ' + character.getCareer().getVocation().resString(1)}"
-             th:height="${imsize==null?20:50}" th:width="${imsize == null?20:50}">
-        </img>
+        <a th:href="${'/game/vocation?vocationId=' + character.getCareer().getVocation().getId()}">
+            <img th:src="@{'/graphics/vocation/vocations_'+${character.getCareer().getVocation().getId()}+'.png' }" data-toggle="tooltip"
+                 th:alt-title="${'Призвание: ' + character.getCareer().getVocation().getName() + '. Приносит ресурсы: ' + character.getCareer().getVocation().resString(1)}"
+                 th:height="${imsize==null?20:50}" th:width="${imsize == null?20:50}">
+            </img>
+        </a>
         <span th:text="${character.getCareer().getIntelligence()}" data-toggle="tooltip" title="Интеллект"></span>|
         <span th:text="${character.getCareer().getCharisma()}" data-toggle="tooltip" title="Харизма"></span>|
         <span th:text="${character.getCareer().getStrength()}" data-toggle="tooltip" title="Сила"></span>|

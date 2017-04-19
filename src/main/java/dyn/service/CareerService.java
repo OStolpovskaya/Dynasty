@@ -140,4 +140,8 @@ public class CareerService {
 
         career.setEducation(educationRepository.findOne(educationId));
     }
+
+    public Vocation getVocation(long vocationId) {
+        return vocationRepository.findOne(vocationId);
+    }
 }

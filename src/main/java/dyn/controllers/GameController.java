@@ -8,6 +8,7 @@ package dyn.controllers;
 import dyn.model.*;
 import dyn.model.Character;
 import dyn.model.career.Career;
+import dyn.model.career.Vocation;
 import dyn.repository.CharacterRepository;
 import dyn.repository.FamilyRepository;
 import dyn.repository.UserRepository;
@@ -119,6 +120,24 @@ public class GameController {
         model.addAttribute("character", character);
 
         return "/game/character";
+    }
+
+    @RequestMapping("/game/vocation")
+    public String vocationView(ModelMap model, RedirectAttributes redirectAttributes,
+                               @RequestParam(value = "vocationId") long vocationId) {
+        User user = userRepository.findByUserName(getAuthUser().getUsername());
+        Family family = user.getCurrentFamily();
+        model.addAttribute("family", family);
+
+        Vocation vocation = careerService.getVocation(vocationId);
+        if (vocation != null) {
+            model.addAttribute("vocation", vocation);
+            return "/game/vocation";
+        }
+
+        redirectAttributes.addFlashAttribute("mess", "Призвание не найдено");
+        logger.error(user.getUserName() + " tried to see non-existing vocation");
+        return "redirect:/game";
     }
 
     @RequestMapping("/game/improveEducation")

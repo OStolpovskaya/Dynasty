@@ -9,7 +9,7 @@ public class Profession {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "vocation")
     private Vocation vocation;
 

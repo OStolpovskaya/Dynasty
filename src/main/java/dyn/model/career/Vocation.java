@@ -4,6 +4,7 @@ import dyn.utils.ResourcesHolder;
 import dyn.utils.ResourcesUtils;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "vocation")
@@ -21,6 +22,9 @@ public class Vocation implements ResourcesHolder {
     private int cloth;
     private int stone;
     private int chemical;
+
+    @OneToMany(mappedBy = "vocation")
+    private List<Profession> professionList;
 
 
     public long getId() {
@@ -106,5 +110,9 @@ public class Vocation implements ResourcesHolder {
     public String resString(int coeff) {
 
         return ResourcesUtils.getResString(this, coeff);
+    }
+
+    public List<Profession> getProfessionList() {
+        return professionList;
     }
 }
