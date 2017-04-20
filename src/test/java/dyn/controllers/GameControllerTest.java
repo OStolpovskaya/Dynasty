@@ -44,9 +44,14 @@ public class GameControllerTest {
         Assert.assertTrue("Not login page", isLoginPage());
 
         HashMap<String, String[]> players = new HashMap<>();
+        /*
         players.put("YellowSubmarine", new String[]{"Подлодковы", "Подлодков", "Подлодкова"});
         players.put("Hovard", new String[]{"Верещагины", "Верещагин", "Верещагина"});
         players.put("OlgaTheFirst", new String[]{"Котовы", "Котов", "Котова"});
+        */
+        players.put("Octopus", new String[]{"Осьминоговы", "Осьминогов", "Осьминогова"});
+        players.put("Периметр", new String[]{"Кругловы", "Круглов", "Круглова"});
+        players.put("Vladimir", new String[]{"Владимировы", "Владимиров", "Владимирова"});
 
         for (String player : players.keySet()) {
             addNewFamily(player, players.get(player)[0], players.get(player)[1], players.get(player)[2]);

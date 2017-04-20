@@ -10,10 +10,7 @@ import dyn.model.Character;
 import dyn.model.*;
 import dyn.model.career.Career;
 import dyn.model.career.Career_;
-import dyn.repository.CharacterRepository;
-import dyn.repository.FamilyRepository;
-import dyn.repository.FianceeRepository;
-import dyn.repository.UserRepository;
+import dyn.repository.*;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +42,8 @@ public class FianceeController {
     AdminController adminController;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private RaceRepository raceRepository;
     @Autowired
     private FamilyRepository familyRepository;
     @Autowired
@@ -184,5 +183,46 @@ public class FianceeController {
         logger.error(user.getUserName() + "'s character " + characterId + " can not belongs to user's current family female singles or is already feancee");
         return "redirect:/game";
     }
+
+
+    //postAllHumanFiancees
+    @RequestMapping(value = "/game/postAllHumanFiancees", method = RequestMethod.POST)
+    public String postAllHumanFiancees(ModelMap model, RedirectAttributes redirectAttributes) {
+        User user = userRepository.findByUserName(getAuthUser().getUsername());
+        Family family = user.getCurrentFamily();
+        model.addAttribute("family", family);
+
+        int cost = 50 * family.getLevel();
+
+        List<Character> fianceeList = characterRepository.findByFamilyAndLevelAndSexAndRaceAndSpouseIsNull(family, family.getLevel(), "female", raceRepository.findOne(1L));
+        int size = fianceeList.size();
+        if (size == 0) {
+            redirectAttributes.addFlashAttribute("mess", "У вас нет дочерей, которых можно поместить в базу невест");
+            logger.error(user.getUserName() + " has no daughters of race Human to become fiancee");
+            return "redirect:/game";
+        }
+        int count = 0;
+        for (Character character : fianceeList) {
+            if (!character.isFiancee()) {
+                Fiancee fiancee = new Fiancee();
+                fiancee.setCharacter(character);
+                fiancee.setCost(cost);
+                fianceeRepository.save(fiancee);
+
+                count += 1;
+            }
+        }
+
+        if (count == 0) {
+            redirectAttributes.addFlashAttribute("mess", "Все ваши дочери уже в базе невест!");
+            logger.error(user.getUserName() + " daughters of race Human already in fiancee database");
+            return "redirect:/game";
+        }
+
+        redirectAttributes.addFlashAttribute("mess", "Все дочери (" + count + ") расы Человек теперь в базе невест!");
+        logger.debug(user.getUserName() + "'s daughters of race Human become fiancee");
+        return "redirect:/game";
+    }
+
 
 }

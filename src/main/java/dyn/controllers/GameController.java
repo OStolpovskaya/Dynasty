@@ -147,25 +147,44 @@ public class GameController {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         Family family = user.getCurrentFamily();
 
-        Character character = characterRepository.findByIdAndFamilyAndLevel(characterId, family, family.getLevel());
-        if (character != null && careerService.mayImproveEducation(character.getCareer())) {
-            if (family.getMoney() >= Career.IMPROVE_COST) {
-
-                careerService.improveEducation(character.getCareer());
-                characterRepository.save(character);
-
-                family.setMoney(family.getMoney() - Career.IMPROVE_COST);
-                familyRepository.save(family);
-
-                redirectAttributes.addFlashAttribute("mess", "Персонаж " + character.getName() + " повысил свое образование. Потрачено: " + Career.IMPROVE_COST);
-                logger.info(user.getUserName() + " improve the education!");
-                return "redirect:/game";
-            } else {
-                logger.error(user.getUserName() + " hasn't enough money to improve education");
-                redirectAttributes.addFlashAttribute("mess", "Недостаточно денег");
-                return "redirect:/game";
+        // Character character = characterRepository.findByIdAndFamilyAndLevel(characterId, family, family.getLevel());
+        Character character = characterRepository.findOne(characterId);
+        if (character != null && character.getLevel() == family.getLevel()) {
+            boolean condition = false; // повысить образование можно у сыновей, дочерей и жен сыновей - проверка всего этого ниже
+            switch (character.getSex()) {
+                case "male":
+                    condition = character.getFamily() == family;
+                    break;
+                case "female":
+                    condition = character.getFamily() == family;
+                    if (!condition && character.getSpouse() != null) {
+                        condition = character.getSpouse().getFamily() == family;
+                    }
+                    break;
             }
+            if (condition) {
+                if (careerService.mayImproveEducation(character.getCareer())) {
+                    if (family.getMoney() >= Career.IMPROVE_COST) {
 
+                        careerService.improveEducation(character.getCareer());
+                        characterRepository.save(character);
+
+                        family.setMoney(family.getMoney() - Career.IMPROVE_COST);
+                        familyRepository.save(family);
+
+                        redirectAttributes.addFlashAttribute("mess", "Персонаж " + character.getName() + " повысил свое образование. Потрачено: " + Career.IMPROVE_COST);
+                        logger.info(user.getUserName() + " improve the education!");
+                        return "redirect:/game";
+                    } else {
+                        logger.error(user.getUserName() + " hasn't enough money to improve education");
+                        redirectAttributes.addFlashAttribute("mess", "Недостаточно денег");
+                        return "redirect:/game";
+                    }
+                }
+            }
+            redirectAttributes.addFlashAttribute("mess", "Вы можете повысить образование только у сыновей, дочерей или жен сыновей. Персонаж никем из них не является.");
+            logger.error(user.getUserName() + "'s character " + characterId + " try to improve education, but he/she is not son, daughter or son's wife");
+            return "redirect:/game";
         }
         redirectAttributes.addFlashAttribute("mess", "Персонаж не найден");
         logger.error(user.getUserName() + "'s character " + characterId + " can not belongs to user's current family");

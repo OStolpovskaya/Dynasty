@@ -2,6 +2,7 @@ package dyn.repository;
 
 import dyn.model.Character;
 import dyn.model.Family;
+import dyn.model.Race;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -23,6 +24,8 @@ public interface CharacterRepository extends CrudRepository<Character, Long> {
     List<Character> findByFamilyAndLevelAndSexAndSpouseIsNotNull(Family family, int level, String sex);
 
     List<Character> findByFamilyAndLevelAndSexAndSpouseIsNull(Family family, int level, String sex);
+
+    List<Character> findByFamilyAndLevelAndSexAndRaceAndSpouseIsNull(Family family, int level, String sex, Race race);
 
     Character findByIdAndFamilyAndLevelAndSexAndSpouseIsNotNull(Long characterId, Family family, int level, String sex);
 

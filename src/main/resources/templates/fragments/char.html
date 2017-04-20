@@ -16,7 +16,7 @@
         <span th:unless="${character.getRace().getId() == 1}" th:text="${character.getRace().getName()}" style="color:DarkOrchid"></span>
     </p>
     <div align="center" style="font-size: 10px; margin: 0px;">
-        <a th:href="${'/game/vocation?vocationId=' + character.getCareer().getVocation().getId()}">
+        <a th:href="${'/game/vocation?vocationId=' + character.getCareer().getVocation().getId()}" style="text-decoration: none;">
             <img th:src="@{'/graphics/vocation/vocations_'+${character.getCareer().getVocation().getId()}+'.png' }" data-toggle="tooltip"
                  th:alt-title="${'Призвание: ' + character.getCareer().getVocation().getName() + '. Приносит ресурсы: ' + character.getCareer().getVocation().resString(1)}"
                  th:height="${imsize==null?20:50}" th:width="${imsize == null?20:50}">

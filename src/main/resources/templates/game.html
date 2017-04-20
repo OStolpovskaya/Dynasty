@@ -50,7 +50,11 @@
             </div>
         </div>
 
-
+        <div class="well">
+            <form th:action="@{/game/postAllHumanFiancees}" method="post" class="form-inline">
+                <button class="btn btn-xs btn-primary" type="submit" name="postAllHumanFiancees">Поместить всех дочерей расы "Человек" в базу невест по стандартной стоимости</button>
+            </form>
+        </div>
         <div align="center" style="overflow-x: scroll; white-space: nowrap;">
 
             <div align="center" class="well" th:each="father : ${fathers}">
