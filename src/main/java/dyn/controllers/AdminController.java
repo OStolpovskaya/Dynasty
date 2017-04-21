@@ -7,7 +7,9 @@ package dyn.controllers;
 
 import dyn.form.RaceAppearanceForm;
 import dyn.model.Character;
-import dyn.model.*;
+import dyn.model.Family;
+import dyn.model.Fiancee;
+import dyn.model.Race;
 import dyn.repository.*;
 import dyn.service.AppearanceService;
 import dyn.service.CareerService;
@@ -132,8 +134,7 @@ public class AdminController {
                                    @RequestParam("level") int level,
                                    RedirectAttributes redirectAttributes) {
         logger.debug("AdminController.generateFiancees, level=" + level);
-        User user = userRepository.findByUserName(getAuthUser().getUsername());
-        Family family = user.getCurrentFamily();
+        Family family = familyRepository.findOne(1L);
 
         String names = genFiancees(level, family);
         redirectAttributes.addFlashAttribute("mess", "Fiancees are generated: " + names);

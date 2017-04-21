@@ -138,7 +138,7 @@ public class FianceeController {
 
                 logger.info(user.getUserName() + " has chosen fiancee " + wife.getName());
                 redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("chooseFiancee.success", new Object[]{character.getName(), wife.getName(), fiancee.getCost()}, loc()));
-                return "redirect:/game";
+                return "redirect:/game#char" + character.getFather().getId();
             } else {
                 logger.error(user.getUserName() + " hasn't enough money to choose fiancee " + wife.getName());
                 redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("chooseFiancee.notEnoughMoney", null, loc()));
@@ -175,7 +175,7 @@ public class FianceeController {
 
             redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("becomeFiancee.characterBecomeFiancee", null, loc()));
             logger.info(user.getUserName() + "'s character " + character.getName() + " become fiancee");
-            return "redirect:/game";
+            return "redirect:/game#char" + character.getFather().getId();
         }
 
 

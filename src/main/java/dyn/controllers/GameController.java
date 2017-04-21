@@ -174,7 +174,7 @@ public class GameController {
 
                         redirectAttributes.addFlashAttribute("mess", "Персонаж " + character.getName() + " повысил свое образование. Потрачено: " + Career.IMPROVE_COST);
                         logger.info(user.getUserName() + " improve the education!");
-                        return "redirect:/game";
+                        return "redirect:/game#char" + character.getFather().getId();
                     } else {
                         logger.error(user.getUserName() + " hasn't enough money to improve education");
                         redirectAttributes.addFlashAttribute("mess", "Недостаточно денег");

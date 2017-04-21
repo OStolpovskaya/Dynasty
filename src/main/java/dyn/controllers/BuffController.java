@@ -91,7 +91,7 @@ public class BuffController {
                     Object[] messageArguments = {character.getName(), messageSource.getMessage(buff.getTitle(), null, loc()), buff.getCost()};
                     redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("game.chooseBuffs.success", messageArguments, loc()));
                     logger.debug(user.getUserName() + "'s character " + characterId + " now has buff " + buff.getTitle());
-                    return "redirect:/game";
+                    return "redirect:/game#char" + character.getFather().getId();
                 } else {
                     redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("game.chooseBuffs.notEnoughMoney", null, loc()));
                     logger.error(user.getUserName() + ": not enough money for buff " + buff.getTitle());
