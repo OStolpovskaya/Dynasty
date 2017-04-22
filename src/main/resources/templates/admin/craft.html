@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Крафт</title>
+    <link th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}" rel="stylesheet"></link>
+    <link th:href="@{/css/common.css}" rel="stylesheet"></link>
+</head>
+<body>
+<div th:replace="fragments/navigation :: nav-for-admin"></div>
+<script>
+    function passData(id, name, parentId, cost) {
+        $(".modal-body #thingId").val(id);
+        $(".modal-body #thingName").val(name);
+        $(".modal-body #thingParent").val(parentId);
+        $(".modal-body #thingCost").val(cost);
+    }
+</script>
+<div class="container" style="width: 1600px;">
+    <h3>Крафт</h3>
+    <th:block th:each="parentThing : ${parentThings}">
+        <!--/*@thymesVar id="parentThing" type="dyn.model.Thing"*/-->
+        <div class="well" style="height: 800px;">
+            <th:block th:with="craftBranch = ${parentThing.getCraftBranch()}">
+                <h3 th:text="${#strings.capitalize(craftBranch.getName())}"></h3>
+                <div class="tree">
+                    <ul>
+                        <li>
+                            <a th:text="${parentThing.getName()}" th:title="${parentThing.getId() + ' ('+parentThing.getCost() + ')'}">Parent</a>
+
+                            <th:block th:fragment="submenu">
+                                <ul>
+                                    <li th:each="thing : ${parentThing.getChildThings()}">
+                                        <a th:text="${thing.getName()+ ' ('+parentThing.getCost() + ' б.)'}" title="Нажмите для редактирования"
+                                           data-toggle="modal" data-target="#myModal"
+                                           th:onclick="'javascript:passData('+${thing.getId()}+',\'' + ${thing.getName()} + '\','+${thing.getParent().getId()}+','+${thing.getCost()}+');'">Thing
+                                        </a>
+                                        <th:block th:if="${#lists.size(thing.getChildThings()) > 0}" th:with="parentThing = ${thing}" th:include="this :: submenu"/>
+                                    </li>
+                                </ul>
+                            </th:block>
+                        </li>
+                    </ul>
+                </div>
+            </th:block>
+        </div>
+    </th:block>
+</div>
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Изменение вещи</h4>
+            </div>
+            <div class="modal-body">
+                <p>Введите новые значения:</p>
+                <form th:action="@{/admin/changeThing}" method="post">
+                    <div class="form-group"><label>Name:</label>
+                        <input type="text" name="thingName" id="thingName" value="" class="form-control"/></div>
+                    <div class="form-group"><label>Parent:</label>
+                        <select name="thingParent" id="thingParent" class="form-control">
+                            <option th:each="parentThing : ${thingList}"
+                                    th:value="${parentThing.getId()}"
+                                    th:text="${parentThing.getName()} + ' (' + ${parentThing.getId()} + ')'">option
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Cost:</label>
+                        <input type="text" name="thingCost" id="thingCost" value="" class="form-control"/>
+                    </div>
+                    <input type="hidden" name="thingId" id="thingId" value=""/>
+                    <button type="submit" class="btn btn-info">Изменить</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+</body>
+</html>

@@ -13,6 +13,7 @@ import dyn.model.Race;
 import dyn.repository.*;
 import dyn.service.AppearanceService;
 import dyn.service.CareerService;
+import dyn.service.CraftService;
 import dyn.service.RaceService;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -49,6 +50,8 @@ public class AdminController {
     BuffRepository buffRepository;
     @Autowired
     FamilyRepository familyRepository;
+    @Autowired
+    CraftService craftService;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -304,6 +307,24 @@ public class AdminController {
             redirectAttributes.addFlashAttribute("mess", "Персонаж не найден: " + characterId);
             return "redirect:/admin";
         }
+    }
+
+    @RequestMapping("/admin/craft")
+    public String craft(ModelMap model) {
+        model.addAttribute("thingList", craftService.getAllThings());
+        model.addAttribute("parentThings", craftService.getThingsForTree());
+        return "admin/craft";
+    }
+
+    @RequestMapping(value = "/admin/changeThing", method = RequestMethod.POST)
+    public String changeThing(ModelMap model,
+                              @RequestParam("thingId") Long thingId,
+                              @RequestParam("thingName") String thingName,
+                              @RequestParam("thingParent") Long thingParentId,
+                              @RequestParam("thingCost") int thingCost,
+                              RedirectAttributes redirectAttributes) {
+        craftService.changeThing(thingId, thingName, thingParentId, thingCost);
+        return "redirect:/admin/craft";
     }
 
     @RequestMapping("/admin/random")

@@ -393,6 +393,7 @@ public class GameController {
         }
         family.setLevel(newLevel);
         family.setCraftPoint(family.getCraftPoint() + 1);
+        family.setPairsNum(0);
         familyRepository.save(family);
 
         sb.append("Всего получено: <br>");

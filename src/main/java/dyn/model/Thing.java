@@ -93,4 +93,8 @@ public class Thing {
     public Thing getParent() {
         return parent;
     }
+
+    public void setParent(Thing parent) {
+        this.parent = parent;
+    }
 }

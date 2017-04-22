@@ -11,6 +11,8 @@ public class House {
     private Long id;
     private String name;
     private int cost;
+    private int pairsNum;
+    private int fianceeNum;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -36,6 +38,22 @@ public class House {
 
     public void setCost(int cost) {
         this.cost = cost;
+    }
+
+    public int getPairsNum() {
+        return pairsNum;
+    }
+
+    public void setPairsNum(int pairs_num) {
+        this.pairsNum = pairs_num;
+    }
+
+    public int getFianceeNum() {
+        return fianceeNum;
+    }
+
+    public void setFianceeNum(int fiancee_num) {
+        this.fianceeNum = fiancee_num;
     }
 
     @Override

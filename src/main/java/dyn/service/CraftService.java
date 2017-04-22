@@ -17,6 +17,8 @@ import java.util.List;
 public class CraftService {
 
     private static final Logger logger = LogManager.getLogger(CraftService.class);
+    final
+    CraftBranchRepository craftBranchRepository;
     private final ThingRepository thingRepository;
     private final ProjectRepository projectRepository;
     private final ItemRepository itemRepository;
@@ -28,6 +30,7 @@ public class CraftService {
         this.projectRepository = projectRepository;
         this.itemRepository = itemRepository;
         this.familyRepository = familyRepository;
+        this.craftBranchRepository = craftBranchRepository;
     }
 
     public void newFamily(Family family) {
@@ -64,5 +67,19 @@ public class CraftService {
         things.add(thingRepository.getParentThingForCraftBranchId(3));
         things.add(thingRepository.getParentThingForCraftBranchId(6));
         return things;
+    }
+
+    public List<Thing> getAllThings() {
+        return (List<Thing>) thingRepository.findAll();
+    }
+
+    public void changeThing(Long thingId, String thingName, Long thingParentId, int thingCost) {
+        Thing thing = thingRepository.findOne(thingId);
+        Thing parentThing = thingRepository.findOne(thingParentId);
+
+        thing.setName(thingName);
+        thing.setParent(parentThing);
+        thing.setCost(thingCost);
+        thingRepository.save(thing);
     }
 }

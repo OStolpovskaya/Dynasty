@@ -50,6 +50,9 @@ public class FianceeController {
     private CharacterRepository characterRepository;
     @Autowired
     private FianceeRepository fianceeRepository;
+    @Autowired
+    private FamilyLogRepository familyLogRepository;
+
     @PersistenceContext
     private EntityManager em;
 
@@ -114,6 +117,12 @@ public class FianceeController {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         Family family = user.getCurrentFamily();
 
+        if (family.getPairsNum() >= family.getHouse().getPairsNum()) {
+            redirectAttributes.addFlashAttribute("mess", "Вы не можете создать еще одну пару, ваш дом слишком мал. Вы можете разместить пар: " + family.getHouse().getPairsNum());
+            logger.error(user.getUserName() + " want to make a pair, but max pairs num is already reached");
+            return "redirect:/game";
+        }
+
         Character character = characterRepository.findByIdAndFamilyAndLevelAndSexAndSpouseIsNull(characterId, family, family.getLevel(), "male");
         Fiancee fiancee = fianceeRepository.findOne(fianceeId);
 
@@ -130,11 +139,20 @@ public class FianceeController {
                 fianceeRepository.delete(fiancee);
 
                 family.setMoney(family.getMoney() - fiancee.getCost());
+                family.setPairsNum(family.getPairsNum() + 1);
                 familyRepository.save(family);
+
+                FamilyLog familyLog = familyLogRepository.findByFamilyAndLevel(family, family.getLevel());
+                familyLog.addText("Вы выкупили невесту " + wife.getName() + " из семьи " + wife.getFamily().getFamilyName() + " для своего персонажа " + character.getName() + ". Потрачено: " + fiancee.getCost() + " р.");
+                familyLogRepository.save(familyLog);
 
                 Family wifeFamily = wife.getFamily();
                 wifeFamily.setMoney(wifeFamily.getMoney() + fiancee.getCost());
                 familyRepository.save(wifeFamily);
+
+                FamilyLog wifeFamilyLog = familyLogRepository.findByFamilyAndLevel(wifeFamily, wifeFamily.getLevel());
+                wifeFamilyLog.addText("Семья " + family.getFamilyName() + " выкупила одну из ваших невест: " + wife.getName() + " (уровень: " + wife.getLevel() + "). Получено: " + fiancee.getCost() + " р.");
+                familyLogRepository.save(wifeFamilyLog);
 
                 logger.info(user.getUserName() + " has chosen fiancee " + wife.getName());
                 redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("chooseFiancee.success", new Object[]{character.getName(), wife.getName(), fiancee.getCost()}, loc()));

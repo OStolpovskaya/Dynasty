@@ -13,94 +13,81 @@ import java.util.Set;
 @Entity
 @Table(name = "family")
 public class Family {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
+    private Long id;
     private User user;
 
-    @Size(min = 2, max = 30, message = "{field.size2-30}")
-    @Column(name = "family_name")
     private String familyName;
-
-    private boolean current;
-
-    @Size(min = 2, max = 30, message = "{field.size2-30}")
-    @Column(name = "male_lastname")
     private String maleLastname;
-
-    @Size(min = 2, max = 30, message = "{field.size2-30}")
-    @Column(name = "female_lastname")
     private String femaleLastname;
 
-    @Column(name = "level")
+    private boolean current;
     private int level;
-
-    @Column(name = "money")
     private int money;
-
-    @Column(name = "craft_point")
     private int craftPoint;
 
-    @OneToOne(fetch = FetchType.LAZY)
     private House house;
 
-    // ===================================
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "family_craft_thing",
-            joinColumns = {@JoinColumn(name = "family_id")},
-            inverseJoinColumns = {@JoinColumn(name = "thing_id")})
-    private Set<Thing> craftThings = new HashSet<Thing>();
+    private int pairsNum;
+    private int fianceeNum;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "family_craft_project",
-            joinColumns = {@JoinColumn(name = "family_id")},
-            inverseJoinColumns = {@JoinColumn(name = "project_id")})
-    @OrderBy("name")
-    private Set<Project> craftProjects = new HashSet<Project>();
     // ===================================
-    @OneToMany(mappedBy = "family", fetch = FetchType.LAZY)
     private List<Character> characters;
-
-    @OneToMany(mappedBy = "family", fetch = FetchType.LAZY)
-    private List<Item> items;
-
-    @OneToMany(mappedBy = "family", fetch = FetchType.LAZY)
-    private List<FamilyLog> familyLogs;
-
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "resources")
     private FamilyResources familyResources;
 
+    private Set<Thing> craftThings = new HashSet<>();
+    private Set<Project> craftProjects = new HashSet<>();
+    private List<Item> items;
+
+    private List<FamilyLog> familyLogs;
     // ===================================
 
     public Family() {
     }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     public Long getId() {
         return id;
     }
-
     public void setId(Long id) {
         this.id = id;
     }
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
     public User getUser() {
         return user;
     }
-
     public void setUser(User user) {
         this.user = user;
     }
 
+    @Size(min = 2, max = 30, message = "{field.size2-30}")
+    @Column(name = "family_name")
     public String getFamilyName() {
         return familyName;
     }
-
     public void setFamilyName(String familyName) {
         this.familyName = familyName;
+    }
+
+    @Size(min = 2, max = 30, message = "{field.size2-30}")
+    @Column(name = "male_lastname")
+    public String getMaleLastname() {
+        return maleLastname;
+    }
+    public void setMaleLastname(String maleLastname) {
+        this.maleLastname = maleLastname;
+    }
+
+    @Size(min = 2, max = 30, message = "{field.size2-30}")
+    @Column(name = "female_lastname")
+    public String getFemaleLastname() {
+        return femaleLastname;
+    }
+    public void setFemaleLastname(String femaleLastname) {
+        this.femaleLastname = femaleLastname;
     }
 
     public boolean isCurrent() {
@@ -111,26 +98,9 @@ public class Family {
         this.current = current;
     }
 
-    public String getMaleLastname() {
-        return maleLastname;
-    }
-
-    public void setMaleLastname(String maleLastname) {
-        this.maleLastname = maleLastname;
-    }
-
-    public String getFemaleLastname() {
-        return femaleLastname;
-    }
-
-    public void setFemaleLastname(String femaleLastname) {
-        this.femaleLastname = femaleLastname;
-    }
-
     public int getLevel() {
         return level;
     }
-
     public void setLevel(int level) {
         this.level = level;
     }
@@ -138,7 +108,6 @@ public class Family {
     public int getMoney() {
         return money;
     }
-
     public void setMoney(int money) {
         this.money = money;
     }
@@ -146,67 +115,73 @@ public class Family {
     public int getCraftPoint() {
         return craftPoint;
     }
-
     public void setCraftPoint(int craftPoint) {
         this.craftPoint = craftPoint;
     }
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "family_craft_thing",
+            joinColumns = {@JoinColumn(name = "family_id")},
+            inverseJoinColumns = {@JoinColumn(name = "thing_id")})
     public Set<Thing> getCraftThings() {
         return craftThings;
     }
-
     public void setCraftThings(Set<Thing> craftThings) {
         this.craftThings = craftThings;
     }
 
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "family_craft_project",
+            joinColumns = {@JoinColumn(name = "family_id")},
+            inverseJoinColumns = {@JoinColumn(name = "project_id")})
+    @OrderBy("name")
     public Set<Project> getCraftProjects() {
         return craftProjects;
     }
-
     public void setCraftProjects(Set<Project> craftProjects) {
         this.craftProjects = craftProjects;
     }
 
+    @OneToOne(fetch = FetchType.LAZY)
     public House getHouse() {
         return house;
     }
-
     public void setHouse(House house) {
         this.house = house;
     }
 
+    public int getPairsNum() {
+        return pairsNum;
+    }
+
+    public void setPairsNum(int pairs_num) {
+        this.pairsNum = pairs_num;
+    }
+
+    public int getFianceeNum() {
+        return fianceeNum;
+    }
+
+    public void setFianceeNum(int fiancee_num) {
+        this.fianceeNum = fiancee_num;
+    }
+
+    @OneToMany(mappedBy = "family", fetch = FetchType.LAZY)
     public List<Character> getCharacters() {
         return characters;
     }
-
     public void setCharacters(List<Character> characters) {
         this.characters = characters;
     }
 
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "resources")
     public FamilyResources getFamilyResources() {
         return familyResources;
     }
-
     public void setFamilyResources(FamilyResources familyResources) {
         this.familyResources = familyResources;
-    }
-
-    public List<List<Character>> getLevelOrderedFathers() {
-        List<List<Character>> array = new ArrayList<>(getLevel());
-        if (level > 0) {
-            for (int i = 0; i <= level; i++) {
-                array.add(new ArrayList<>());
-            }
-        } else {
-            array.add(new ArrayList<>());
-        }
-
-        for (Character character : characters) {
-            if (character.getSex().equals("male") && character.getSpouse() != null) {
-                array.get(character.getLevel()).add(character);
-            }
-        }
-        return array;
     }
 
     public List<Project> getCraftProjectsForThing(Thing thing) {
@@ -219,30 +194,13 @@ public class Family {
         return craftProjectsForThing;
     }
 
+    @OneToMany(mappedBy = "family", fetch = FetchType.LAZY)
     public List<Item> getItems() {
         return items;
     }
 
-    public List<Item> getItemsInStorage() {
-        List<Item> itemsInStorage = new ArrayList<>();
-        List<Item> familyItems = getItems();
-        for (Item familyItem : familyItems) {
-            if (familyItem.getPlace().equals(ItemPlace.storage)) {
-                itemsInStorage.add(familyItem);
-            }
-        }
-        return itemsInStorage;
-    }
-
-    public List<Item> getItemsInStore() {
-        List<Item> itemsInStore = new ArrayList<>();
-        List<Item> familyItems = getItems();
-        for (Item familyItem : familyItems) {
-            if (familyItem.getPlace().equals(ItemPlace.store)) {
-                itemsInStore.add(familyItem);
-            }
-        }
-        return itemsInStore;
+    public void setItems(List<Item> items) {
+        this.items = items;
     }
 
     @Override
@@ -268,11 +226,16 @@ public class Family {
                 familyResources.getChemical() >= project.getChemical();
     }
 
-    public String getLogName() {
+    public String logName() {
         return "Family " + familyName + "(" + id + ") ";
     }
 
+    @OneToMany(mappedBy = "family", fetch = FetchType.LAZY)
     public List<FamilyLog> getFamilyLogs() {
         return familyLogs;
+    }
+
+    public void setFamilyLogs(List<FamilyLog> familyLogs) {
+        this.familyLogs = familyLogs;
     }
 }

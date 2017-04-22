@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -65,9 +66,17 @@ public class FamilyController {
             logger.debug(user.getUserName() + " doesn't have any family");
             return "redirect:/game/addNewFamily";
         } else {
-            model.addAttribute("family", user.getCurrentFamily());
             model.addAttribute("families", families);
-            model.addAttribute("levels", user.getCurrentFamily().getLevelOrderedFathers());
+
+            Family family = user.getCurrentFamily();
+            model.addAttribute("family", family);
+
+            List<List<Character>> levelOrderedFathers = new ArrayList<>();
+            for (int i = 0; i < family.getLevel(); i++) {
+                List<Character> fathersOnLevel = characterRepository.findByFamilyAndLevelAndSexAndSpouseIsNotNull(family, i, "male");
+                levelOrderedFathers.add(fathersOnLevel);
+            }
+            model.addAttribute("levels", levelOrderedFathers);
         }
         return "game/families";
     }

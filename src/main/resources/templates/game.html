@@ -80,7 +80,8 @@
                         <div th:replace="fragments/char :: char-view (character=${child.getSpouse()}, education=${@careerService.mayImproveEducation(child.getSpouse().getCareer())})"></div>
                     </div>
                     <br></br>
-                    <div style="text-align: center;" th:if="${child.getSex() == 'male' and child.getSpouse() == null}">
+                    <div th:if="${child.getSex() == 'male' and child.getSpouse() == null and family.getPairsNum() lt family.getHouse().getPairsNum()}"
+                         data-toggle="tooltip" th:title="'Можно создать еще пар: '+${family.getHouse().getPairsNum()-family.getPairsNum()}" style="text-align: center;">
                         <form th:action="@{/game/chooseFiancee}" method="post">
                             <input type="hidden" name="characterId" th:value="${child.getId()}"/>
                             <button class="btn btn-xs btn-primary" type="submit" name="chooseFianceeButton">Выбрать невесту</button>
@@ -117,6 +118,9 @@
                             <input type="hidden" name="female" th:value="${child.getId()}"/>
                             <button class="btn btn-xs btn-danger" name="postFianceeButton" type="submit" data-toggle="tooltip" th:title="#{postFiancee.tooltip.button}">V</button>
                         </form>
+                    </div>
+                    <div th:if="${child.getSex() == 'female' and child.getSpouse() == null and child.isFiancee() == true}">
+                        <span th:text="'Анкета в базе невест'" style="font-size: 10px;"></span>
                     </div>
                 </div>
             </div>

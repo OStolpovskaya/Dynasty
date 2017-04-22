@@ -86,27 +86,27 @@ public class HouseService {
     public boolean setItemToRoomInterior(Family family, Long itemId, Long roomInteriorId) {
         Item item = itemRepository.findByFamilyAndId(family, itemId);
         if (item == null) {
-            logger.error(family.getLogName() + "want to set non-existing item to roomInterior: item.id=" + itemId);
+            logger.error(family.logName() + "want to set non-existing item to roomInterior: item.id=" + itemId);
             return false;
         }
         RoomInterior roomInterior = roomInteriorRepository.findOne(roomInteriorId);
         if (roomInterior == null) {
-            logger.error(family.getLogName() + "want to set item to non-existing roomInterior: roomInterior.id=" + roomInteriorId);
+            logger.error(family.logName() + "want to set item to non-existing roomInterior: roomInterior.id=" + roomInteriorId);
             return false;
         }
 
         Item oldItem = itemRepository.findByFamilyAndInteriorId(family, roomInterior.getId());
         if (oldItem == null) {
-            logger.debug(family.getLogName() + "has no item with interiorId=" + roomInterior.getId());
+            logger.debug(family.logName() + "has no item with interiorId=" + roomInterior.getId());
         } else {
             oldItem.setPlace(ItemPlace.storage);
             oldItem.setInteriorId(0L);
-            logger.debug(family.getLogName() + "has item with interiorId=" + roomInterior.getId() + ". Put to storage and set interiorId to 0");
+            logger.debug(family.logName() + "has item with interiorId=" + roomInterior.getId() + ". Put to storage and set interiorId to 0");
             itemRepository.save(oldItem);
         }
         item.setPlace(ItemPlace.home);
         item.setInteriorId(roomInterior.getId());
-        logger.debug(family.getLogName() + "set item " + item.getProject().getName() + "(" + item.getId() + ") to room interior thing=" + roomInterior.getThing().getName());
+        logger.debug(family.logName() + "set item " + item.getProject().getName() + "(" + item.getId() + ") to room interior thing=" + roomInterior.getThing().getName());
         itemRepository.save(item);
         return true;
     }
@@ -114,31 +114,31 @@ public class HouseService {
     public boolean unsetItem(Family family, Long itemId) {
         Item item = itemRepository.findByFamilyAndId(family, itemId);
         if (item == null) {
-            logger.error(family.getLogName() + "want to unset non-existing item: " + itemId);
+            logger.error(family.logName() + "want to unset non-existing item: " + itemId);
             return false;
         }
         if (item.getPlace().equals(ItemPlace.storage)) {
-            logger.error(family.getLogName() + "want to unset item which is already in storage: " + item.getProject().getName() + "(" + item.getId() + ")");
+            logger.error(family.logName() + "want to unset item which is already in storage: " + item.getProject().getName() + "(" + item.getId() + ")");
             return false;
         }
 
         if (item.getPlace().equals(ItemPlace.store)) {
             item.setPlace(ItemPlace.storage);
             item.setCost(0);
-            logger.debug(family.getLogName() + "put item " + item.getProject().getName() + "(" + item.getId() + ") back from store to storage");
+            logger.debug(family.logName() + "put item " + item.getProject().getName() + "(" + item.getId() + ") back from store to storage");
             itemRepository.save(item);
             return true;
         }
 
         RoomInterior roomInterior = roomInteriorRepository.findOne(item.getInteriorId());
         if (roomInterior == null) {
-            logger.error(family.getLogName() + "want to unset item from non-existing roomInterior: " + item.getProject().getName() + "(" + item.getId() + "), roomInterior.id=" + item.getInteriorId());
+            logger.error(family.logName() + "want to unset item from non-existing roomInterior: " + item.getProject().getName() + "(" + item.getId() + "), roomInterior.id=" + item.getInteriorId());
             return false;
         }
 
         item.setPlace(ItemPlace.storage);
         item.setInteriorId(0L);
-        logger.debug(family.getLogName() + "unset item " + item.getProject().getName() + "(" + item.getId() + ") from room interior thing=" + roomInterior.getThing().getName());
+        logger.debug(family.logName() + "unset item " + item.getProject().getName() + "(" + item.getId() + ") from room interior thing=" + roomInterior.getThing().getName());
         itemRepository.save(item);
         return true;
     }

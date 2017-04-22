@@ -102,19 +102,19 @@ public class HouseController {
                     item.setPlace(ItemPlace.store);
                     item.setCost(cost);
                     houseService.saveItem(item);
-                    logger.info(family.getLogName() + " put item to store: " + item.getProject().getName() + "(" + item.getId() + ")");
+                    logger.info(family.logName() + " put item to store: " + item.getProject().getName() + "(" + item.getId() + ")");
                     redirectAttributes.addFlashAttribute("mess", "Вещь выставлена на продажу: " + item.getProject().getName() + "(" + item.getId() + ")");
                     return "redirect:/game/house";
                 }
-                logger.error(family.getLogName() + " want to put in store item, which is not in the storage: " + item.getProject().getName() + "(" + item.getId() + "), place=" + item.getPlace().toString());
+                logger.error(family.logName() + " want to put in store item, which is not in the storage: " + item.getProject().getName() + "(" + item.getId() + "), place=" + item.getPlace().toString());
                 redirectAttributes.addFlashAttribute("mess", "Вещь, выставляемая на продажу, должна быть на складе: " + item.getProject().getName() + "(" + item.getId() + ")");
                 return "redirect:/game/house";
             }
-            logger.error(family.getLogName() + " has not item: " + item.getProject().getName() + "(" + item.getId() + ")");
+            logger.error(family.logName() + " has not item: " + item.getProject().getName() + "(" + item.getId() + ")");
             redirectAttributes.addFlashAttribute("mess", "Вы не владеете такой вещью: " + item.getProject().getName() + "(" + item.getId() + ")");
             return "redirect:/game/house";
         }
-        logger.error(family.getLogName() + " want to put in store non existing item: " + itemId);
+        logger.error(family.logName() + " want to put in store non existing item: " + itemId);
         redirectAttributes.addFlashAttribute("mess", "Вещь не найдена");
         return "redirect:/game/house";
     }
@@ -135,7 +135,7 @@ public class HouseController {
         }
 
 
-        logger.error(family.getLogName() + " want to buy items for non existing thing: " + thingId);
+        logger.error(family.logName() + " want to buy items for non existing thing: " + thingId);
         redirectAttributes.addFlashAttribute("mess", "Предмет не найден");
         return "redirect:/game/house";
 
@@ -162,19 +162,19 @@ public class HouseController {
                     item.setCost(0);
                     houseService.saveItem(item);
 
-                    logger.info(family.getLogName() + "buy item: " + item.getId());
+                    logger.info(family.logName() + "buy item: " + item.getId());
                     redirectAttributes.addFlashAttribute("mess", "Вы купили предмет " + item.getProject().getName() + "(" + item.getProject().getThing().getName() + ")");
                     return "redirect:/game/house";
                 }
-                logger.error(family.getLogName() + "want to buy item, but has not enough money: " + item.getId());
+                logger.error(family.logName() + "want to buy item, but has not enough money: " + item.getId());
                 redirectAttributes.addFlashAttribute("mess", "Недостаточно денег для покупки этого предмета");
                 return "redirect:/game/house";
             }
-            logger.error(family.getLogName() + "want to buy their own item: " + item.getId());
+            logger.error(family.logName() + "want to buy their own item: " + item.getId());
             redirectAttributes.addFlashAttribute("mess", "Предмет принадлежит Вашей семье и выставлен вами на продажу.");
             return "redirect:/game/house";
         }
-        logger.error(family.getLogName() + "want to buy non existing item: " + itemId);
+        logger.error(family.logName() + "want to buy non existing item: " + itemId);
         redirectAttributes.addFlashAttribute("mess", "Предмет не найден");
         return "redirect:/game/house";
 
@@ -200,19 +200,19 @@ public class HouseController {
 
                     familyRepository.save(family);
 
-                    logger.info(family.getLogName() + "buy house: " + nextHouse.getName());
+                    logger.info(family.logName() + "buy house: " + nextHouse.getName());
                     redirectAttributes.addFlashAttribute("mess", "Вы купили новый дом " + nextHouse.getName() + ". Потрачено " + nextHouse.getCost() + " р.");
                     return "redirect:/game/house";
                 }
-                logger.error(family.getLogName() + "want to buy house, but has not enough money: " + nextHouse.getName());
+                logger.error(family.logName() + "want to buy house, but has not enough money: " + nextHouse.getName());
                 redirectAttributes.addFlashAttribute("mess", "Недостаточно денег для покупки этого дома");
                 return "redirect:/game/house";
             }
-            logger.error(family.getLogName() + "want to buy house, but current house is not full of items: " + currentHouse.getName());
+            logger.error(family.logName() + "want to buy house, but current house is not full of items: " + currentHouse.getName());
             redirectAttributes.addFlashAttribute("mess", "Ваш текущий дом недостаточно обставлен, чтобы покупать новый дом.");
             return "redirect:/game/house";
         }
-        logger.error(family.getLogName() + "want to buy house, but there is no next houses : " + currentHouse.getName());
+        logger.error(family.logName() + "want to buy house, but there is no next houses : " + currentHouse.getName());
         redirectAttributes.addFlashAttribute("mess", "У вас уже есть самый крутой дом!");
         return "redirect:/game/house";
     }
