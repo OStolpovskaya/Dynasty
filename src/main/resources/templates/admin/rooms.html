@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Комнаты</title>
+    <link th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}" rel="stylesheet"></link>
+</head>
+<body>
+<div th:replace="fragments/navigation :: nav-for-admin"></div>
+<div class="container">
+    <h3>Комнаты для дома</h3>
+    <ul class="list-inline">
+        <li th:each="house : ${houseList}"><!--/*@thymesVar id="house" type="dyn.model.House"*/-->
+            <a th:href="${'/admin/rooms?houseId='+house.getId()}" th:text="${house.getName()}">Home</a>
+        </li>
+    </ul>
+    <h3>Комнаты</h3>
+    <th:block th:each="roomEntry : ${roomInteriorMap}">
+        <h4 th:text="${roomEntry.getKey().getName()}"></h4>
+        <div style="border: solid 1px lightgreen; width: 1035px; height: 405px; position: relative;">
+            <th:block th:each="roomInterior : ${roomEntry.getValue()}">
+                <!--/*@thymesVar id="roomInterior" type="dyn.model.RoomInterior"*/-->
+                <div align="center" style="border: solid 1px darkslategray; display: table; position: absolute; "
+                     th:styleappend="${'width: '+ roomInterior.getThing().getWidth() +'px;'+
+                                 'height: ' + roomInterior.getThing().getHeight()+'px;'+
+                                 'left: ' + roomInterior.getX()+'px;'+
+                                 'top: ' + roomInterior.getY()+'px;'}">
+                    <div th:text="${roomInterior.getThing().getName()}"
+                         data-toggle="tooltip" th:title="${roomInterior.getX() + ','+roomInterior.getY()}"
+                         style="color: dimgrey; display: table-cell; vertical-align: middle; font-size: 10px;">Нет вещи
+                    </div>
+                </div>
+            </th:block>
+        </div>
+    </th:block>
+</div>
+<script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+</body>
+</html>

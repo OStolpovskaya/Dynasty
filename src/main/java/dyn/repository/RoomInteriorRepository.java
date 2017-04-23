@@ -13,4 +13,6 @@ public interface RoomInteriorRepository extends CrudRepository<RoomInterior, Lon
     List<RoomInterior> findByHouseAndRoom(House house, Room room);
 
     List<RoomInterior> findByHouseIdLessThanEqualAndRoomOrderById(long houseId, Room room);
+
+    List<RoomInterior> findByHouseIdLessThanEqualAndRoomIdOrderById(long houseId, long roomId);
 }

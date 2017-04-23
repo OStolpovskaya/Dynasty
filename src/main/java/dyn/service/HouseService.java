@@ -166,4 +166,18 @@ public class HouseService {
     public Thing getThing(Long thingId) {
         return thingRepository.findOne(thingId);
     }
+
+    public List<Room> getRoomsByHouseId(Long houseId) {
+        List<Room> rooms = roomRepository.findByHouseIdLessThanEqualOrderById(houseId);
+        return rooms;
+    }
+
+    public List<RoomInterior> getRoomInteriorByRoomIdAndHouseId(Long roomId, Long houseId) {
+        List<RoomInterior> roomInteriorList = roomInteriorRepository.findByHouseIdLessThanEqualAndRoomIdOrderById(houseId, roomId);
+        return roomInteriorList;
+    }
+
+    public List<House> getHouseList() {
+        return (List<House>) houseRepository.findAll();
+    }
 }

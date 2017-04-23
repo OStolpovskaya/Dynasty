@@ -7,14 +7,9 @@ package dyn.controllers;
 
 import dyn.form.RaceAppearanceForm;
 import dyn.model.Character;
-import dyn.model.Family;
-import dyn.model.Fiancee;
-import dyn.model.Race;
+import dyn.model.*;
 import dyn.repository.*;
-import dyn.service.AppearanceService;
-import dyn.service.CareerService;
-import dyn.service.CraftService;
-import dyn.service.RaceService;
+import dyn.service.*;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +25,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class AdminController {
@@ -52,6 +49,8 @@ public class AdminController {
     FamilyRepository familyRepository;
     @Autowired
     CraftService craftService;
+    @Autowired
+    HouseService houseService;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -314,6 +313,23 @@ public class AdminController {
         model.addAttribute("thingList", craftService.getAllThings());
         model.addAttribute("parentThings", craftService.getThingsForTree());
         return "admin/craft";
+    }
+
+    @RequestMapping("/admin/rooms")
+    public String rooms(ModelMap model,
+                        @RequestParam(value = "houseId", defaultValue = "1") Long houseId,
+                        RedirectAttributes redirectAttributes) {
+        List<House> houseList = houseService.getHouseList();
+        model.addAttribute("houseList", houseList);
+
+        Map<Room, List<RoomInterior>> roomInteriorMap = new LinkedHashMap<>();
+        List<Room> rooms = houseService.getRoomsByHouseId(houseId);
+        for (Room room : rooms) {
+            roomInteriorMap.put(room, houseService.getRoomInteriorByRoomIdAndHouseId(room.getId(), houseId));
+        }
+        model.addAttribute("roomInteriorMap", roomInteriorMap);
+
+        return "admin/rooms";
     }
 
     @RequestMapping(value = "/admin/changeThing", method = RequestMethod.POST)
