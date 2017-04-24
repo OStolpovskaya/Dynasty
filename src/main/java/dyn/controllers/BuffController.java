@@ -11,6 +11,7 @@ import dyn.repository.BuffRepository;
 import dyn.repository.CharacterRepository;
 import dyn.repository.FamilyRepository;
 import dyn.repository.UserRepository;
+import dyn.service.FamilyLogService;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,8 @@ public class BuffController {
     MessageSource messageSource;
     @Autowired
     BuffRepository buffRepository;
+    @Autowired
+    FamilyLogService familyLogService;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -88,6 +91,7 @@ public class BuffController {
                     character.getBuffs().add(buff);
                     characterRepository.save(character);
 
+                    familyLogService.addToLog(family, "Вы применили бафф " + messageSource.getMessage(buff.getTitle(), null, loc()) + " к персонажу " + character.getName() + ". Потрачено: " + buff.getCost() + " р.");
                     Object[] messageArguments = {character.getName(), messageSource.getMessage(buff.getTitle(), null, loc()), buff.getCost()};
                     redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("game.chooseBuffs.success", messageArguments, loc()));
                     logger.debug(user.getUserName() + "'s character " + characterId + " now has buff " + buff.getTitle());

@@ -8,6 +8,7 @@ package dyn.controllers;
 import dyn.model.*;
 import dyn.repository.FamilyRepository;
 import dyn.repository.UserRepository;
+import dyn.service.FamilyLogService;
 import dyn.service.HouseInterior;
 import dyn.service.HouseService;
 import org.apache.log4j.LogManager;
@@ -30,6 +31,8 @@ public class HouseController {
     private static final Logger logger = LogManager.getLogger(HouseController.class);
     @Autowired
     HouseService houseService;
+    @Autowired
+    FamilyLogService familyLogService;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -103,7 +106,9 @@ public class HouseController {
                     item.setCost(cost);
                     houseService.saveItem(item);
                     logger.info(family.logName() + " put item to store: " + item.getProject().getName() + "(" + item.getId() + ")");
-                    redirectAttributes.addFlashAttribute("mess", "Вещь выставлена на продажу: " + item.getProject().getName() + "(" + item.getId() + ")");
+                    String mess = "Вещь выставлена на продажу: '" + item.getProject().getName() + "'. Стоимость: " + cost + " р.)";
+                    familyLogService.addToLog(family, mess);
+                    redirectAttributes.addFlashAttribute("mess", mess);
                     return "redirect:/game/house";
                 }
                 logger.error(family.logName() + " want to put in store item, which is not in the storage: " + item.getProject().getName() + "(" + item.getId() + "), place=" + item.getPlace().toString());
@@ -163,7 +168,9 @@ public class HouseController {
                     houseService.saveItem(item);
 
                     logger.info(family.logName() + "buy item: " + item.getId());
-                    redirectAttributes.addFlashAttribute("mess", "Вы купили предмет " + item.getProject().getName() + "(" + item.getProject().getThing().getName() + ")");
+                    String mess = "Вы купили предмет " + item.getProject().getName() + "(" + item.getProject().getThing().getName() + "). Потрачено: " + item.getCost() + " р.";
+                    familyLogService.addToLog(family, mess);
+                    redirectAttributes.addFlashAttribute("mess", mess);
                     return "redirect:/game/house";
                 }
                 logger.error(family.logName() + "want to buy item, but has not enough money: " + item.getId());
@@ -201,7 +208,9 @@ public class HouseController {
                     familyRepository.save(family);
 
                     logger.info(family.logName() + "buy house: " + nextHouse.getName());
-                    redirectAttributes.addFlashAttribute("mess", "Вы купили новый дом " + nextHouse.getName() + ". Потрачено " + nextHouse.getCost() + " р.");
+                    String mess = "Вы купили новый дом " + nextHouse.getName() + ". Потрачено " + nextHouse.getCost() + " р.";
+                    familyLogService.addToLog(family, mess);
+                    redirectAttributes.addFlashAttribute("mess", mess);
                     return "redirect:/game/house";
                 }
                 logger.error(family.logName() + "want to buy house, but has not enough money: " + nextHouse.getName());

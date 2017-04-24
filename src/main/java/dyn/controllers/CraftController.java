@@ -10,6 +10,7 @@ import dyn.repository.CraftBranchRepository;
 import dyn.repository.FamilyRepository;
 import dyn.repository.UserRepository;
 import dyn.service.CraftService;
+import dyn.service.FamilyLogService;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,9 @@ public class CraftController {
     private static final Logger logger = LogManager.getLogger(CraftController.class);
     @Autowired
     CraftService craftService;
+
+    @Autowired
+    FamilyLogService familyLogService;
 
     @Autowired
     private UserRepository userRepository;
@@ -62,9 +66,12 @@ public class CraftController {
                 if (family.getCraftPoint() >= thing.getCost()) {
                     family.setCraftPoint(family.getCraftPoint() - thing.getCost());
                     family.getCraftThings().add(thing);
-                    logger.info(family.logName() + " learn thing " + thing.getName() + "(" + thing.getId() + ")");
                     familyRepository.save(family);
-                    redirectAttributes.addFlashAttribute("mess", "Ваша семья выучила схему изготовления предмета " + thing.getName());
+
+                    logger.info(family.logName() + " learn thing " + thing.getName() + "(" + thing.getId() + ")");
+                    String mess = "Ваша семья выучила схему изготовления предмета " + thing.getName() + ". Использовано: " + thing.getCost() + " б.";
+                    familyLogService.addToLog(family, mess);
+                    redirectAttributes.addFlashAttribute("mess", mess);
                     return "redirect:/game/craft";
                 } else {
                     logger.error(family.logName() + " hasn't enough craft points to learn thing " + thing.getName() + "(" + thing.getId() + ")");
@@ -130,8 +137,11 @@ public class CraftController {
                         family.setMoney(family.getMoney() - project.getCost());
                         family.getCraftProjects().add(project);
                         familyRepository.save(family);
+
+                        String mess = "Ваша семья приобрела проект '" + project.getName() + "' предмета '" + thing.getName() + "'. Потрачено: " + project.getCost() + " р.";
+                        familyLogService.addToLog(family, mess);
+                        redirectAttributes.addFlashAttribute("mess", mess + " Время производить!");
                         logger.info(family.logName() + " buy project: '" + project.getName() + "' for thing " + thing.getName());
-                        redirectAttributes.addFlashAttribute("mess", "Ваша семья приобретает проект " + project.getName() + " предмета " + thing.getName() + ". Потрачено: " + project.getCost() + ". Время производить!");
                         return "redirect:/game/chooseProject?thingId=" + thing.getId();
                     }
                     logger.error(family.logName() + " doesn't have enough money to buy project: '" + project.getName() + "' for thing " + thing.getName());
@@ -167,7 +177,9 @@ public class CraftController {
                     familyRepository.save(family);
 
                     logger.info(family.logName() + " makes the item for project:" + project.getName());
-                    redirectAttributes.addFlashAttribute("mess", "Ваша семья изготавливает предмет по проекту '" + project.getName() + "' предмета " + project.getThing().getName() + ". Загляните на ваш склад!");
+                    String mess = "Ваша семья изготавливает предмет по проекту '" + project.getName() + "' предмета '" + project.getThing().getName() + "'. Израсходовано: " + project.resString();
+                    familyLogService.addToLog(family, mess);
+                    redirectAttributes.addFlashAttribute("mess", mess);
                     return "redirect:/game/chooseProject?thingId=" + project.getThing().getId();
                 }
                 logger.error(family.logName() + " doesn't have resources to make item for project:" + project.getName());

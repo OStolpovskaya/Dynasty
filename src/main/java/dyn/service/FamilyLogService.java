@@ -40,4 +40,10 @@ public class FamilyLogService {
         FamilyLog familyLog = familyLogRepository.findByFamilyAndLevel(family, family.getLevel());
         return familyLog;
     }
+
+    public void addToLog(Family family, String text) {
+        FamilyLog familyLog = familyLogRepository.findByFamilyAndLevel(family, family.getLevel());
+        familyLog.addText(text);
+        familyLogRepository.save(familyLog);
+    }
 }

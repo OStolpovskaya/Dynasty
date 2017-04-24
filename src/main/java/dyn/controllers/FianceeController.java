@@ -11,6 +11,7 @@ import dyn.model.*;
 import dyn.model.career.Career;
 import dyn.model.career.Career_;
 import dyn.repository.*;
+import dyn.service.FamilyLogService;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,8 @@ public class FianceeController {
     @Autowired
     AdminController adminController;
     @Autowired
+    FamilyLogService familyLogService;
+    @Autowired
     private UserRepository userRepository;
     @Autowired
     private RaceRepository raceRepository;
@@ -50,9 +53,6 @@ public class FianceeController {
     private CharacterRepository characterRepository;
     @Autowired
     private FianceeRepository fianceeRepository;
-    @Autowired
-    private FamilyLogRepository familyLogRepository;
-
     @PersistenceContext
     private EntityManager em;
 
@@ -142,18 +142,12 @@ public class FianceeController {
                 family.setPairsNum(family.getPairsNum() + 1);
                 familyRepository.save(family);
 
-                FamilyLog familyLog = familyLogRepository.findByFamilyAndLevel(family, family.getLevel());
-                familyLog.addText("Вы выкупили невесту " + wife.getName() + " из семьи " + wife.getFamily().getFamilyName() + " для своего персонажа " + character.getName() + ". Потрачено: " + fiancee.getCost() + " р.");
-                familyLogRepository.save(familyLog);
-
                 Family wifeFamily = wife.getFamily();
                 wifeFamily.setMoney(wifeFamily.getMoney() + fiancee.getCost());
                 familyRepository.save(wifeFamily);
 
-                FamilyLog wifeFamilyLog = familyLogRepository.findByFamilyAndLevel(wifeFamily, wifeFamily.getLevel());
-                wifeFamilyLog.addText("Семья " + family.getFamilyName() + " выкупила одну из ваших невест: " + wife.getName() + " (уровень: " + wife.getLevel() + "). Получено: " + fiancee.getCost() + " р.");
-                familyLogRepository.save(wifeFamilyLog);
-
+                familyLogService.addToLog(family, "Вы выкупили невесту " + wife.getName() + " из семьи " + wife.getFamily().getFamilyName() + " для своего персонажа " + character.getName() + ". Потрачено: " + fiancee.getCost() + " р.");
+                familyLogService.addToLog(wifeFamily, "Семья " + family.getFamilyName() + " выкупила одну из ваших невест: " + wife.getName() + " (уровень: " + wife.getLevel() + "). Получено: " + fiancee.getCost() + " р.");
                 logger.info(user.getUserName() + " has chosen fiancee " + wife.getName());
                 redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("chooseFiancee.success", new Object[]{character.getName(), wife.getName(), fiancee.getCost()}, loc()));
                 return "redirect:/game#char" + character.getFather().getId();
@@ -177,6 +171,12 @@ public class FianceeController {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         Family family = user.getCurrentFamily();
 
+        if (family.getFianceeNum() >= family.getHouse().getFianceeNum()) {
+            redirectAttributes.addFlashAttribute("mess", "Вы не можете опубликовать анкету невесты, ваш дом слишком мал. Вы можете разместить анкет: " + family.getHouse().getFianceeNum());
+            logger.error(user.getUserName() + " want to put up for fiancee, but max fiancee num is already reached");
+            return "redirect:/game";
+        }
+
         if (cost < 50 * family.getLevel()) {
             redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("becomeFiancee.costMustBeGreater", null, loc()));
             logger.error(user.getUserName() + "'s character " + characterId + " can not become fiancee because small cost");
@@ -191,6 +191,10 @@ public class FianceeController {
             fiancee.setCost(cost);
             fianceeRepository.save(fiancee);
 
+            family.setFianceeNum(family.getFianceeNum() + 1);
+            familyRepository.save(family);
+
+            familyLogService.addToLog(family, "Вы опубликовали анкету невесты " + character.getName() + ". Стоимость выкупа: " + cost + " р.");
             redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("becomeFiancee.characterBecomeFiancee", null, loc()));
             logger.info(user.getUserName() + "'s character " + character.getName() + " become fiancee");
             return "redirect:/game#char" + character.getFather().getId();

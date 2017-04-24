@@ -43,7 +43,7 @@ public class HouseService {
         boolean allItems = true;
         List<Room> rooms = roomRepository.findByHouseIdLessThanEqualOrderById(house.getId());
         for (Room room : rooms) {
-            List<RoomInterior> interiorList = roomInteriorRepository.findByHouseIdLessThanEqualAndRoomOrderById(house.getId(), room);
+            List<RoomInterior> interiorList = roomInteriorRepository.findByHouseIdLessThanEqualAndRoomIdOrderById(house.getId(), room.getId());
             for (RoomInterior roomInterior : interiorList) {
                 RoomInteriorWithItems roomInteriorWithItems = new RoomInteriorWithItems(roomInterior);
 
