@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Здание</title>
+    <link th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}" rel="stylesheet"></link>
+    <link th:href="@{/css/common.css}" rel="stylesheet"></link>
+</head>
+<body>
+<div th:replace="fragments/navigation :: nav-for-game"></div>
+<div class="container">
+    <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
+    <!--/*@thymesVar id="ownerFamily" type="dyn.model.Family"*/-->
+    <!--/*@thymesVar id="building" type="dyn.model.buildings.Building"*/-->
+    <h3>Здание</h3>
+    <p>Владелец:
+        <th:block th:text="${ownerFamily.getFamilyName()}"></th:block>
+    </p>
+    <p>Здание:
+        <th:block th:text="${building.getName()}"></th:block>
+    </p>
+</div>
+<script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+</body>
+</html>

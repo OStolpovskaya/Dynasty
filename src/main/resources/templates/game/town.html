@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Город</title>
+    <link th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}" rel="stylesheet"></link>
+    <link th:href="@{/css/common.css}" rel="stylesheet"></link>
+</head>
+<body>
+<div th:replace="fragments/navigation :: nav-for-game"></div>
+<div class="container">
+    <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
+    <th:block th:if="${family.getLevel() == 0}">
+        <div class="alert alert-success">
+            В городе вы можете посетить парк отдыха для увеличения плодовитости оджного из ваших персонажей или снять жилье для еще одной пары.<br/>
+        </div>
+    </th:block>
+    <h3>Город</h3>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Имя</th>
+            <th>Описание</th>
+            <th>Приобрести</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="building : ${buildingList}">
+            <!--/*@thymesVar id="building" type="dyn.model.buildings.Building"*/-->
+            <td th:text="${building.getName()}">name</td>
+            <td th:text="${building.getDesc()}">desc</td>
+            <td>
+                <th:block th:if="${#lists.contains(familyBuildingList,building)}">
+                    <a th:href="${'/game/familyBuildingView?familyId='+family.getId()+'&amp;buildingId='+building.getId()}">Осмотр</a>
+                </th:block>
+                <th:block th:unless="${#lists.contains(familyBuildingList,building)}">
+                    <form th:action="@{/game/buyBuilding}" method="post" class="form-inline">
+                        <input type="hidden" name="buildingId" th:value="${building.getId()}"/>
+                        <button type="submit" class="btn btn-default" th:text="${'Купить: ' + building.getCost() + ' р.'}" th:disabled="${family.getMoney() lt building.getCost()}">Вернуть на склад</button>
+                    </form>
+                </th:block>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+</body>
+</html>

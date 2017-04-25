@@ -1,5 +1,7 @@
 package dyn.model;
 
+import dyn.model.buildings.Building;
+
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
@@ -40,6 +42,8 @@ public class Family {
     private List<Item> items;
 
     private List<FamilyLog> familyLogs;
+
+    private Set<Building> buildings = new HashSet<>();
     // ===================================
 
     public Family() {
@@ -141,6 +145,19 @@ public class Family {
     }
     public void setCraftProjects(Set<Project> craftProjects) {
         this.craftProjects = craftProjects;
+    }
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "family_building",
+            joinColumns = {@JoinColumn(name = "family_id")},
+            inverseJoinColumns = {@JoinColumn(name = "building_id")})
+    @OrderBy("name")
+    public Set<Building> getBuildings() {
+        return buildings;
+    }
+
+    public void setBuildings(Set<Building> buildings) {
+        this.buildings = buildings;
     }
 
     @OneToOne(fetch = FetchType.LAZY)
