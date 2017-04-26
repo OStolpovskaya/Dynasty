@@ -30,13 +30,10 @@
             <td th:text="${building.getName()}">name</td>
             <td th:text="${building.getDesc()}">desc</td>
             <td>
-                <th:block th:if="${#lists.contains(familyBuildingList,building)}">
-                    <a th:href="${'/game/familyBuildingView?familyId='+family.getId()+'&amp;buildingId='+building.getId()}">Осмотр</a>
-                </th:block>
-                <th:block th:unless="${#lists.contains(familyBuildingList,building)}">
+                <th:block th:if="${not #lists.contains(familyBuildingList,building)}">
                     <form th:action="@{/game/buyBuilding}" method="post" class="form-inline">
                         <input type="hidden" name="buildingId" th:value="${building.getId()}"/>
-                        <button type="submit" class="btn btn-default" th:text="${'Купить: ' + building.getCost() + ' р.'}" th:disabled="${family.getMoney() lt building.getCost()}">Вернуть на склад</button>
+                        <button type="submit" class="btn btn-default" th:text="${'Купить: ' + building.getCost() + ' р.'}" th:disabled="${family.getMoney() lt building.getCost()}">Купить</button>
                     </form>
                 </th:block>
             </td>

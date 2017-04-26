@@ -43,7 +43,7 @@ public class Family {
 
     private List<FamilyLog> familyLogs;
 
-    private Set<Building> buildings = new HashSet<>();
+    private List<Building> buildings = new ArrayList<>();
     // ===================================
 
     public Family() {
@@ -152,11 +152,11 @@ public class Family {
             joinColumns = {@JoinColumn(name = "family_id")},
             inverseJoinColumns = {@JoinColumn(name = "building_id")})
     @OrderBy("name")
-    public Set<Building> getBuildings() {
+    public List<Building> getBuildings() {
         return buildings;
     }
 
-    public void setBuildings(Set<Building> buildings) {
+    public void setBuildings(List<Building> buildings) {
         this.buildings = buildings;
     }
 

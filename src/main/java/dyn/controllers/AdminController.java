@@ -8,7 +8,11 @@ package dyn.controllers;
 import dyn.form.RaceAppearanceForm;
 import dyn.model.Character;
 import dyn.model.*;
+import dyn.model.buildings.Building;
+import dyn.model.buildings.BuildingThing;
 import dyn.repository.*;
+import dyn.repository.buildings.BuildingRepository;
+import dyn.repository.buildings.BuildingThingRepository;
 import dyn.service.*;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -51,6 +55,12 @@ public class AdminController {
     CraftService craftService;
     @Autowired
     HouseService houseService;
+    @Autowired
+    BuildingRepository buildingRepository;
+    @Autowired
+    BuildingThingRepository buildingThingRepository;
+    @Autowired
+    ThingRepository thingRepository;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -330,6 +340,41 @@ public class AdminController {
         model.addAttribute("roomInteriorMap", roomInteriorMap);
 
         return "admin/rooms";
+    }
+
+    @RequestMapping("/admin/buildings")
+    public String buildings(ModelMap model,
+                            RedirectAttributes redirectAttributes) {
+        List<Building> buildingList = buildingRepository.findAll();
+        model.addAttribute("buildingList", buildingList);
+
+        Map<Building, List<BuildingThing>> buildingThingsMap = new LinkedHashMap<>();
+        for (Building building : buildingList) {
+            buildingThingsMap.put(building, buildingThingRepository.findAllByBuilding(building));
+        }
+        model.addAttribute("buildingThingsMap", buildingThingsMap);
+
+        Iterable<Thing> thingList = thingRepository.findAll();
+        model.addAttribute("thingList", thingList);
+        return "admin/buildings";
+    }
+
+    @RequestMapping(value = "/admin/placeBuildingThing", method = RequestMethod.POST)
+    public String placeBuildingThing(ModelMap model,
+                                     @RequestParam("buildingId") Long buildingId,
+                                     @RequestParam("thingId") Long thingId,
+                                     @RequestParam("x") int x,
+                                     @RequestParam("y") int y,
+                                     @RequestParam("layer") int layer,
+                                     RedirectAttributes redirectAttributes) {
+        BuildingThing buildingThing = new BuildingThing();
+        buildingThing.setBuilding(buildingRepository.findOne(buildingId));
+        buildingThing.setThing(thingRepository.findOne(thingId));
+        buildingThing.setX(x);
+        buildingThing.setY(y);
+        buildingThing.setLayer(layer);
+        buildingThingRepository.save(buildingThing);
+        return "redirect:/admin/buildings#building" + buildingId;
     }
 
     @RequestMapping(value = "/admin/changeThing", method = RequestMethod.POST)
