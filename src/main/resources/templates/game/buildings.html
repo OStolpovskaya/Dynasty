@@ -22,7 +22,11 @@
         <th:block th:each="mapEntry : ${buildingMap}" th:with="building = ${mapEntry.getKey()}, buildingThingWithItemsList = ${mapEntry.getValue()}">
             <div class="well">
                 <a th:name="${'building'+building.getId()}"></a>
-                <h3 th:text="${building.getName()}">Здание</h3>
+                <h3 th:text="${#strings.toUpperCase(building.getName())}">Здание</h3>
+                <button data-toggle="collapse" th:attr="data-target='#interior_'+${building.getId()}" class="btn btn-default" style="margin-bottom: 10px;">Табличный вид интерьера <span class="glyphicon glyphicon-menu-down"
+                                                                                                                                                                                         style="color: black;"></span>
+                </button>
+                <div th:id="${'interior_'+building.getId()}" class="collapse">
                 <!--buildingThingWithItemsList-->
                 <table class="table table-striped">
                     <thead>
@@ -83,6 +87,7 @@
                     </tr>
                     </tbody>
                 </table>
+                </div>
                 <div style="width: 1035px; height: 405px; position: relative; background: url(/graphics/room_grid.png) repeat-y #fc0">
                     <!--/*@thymesVar id="buildingThingWithItems" type="dyn.model.buildings.BuildingThingWithItems"*/-->
                     <th:block th:each="buildingThingWithItems : ${buildingThingWithItemsList}">

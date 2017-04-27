@@ -9,14 +9,21 @@
 <div th:replace="fragments/navigation :: nav-for-admin"></div>
 <div class="container">
     <h3>Интерьер зданий города</h3>
+    <h3>Ваши здания:</h3>
+    <ul class="list-inline">
+        <!--/*@thymesVar id="buildingList" type="List<Building>"*/-->
+        <li th:each="building : ${buildingList}">
+            <a th:href="${'/admin/buildings#building'+building.getId()}" th:text="${building.getName()}">Home</a>
+        </li>
+    </ul>
     <th:block th:each="buildingEntry : ${buildingThingsMap}">
+        <a th:name="${'building'+buildingEntry.getKey().getId()}"></a>
         <div class="well">
-            <a th:name="${'building'+buildingEntry.getKey().getId()}"></a>
-            <h4 th:text="${buildingEntry.getKey().getName()}"></h4>
+            <h4 th:text="${#strings.toUpperCase(buildingEntry.getKey().getName())}"></h4>
             <form th:action="@{/admin/placeBuildingThing}" method="post" class="form-inline" style="padding-bottom: 10px;">
                 <input type="hidden" name="buildingId" th:value="${buildingEntry.getKey().getId()}"/>
                 <div class="form-group">
-                    <label>Вещь:</label>
+                    <label>Разместить вещь:</label>
                     <select class="form-control" name="thingId">
                         <option th:each="thing : ${thingList}"
                                 th:value="${thing.getId()}"

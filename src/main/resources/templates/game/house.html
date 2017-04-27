@@ -25,6 +25,12 @@
                 <p>В этом доме может проживать пар: <strong th:text="${houseInterior.getHouse().getPairsNum()}"></strong><br/>
                     Позволяет поместить столько анкет в базу невест: <strong th:text="${houseInterior.getHouse().getFianceeNum()}"></strong>
                 </p>
+                <ul class="list-inline">
+                    <!--/*@thymesVar id="buildingList" type="List<Building>"*/-->
+                    <li th:each="roomEntry : ${houseInterior.getRoomList()}">
+                        <a th:href="${'/game/house#room'+roomEntry.getKey().getId()}" th:text="${roomEntry.getKey().getName()}">Home</a>
+                    </li>
+                </ul>
             </div>
 
             <th:block th:if="${houseInterior.getNextHouse() != null}">
@@ -45,11 +51,14 @@
         </div>
     </div>
 
-    <div class="well">
+
         <th:block th:each="roomEntry : ${houseInterior.getRoomList()}">
-            <ul>
-                <li>
-                    <h4 th:text="${roomEntry.getKey().getName()}"></h4>
+            <a th:name="${'room'+roomEntry.getKey().getId()}"></a>
+            <div class="well">
+                <h4 th:text="${#strings.toUpperCase(roomEntry.getKey().getName())}"></h4>
+                <button data-toggle="collapse" th:attr="data-target='#interior_'+${roomEntry.getKey().getId()}" class="btn btn-default" style="margin-bottom: 10px;">Табличный вид интерьера <span class="glyphicon glyphicon-menu-down"></span>
+                </button>
+                <div th:id="${'interior_'+roomEntry.getKey().getId()}" class="collapse">
                     <table class="table table-striped">
                         <thead>
                         <tr>
@@ -106,6 +115,7 @@
                         </tr>
                         </tbody>
                     </table>
+                </div>
                     <div style="border: solid 1px lightgreen; width: 1035px; height: 405px; position: relative;">
                         <th:block th:each="roomInteriorWithItems : ${roomEntry.getValue()}">
                             <div align="center" style="border: solid 1px darkslategray; display: table; position: absolute; "
@@ -126,10 +136,10 @@
                             </div>
                         </th:block>
                     </div>
-                </li>
-            </ul>
+            </div>
+
         </th:block>
-    </div>
+
     <!--/*@thymesVar id="item" type="dyn.model.Item"*/-->
     <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
     <div class="well">
