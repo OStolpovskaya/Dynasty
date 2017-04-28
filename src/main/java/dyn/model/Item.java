@@ -91,4 +91,18 @@ public class Item {
     public void setCost(int cost) {
         this.cost = cost;
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Item{");
+        sb.append("id=").append(id);
+        sb.append(", project=").append(project.getName());
+        sb.append(", family=").append(family.getFamilyName());
+        sb.append(", author=").append(author.getFamilyName());
+        sb.append(", place=").append(place);
+        sb.append(", interiorId=").append(interiorId);
+        sb.append(", cost=").append(cost);
+        sb.append('}');
+        return sb.toString();
+    }
 }

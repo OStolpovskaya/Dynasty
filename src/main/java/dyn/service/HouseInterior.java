@@ -3,6 +3,7 @@ package dyn.service;
 import dyn.model.Family;
 import dyn.model.House;
 import dyn.model.Room;
+import dyn.model.RoomThingWithItems;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -16,14 +17,14 @@ public class HouseInterior {
     private Family family;
     private House house;
     private House nextHouse = null;
-    private Map<Room, List<RoomInteriorWithItems>> roomList = new LinkedHashMap<>();
+    private Map<Room, List<RoomThingWithItems>> roomList = new LinkedHashMap<>();
     private boolean full;
 
-    public void addRoomInterior(Room room, RoomInteriorWithItems roomInterior) {
+    public void addRoomInterior(Room room, RoomThingWithItems roomInterior) {
         if (roomList.containsKey(room)) {
             roomList.get(room).add(roomInterior);
         } else {
-            ArrayList<RoomInteriorWithItems> roomInteriors = new ArrayList<>();
+            ArrayList<RoomThingWithItems> roomInteriors = new ArrayList<>();
             roomInteriors.add(roomInterior);
             roomList.put(room, roomInteriors);
         }
@@ -61,7 +62,7 @@ public class HouseInterior {
         this.full = full;
     }
 
-    public Map<Room, List<RoomInteriorWithItems>> getRoomList() {
+    public Map<Room, List<RoomThingWithItems>> getRoomList() {
         return roomList;
     }
 

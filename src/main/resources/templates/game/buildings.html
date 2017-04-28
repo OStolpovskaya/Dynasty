@@ -12,105 +12,36 @@
     <div class="well">
         <h3>Ваши здания:</h3>
         <ul class="list-inline">
-            <!--/*@thymesVar id="buildingList" type="List<Building>"*/-->
+            <!--/*@thymesVar id="buildingList" type="List<dyn.model.House>"*/-->
             <li th:each="building : ${buildingList}">
                 <a th:href="${'/game/buildings#building'+building.getId()}" th:text="${building.getName()}">Home</a>
             </li>
         </ul>
     </div>
     <th:block th:if="${#lists.size(buildingList) > 0}">
-        <th:block th:each="mapEntry : ${buildingMap}" th:with="building = ${mapEntry.getKey()}, buildingThingWithItemsList = ${mapEntry.getValue()}">
-            <div class="well">
-                <a th:name="${'building'+building.getId()}"></a>
-                <h3 th:text="${#strings.toUpperCase(building.getName())}">Здание</h3>
-                <button data-toggle="collapse" th:attr="data-target='#interior_'+${building.getId()}" class="btn btn-default" style="margin-bottom: 10px;">Табличный вид интерьера <span class="glyphicon glyphicon-menu-down"
-                                                                                                                                                                                         style="color: black;"></span>
-                </button>
-                <div th:id="${'interior_'+building.getId()}" class="collapse">
-                <!--buildingThingWithItemsList-->
-                <table class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th>Тип предмета</th>
-                        <th>Установленная вещь</th>
-                        <th>Выбрать со склада</th>
-                        <th>Купить</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <!--/*@thymesVar id="buildingThingWithItems" type="dyn.model.buildings.BuildingThingWithItems"*/-->
-                    <tr th:each="buildingThingWithItems : ${buildingThingWithItemsList}">
-                        <td class="col-md-4">
-                            <th:block th:if="${buildingThingWithItems.isKnownThing()}">
-                                <a th:href="${'/game/chooseProject?thingId='+buildingThingWithItems.getThing().getId()}"
-                                   th:text="${buildingThingWithItems.getThing().getName()}"></a>
-                            </th:block>
-                            <th:block th:unless="${buildingThingWithItems.isKnownThing()}" th:text="${buildingThingWithItems.getThing().getName()}"></th:block>
-                        </td>
-                        <td class="col-md-4">
-                            <th:block th:with="curItem = ${buildingThingWithItems.getCurrentItem()}">
-                                <th:block th:if="${curItem==null}">Нет вещи</th:block>
-                                <th:block th:unless="${curItem==null}">
-                                    <form class="form-inline" th:action="@{/game/unsetItemFromBuildingThing}" method="post">
-                                    <span th:text="${curItem.getProject().getName()}"
-                                          data-toggle="tooltip"
-                                          th:title="${curItem.getProject().getThing().getName() + ' '+curItem.getProject().getName()+' от '+curItem.getAuthor().getFamilyName()}"></span>
-                                        <input type="hidden" name="itemId" th:value="${curItem.getId()}"/>
-                                        <button type="submit" class="btn btn-default">Убрать</button>
-                                    </form>
-                                </th:block>
-                            </th:block>
-                        </td>
-                        <td class="col-md-4">
-                            <th:block th:if="${buildingThingWithItems.getAvailableItems().size()>0}">
-                                <form class="form-inline" th:action="@{/game/setItemToBuildingThing}" method="post">
-                                    <input type="hidden" name="buildingThingId" th:value="${buildingThingWithItems.getBuildingThing().getId()}"/>
-                                    <div class="form-group">
-                                        <select class="form-control" id="sel1" name="itemId">
-                                            <option th:each="item : ${buildingThingWithItems.getAvailableItems()}"
-                                                    th:value="${item.getId()}"
-                                                    th:text="${item.getProject().getName()}">
-                                            </option>
-                                        </select>
-                                    </div>
-                                    <button type="submit" class="btn btn-default">Выбрать</button>
-                                </form>
-                            </th:block>
+        <th:block th:each="mapEntry : ${buildingMap}" th:with="building = ${mapEntry.getKey()}, roomViewList = ${mapEntry.getValue()}">
+            <a th:name="${'building'+building.getId()}"></a>
+            <h3 th:text="${#strings.toUpperCase(building.getName())}">Здание</h3>
+            <th:block th:with="roomView = ${roomViewList.get(0)}">
+                <!--/*@thymesVar id="roomView" type="dyn.model.RoomView"*/-->
+                <th:block th:if="${roomView.isFull()}">
+                    <span>Здесь будет кнопка Изготовить предмет. Будет создан итем: place - склад, project - "Приемный ребенок". У проекта: thing - "Бафф на родителя": craft_branch - новый бранч "баффы", у крафтбранчей сделать тип - обычный и редкий.
+                        так вот у "баффов" будет редкий тип, который не будет виден на вкладке крафт.
+                    к house добавляем свойство production. туда пишем thing.id ("Бафф на родителя"). Здесь смотрим, какой production у хауса, ищем проект для этой вещи. находим "Приемный ребенок". У него есть кост и ресурсы. Берем кост и ресурсы
+                        как сырье и производим несколько айтемов проекта "Приемный ребенок". Они появляются на складе.
+                        На складе. Если у вещи крафтбранч "баффы", то смотрим какая вещь. Если "Бафф на родителя", то ставим селект на отцов текущего уровня и кнопку Применить. Если "Бафф на женатого сына", то ставим селект на всех женатых сыновей
+                        и кнопку применить. Также game.html должен проверять, есть ли на складе вещи "Бафф на женатого сына", и предлагать применить у каждого портрета женатого сына.
+                        На складе есть обычная кнопка "Выставить на продажу". Надо сделать еще "просмотреть магазин этой вещи". Можно выставить этот айтем на продажу по нужной цене. Купить его игрок сможет, перейдя на вкладку Город и выбрав
+                        здание. По зданию.production мы находим Id вещи и в йтемсах ищем все айтемы у которых вещь проекта наша production  и место в store. Кнопка купить. ПОпадает на склад. Можно также применить к персонажу.
+                        Бафф на родителя
+                        Бафф на женатого сына
+                        Бафф на семью (под текстом семьи будет выбор баффов если есть)
+                    </span>
+                </th:block>
+                <div th:replace="fragments/roomView :: room-view (roomView=${roomView})"></div>
+            </th:block>
 
-                        </td>
-                        <td class="col-md-4">
-                            <form class="form-inline" th:action="@{/game/chooseItemToBuy}" method="post">
-                                <input type="hidden" name="thingId" th:value="${buildingThingWithItems.getThing().getId()}"/>
-                                <button type="submit" class="btn btn-default">Купить</button>
-                            </form>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-                </div>
-                <div style="width: 1035px; height: 405px; position: relative; background: url(/graphics/room_grid.png) repeat-y #fc0">
-                    <!--/*@thymesVar id="buildingThingWithItems" type="dyn.model.buildings.BuildingThingWithItems"*/-->
-                    <th:block th:each="buildingThingWithItems : ${buildingThingWithItemsList}">
-                        <div align="center" style="border: solid 1px darkslategray; display: table; position: absolute; "
-                             th:styleappend="${'width: '+ buildingThingWithItems.getBuildingThing().getThing().getWidth() +'px;'+
-                                 'height: ' + buildingThingWithItems.getBuildingThing().getThing().getHeight()+'px;'+
-                                 'left: ' + buildingThingWithItems.getBuildingThing().getX()+'px;'+
-                                 'top: ' + buildingThingWithItems.getBuildingThing().getY()+'px;'}">
-                            <th:block th:with="curItem = ${buildingThingWithItems.getCurrentItem()}">
-                                <th:block th:if="${curItem==null}">
-                                    <span th:text="${buildingThingWithItems.getBuildingThing().getThing().getName()}" style="color: dimgrey; display: table-cell; vertical-align: middle;"></span>
-                                </th:block>
-                                <th:block th:unless="${curItem==null}">
-                    <span th:text="${curItem.getProject().getName()}"
-                          style="color: cornflowerblue;  display: table-cell; vertical-align: middle;"
-                          data-toggle="tooltip"
-                          th:title="${curItem.getProject().getThing().getName() + ' '+curItem.getProject().getName()+' от '+curItem.getAuthor().getFamilyName()}"></span>
-                                </th:block>
-                            </th:block>
-                        </div>
-                    </th:block>
-                </div>
-            </div>
+
         </th:block>
 
     </th:block>

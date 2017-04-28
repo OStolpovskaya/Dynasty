@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by OM on 30.03.2017.
@@ -21,7 +22,7 @@ public class HouseService {
     private RoomRepository roomRepository;
 
     @Autowired
-    private RoomInteriorRepository roomInteriorRepository;
+    private RoomThingRepository roomThingRepository;
 
     @Autowired
     private HouseRepository houseRepository;
@@ -31,6 +32,59 @@ public class HouseService {
 
     @Autowired
     private ThingRepository thingRepository;
+
+    public List<RoomView> getRoomMaps(House house, Family family) {
+        List<RoomView> roomViewList = new ArrayList<>();
+
+        List<Room> roomList;
+        if (house.getType() == HouseType.home) {
+            roomList = roomRepository.findByHouseIdLessThanEqualOrderById(house.getId());
+        } else {
+            roomList = roomRepository.findByHouseIdOrderById(house.getId());
+        }
+        for (Room room : roomList) {
+            RoomView roomView = new RoomView(room);
+            roomView.setFull(true);
+
+            List<RoomThing> roomThings;
+
+            ItemPlace itemPlace;
+            if (house.getType() == HouseType.home) {
+                roomThings = roomThingRepository.findByHouseIdLessThanEqualAndRoomIdOrderById(house.getId(), room.getId());
+                itemPlace = ItemPlace.home;
+            } else {
+                roomThings = roomThingRepository.findByHouseIdAndRoomIdOrderById(house.getId(), room.getId());
+                itemPlace = ItemPlace.building;
+            }
+            for (RoomThing roomThing : roomThings) {
+                RoomThingWithItems roomThingWithItems = new RoomThingWithItems(roomThing);
+
+                Item currentItem = null;
+                List<Item> availableItems = new ArrayList<>();
+
+                List<Item> itemList = itemRepository.findByFamilyAndProjectThing(family, roomThing.getThing());
+                for (Item availableItem : itemList) {
+                    if (availableItem.getPlace().equals(itemPlace) && Objects.equals(availableItem.getInteriorId(), roomThing.getId())) {
+                        currentItem = availableItem;
+                    }
+                    if (availableItem.getPlace().equals(ItemPlace.storage)) {
+                        availableItems.add(availableItem);
+                    }
+                }
+                roomThingWithItems.setCurrentItem(currentItem);
+                roomThingWithItems.setAvailableItems(availableItems);
+                roomThingWithItems.setKnownThing(family.getCraftThings().contains(roomThing.getThing()));
+
+                roomView.getRoomThingWithItemsList().add(roomThingWithItems);
+                if (currentItem == null) {
+                    roomView.setFull(false);
+                }
+            }
+
+            roomViewList.add(roomView);
+        }
+        return roomViewList;
+    }
 
     public HouseInterior getHouseInterior(Family family) {
 
@@ -43,26 +97,26 @@ public class HouseService {
         boolean allItems = true;
         List<Room> rooms = roomRepository.findByHouseIdLessThanEqualOrderById(house.getId());
         for (Room room : rooms) {
-            List<RoomInterior> interiorList = roomInteriorRepository.findByHouseIdLessThanEqualAndRoomIdOrderById(house.getId(), room.getId());
-            for (RoomInterior roomInterior : interiorList) {
-                RoomInteriorWithItems roomInteriorWithItems = new RoomInteriorWithItems(roomInterior);
+            List<RoomThing> interiorList = roomThingRepository.findByHouseIdLessThanEqualAndRoomIdOrderById(house.getId(), room.getId());
+            for (RoomThing roomThing : interiorList) {
+                RoomThingWithItems roomThingWithItems = new RoomThingWithItems(roomThing);
 
                 Item currentItem = null;
                 List<Item> availableItems = new ArrayList<>();
 
-                List<Item> itemList = itemRepository.findByFamilyAndProjectThing(family, roomInterior.getThing());
+                List<Item> itemList = itemRepository.findByFamilyAndProjectThing(family, roomThing.getThing());
                 for (Item availableItem : itemList) {
-                    if (availableItem.getPlace().equals(ItemPlace.home) && availableItem.getInteriorId() == roomInterior.getId()) {
+                    if (availableItem.getPlace().equals(ItemPlace.home) && availableItem.getInteriorId() == roomThing.getId()) {
                         currentItem = availableItem;
                     }
                     if (availableItem.getPlace().equals(ItemPlace.storage)) {
                         availableItems.add(availableItem);
                     }
                 }
-                roomInteriorWithItems.setCurrentItem(currentItem);
-                roomInteriorWithItems.setAvailableItems(availableItems);
-                roomInteriorWithItems.setKnownThing(family.getCraftThings().contains(roomInterior.getThing()));
-                houseInterior.addRoomInterior(room, roomInteriorWithItems);
+                roomThingWithItems.setCurrentItem(currentItem);
+                roomThingWithItems.setAvailableItems(availableItems);
+                roomThingWithItems.setKnownThing(family.getCraftThings().contains(roomThing.getThing()));
+                houseInterior.addRoomInterior(room, roomThingWithItems);
 
                 if (currentItem == null) {
                     allItems = false;
@@ -72,7 +126,7 @@ public class HouseService {
         }
         houseInterior.setFull(allItems);
 
-        if (house.nextHouse()) {
+        if (house.hasNextLevel()) {
             houseInterior.setNextHouse(getNextHouse(house));
         }
 
@@ -81,66 +135,6 @@ public class HouseService {
 
     public House getNextHouse(House house) {
         return houseRepository.findOne(house.getId() + 1);
-    }
-
-    public boolean setItemToRoomInterior(Family family, Long itemId, Long roomInteriorId) {
-        Item item = itemRepository.findByFamilyAndId(family, itemId);
-        if (item == null) {
-            logger.error(family.logName() + "want to set non-existing item to roomInterior: item.id=" + itemId);
-            return false;
-        }
-        RoomInterior roomInterior = roomInteriorRepository.findOne(roomInteriorId);
-        if (roomInterior == null) {
-            logger.error(family.logName() + "want to set item to non-existing roomInterior: roomInterior.id=" + roomInteriorId);
-            return false;
-        }
-
-        Item oldItem = itemRepository.findByFamilyAndInteriorId(family, roomInterior.getId());
-        if (oldItem == null) {
-            logger.debug(family.logName() + "has no item with interiorId=" + roomInterior.getId());
-        } else {
-            oldItem.setPlace(ItemPlace.storage);
-            oldItem.setInteriorId(0L);
-            logger.debug(family.logName() + "has item with interiorId=" + roomInterior.getId() + ". Put to storage and set interiorId to 0");
-            itemRepository.save(oldItem);
-        }
-        item.setPlace(ItemPlace.home);
-        item.setInteriorId(roomInterior.getId());
-        logger.debug(family.logName() + "set item " + item.getProject().getName() + "(" + item.getId() + ") to room interior thing=" + roomInterior.getThing().getName());
-        itemRepository.save(item);
-        return true;
-    }
-
-    public boolean unsetItem(Family family, Long itemId) {
-        Item item = itemRepository.findByFamilyAndId(family, itemId);
-        if (item == null) {
-            logger.error(family.logName() + "want to unset non-existing item: " + itemId);
-            return false;
-        }
-        if (item.getPlace().equals(ItemPlace.storage)) {
-            logger.error(family.logName() + "want to unset item which is already in storage: " + item.getProject().getName() + "(" + item.getId() + ")");
-            return false;
-        }
-
-        if (item.getPlace().equals(ItemPlace.store)) {
-            item.setPlace(ItemPlace.storage);
-            item.setCost(0);
-            logger.debug(family.logName() + "put item " + item.getProject().getName() + "(" + item.getId() + ") back from store to storage");
-            itemRepository.save(item);
-            return true;
-        }
-
-        RoomInterior roomInterior = roomInteriorRepository.findOne(item.getInteriorId());
-        if (roomInterior == null) {
-            logger.error(family.logName() + "want to unset item from non-existing roomInterior: " + item.getProject().getName() + "(" + item.getId() + "), roomInterior.id=" + item.getInteriorId());
-            return false;
-        }
-
-        item.setPlace(ItemPlace.storage);
-        item.setInteriorId(0L);
-        logger.debug(family.logName() + "unset item " + item.getProject().getName() + "(" + item.getId() + ") from room interior thing=" + roomInterior.getThing().getName());
-        itemRepository.save(item);
-        return true;
     }
 
     public List<Item> getItemsInStorage(Family family) {
@@ -172,12 +166,37 @@ public class HouseService {
         return rooms;
     }
 
-    public List<RoomInterior> getRoomInteriorByRoomIdAndHouseId(Long roomId, Long houseId) {
-        List<RoomInterior> roomInteriorList = roomInteriorRepository.findByHouseIdLessThanEqualAndRoomIdOrderById(houseId, roomId);
-        return roomInteriorList;
+    public List<RoomThing> getRoomInteriorByRoomIdAndHouseId(Long roomId, Long houseId) {
+        List<RoomThing> roomThingList = roomThingRepository.findByHouseIdLessThanEqualAndRoomIdOrderById(houseId, roomId);
+        return roomThingList;
     }
 
-    public List<House> getHouseList() {
-        return (List<House>) houseRepository.findAll();
+    public List<House> getHomeList() {
+        return houseRepository.findAllByType(HouseType.home);
+    }
+
+
+    public List<House> getBuildingList() {
+        return houseRepository.findAllByType(HouseType.building);
+    }
+
+    public House getHouse(Long buildingId) {
+        return houseRepository.findOne(buildingId);
+    }
+
+    public Item getItemByFamilyAndItemId(Family family, Long itemId) {
+        return itemRepository.findByFamilyAndId(family, itemId);
+    }
+
+    public RoomThing getRoomThingById(Long roomThingId) {
+        return roomThingRepository.findOne(roomThingId);
+    }
+
+    public Item getItemByFamilyAndRoomThing(Family family, RoomThing roomThing) {
+        return itemRepository.findByFamilyAndInteriorId(family, roomThing.getId());
+    }
+
+    public void saveRoomThing(RoomThing roomThing) {
+        roomThingRepository.save(roomThing);
     }
 }

@@ -8,11 +8,7 @@ package dyn.controllers;
 import dyn.form.RaceAppearanceForm;
 import dyn.model.Character;
 import dyn.model.*;
-import dyn.model.buildings.Building;
-import dyn.model.buildings.BuildingThing;
 import dyn.repository.*;
-import dyn.repository.buildings.BuildingRepository;
-import dyn.repository.buildings.BuildingThingRepository;
 import dyn.service.*;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -55,10 +51,6 @@ public class AdminController {
     CraftService craftService;
     @Autowired
     HouseService houseService;
-    @Autowired
-    BuildingRepository buildingRepository;
-    @Autowired
-    BuildingThingRepository buildingThingRepository;
     @Autowired
     ThingRepository thingRepository;
     @Autowired
@@ -329,10 +321,10 @@ public class AdminController {
     public String rooms(ModelMap model,
                         @RequestParam(value = "houseId", defaultValue = "1") Long houseId,
                         RedirectAttributes redirectAttributes) {
-        List<House> houseList = houseService.getHouseList();
+        List<House> houseList = houseService.getHomeList();
         model.addAttribute("houseList", houseList);
 
-        Map<Room, List<RoomInterior>> roomInteriorMap = new LinkedHashMap<>();
+        Map<Room, List<RoomThing>> roomInteriorMap = new LinkedHashMap<>();
         List<Room> rooms = houseService.getRoomsByHouseId(houseId);
         for (Room room : rooms) {
             roomInteriorMap.put(room, houseService.getRoomInteriorByRoomIdAndHouseId(room.getId(), houseId));
@@ -343,19 +335,20 @@ public class AdminController {
     }
 
     @RequestMapping("/admin/buildings")
-    public String buildings(ModelMap model,
-                            RedirectAttributes redirectAttributes) {
-        List<Building> buildingList = buildingRepository.findAll();
+    public String buildings(ModelMap model, RedirectAttributes redirectAttributes) {
+
+        List<House> buildingList = houseService.getBuildingList();
         model.addAttribute("buildingList", buildingList);
 
-        Map<Building, List<BuildingThing>> buildingThingsMap = new LinkedHashMap<>();
-        for (Building building : buildingList) {
-            buildingThingsMap.put(building, buildingThingRepository.findAllByBuilding(building));
+        Map<House, List<RoomView>> buildingMap = new LinkedHashMap<>();
+        for (House house : buildingList) {
+            buildingMap.put(house, houseService.getRoomMaps(house, familyRepository.findOne(1L)));
         }
-        model.addAttribute("buildingThingsMap", buildingThingsMap);
+        model.addAttribute("buildingMap", buildingMap);
 
         Iterable<Thing> thingList = thingRepository.findAll();
         model.addAttribute("thingList", thingList);
+
         return "admin/buildings";
     }
 
@@ -367,13 +360,13 @@ public class AdminController {
                                      @RequestParam("y") int y,
                                      @RequestParam("layer") int layer,
                                      RedirectAttributes redirectAttributes) {
-        BuildingThing buildingThing = new BuildingThing();
-        buildingThing.setBuilding(buildingRepository.findOne(buildingId));
+        RoomThing buildingThing = new RoomThing();
+        buildingThing.setHouse(houseService.getHouse(buildingId));
         buildingThing.setThing(thingRepository.findOne(thingId));
         buildingThing.setX(x);
         buildingThing.setY(y);
         buildingThing.setLayer(layer);
-        buildingThingRepository.save(buildingThing);
+        houseService.saveRoomThing(buildingThing);
         return "redirect:/admin/buildings#building" + buildingId;
     }
 

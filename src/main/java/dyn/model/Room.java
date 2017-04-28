@@ -20,7 +20,7 @@ public class Room {
 
     //==============================================================
     @OneToMany(mappedBy = "room")
-    private List<RoomInterior> roomInteriors;
+    private List<RoomThing> roomThings;
     //==============================================================
 
     public Long getId() {

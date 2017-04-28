@@ -16,51 +16,38 @@
             <a th:href="${'/admin/buildings#building'+building.getId()}" th:text="${building.getName()}">Home</a>
         </li>
     </ul>
-    <th:block th:each="buildingEntry : ${buildingThingsMap}">
-        <a th:name="${'building'+buildingEntry.getKey().getId()}"></a>
-        <div class="well">
-            <h4 th:text="${#strings.toUpperCase(buildingEntry.getKey().getName())}"></h4>
-            <form th:action="@{/admin/placeBuildingThing}" method="post" class="form-inline" style="padding-bottom: 10px;">
-                <input type="hidden" name="buildingId" th:value="${buildingEntry.getKey().getId()}"/>
-                <div class="form-group">
-                    <label>Разместить вещь:</label>
-                    <select class="form-control" name="thingId">
-                        <option th:each="thing : ${thingList}"
-                                th:value="${thing.getId()}"
-                                th:text="${thing.getName()}">
-                        </option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>x:</label>
-                    <input type="text" name="x" class="form-control" style="width: 75px;"/>
-                </div>
-                <div class="form-group">
-                    <label>y:</label>
-                    <input type="text" name="y" class="form-control" style="width: 75px;"/>
-                </div>
-                <div class="form-group">
-                    <label>layer:</label>
-                    <input type="text" name="layer" class="form-control" value="0" style="width: 75px;"/>
-                </div>
-                <button type="submit" class="btn btn-default">Установить</button>
-            </form>
-            <div style="width: 1035px; height: 405px; position: relative; background: url(/graphics/room_grid.png) repeat-y #fc0">
-                <!--/*@thymesVar id="buildingThing" type="dyn.model.buildings.BuildingThing"*/-->
-                <th:block th:each="buildingThing : ${buildingEntry.getValue()}">
-                    <div align="center" style="border: solid 1px darkslategray; display: table; position: absolute; "
-                         th:styleappend="${'width: '+ buildingThing.getThing().getWidth() +'px;'+
-                                 'height: ' + buildingThing.getThing().getHeight()+'px;'+
-                                 'left: ' + buildingThing.getX()+'px;'+
-                                 'top: ' + buildingThing.getY()+'px;'}">
-                        <div th:text="${buildingThing.getThing().getName()}"
-                             data-toggle="tooltip" th:title="${buildingThing.getX() + ','+buildingThing.getY()}"
-                             style="color: dimgrey; display: table-cell; vertical-align: middle; font-size: 10px;">Нет вещи
-                        </div>
-                    </div>
-                </th:block>
+    <th:block th:each="mapEntry : ${buildingMap}" th:with="building = ${mapEntry.getKey()}, roomViewList = ${mapEntry.getValue()}">
+        <a th:name="${'building'+building.getId()}"></a>
+        <h3 th:text="${#strings.toUpperCase(building.getName())}">Здание</h3>
+        <form th:action="@{/admin/placeBuildingThing}" method="post" class="form-inline" style="padding-bottom: 10px;">
+            <input type="hidden" name="buildingId" th:value="${building.getId()}"/>
+            <div class="form-group">
+                <label>Разместить вещь:</label>
+                <select class="form-control" name="thingId">
+                    <option th:each="thing : ${thingList}"
+                            th:value="${thing.getId()}"
+                            th:text="${thing.getName()}">
+                    </option>
+                </select>
             </div>
-        </div>
+            <div class="form-group">
+                <label>x:</label>
+                <input type="text" name="x" class="form-control" style="width: 75px;"/>
+            </div>
+            <div class="form-group">
+                <label>y:</label>
+                <input type="text" name="y" class="form-control" style="width: 75px;"/>
+            </div>
+            <div class="form-group">
+                <label>layer:</label>
+                <input type="text" name="layer" class="form-control" value="0" style="width: 75px;"/>
+            </div>
+            <button type="submit" class="btn btn-default">Установить</button>
+        </form>
+        <th:block th:with="roomView = ${roomViewList.get(0)}">
+            <!--/*@thymesVar id="roomView" type="dyn.model.RoomView"*/-->
+            <div th:replace="fragments/roomView :: room-view (roomView=${roomView})"></div>
+        </th:block>
     </th:block>
 </div>
 <script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>

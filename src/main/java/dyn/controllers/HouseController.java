@@ -24,7 +24,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class HouseController {
@@ -44,35 +46,90 @@ public class HouseController {
                         @RequestParam(value = "room", defaultValue = "kitchen") String roomName) {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
 
-        Family family;
-        if (familyId == 0) {
-            family = user.getCurrentFamily();
-        } else {
-            family = familyRepository.findOne(familyId);
-            if (family == null) {
-                family = user.getCurrentFamily();
-            }
-        }
+        Family family = user.getCurrentFamily();
         model.addAttribute("family", family);
+
         model.addAttribute("itemsInStorage", houseService.getItemsInStorage(family));
         model.addAttribute("itemsInStore", houseService.getItemsInStore(family));
+        model.addAttribute("roomList", houseService.getRoomsByHouseId(family.getHouse().getId()));
 
-        HouseInterior houseInterior = houseService.getHouseInterior(family);
-        model.addAttribute("houseInterior", houseInterior);
+        List<RoomView> roomViewList = houseService.getRoomMaps(family.getHouse(), family);
+        model.addAttribute("roomViewList", roomViewList);
+
+        boolean houseIsFull = true;
+        for (RoomView roomView : roomViewList) {
+            if (!roomView.isFull()) {
+                houseIsFull = false;
+            }
+        }
+        model.addAttribute("houseIsFull", houseIsFull);
+
+        House nextHouse = null;
+        if (family.getHouse().hasNextLevel()) {
+            nextHouse = houseService.getNextHouse(family.getHouse());
+        }
+        model.addAttribute("nextHouse", nextHouse);
 
         return "game/house";
+    }
+
+
+    @RequestMapping(value = "/game/buildings", method = RequestMethod.GET)
+    public String buildings(ModelMap model, RedirectAttributes redirectAttributes) {
+        User user = userRepository.findByUserName(getAuthUser().getUsername());
+        Family family = user.getCurrentFamily();
+        model.addAttribute("family", family);
+
+        List<House> buildingList = family.getBuildings();
+        model.addAttribute("buildingList", buildingList);
+
+        Map<House, List<RoomView>> buildingMap = new LinkedHashMap<>();
+        for (House house : buildingList) {
+            buildingMap.put(house, houseService.getRoomMaps(house, family));
+        }
+        model.addAttribute("buildingMap", buildingMap);
+
+        return "game/buildings";
+
     }
 
     @RequestMapping(value = "/game/setItemToThing", method = RequestMethod.POST)
     public String setItemToRoomInterior(ModelMap model, RedirectAttributes redirectAttributes,
                                         @RequestParam(value = "itemId") Long itemId,
-                                        @RequestParam(value = "roomInteriorId") Long roomInteriorId) {
+                                        @RequestParam(value = "roomThingId") Long roomThingId) {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         Family family = user.getCurrentFamily();
 
-        houseService.setItemToRoomInterior(family, itemId, roomInteriorId);
+        Item item = houseService.getItemByFamilyAndItemId(family, itemId);
+        RoomThing roomThing = houseService.getRoomThingById(roomThingId);
+        if (item != null && roomThing != null) {
+            Item oldItem = houseService.getItemByFamilyAndRoomThing(family, roomThing);//itemRepository.findByFamilyAndInteriorId(family, roomThing.getId());
+            if (oldItem == null) {
+                logger.debug(family.logName() + "has no item with interiorId=" + roomThing.getId());
+            } else {
+                oldItem.setPlace(ItemPlace.storage);
+                oldItem.setInteriorId(0L);
+                logger.debug(family.logName() + "has item with interiorId=" + roomThing.getId() + ". Put to storage and set interiorId to 0");
+                houseService.saveItem(oldItem);
+            }
 
-        return "redirect:/game/house";
+            item.setPlace(ItemPlace.home);
+            String returnTo = "house#room" + roomThing.getRoom().getId();
+            if (roomThing.getHouse().getType().equals(HouseType.building)) {
+                item.setPlace(ItemPlace.building);
+                returnTo = "buildings#building" + roomThing.getHouse().getId();
+            }
+            item.setInteriorId(roomThing.getId());
+            houseService.saveItem(item);
+
+            logger.debug(family.logName() + "set item " + item.getProject().getName() + "(" + item.getId() + ") to room interior thing=" + roomThing.getThing().getName());
+            redirectAttributes.addFlashAttribute("mess", "Предмет размещен на месте вещи: " + roomThing.getThing().getName());
+            return "redirect:/game/" + returnTo;
+        }
+
+        logger.error(family.logName() + "want to set nonexisting item: " + itemId + " or to nonexisting room thing: " + roomThingId);
+        redirectAttributes.addFlashAttribute("mess", "Нет такого предмета или непонятно куда ставить");
+        return "redirect:/game";
     }
 
     @RequestMapping(value = "/game/unsetItem", method = RequestMethod.POST)
@@ -81,14 +138,38 @@ public class HouseController {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         Family family = user.getCurrentFamily();
 
-        boolean result = houseService.unsetItem(family, itemId);
-        if (result) {
-            redirectAttributes.addFlashAttribute("mess", "Вещь вернулась на склад");
-        } else {
-            redirectAttributes.addFlashAttribute("mess", "Ошибка при возвращении вещи на склад!");
+        Item item = houseService.getItemByFamilyAndItemId(family, itemId);
+        if (item != null) {
+            String returnTo = "house";
+            switch (item.getPlace()) {
+                case home:
+                    item.setInteriorId(0L);
+                    logger.debug(family.logName() + "unset item " + item.getProject().getName() + "(" + item.getId() + ") from room ");
+                    redirectAttributes.addFlashAttribute("mess", "Предмет перенесен из дома на склад");
+                    returnTo = "house";
+                    break;
+                case building:
+                    item.setInteriorId(0L);
+                    logger.debug(family.logName() + "unset item " + item.getProject().getName() + "(" + item.getId() + ") from building ");
+                    redirectAttributes.addFlashAttribute("mess", "Предмет перенесен из помещения на склад");
+                    returnTo = "buildings";
+                    break;
+                case store:
+                    String mess = "Предмет удален из базы продаж и перенесен на склад: '" + item.getProject().getName() + "'. Стоимость: " + item.getCost() + " р.)";
+                    item.setCost(0);
+                    logger.debug(family.logName() + "put item " + item.getProject().getName() + "(" + item.getId() + ") back from store to storage");
+                    familyLogService.addToLog(family, mess);
+                    redirectAttributes.addFlashAttribute("mess", mess);
+                    returnTo = "house";//todo: изменить, когда перенесу склад и выставленные на продажу вещи в отдельную вкладку: returnTo="storage"
+                    break;
+            }
+            item.setPlace(ItemPlace.storage);
+            houseService.saveItem(item);
+            return "redirect:/game/" + returnTo;
         }
-
-        return "redirect:/game/house";
+        logger.error(family.logName() + "want to unset nonexisting item: " + itemId);
+        redirectAttributes.addFlashAttribute("mess", "Нет такого предмета");
+        return "redirect:/game";
     }
 
     @RequestMapping(value = "/game/putItemToStore", method = RequestMethod.POST)
@@ -195,7 +276,7 @@ public class HouseController {
 
         House currentHouse = family.getHouse();
 
-        if (currentHouse.nextHouse()) {
+        if (currentHouse.hasNextLevel()) {
             HouseInterior houseInterior = houseService.getHouseInterior(family);
             if (houseInterior.isFull()) {
                 House nextHouse = houseService.getNextHouse(currentHouse);

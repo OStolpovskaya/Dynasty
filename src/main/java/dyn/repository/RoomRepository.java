@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface RoomRepository extends CrudRepository<Room, Long> {
     List<Room> findByHouseIdLessThanEqualOrderById(long houseId);
+
+    List<Room> findByHouseIdOrderById(Long id);
 }

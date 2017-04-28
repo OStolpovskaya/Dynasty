@@ -9,8 +9,10 @@ import javax.persistence.*;
 @Table(name = "house")
 public class House {
     private Long id;
+    private HouseType type;
     private String name;
     private int cost;
+    private String desc;
     private int pairsNum;
     private int fianceeNum;
 
@@ -22,6 +24,15 @@ public class House {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @Enumerated(EnumType.STRING)
+    public HouseType getType() {
+        return type;
+    }
+
+    public void setType(HouseType houseType) {
+        this.type = houseType;
     }
 
     public String getName() {
@@ -38,6 +49,14 @@ public class House {
 
     public void setCost(int cost) {
         this.cost = cost;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 
     public int getPairsNum() {
@@ -65,7 +84,7 @@ public class House {
         return sb.toString();
     }
 
-    public boolean nextHouse() {
+    public boolean hasNextLevel() {
         return id < 10;
     }
 }

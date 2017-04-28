@@ -1,7 +1,5 @@
 package dyn.model;
 
-import dyn.model.buildings.Building;
-
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
@@ -43,7 +41,7 @@ public class Family {
 
     private List<FamilyLog> familyLogs;
 
-    private List<Building> buildings = new ArrayList<>();
+    private List<House> buildings = new ArrayList<>();
     // ===================================
 
     public Family() {
@@ -152,11 +150,11 @@ public class Family {
             joinColumns = {@JoinColumn(name = "family_id")},
             inverseJoinColumns = {@JoinColumn(name = "building_id")})
     @OrderBy("name")
-    public List<Building> getBuildings() {
+    public List<House> getBuildings() {
         return buildings;
     }
 
-    public void setBuildings(List<Building> buildings) {
+    public void setBuildings(List<House> buildings) {
         this.buildings = buildings;
     }
 

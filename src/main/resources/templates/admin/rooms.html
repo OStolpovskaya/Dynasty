@@ -18,15 +18,15 @@
     <th:block th:each="roomEntry : ${roomInteriorMap}">
         <h4 th:text="${roomEntry.getKey().getName()}"></h4>
         <div style="width: 1035px; height: 405px; position: relative; background: url(/graphics/room_grid.png) repeat-y #fc0">
-            <th:block th:each="roomInterior : ${roomEntry.getValue()}">
-                <!--/*@thymesVar id="roomInterior" type="dyn.model.RoomInterior"*/-->
+            <th:block th:each="roomThing : ${roomEntry.getValue()}">
+                <!--/*@thymesVar roomThingrior" type="dyn.model.RoomThing"*/-->
                 <div align="center" style="border: solid 1px darkslategray; display: table; position: absolute; "
-                     th:styleappend="${'width: '+ roomInterior.getThing().getWidth() +'px;'+
-                                 'height: ' + roomInterior.getThing().getHeight()+'px;'+
-                                 'left: ' + roomInterior.getX()+'px;'+
-                                 'top: ' + roomInterior.getY()+'px;'}">
-                    <div th:text="${roomInterior.getThing().getName()}"
-                         data-toggle="tooltip" th:title="${roomInterior.getX() + ','+roomInterior.getY()}"
+                     th:styleappend="${'width: '+ roomThing.getThing().getWidth() +'px;'+
+                                 'height: ' + roomThing.getThing().getHeight()+'px;'+
+                                 'left: ' + roomThing.getX()+'px;'+
+                                 'top: ' + roomThing.getY()+'px;'}">
+                    <div th:text="${roomThing.getThing().getName()}"
+                         data-toggle="tooltip" th:title="${roomThing.getX() + ','+roomThing.getY()}"
                          style="color: dimgrey; display: table-cell; vertical-align: middle; font-size: 10px;">Нет вещи
                     </div>
                 </div>
