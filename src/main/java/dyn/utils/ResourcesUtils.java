@@ -20,6 +20,7 @@ public class ResourcesUtils {
 
     public static String getResString(ResourcesHolder resHolder, int coeff) {
         List<String> resources = new ArrayList<>();
+        if (resHolder.getFood() > 0) resources.add("Продукты: " + resHolder.getFood() * coeff);
         if (resHolder.getWood() > 0) resources.add("Дерево: " + resHolder.getWood() * coeff);
         if (resHolder.getMetall() > 0) resources.add("Металл: " + resHolder.getMetall() * coeff);
         if (resHolder.getPlastic() > 0) resources.add("Пластик, резина: " + resHolder.getPlastic() * coeff);
@@ -34,6 +35,7 @@ public class ResourcesUtils {
         FamilyResources familyResources = family.getFamilyResources();
         initValues = new HashMap<>();
         initValues.put("Money", family.getMoney());
+        initValues.put("Food", familyResources.getFood());
         initValues.put("Wood", familyResources.getWood());
         initValues.put("Metall", familyResources.getMetall());
         initValues.put("Plastic", familyResources.getPlastic());
@@ -46,6 +48,7 @@ public class ResourcesUtils {
     public String getDifference(Family family) {
         StringBuilder sb = new StringBuilder();
         sb.append(" Деньги: ").append(family.getMoney() - initValues.get("Money")).append(" р. <br>");
+        sb.append(" Продукты: ").append(family.getFamilyResources().getFood() - initValues.get("Food")).append(", ");
         sb.append(" Дерево: ").append(family.getFamilyResources().getWood() - initValues.get("Wood")).append(", ");
         sb.append(" Металл: ").append(family.getFamilyResources().getMetall() - initValues.get("Metall")).append(", ");
         sb.append(" Пластик, резина: ").append(family.getFamilyResources().getPlastic() - initValues.get("Plastic")).append(", ");

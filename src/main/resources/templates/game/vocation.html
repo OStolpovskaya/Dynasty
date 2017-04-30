@@ -15,6 +15,7 @@
     <table class="table table-striped">
         <thead>
         <tr>
+            <th>Продукты</th>
             <th>Дерево</th>
             <th>Металл</th>
             <th>Пластик, резина</th>
@@ -27,6 +28,7 @@
         <tbody>
         <tr>
             <!--/*@thymesVar id="profession" type="dyn.model.career.Profession"*/-->
+            <td th:text="${vocation.getFood()}"></td>
             <td th:text="${vocation.getWood()}"></td>
             <td th:text="${vocation.getMetall()}"></td>
             <td th:text="${vocation.getPlastic()}"></td>

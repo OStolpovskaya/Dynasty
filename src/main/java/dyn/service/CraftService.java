@@ -65,7 +65,8 @@ public class CraftService {
         things.add(thingRepository.getParentThingForCraftBranchId(1));
         things.add(thingRepository.getParentThingForCraftBranchId(2));
         things.add(thingRepository.getParentThingForCraftBranchId(3));
-        things.add(thingRepository.getParentThingForCraftBranchId(6));
+        things.add(thingRepository.getParentThingForCraftBranchId(4));
+        things.add(thingRepository.getParentThingForCraftBranchId(5));
         return things;
     }
 
@@ -73,13 +74,40 @@ public class CraftService {
         return (List<Thing>) thingRepository.findAll();
     }
 
-    public void changeThing(Long thingId, String thingName, Long thingParentId, int thingCost) {
+    public void changeThing(Long thingId, String thingName, Long thingParentId, int thingCost, int thingWidth, int thingHeight) {
         Thing thing = thingRepository.findOne(thingId);
         Thing parentThing = thingRepository.findOne(thingParentId);
 
         thing.setName(thingName);
         thing.setParent(parentThing);
         thing.setCost(thingCost);
+        thing.setWidth(thingWidth);
+        thing.setHeight(thingHeight);
+        thingRepository.save(thing);
+    }
+
+
+    public List<CraftBranch> getCraftBranches() {
+        List<CraftBranch> craftBranchList = new ArrayList<>();
+        craftBranchList.add(craftBranchRepository.findOne(1L));
+        craftBranchList.add(craftBranchRepository.findOne(2L));
+        craftBranchList.add(craftBranchRepository.findOne(3L));
+        craftBranchList.add(craftBranchRepository.findOne(4L));
+        craftBranchList.add(craftBranchRepository.findOne(5L));
+        return craftBranchList;
+    }
+
+    public void newThing(String name, Long craftBranchId, Long parentId, int cost, int width, int height) {
+        Thing thing = new Thing();
+        CraftBranch craftBranch = craftBranchRepository.findOne(craftBranchId);
+        Thing parentThing = thingRepository.findOne(parentId);
+
+        thing.setName(name);
+        thing.setCraftBranch(craftBranch);
+        thing.setParent(parentThing);
+        thing.setCost(cost);
+        thing.setWidth(width);
+        thing.setHeight(height);
         thingRepository.save(thing);
     }
 }

@@ -1,7 +1,6 @@
 package dyn.model;
 
 import javax.persistence.*;
-import java.util.List;
 
 /**
  * Created by OM on 21.02.2017.
@@ -9,20 +8,14 @@ import java.util.List;
 @Entity
 @Table(name = "room")
 public class Room {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+
     private Long id;
 
     private String name;
+    private House house;
 
-    @Column(name = "house_id")
-    private long houseId;
-
-    //==============================================================
-    @OneToMany(mappedBy = "room")
-    private List<RoomThing> roomThings;
-    //==============================================================
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     public Long getId() {
         return id;
     }
@@ -39,12 +32,14 @@ public class Room {
         this.name = name;
     }
 
-    public long getHouseId() {
-        return houseId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "house_id")
+    public House getHouse() {
+        return house;
     }
 
-    public void setHouseId(long houseId) {
-        this.houseId = houseId;
+    public void setHouse(House house) {
+        this.house = house;
     }
 
     @Override
@@ -52,7 +47,7 @@ public class Room {
         final StringBuilder sb = new StringBuilder("Room{");
         sb.append("id=").append(id);
         sb.append(", name='").append(name).append('\'');
-        sb.append(", houseId=").append(houseId);
+        sb.append(", house=").append(house.getName());
         sb.append('}');
         return sb.toString();
     }

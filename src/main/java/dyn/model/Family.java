@@ -232,7 +232,8 @@ public class Family {
     }
 
     public boolean hasResourcesForProject(Project project) {
-        return familyResources.getWood() >= project.getWood() &&
+        return familyResources.getFood() >= project.getFood() &&
+                familyResources.getWood() >= project.getWood() &&
                 familyResources.getMetall() >= project.getMetall() &&
                 familyResources.getPlastic() >= project.getPlastic() &&
                 familyResources.getMicroelectronics() >= project.getMicroelectronics() &&

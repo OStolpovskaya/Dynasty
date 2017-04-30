@@ -17,4 +17,8 @@ public interface ThingRepository extends CrudRepository<Thing, Long> {
     Thing getParentThingForCraftBranchId(@Param("id") int i);
 
     List<Thing> findByCraftBranch(CraftBranch craftBranch);
+
+    List<Thing> findByCraftBranchId(Long craftBranchId);
+
+    List<Thing> findByCraftBranchIdLessThanEqualOrderByName(Long craftBranchId);
 }

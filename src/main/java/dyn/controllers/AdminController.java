@@ -313,6 +313,7 @@ public class AdminController {
     @RequestMapping("/admin/craft")
     public String craft(ModelMap model) {
         model.addAttribute("thingList", craftService.getAllThings());
+        model.addAttribute("craftBranchList", craftService.getCraftBranches());
         model.addAttribute("parentThings", craftService.getThingsForTree());
         return "admin/craft";
     }
@@ -324,12 +325,13 @@ public class AdminController {
         List<House> houseList = houseService.getHomeList();
         model.addAttribute("houseList", houseList);
 
-        Map<Room, List<RoomThing>> roomInteriorMap = new LinkedHashMap<>();
-        List<Room> rooms = houseService.getRoomsByHouseId(houseId);
-        for (Room room : rooms) {
-            roomInteriorMap.put(room, houseService.getRoomInteriorByRoomIdAndHouseId(room.getId(), houseId));
-        }
-        model.addAttribute("roomInteriorMap", roomInteriorMap);
+        model.addAttribute("thingList", thingRepository.findByCraftBranchIdLessThanEqualOrderByName(5L));
+
+        House house = houseService.getHouse(houseId);
+        model.addAttribute("house", house);
+
+        List<RoomView> roomViewList = houseService.getRoomMaps(house, familyRepository.findOne(1L));
+        model.addAttribute("roomViewList", roomViewList);
 
         return "admin/rooms";
     }
@@ -376,9 +378,58 @@ public class AdminController {
                               @RequestParam("thingName") String thingName,
                               @RequestParam("thingParent") Long thingParentId,
                               @RequestParam("thingCost") int thingCost,
+                              @RequestParam("thingWidth") int thingWidth,
+                              @RequestParam("thingHeight") int thingHeight,
                               RedirectAttributes redirectAttributes) {
-        craftService.changeThing(thingId, thingName, thingParentId, thingCost);
+        craftService.changeThing(thingId, thingName, thingParentId, thingCost, thingWidth, thingHeight);
         return "redirect:/admin/craft";
+    }
+
+    @RequestMapping(value = "/admin/newThing", method = RequestMethod.POST)
+    public String newThing(ModelMap model,
+                           @RequestParam("thingCraftBranchId") Long thingCraftBranchId,
+                           @RequestParam("thingName") String thingName,
+                           @RequestParam("thingParentId") Long thingParentId,
+                           @RequestParam("thingCost") int thingCost,
+                           @RequestParam("thingWidth") int thingWidth,
+                           @RequestParam("thingHeight") int thingHeight,
+                           RedirectAttributes redirectAttributes) {
+        craftService.newThing(thingName, thingCraftBranchId, thingParentId, thingCost, thingWidth, thingHeight);
+        return "redirect:/admin/craft";
+    }
+
+    @RequestMapping(value = "/admin/changeRoomThing", method = RequestMethod.POST)
+    public String changeRoomThing(ModelMap model,
+                                  @RequestParam("roomThingId") Long roomThingId,
+                                  @RequestParam("roomThingHouseId") Long roomThingHouseId,
+                                  @RequestParam("roomThingX") int roomThingX,
+                                  @RequestParam("roomThingY") int roomThingY,
+                                  @RequestParam("roomThingLayer") int roomThingLayer,
+                                  RedirectAttributes redirectAttributes) {
+        houseService.changeRoomThing(roomThingId, roomThingHouseId, roomThingX, roomThingY, roomThingLayer);
+        RoomThing roomThing = houseService.getRoomThingById(roomThingId);
+        House house = roomThing.getHouse();
+        if (house.getType() == HouseType.building) {
+            return "redirect:/admin/buildings#building" + house.getId();
+        }
+        return "redirect:/admin/rooms?houseId=" + roomThingHouseId + "#room" + roomThing.getRoom().getId();
+    }
+
+    @RequestMapping(value = "/admin/newRoomThing", method = RequestMethod.POST)
+    public String newRoomThing(ModelMap model,
+                               @RequestParam("roomThingThingId") Long roomThingThingId,
+                               @RequestParam("roomThingHouseId") Long roomThingHouseId,
+                               @RequestParam("roomThingRoomId") Long roomThingRoomId,
+                               @RequestParam("roomThingX") int roomThingX,
+                               @RequestParam("roomThingY") int roomThingY,
+                               @RequestParam("roomThingLayer") int roomThingLayer,
+                               RedirectAttributes redirectAttributes) {
+        RoomThing roomThing = houseService.newRoomThing(roomThingThingId, roomThingHouseId, roomThingRoomId, roomThingX, roomThingY, roomThingLayer);
+        House house = roomThing.getHouse();
+        if (house.getType() == HouseType.building) {
+            return "redirect:/admin/buildings#building" + house.getId();
+        }
+        return "redirect:/admin/rooms?houseId=" + roomThingHouseId + "#room" + roomThingRoomId;
     }
 
     @RequestMapping("/admin/random")

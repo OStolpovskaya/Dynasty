@@ -15,6 +15,7 @@ public class Vocation implements ResourcesHolder {
     private String name;
     private int startSalary;
 
+    private int food;
     private int wood;
     private int metall;
     private int plastic;
@@ -49,6 +50,14 @@ public class Vocation implements ResourcesHolder {
 
     public void setStartSalary(int startSalary) {
         this.startSalary = startSalary;
+    }
+
+    public int getFood() {
+        return food;
+    }
+
+    public void setFood(int food) {
+        this.food = food;
     }
 
     public int getWood() {

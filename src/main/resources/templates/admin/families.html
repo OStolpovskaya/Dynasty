@@ -21,6 +21,7 @@
             <th>Баллы</th>
             <th>Деньги</th>
 
+            <th>food</th>
             <th>wood</th>
             <th>metall</th>
             <th>plastic</th>
@@ -48,6 +49,7 @@
             <td th:text="${family.getCraftPoint()}">type</td>
             <td th:text="${family.getMoney()}">type</td>
 
+            <td th:text="${family.getFamilyResources().getFood()}">type</td>
             <td th:text="${family.getFamilyResources().getWood()}">type</td>
             <td th:text="${family.getFamilyResources().getMetall()}">type</td>
             <td th:text="${family.getFamilyResources().getPlastic()}">type</td>

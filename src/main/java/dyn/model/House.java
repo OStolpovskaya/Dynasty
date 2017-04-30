@@ -1,6 +1,7 @@
 package dyn.model;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by OM on 21.02.2017.
@@ -15,6 +16,8 @@ public class House {
     private String desc;
     private int pairsNum;
     private int fianceeNum;
+
+    private List<Room> roomList;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -86,5 +89,14 @@ public class House {
 
     public boolean hasNextLevel() {
         return id < 10;
+    }
+
+    @OneToMany(mappedBy = "house", fetch = FetchType.LAZY)
+    public List<Room> getRoomList() {
+        return roomList;
+    }
+
+    public void setRoomList(List<Room> roomList) {
+        this.roomList = roomList;
     }
 }

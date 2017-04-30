@@ -16,6 +16,7 @@ public class FamilyResources implements ResourcesHolder {
     public static final int BUYCOST = 500;
 
     private Long id;
+    private int food;
     private int wood;
     private int metall;
     private int plastic;
@@ -26,6 +27,7 @@ public class FamilyResources implements ResourcesHolder {
     private Family family;
 
     public FamilyResources() {
+        food = 10;
         wood = 10;
         metall = 10;
         plastic = 10;
@@ -44,6 +46,14 @@ public class FamilyResources implements ResourcesHolder {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public int getFood() {
+        return food;
+    }
+
+    public void setFood(int food) {
+        this.food = food;
     }
 
     @Basic
@@ -126,6 +136,7 @@ public class FamilyResources implements ResourcesHolder {
     }
 
     public void makingProject(Project project) {
+        food -= project.getFood();
         wood -= project.getWood();
         metall -= project.getMetall();
         plastic -= project.getPlastic();
@@ -137,6 +148,9 @@ public class FamilyResources implements ResourcesHolder {
 
     public boolean addRes(String res, int amount) {
         switch (res) {
+            case "food":
+                food += amount;
+                break;
             case "wood":
                 wood += amount;
                 break;
@@ -167,6 +181,7 @@ public class FamilyResources implements ResourcesHolder {
     public void addResFromVocation(Career career) {
         Vocation vocation = career.getVocation();
         int professionLevel = career.getProfession().getLevel();
+        food += vocation.getFood() * professionLevel;
         wood += vocation.getWood() * professionLevel;
         metall += vocation.getMetall() * professionLevel;
         plastic += vocation.getPlastic() * professionLevel;

@@ -8,32 +8,126 @@
 <body>
 <div th:replace="fragments/navigation :: nav-for-admin"></div>
 <div class="container">
-    <h3>Комнаты для дома</h3>
     <ul class="list-inline">
-        <li th:each="house : ${houseList}"><!--/*@thymesVar id="house" type="dyn.model.House"*/-->
-            <a th:href="${'/admin/rooms?houseId='+house.getId()}" th:text="${house.getName()}">Home</a>
+        <li th:each="houseMenu : ${houseList}"><!--/*@thymesVar id="houseMenu" type="dyn.model.House"*/-->
+            <a th:href="${'/admin/rooms?houseId='+houseMenu.getId()}" th:text="${houseMenu.getName()}">Home</a>
         </li>
     </ul>
-    <h3>Комнаты</h3>
-    <th:block th:each="roomEntry : ${roomInteriorMap}">
-        <h4 th:text="${roomEntry.getKey().getName()}"></h4>
-        <div style="width: 1035px; height: 405px; position: relative; background: url(/graphics/room_grid.png) repeat-y #fc0">
-            <th:block th:each="roomThing : ${roomEntry.getValue()}">
-                <!--/*@thymesVar roomThingrior" type="dyn.model.RoomThing"*/-->
-                <div align="center" style="border: solid 1px darkslategray; display: table; position: absolute; "
-                     th:styleappend="${'width: '+ roomThing.getThing().getWidth() +'px;'+
+    <h3>Комнаты для дома
+        <th:block th:text="${#strings.toUpperCase(house.getName())}"></th:block>
+    </h3>
+    <ul class="list-inline">
+        <li th:each="roomView : ${roomViewList}"><!--/*@thymesVar id="roomView" type="dyn.model.RoomView"*/-->
+            <a th:href="${'/admin/rooms?houseId='+house.getId() + '#room'+roomView.getRoom().getId()}" th:text="${roomView.getRoom().getName()}">Home</a>
+        </li>
+    </ul>
+    <th:block th:each="roomView : ${roomViewList}">
+        <!--/*@thymesVar id="roomView" type="dyn.model.RoomView"*/-->
+        <a th:name="${'room'+roomView.getRoom().getId()}"></a>
+        <div class="well">
+            <h4 th:text="${#strings.toUpperCase(roomView.getRoom().getName())}"></h4>
+            <p>
+            <form th:action="@{/admin/newRoomThing}" method="post" class="form-inline">
+                <div class="form-group"><label>Вещь:</label>
+                    <select name="roomThingThingId" class="form-control">
+                        <option th:each="thing : ${thingList}"
+                                th:value="${thing.getId()}"
+                                th:text="${thing.getName()} + ' (' + ${thing.getId()} + ')'">option
+                        </option>
+                    </select>
+                </div>
+                <div class="form-group"><label>Дом:</label>
+                    <select name="roomThingHouseId" class="form-control">
+                        <option th:each="houseToChoose : ${houseList}"
+                                th:value="${houseToChoose.getId()}"
+                                th:text="${houseToChoose.getName()}"
+                                th:selected="${houseToChoose.getId() eq house.getId()}">option
+                        </option>
+                    </select>
+                </div>
+                <div class="form-group"><label>X:</label>
+                    <input type="text" name="roomThingX" value="" class="form-control" style="width: 60px;"/></div>
+                <div class="form-group"><label>Y:</label>
+                    <input type="text" name="roomThingY" value="" class="form-control" style="width: 60px;"/></div>
+                <div class="form-group"><label>Слой:</label>
+                    <input type="text" name="roomThingLayer" value="0" class="form-control" style="width: 60px;"/>
+                </div>
+                <input type="hidden" name="roomThingRoomId" th:value="${roomView.getRoom().getId()}"/>
+                <button type="submit" class="btn btn-info">Создать</button>
+            </form>
+            </p>
+            <div style="width: 1035px; height: 405px; position: relative; background: url(/graphics/room_grid.png) repeat-y #ffffff">
+                <th:block th:each="roomThingWithItems : ${roomView.getRoomThingWithItemsList()}" th:with="roomThing = ${roomThingWithItems.getRoomThing()}">
+                    <div align="center" style="border: solid 1px darkslategray; display: table; position: absolute; "
+                         th:styleappend="${'width: '+ roomThing.getThing().getWidth() +'px;'+
                                  'height: ' + roomThing.getThing().getHeight()+'px;'+
                                  'left: ' + roomThing.getX()+'px;'+
                                  'top: ' + roomThing.getY()+'px;'}">
-                    <div th:text="${roomThing.getThing().getName()}"
-                         data-toggle="tooltip" th:title="${roomThing.getX() + ','+roomThing.getY()}"
-                         style="color: dimgrey; display: table-cell; vertical-align: middle; font-size: 10px;">Нет вещи
+
+                        <!--<div th:text="${roomThing.getThing().getName()}"
+                             data-toggle="tooltip" th:title="${roomThing.getThing().getName() + ' (' + roomThing.getX() + ',' + roomThing.getY() + ')'}"
+                             style="color: dimgrey; display: table-cell; vertical-align: middle; font-size: 10px;">Нет вещи
+                        </div>-->
+                        <a th:text="${roomThing.getThing().getName()}" th:title="${roomThing.getThing().getName() + ' (' + roomThing.getX() + ',' + roomThing.getY() + ')'}"
+                           data-toggle="modal" data-target="#myModal" style="cursor: pointer; font-size: 10px;" th:styleappend="${roomThing.getHouse().getId() eq house.getId()? 'color: darkgreen;' : 'color: cornflowerblue;'}"
+                           th:onclick="'javascript:passData('+${roomThing.getId()}+',\'' + ${roomThing.getX()} + '\','+${roomThing.getY()}+','+${roomThing.getLayer()}+','+${roomThing.getHouse().getId()}+');'">Thing
+                        </a>
+
                     </div>
-                </div>
-            </th:block>
+                </th:block>
+            </div>
         </div>
     </th:block>
 </div>
+<!-- Modal -->
+<script>
+    function passData(id, x, y, layer, houseId) {
+        $(".modal-body #roomThingId").val(id);
+        $(".modal-body #roomThingX").val(x);
+        $(".modal-body #roomThingY").val(y);
+        $(".modal-body #roomThingLayer").val(layer);
+        $(".modal-body #roomThingHouseId").val(houseId);
+    }
+</script>
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Изменение положения вещи в интерьере комнаты</h4>
+            </div>
+            <div class="modal-body">
+                <p>Введите новые значения:</p>
+                <form th:action="@{/admin/changeRoomThing}" method="post">
+                    <div class="form-group"><label>Parent:</label>
+                        <select name="roomThingHouseId" id="roomThingHouseId" class="form-control">
+                            <option th:each="houseToChoose : ${houseList}"
+                                    th:value="${houseToChoose.getId()}"
+                                    th:text="${houseToChoose.getName()}">option
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>X:</label>
+                        <input type="text" name="roomThingX" id="roomThingX" value="" class="form-control"/></div>
+                    <div class="form-group"><label>Y:</label>
+                        <input type="text" name="roomThingY" id="roomThingY" value="" class="form-control"/></div>
+                    <div class="form-group"><label>Layer:</label>
+                        <input type="text" name="roomThingLayer" id="roomThingLayer" value="" class="form-control"/>
+                    </div>
+                    <input type="hidden" name="roomThingId" id="roomThingId" value=""/>
+                    <button type="submit" class="btn btn-info">Изменить</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
 <script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
 <script>

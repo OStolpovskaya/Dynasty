@@ -199,4 +199,26 @@ public class HouseService {
     public void saveRoomThing(RoomThing roomThing) {
         roomThingRepository.save(roomThing);
     }
+
+    public void changeRoomThing(Long roomThingId, Long roomThingHouseId, int roomThingX, int roomThingY, int roomThingLayer) {
+        RoomThing roomThing = roomThingRepository.findOne(roomThingId);
+        roomThing.setHouse(houseRepository.findOne(roomThingHouseId));
+        roomThing.setX(roomThingX);
+        roomThing.setY(roomThingY);
+        roomThing.setLayer(roomThingLayer);
+        roomThingRepository.save(roomThing);
+    }
+
+    public RoomThing newRoomThing(Long thingId, Long houseId, Long roomId, int x, int y, int layer) {
+        RoomThing roomThing = new RoomThing();
+        roomThing.setThing(thingRepository.findOne(thingId));
+        roomThing.setRoom(roomRepository.findOne(roomId));
+        roomThing.setHouse(houseRepository.findOne(houseId));
+        roomThing.setX(x);
+        roomThing.setY(y);
+        roomThing.setLayer(layer);
+        roomThingRepository.save(roomThing);
+
+        return roomThing;
+    }
 }

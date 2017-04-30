@@ -5,93 +5,108 @@
     <title>Fragments for RoomView</title>
 </head>
 <body>
+<div th:fragment="room-table-set-unset-buy (roomView)">
+    <!--/*@thymesVar id="roomView" type="dyn.model.RoomView"*/-->
+    <button data-toggle="collapse" th:attr="data-target='#interior_'+${roomView.getRoom().getId()}" class="btn btn-default" style="margin-bottom: 10px;">
+        Табличный вид интерьера <span class="glyphicon glyphicon-menu-down"></span>
+    </button>
+    <div th:id="${'interior_'+roomView.getRoom().getId()}" class="collapse">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Тип предмета</th>
+                <th>Установленная вещь</th>
+                <th>Выбрать со склада</th>
+                <th>Купить</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="roomThingWithItems : ${roomView.getRoomThingWithItemsList()}">
+                <!--/*@thymesVar id="roomThingWithItems" type="dyn.model.RoomThingWithItems"*/-->
+                <td class="col-md-4">
+                    <th:block th:if="${roomThingWithItems.isKnownThing()}">
+                        <a th:href="${'/game/chooseProject?thingId='+roomThingWithItems.getRoomThing().getThing().getId()}" th:text="${roomThingWithItems.getRoomThing().getThing().getName()}"></a>
+                    </th:block>
+                    <th:block th:unless="${roomThingWithItems.isKnownThing()}" th:text="${roomThingWithItems.getRoomThing().getThing().getName()}"></th:block>
+                </td>
+                <td class="col-md-4">
+                    <th:block th:if="${roomThingWithItems.getCurrentItem()==null}">Нет вещи</th:block>
+                    <th:block th:unless="${roomThingWithItems.getCurrentItem()==null}">
+                        <form class="form-inline" th:action="@{/game/unsetItem}" method="post">
+                                    <span th:text="${roomThingWithItems.getCurrentItem().getProject().getName()}"
+                                          data-toggle="tooltip"
+                                          th:title="${roomThingWithItems.getCurrentItem().getProject().getThing().getName() + ' '+roomThingWithItems.getCurrentItem().getProject().getName()+' от '+roomThingWithItems.getCurrentItem().getAuthor().getFamilyName()}"></span>
+                            <input type="hidden" name="itemId" th:value="${roomThingWithItems.getCurrentItem().getId()}"/>
+                            <button type="submit" class="btn btn-default">Убрать</button>
+                        </form>
+                    </th:block>
+                </td>
+                <td class="col-md-4">
+                    <th:block th:if="${roomThingWithItems.getAvailableItems().size()>0}">
+                        <form class="form-inline" th:action="@{/game/setItemToThing}" method="post">
+                            <input type="hidden" name="roomThingId" th:value="${roomThingWithItems.getRoomThing().getId()}"/>
+                            <div class="form-group">
+                                <select class="form-control" id="sel1" name="itemId">
+                                    <option th:each="item : ${roomThingWithItems.getAvailableItems()}"
+                                            th:value="${item.getId()}"
+                                            th:text="${item.getProject().getName()}">
+                                    </option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-default">Выбрать</button>
+                        </form>
+                    </th:block>
+
+                </td>
+                <td class="col-md-4">
+                    <form class="form-inline" th:action="@{/game/chooseItemToBuy}" method="post">
+                        <input type="hidden" name="thingId" th:value="${roomThingWithItems.getRoomThing().getThing().getId()}"/>
+                        <button type="submit" class="btn btn-default">Купить</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div th:fragment="room-map (roomView)">
+    <!--/*@thymesVar id="roomView" type="dyn.model.RoomView"*/-->
+    <div style="width: 1035px; height: 405px; position: relative; background: url(/graphics/room_grid.png) repeat-y #ffffff">
+        <th:block th:each="roomThingWithItems : ${roomView.getRoomThingWithItemsList()}">
+            <div align="center" style="border: solid 1px darkslategray; display: table; position: absolute; "
+                 th:styleappend="${'width: '+ roomThingWithItems.getRoomThing().getThing().getWidth() +'px;'+
+                                 'height: ' + roomThingWithItems.getRoomThing().getThing().getHeight()+'px;'+
+                                 'left: ' + roomThingWithItems.getRoomThing().getX()+'px;'+
+                                 'top: ' + roomThingWithItems.getRoomThing().getY()+'px;'}">
+                <div th:if="${roomThingWithItems.getCurrentItem()==null}" th:text="${roomThingWithItems.getRoomThing().getThing().getName()}"
+                     style="color: dimgrey; display: table-cell; vertical-align: middle; font-size: 8px;">Нет вещи
+                </div>
+                <th:block th:unless="${roomThingWithItems.getCurrentItem()==null}">
+                                    <span th:text="${roomThingWithItems.getCurrentItem().getProject().getName()}"
+                                          style="color: cornflowerblue;  display: table-cell; vertical-align: middle; font-size: 8px;"
+                                          data-toggle="tooltip"
+                                          th:title="${roomThingWithItems.getCurrentItem().getProject().getThing().getName() + ' '+roomThingWithItems.getCurrentItem().getProject().getName()+' от '+roomThingWithItems.getCurrentItem().getAuthor().getFamilyName()}"></span>
+                </th:block>
+
+            </div>
+        </th:block>
+    </div>
+</div>
 <div th:fragment="room-view (roomView)">
     <!--/*@thymesVar id="roomView" type="dyn.model.RoomView"*/-->
     <a th:name="${'room'+roomView.getRoom().getId()}"></a>
     <div class="well">
         <h4 th:text="${#strings.toUpperCase(roomView.getRoom().getName())}"></h4>
         <p th:text="${'Заполнена: '+roomView.isFull()}"></p>
-        <button data-toggle="collapse" th:attr="data-target='#interior_'+${roomView.getRoom().getId()}" class="btn btn-default" style="margin-bottom: 10px;">Табличный вид интерьера <span class="glyphicon glyphicon-menu-down"></span>
-        </button>
-        <div th:id="${'interior_'+roomView.getRoom().getId()}" class="collapse">
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th>Тип предмета</th>
-                    <th>Установленная вещь</th>
-                    <th>Выбрать со склада</th>
-                    <th>Купить</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="roomThingWithItems : ${roomView.getRoomThingWithItemsList()}">
-                    <!--/*@thymesVar id="roomThingWithItems" type="dyn.model.RoomThingWithItems"*/-->
-                    <td class="col-md-4">
-                        <th:block th:if="${roomThingWithItems.isKnownThing()}">
-                            <a th:href="${'/game/chooseProject?thingId='+roomThingWithItems.getRoomThing().getThing().getId()}" th:text="${roomThingWithItems.getRoomThing().getThing().getName()}"></a>
-                        </th:block>
-                        <th:block th:unless="${roomThingWithItems.isKnownThing()}" th:text="${roomThingWithItems.getRoomThing().getThing().getName()}"></th:block>
-                    </td>
-                    <td class="col-md-4">
-                        <th:block th:if="${roomThingWithItems.getCurrentItem()==null}">Нет вещи</th:block>
-                        <th:block th:unless="${roomThingWithItems.getCurrentItem()==null}">
-                            <form class="form-inline" th:action="@{/game/unsetItem}" method="post">
-                                    <span th:text="${roomThingWithItems.getCurrentItem().getProject().getName()}"
-                                          data-toggle="tooltip"
-                                          th:title="${roomThingWithItems.getCurrentItem().getProject().getThing().getName() + ' '+roomThingWithItems.getCurrentItem().getProject().getName()+' от '+roomThingWithItems.getCurrentItem().getAuthor().getFamilyName()}"></span>
-                                <input type="hidden" name="itemId" th:value="${roomThingWithItems.getCurrentItem().getId()}"/>
-                                <button type="submit" class="btn btn-default">Убрать</button>
-                            </form>
-                        </th:block>
-                    </td>
-                    <td class="col-md-4">
-                        <th:block th:if="${roomThingWithItems.getAvailableItems().size()>0}">
-                            <form class="form-inline" th:action="@{/game/setItemToThing}" method="post">
-                                <input type="hidden" name="roomThingId" th:value="${roomThingWithItems.getRoomThing().getId()}"/>
-                                <div class="form-group">
-                                    <select class="form-control" id="sel1" name="itemId">
-                                        <option th:each="item : ${roomThingWithItems.getAvailableItems()}"
-                                                th:value="${item.getId()}"
-                                                th:text="${item.getProject().getName()}">
-                                        </option>
-                                    </select>
-                                </div>
-                                <button type="submit" class="btn btn-default">Выбрать</button>
-                            </form>
-                        </th:block>
 
-                    </td>
-                    <td class="col-md-4">
-                        <form class="form-inline" th:action="@{/game/chooseItemToBuy}" method="post">
-                            <input type="hidden" name="thingId" th:value="${roomThingWithItems.getRoomThing().getThing().getId()}"/>
-                            <button type="submit" class="btn btn-default">Купить</button>
-                        </form>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <div style="width: 1035px; height: 405px; position: relative; background: url(/graphics/room_grid.png) repeat-y #ffffff">
-            <th:block th:each="roomThingWithItems : ${roomView.getRoomThingWithItemsList()}">
-                <div align="center" style="border: solid 1px darkslategray; display: table; position: absolute; "
-                     th:styleappend="${'width: '+ roomThingWithItems.getRoomThing().getThing().getWidth() +'px;'+
-                                 'height: ' + roomThingWithItems.getRoomThing().getThing().getHeight()+'px;'+
-                                 'left: ' + roomThingWithItems.getRoomThing().getX()+'px;'+
-                                 'top: ' + roomThingWithItems.getRoomThing().getY()+'px;'}">
-                    <div th:if="${roomThingWithItems.getCurrentItem()==null}" th:text="${roomThingWithItems.getRoomThing().getThing().getName()}"
-                         style="color: dimgrey; display: table-cell; vertical-align: middle;">Нет вещи
-                    </div>
-                    <th:block th:unless="${roomThingWithItems.getCurrentItem()==null}">
-                                    <span th:text="${roomThingWithItems.getCurrentItem().getProject().getName()}"
-                                          style="color: cornflowerblue;  display: table-cell; vertical-align: middle;"
-                                          data-toggle="tooltip"
-                                          th:title="${roomThingWithItems.getCurrentItem().getProject().getThing().getName() + ' '+roomThingWithItems.getCurrentItem().getProject().getName()+' от '+roomThingWithItems.getCurrentItem().getAuthor().getFamilyName()}"></span>
-                    </th:block>
+        <div th:replace="fragments/roomView :: room-table-set-unset-buy (roomView=${roomView})"></div>
+        <div th:replace="fragments/roomView :: room-map (roomView=${roomView})"></div>
 
-                </div>
-            </th:block>
-        </div>
+
     </div>
 </div>
+
+
 </body>
 </html>

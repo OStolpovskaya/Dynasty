@@ -26,6 +26,7 @@ public class Project implements ResourcesHolder {
     @Lob
     private byte[] view;
 
+    private int food;
     private int wood;
     private int metall;
     private int plastic;
@@ -78,6 +79,14 @@ public class Project implements ResourcesHolder {
 
     public void setView(byte[] view) {
         this.view = view;
+    }
+
+    public int getFood() {
+        return food;
+    }
+
+    public void setFood(int food) {
+        this.food = food;
     }
 
     public int getWood() {
