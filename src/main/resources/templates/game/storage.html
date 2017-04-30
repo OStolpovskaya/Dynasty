@@ -44,7 +44,7 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th>Предмет (тип предмета)</th>
+                    <th>Предмет</th>
                     <th>Изготовитель</th>
                     <th>Продать</th>
                     <th>Просмотреть маркет</th>
@@ -53,7 +53,7 @@
                 <tbody>
                 <th:block th:each="item : ${itemsInStorage}">
                     <tr>
-                        <td th:text="${item.getProject().getName()+' ('+item.getProject().getThing().getName()+')'}"></td>
+                        <td th:text="${item.getFullName()}"></td>
                         <td th:text="${item.getAuthor().getFamilyName()+' ('+item.getAuthor().getUser().getUserName()+')'}"></td>
                         <td>
                             <form th:action="@{/game/putItemToStore}" method="post" class="form-inline">
@@ -84,7 +84,7 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th>Предмет (тип предмета)</th>
+                    <th>Предмет</th>
                     <th>Изготовитель</th>
                     <th>Применить</th>
                     <th>Продать</th>
@@ -94,7 +94,7 @@
                 <tbody>
                 <th:block th:each="item : ${serviceAndBuffsInStorage}">
                     <tr>
-                        <td th:text="${item.getProject().getName()+' ('+item.getProject().getThing().getName()+')'}"></td>
+                        <td th:text="${item.getFullName()}"></td>
                         <td th:text="${item.getAuthor().getFamilyName()+' ('+item.getAuthor().getUser().getUserName()+')'}"></td>
                         <td>
                             <th:block th:switch="${item.getProject().getThing().getId()}">
@@ -136,7 +136,7 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th>Предмет (тип предмета)</th>
+                    <th>Предмет</th>
                     <th>Изготовитель</th>
                     <th>Цена</th>
                     <th>Продать</th>
@@ -146,7 +146,7 @@
                 <tbody>
                 <th:block th:each="item : ${itemsInStore}">
                     <tr>
-                        <td th:text="${item.getProject().getName()+' ('+item.getProject().getThing().getName()+')'}"></td>
+                        <td th:text="${item.getFullName()}"></td>
                         <td th:text="${item.getAuthor().getFamilyName()+' ('+item.getAuthor().getUser().getUserName()+')'}"></td>
                         <td th:text="${item.getCost()+' р.'}"></td>
                         <td>

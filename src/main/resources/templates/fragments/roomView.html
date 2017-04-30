@@ -86,7 +86,7 @@
                                     <span th:text="${roomThingWithItems.getCurrentItem().getProject().getName()}"
                                           style="color: cornflowerblue;  display: table-cell; vertical-align: middle; font-size: 8px;"
                                           data-toggle="tooltip"
-                                          th:title="${roomThingWithItems.getCurrentItem().getProject().getThing().getName() + ' '+roomThingWithItems.getCurrentItem().getProject().getName()+' от '+roomThingWithItems.getCurrentItem().getAuthor().getFamilyName()}"></span>
+                                          th:title="${roomThingWithItems.getCurrentItem().getFullName() + ' от '+roomThingWithItems.getCurrentItem().getAuthor().getFamilyName()}"></span>
                 </th:block>
 
             </div>

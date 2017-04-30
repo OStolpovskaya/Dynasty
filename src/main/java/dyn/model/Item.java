@@ -105,4 +105,9 @@ public class Item {
         sb.append('}');
         return sb.toString();
     }
+
+    public String getFullName() {
+
+        return getProject().getThing().getName() + " '" + getProject().getName() + "'";
+    }
 }

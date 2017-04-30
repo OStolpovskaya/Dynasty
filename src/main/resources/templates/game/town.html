@@ -21,7 +21,8 @@
         <tr>
             <th>Имя</th>
             <th>Описание</th>
-            <th>Приобрести</th>
+            <th>Купить продукцию</th>
+            <th>Приобрести здание</th>
         </tr>
         </thead>
         <tbody>
@@ -29,6 +30,14 @@
             <!--/*@thymesVar id="building" type="dyn.model.House"*/-->
             <td th:text="${building.getName()}">name</td>
             <td th:text="${building.getDesc()}">desc</td>
+            <td>
+                <th:block th:if="${building.getProduction() ne null}">
+                    <form th:action="@{/game/chooseItemToBuy}" method="post" class="form-inline">
+                        <input type="hidden" name="thingId" th:value="${building.getProduction().getThing().getId()}"/>
+                        <button type="submit" class="btn btn-default">Маркет</button>
+                    </form>
+                </th:block>
+            </td>
             <td>
                 <th:block th:if="${not #lists.contains(familyBuildingList,building)}">
                     <form th:action="@{/game/buyBuilding}" method="post" class="form-inline">

@@ -188,8 +188,8 @@ public class CraftController {
                     }
                     familyRepository.save(family);
 
-                    logger.info(family.logName() + " makes the item for project:" + project.getName());
-                    String mess = "Ваша семья изготавливает предмет по проекту '" + project.getName() + "' предмета '" + project.getThing().getName() + "'. Израсходовано: " + project.resString();
+                    logger.info(family.logName() + " makes the item:" + item.getFullName());
+                    String mess = "Ваша семья изготавливает предмет " + item.getFullName() + ". Израсходовано: " + project.resString();
 
                     if (projectIsProductionOfBuilding) {
                         mess = "Ваша семья изготавливает " + project.getThing().getName() + " " + project.getName() + ". Израсходовано: " + project.getCost() + (project.resString() != "" ? ", " + project.resString() : "");
