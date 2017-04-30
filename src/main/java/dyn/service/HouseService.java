@@ -138,7 +138,12 @@ public class HouseService {
     }
 
     public List<Item> getItemsInStorage(Family family) {
-        return itemRepository.findByFamilyAndPlaceOrderByProjectThing(family, ItemPlace.storage);
+        return itemRepository.findByFamilyAndPlaceAndProjectThingCraftBranchIdLessThanEqualOrderByProjectThing(family, ItemPlace.storage, CraftBranch.MEAL);
+//        return itemRepository.findByFamilyAndPlaceOrderByProjectThing(family, ItemPlace.storage);
+    }
+
+    public List<Item> getProductionsInStorage(Family family) {
+        return itemRepository.findByFamilyAndPlaceAndProjectThingCraftBranchIdOrderByProjectThing(family, ItemPlace.storage, CraftBranch.SERVICE_AND_BUFFS);
     }
 
     public List<Item> getItemsInStore(Family family) {
@@ -220,5 +225,13 @@ public class HouseService {
         roomThingRepository.save(roomThing);
 
         return roomThing;
+    }
+
+    public House getBuildingByProduction(Project project) {
+        return houseRepository.findByProduction(project);
+    }
+
+    public void deleteItem(Item item) {
+        itemRepository.delete(item);
     }
 }

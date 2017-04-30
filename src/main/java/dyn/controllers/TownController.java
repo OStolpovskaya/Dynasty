@@ -7,6 +7,7 @@ package dyn.controllers;
 
 import dyn.model.Family;
 import dyn.model.House;
+import dyn.model.Project;
 import dyn.model.User;
 import dyn.repository.FamilyRepository;
 import dyn.repository.UserRepository;
@@ -60,6 +61,12 @@ public class TownController {
                 if (family.getMoney() >= building.getCost()) {
                     family.getBuildings().add(building);
                     family.setMoney(family.getMoney() - building.getCost());
+
+                    Project production = building.getProduction();
+                    if (production != null) {
+                        family.getCraftProjects().add(production);
+                    }
+
                     familyRepository.save(family);
 
                     logger.info(family.logName() + "buy building: " + building.getName());

@@ -9,6 +9,12 @@ import java.util.List;
 @Entity
 @Table(name = "craft_branch")
 public class CraftBranch {
+    public static final Long FURNITURE = 1L;
+    public static final Long DEVICES = 2L;
+    public static final Long DECOR = 3L;
+    public static final Long CLOTH = 4L;
+    public static final Long MEAL = 5L;
+    public static final Long SERVICE_AND_BUFFS = 10L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

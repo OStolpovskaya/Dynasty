@@ -148,4 +148,20 @@ public class Project implements ResourcesHolder {
     public String resString() {
         return ResourcesUtils.getResString(this);
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Project{");
+        sb.append("id=").append(id);
+        sb.append(", thing=").append(thing.getName());
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", cost='").append(cost).append('\'');
+        sb.append(", res='").append(resString()).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
+
+    public boolean isProductionProject() {
+        return thing.getCraftBranch().getId() == CraftBranch.SERVICE_AND_BUFFS;
+    }
 }

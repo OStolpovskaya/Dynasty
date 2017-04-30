@@ -19,7 +19,7 @@
     <th:block th:each="mapEntry : ${buildingMap}" th:with="building = ${mapEntry.getKey()}, roomViewList = ${mapEntry.getValue()}">
         <a th:name="${'building'+building.getId()}"></a>
         <div class="well">
-            <h3 th:text="${#strings.toUpperCase(building.getName())}">Здание</h3>
+            <h3 th:text="${#strings.toUpperCase(building.getName()) + ' (' + building.getId() + ')'}">Здание</h3>
 
             <form th:action="@{/admin/newRoomThing}" method="post" class="form-inline" style="padding-bottom: 10px;">
                 <div class="form-group"><label>Вещь:</label>

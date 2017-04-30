@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Склад</title>
+    <link th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}" rel="stylesheet"></link>
+</head>
+<body>
+<div th:replace="fragments/navigation :: nav-for-game"></div>
+<div class="container" style="min-width: 1140px;">
+    <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
+    <!--/*@thymesVar id="item" type="dyn.model.Item"*/-->
+    <div class="well"><h4>Имеющиеся ресурсы:</h4>
+        <table class="table table-bordered" width="100%">
+            <thead>
+            <tr>
+                <th>Продукты</th>
+                <th>Дерево</th>
+                <th>Металл</th>
+                <th>Пластик, резина</th>
+                <th>Микроэлектроника</th>
+                <th>Ткань, кожа, бумага</th>
+                <th>Камень, стекло, керамика</th>
+                <th>Химия, краски</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td th:text="${family.getFamilyResources().getFood()}">John</td>
+                <td th:text="${family.getFamilyResources().getWood()}">John</td>
+                <td th:text="${family.getFamilyResources().getMetall()}">John</td>
+                <td th:text="${family.getFamilyResources().getPlastic()}">John</td>
+                <td th:text="${family.getFamilyResources().getMicroelectronics()}">John</td>
+                <td th:text="${family.getFamilyResources().getCloth()}">John</td>
+                <td th:text="${family.getFamilyResources().getStone()}">John</td>
+                <td th:text="${family.getFamilyResources().getChemical()}">John</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="well">
+        <h3>Склад:</h3>
+        <th:block th:if="${not #lists.isEmpty(itemsInStorage)}">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Предмет (тип предмета)</th>
+                    <th>Изготовитель</th>
+                    <th>Продать</th>
+                    <th>Просмотреть маркет</th>
+                </tr>
+                </thead>
+                <tbody>
+                <th:block th:each="item : ${itemsInStorage}">
+                    <tr>
+                        <td th:text="${item.getProject().getName()+' ('+item.getProject().getThing().getName()+')'}"></td>
+                        <td th:text="${item.getAuthor().getFamilyName()+' ('+item.getAuthor().getUser().getUserName()+')'}"></td>
+                        <td>
+                            <form th:action="@{/game/putItemToStore}" method="post" class="form-inline">
+                                <input type="hidden" name="itemId" th:value="${item.getId()}"/>
+                                <input type="text" name="cost" th:value="${family.getLevel()}*100" class="form-control" style="width: 60px;" data-toggle="tooltip" title="Стоимость"/>
+                                <button type="submit" class="btn btn-default">Выставить на продажу</button>
+                            </form>
+
+                        </td>
+                        <td>
+                            <form th:action="@{/game/chooseItemToBuy}" method="post" class="form-inline">
+                                <input type="hidden" name="thingId" th:value="${item.getProject().getThing().getId()}"/>
+                                <button type="submit" class="btn btn-default">Маркет</button>
+                            </form>
+                        </td>
+                    </tr>
+                </th:block>
+                </tbody>
+            </table>
+        </th:block>
+        <th:block th:unless="${not #lists.isEmpty(itemsInStorage)}">
+            <p>Нет вещей на складе</p>
+        </th:block>
+    </div>
+    <div class="well">
+        <h3>Склад услуг и баффов:</h3>
+        <th:block th:if="${not #lists.isEmpty(serviceAndBuffsInStorage)}">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Предмет (тип предмета)</th>
+                    <th>Изготовитель</th>
+                    <th>Применить</th>
+                    <th>Продать</th>
+                    <th>Просмотреть маркет</th>
+                </tr>
+                </thead>
+                <tbody>
+                <th:block th:each="item : ${serviceAndBuffsInStorage}">
+                    <tr>
+                        <td th:text="${item.getProject().getName()+' ('+item.getProject().getThing().getName()+')'}"></td>
+                        <td th:text="${item.getAuthor().getFamilyName()+' ('+item.getAuthor().getUser().getUserName()+')'}"></td>
+                        <td>
+                            <th:block th:switch="${item.getProject().getThing().getId()}">
+                                <th:block th:case="117">
+                                    <form th:action="@{/game/applyItem}" method="post" class="form-inline">
+                                        <input type="hidden" name="itemId" th:value="${item.getId()}"/>
+                                        <button type="submit" class="btn btn-default">Применить</button>
+                                    </form>
+                                </th:block>
+                            </th:block>
+
+                        </td>
+                        <td>
+                            <form th:action="@{/game/putItemToStore}" method="post" class="form-inline">
+                                <input type="hidden" name="itemId" th:value="${item.getId()}"/>
+                                <input type="text" name="cost" th:value="${family.getLevel()}*100" class="form-control" style="width: 60px;" data-toggle="tooltip" title="Стоимость"/>
+                                <button type="submit" class="btn btn-default">Выставить на продажу</button>
+                            </form>
+
+                        </td>
+                        <td>
+                            <form th:action="@{/game/chooseItemToBuy}" method="post" class="form-inline">
+                                <input type="hidden" name="thingId" th:value="${item.getProject().getThing().getId()}"/>
+                                <button type="submit" class="btn btn-default">Маркет</button>
+                            </form>
+                        </td>
+                    </tr>
+                </th:block>
+                </tbody>
+            </table>
+        </th:block>
+        <th:block th:unless="${not #lists.isEmpty(serviceAndBuffsInStorage)}">
+            <p>Нет вещей на складе</p>
+        </th:block>
+    </div>
+    <div class="well">
+        <h3>Выставлены на продажу:</h3>
+        <th:block th:if="${not #lists.isEmpty(itemsInStore)}">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Предмет (тип предмета)</th>
+                    <th>Изготовитель</th>
+                    <th>Цена</th>
+                    <th>Продать</th>
+                    <th>Просмотреть маркет</th>
+                </tr>
+                </thead>
+                <tbody>
+                <th:block th:each="item : ${itemsInStore}">
+                    <tr>
+                        <td th:text="${item.getProject().getName()+' ('+item.getProject().getThing().getName()+')'}"></td>
+                        <td th:text="${item.getAuthor().getFamilyName()+' ('+item.getAuthor().getUser().getUserName()+')'}"></td>
+                        <td th:text="${item.getCost()+' р.'}"></td>
+                        <td>
+                            <form th:action="@{/game/unsetItem}" method="post" class="form-inline">
+                                <input type="hidden" name="itemId" th:value="${item.getId()}"/>
+                                <button type="submit" class="btn btn-default">Вернуть на склад</button>
+                            </form>
+
+                        </td>
+                        <td>
+                            <form th:action="@{/game/chooseItemToBuy}" method="post" class="form-inline">
+                                <input type="hidden" name="thingId" th:value="${item.getProject().getThing().getId()}"/>
+                                <button type="submit" class="btn btn-default">Маркет</button>
+                            </form>
+                        </td>
+                    </tr>
+                </th:block>
+                </tbody>
+            </table>
+        </th:block>
+        <th:block th:unless="${not #lists.isEmpty(itemsInStore)}">
+            <p>Нет выставленных на продажу вещей</p>
+        </th:block>
+    </div>
+</div>
+<script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+</body>
+</html>

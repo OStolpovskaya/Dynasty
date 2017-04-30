@@ -12,6 +12,7 @@ import dyn.repository.CharacterRepository;
 import dyn.repository.FamilyRepository;
 import dyn.repository.UserRepository;
 import dyn.service.FamilyLogService;
+import dyn.service.HouseService;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,8 @@ public class BuffController {
     BuffRepository buffRepository;
     @Autowired
     FamilyLogService familyLogService;
+    @Autowired
+    HouseService houseService;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -114,4 +117,32 @@ public class BuffController {
         return "redirect:/game";
     }
 
+    //applyItemResources
+    @RequestMapping(value = "/game/applyItem", method = RequestMethod.POST)
+    public String applyItem(ModelMap model, RedirectAttributes redirectAttributes,
+                            @RequestParam(value = "itemId") Long itemId) {
+        User user = userRepository.findByUserName(getAuthUser().getUsername());
+        Family family = user.getCurrentFamily();
+
+        String mess = "";
+        Item item = houseService.getItemByFamilyAndItemId(family, itemId);
+        if (item != null) {
+            switch (item.getProject().getId().intValue()) {
+                case 100: // дерево
+                    family.getFamilyResources().addWood(10);
+                    mess = "Добавлено дерево: 10 шт.";
+                    break;
+            }
+            familyRepository.save(family);
+            houseService.deleteItem(item);
+
+            familyLogService.addToLog(family, mess);
+            redirectAttributes.addFlashAttribute("mess", mess);
+            logger.info(family.logName() + " apply item of project: '" + item.getProject());
+            return "redirect:/game/storage";
+        }
+        logger.error(family.logName() + "want to apply nonexisting item: " + itemId);
+        redirectAttributes.addFlashAttribute("mess", "Нет такого предмета или он вам не принадлежит");
+        return "redirect:/storage";
+    }
 }

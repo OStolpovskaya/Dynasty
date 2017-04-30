@@ -22,4 +22,10 @@ public interface ItemRepository extends CrudRepository<Item, Long> {
     List<Item> findByPlaceAndProjectThing(ItemPlace place, Thing thing);
 
     List<Item> findByFamilyAndPlaceOrderByProjectThing(Family family, ItemPlace place);
+
+    List<Item> findByFamilyAndPlaceAndProjectThingCraftBranchIdLessThanEqualOrderByProjectThing(Family family, ItemPlace place, Long maxCraftBranchIdForUsualThings);
+
+    List<Item> findByFamilyAndPlaceAndProjectThingCraftBranchIdOrderByProjectThing(Family family, ItemPlace place, Long craftBranchIdForServicesAndBuffs);
+
+    List<Item> findAllByProjectThingOrderByCost(Thing thing);
 }

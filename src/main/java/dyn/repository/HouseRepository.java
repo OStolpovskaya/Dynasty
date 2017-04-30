@@ -2,6 +2,7 @@ package dyn.repository;
 
 import dyn.model.House;
 import dyn.model.HouseType;
+import dyn.model.Project;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,4 +13,6 @@ public interface HouseRepository extends CrudRepository<House, Long> {
     List<House> findByName(String name);
 
     List<House> findAllByType(HouseType type);
+
+    House findByProduction(Project project);
 }

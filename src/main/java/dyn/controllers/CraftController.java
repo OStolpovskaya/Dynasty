@@ -11,6 +11,7 @@ import dyn.repository.FamilyRepository;
 import dyn.repository.UserRepository;
 import dyn.service.CraftService;
 import dyn.service.FamilyLogService;
+import dyn.service.HouseService;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,9 @@ public class CraftController {
     private static final Logger logger = LogManager.getLogger(CraftController.class);
     @Autowired
     CraftService craftService;
+
+    @Autowired
+    HouseService houseService;
 
     @Autowired
     FamilyLogService familyLogService;
@@ -170,16 +174,33 @@ public class CraftController {
         Project project = craftService.getProject(projectId);
         if (project != null) {
             if (family.getCraftProjects().contains(project)) {
-                if (family.hasResourcesForProject(project)) {
+                boolean projectIsProductionOfBuilding = project.isProductionProject();
+                boolean enoughMoney = true;
+                if (projectIsProductionOfBuilding) {
+                    enoughMoney = family.getMoney() >= project.getCost();
+                }
+                if (family.hasResourcesForProject(project) && enoughMoney) {
                     Item item = craftService.createItem(project, family);
                     family.getItems().add(item);
                     family.getFamilyResources().makingProject(project);
+                    if (projectIsProductionOfBuilding) {
+                        family.setMoney(family.getMoney() - project.getCost());
+                    }
                     familyRepository.save(family);
 
                     logger.info(family.logName() + " makes the item for project:" + project.getName());
                     String mess = "Ваша семья изготавливает предмет по проекту '" + project.getName() + "' предмета '" + project.getThing().getName() + "'. Израсходовано: " + project.resString();
+
+                    if (projectIsProductionOfBuilding) {
+                        mess = "Ваша семья изготавливает " + project.getThing().getName() + " " + project.getName() + ". Израсходовано: " + project.getCost() + (project.resString() != "" ? ", " + project.resString() : "");
+                    }
+
                     familyLogService.addToLog(family, mess);
                     redirectAttributes.addFlashAttribute("mess", mess);
+                    if (projectIsProductionOfBuilding) {
+                        House building = houseService.getBuildingByProduction(project);
+                        return "redirect:/game/buildings#building" + building.getId();
+                    }
                     return "redirect:/game/chooseProject?thingId=" + project.getThing().getId();
                 }
                 logger.error(family.logName() + " doesn't have resources to make item for project:" + project.getName());
@@ -192,7 +213,7 @@ public class CraftController {
         }
         logger.error(family.logName() + " want to make item for non-existing project id=" + projectId);
         redirectAttributes.addFlashAttribute("mess", "Такого проекта нет");
-        return "redirect:/game/craft";
+        return "redirect:/game";
     }
 
     @RequestMapping(value = "/game/buyResources", method = RequestMethod.POST)

@@ -16,6 +16,7 @@ public class House {
     private String desc;
     private int pairsNum;
     private int fianceeNum;
+    private Project production;
 
     private List<Room> roomList;
 
@@ -76,6 +77,16 @@ public class House {
 
     public void setFianceeNum(int fiancee_num) {
         this.fianceeNum = fiancee_num;
+    }
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "production")
+    public Project getProduction() {
+        return production;
+    }
+
+    public void setProduction(Project production) {
+        this.production = production;
     }
 
     @Override

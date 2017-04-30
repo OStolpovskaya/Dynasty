@@ -110,4 +110,8 @@ public class CraftService {
         thing.setHeight(height);
         thingRepository.save(thing);
     }
+
+    public List<Item> getItemsOfThing(Thing thing) {
+        return itemRepository.findAllByProjectThingOrderByCost(thing);
+    }
 }

@@ -194,4 +194,8 @@ public class FamilyResources implements ResourcesHolder {
     public String resString() {
         return ResourcesUtils.getResString(this);
     }
+
+    public void addWood(int num) {
+        wood += num;
+    }
 }

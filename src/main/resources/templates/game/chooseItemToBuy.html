@@ -11,9 +11,7 @@
     <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
     <!--/*@thymesVar id="thing" type="dyn.model.Thing"*/-->
     <!--/*@thymesVar id="item" type="dyn.model.Item"*/-->
-    <h3>Семейный бюджет:</h3>
-    <p th:text="${family.getMoney() + ' р.'}"></p>
-    <h3 th:text="${'Выберите понравившуюся вещь типа '+#strings.toUpperCase(thing.getName())}"></h3>
+    <h3 th:text="${#strings.toUpperCase(thing.getName())}"></h3>
     <table class="table table-striped">
         <thead>
         <tr>

@@ -8,6 +8,7 @@ package dyn.controllers;
 import dyn.model.*;
 import dyn.repository.FamilyRepository;
 import dyn.repository.UserRepository;
+import dyn.service.BuffService;
 import dyn.service.FamilyLogService;
 import dyn.service.HouseInterior;
 import dyn.service.HouseService;
@@ -34,6 +35,8 @@ public class HouseController {
     @Autowired
     HouseService houseService;
     @Autowired
+    BuffService buffService;
+    @Autowired
     FamilyLogService familyLogService;
     @Autowired
     private UserRepository userRepository;
@@ -49,8 +52,6 @@ public class HouseController {
         Family family = user.getCurrentFamily();
         model.addAttribute("family", family);
 
-        model.addAttribute("itemsInStorage", houseService.getItemsInStorage(family));
-        model.addAttribute("itemsInStore", houseService.getItemsInStore(family));
         model.addAttribute("roomList", houseService.getRoomsByHouseId(family.getHouse().getId()));
 
         List<RoomView> roomViewList = houseService.getRoomMaps(family.getHouse(), family);
@@ -91,6 +92,20 @@ public class HouseController {
 
         return "game/buildings";
 
+    }
+
+
+    @RequestMapping("/game/storage")
+    public String storage(ModelMap model, RedirectAttributes redirectAttributes) {
+        User user = userRepository.findByUserName(getAuthUser().getUsername());
+        Family family = user.getCurrentFamily();
+        model.addAttribute("family", family);
+
+        model.addAttribute("itemsInStorage", houseService.getItemsInStorage(family));
+        model.addAttribute("serviceAndBuffsInStorage", houseService.getProductionsInStorage(family));
+        model.addAttribute("itemsInStore", houseService.getItemsInStore(family));
+
+        return "game/storage";
     }
 
     @RequestMapping(value = "/game/setItemToThing", method = RequestMethod.POST)
@@ -160,7 +175,7 @@ public class HouseController {
                     logger.debug(family.logName() + "put item " + item.getProject().getName() + "(" + item.getId() + ") back from store to storage");
                     familyLogService.addToLog(family, mess);
                     redirectAttributes.addFlashAttribute("mess", mess);
-                    returnTo = "house";//todo: изменить, когда перенесу склад и выставленные на продажу вещи в отдельную вкладку: returnTo="storage"
+                    returnTo = "storage";
                     break;
             }
             item.setPlace(ItemPlace.storage);
@@ -190,19 +205,19 @@ public class HouseController {
                     String mess = "Вещь выставлена на продажу: '" + item.getProject().getName() + "'. Стоимость: " + cost + " р.)";
                     familyLogService.addToLog(family, mess);
                     redirectAttributes.addFlashAttribute("mess", mess);
-                    return "redirect:/game/house";
+                    return "redirect:/game/storage";
                 }
                 logger.error(family.logName() + " want to put in store item, which is not in the storage: " + item.getProject().getName() + "(" + item.getId() + "), place=" + item.getPlace().toString());
                 redirectAttributes.addFlashAttribute("mess", "Вещь, выставляемая на продажу, должна быть на складе: " + item.getProject().getName() + "(" + item.getId() + ")");
-                return "redirect:/game/house";
+                return "redirect:/game/storage";
             }
             logger.error(family.logName() + " has not item: " + item.getProject().getName() + "(" + item.getId() + ")");
             redirectAttributes.addFlashAttribute("mess", "Вы не владеете такой вещью: " + item.getProject().getName() + "(" + item.getId() + ")");
-            return "redirect:/game/house";
+            return "redirect:/game/storage";
         }
         logger.error(family.logName() + " want to put in store non existing item: " + itemId);
         redirectAttributes.addFlashAttribute("mess", "Вещь не найдена");
-        return "redirect:/game/house";
+        return "redirect:/game/storage";
     }
 
     @RequestMapping(value = "/game/chooseItemToBuy", method = RequestMethod.POST)
@@ -260,7 +275,7 @@ public class HouseController {
             }
             logger.error(family.logName() + "want to buy their own item: " + item.getId());
             redirectAttributes.addFlashAttribute("mess", "Предмет принадлежит Вашей семье и выставлен вами на продажу.");
-            return "redirect:/game/house";
+            return "redirect:/game/storage";
         }
         logger.error(family.logName() + "want to buy non existing item: " + itemId);
         redirectAttributes.addFlashAttribute("mess", "Предмет не найден");

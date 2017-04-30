@@ -24,7 +24,20 @@
             <h3 th:text="${#strings.toUpperCase(building.getName())}">Здание</h3>
             <th:block th:with="roomView = ${roomViewList.get(0)}">
                 <!--/*@thymesVar id="roomView" type="dyn.model.RoomView"*/-->
-                <th:block th:if="${roomView.isFull()}">
+                <th:block th:if="${roomView.isFull()}" th:with="production = ${building.getProduction()}">
+                    <!--/*@thymesVar id="production" type="dyn.model.Project"*/-->
+                    <p th:text="${production.getName()}"></p>
+                    <th:block th:if="${production ne null}">
+
+                        <form th:action="@{/game/makeItem}" method="post">
+                            <label>
+                                <th:block th:text="${production.getName() + ' (' + production.getCost() + ' р.'+ (production.resString()!=''?', '+production.resString():'')+')'}"></th:block>
+                            </label>
+                            <input type="hidden" name="projectId" th:value="${production.getId()}"/>
+                            <button id="makeItemButton" type="submit" class="btn btn-default btn-md" th:disabled="${not family.hasResourcesForProject(production)}">Изготовить предмет</button>
+                        </form>
+
+                    </th:block>
                     <span>Здесь будет кнопка Изготовить предмет. Будет создан итем: place - склад, project - "Приемный ребенок". У проекта: thing - "Бафф на родителя": craft_branch - новый бранч "баффы", у крафтбранчей сделать тип - обычный и редкий.
                         так вот у "баффов" будет редкий тип, который не будет виден на вкладке крафт.
                     к house добавляем свойство production. туда пишем thing.id ("Бафф на родителя"). Здесь смотрим, какой production у хауса, ищем проект для этой вещи. находим "Приемный ребенок". У него есть кост и ресурсы. Берем кост и ресурсы
