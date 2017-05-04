@@ -32,9 +32,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 
 @Controller
 public class GameController {
@@ -55,6 +53,9 @@ public class GameController {
     FamilyLogService familyLogService;
 
     @Autowired
+    HouseService houseService;
+
+    @Autowired
     private UserRepository userRepository;
     @Autowired
     private FamilyRepository familyRepository;
@@ -72,6 +73,9 @@ public class GameController {
 
     @RequestMapping("/game")
     public String main(ModelMap model, RedirectAttributes redirectAttributes) {
+        System.out.println("GameController.main");
+        long startTime = System.currentTimeMillis();
+
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         model.addAttribute("user", user);
 
@@ -91,9 +95,80 @@ public class GameController {
         } else {
             fathers = characterRepository.findByFamilyAndLevel(family, family.getLevel());
         }
-        model.addAttribute("fathers", fathers);
+
+        List<Item> buffsForAll = new ArrayList<>(); //клонировать
+
+        List<Item> buffsForParents = new ArrayList<>();
+        List<Item> buffsForFather = new ArrayList<>();
+        List<Item> buffsForMother = new ArrayList<>();
+
+        List<Item> buffsForChildren = new ArrayList<>(); // повышение навыка, зп
+        List<Item> buffsForSon = new ArrayList<>();
+        List<Item> buffsForSonMarried = new ArrayList<>();
+        List<Item> buffsForDaughter = new ArrayList<>();
+        List<Item> buffsForDaughterMarried = new ArrayList<>();
+        List<Item> buffsForDaughterBride = new ArrayList<>();
+
+        List<Item> buffs = houseService.getBuffsInStorage(family);
+        model.addAttribute("buffs", buffs);
+
+        Map<Project, List<Item>> buffsSkillImprovement = new LinkedHashMap<>();
+        Map<Project, List<Item>> buffsMarried = new LinkedHashMap<>();
+
+        for (Item item : buffs) {
+            Project project = item.getProject();
+            Thing thing = project.getThing();
+            if (thing.getId() == Const.THING_RESOURCES_SERTIFICATE) {
+
+            }
+            if (thing.getId() == Const.THING_SKILL_IMPROVEMENT) {
+                if (!buffsSkillImprovement.containsKey(project)) {
+                    buffsSkillImprovement.put(project, new ArrayList<>());
+                }
+                buffsSkillImprovement.get(project).add(item);
+            }
+            if (thing.getId() == Const.THING_MARRIED_BUFF) {
+                if (!buffsMarried.containsKey(project)) {
+                    buffsMarried.put(project, new ArrayList<>());
+                }
+                buffsMarried.get(project).add(item);
+            }
+            if (thing.getId() == Const.THING_PARENTS_BUFF) {
+
+            }
+        }
+        model.addAttribute("buffsSkillImprovement", buffsSkillImprovement);
+        model.addAttribute("buffsMarried", buffsMarried);
+
+
+        Map<Thing, Map<Project, List<Item>>> itemMap = new HashMap<>();
+        for (Item item : buffs) {
+
+            Thing thing = item.getProject().getThing();
+            if (!itemMap.containsKey(thing)) {
+                itemMap.put(thing, new HashMap<>());
+            }
+            Map<Project, List<Item>> projectMap = itemMap.get(thing);
+            Project project = item.getProject();
+            if (!projectMap.containsKey(project)) {
+                projectMap.put(project, new ArrayList<>());
+            }
+            projectMap.get(project).add(item);
+        }
+        model.addAttribute("itemMap", itemMap);
+
+        Map<Character, List<Character>> fathersMap = new LinkedHashMap<>();
+        for (Character father : fathers) {
+            fathersMap.put(father, father.getChildren());
+        }
+        model.addAttribute("fathers", fathersMap);
+
 
         model.addAttribute("familyLog", familyLogService.getLevelFamilyLog(family));
+
+        long endTime = System.currentTimeMillis();
+
+        System.out.println("That took " + (endTime - startTime) + " milliseconds");
         return "game";
     }
 
@@ -105,6 +180,11 @@ public class GameController {
 
         Set<Achievement> achievements = user.getAchievements();
         model.addAttribute("achievements", achievements);
+
+        List<Character> characters = new ArrayList<>();
+        characters.add(characterRepository.findOne(1357L));
+        characters.add(characterRepository.findFirstBySex("female"));
+        model.addAttribute("characters", characters);
         return "/game/awarded";
     }
 

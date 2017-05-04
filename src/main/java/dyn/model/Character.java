@@ -33,7 +33,7 @@ public class Character {
 
     private String sex;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "father", nullable = true)
     private Character father;
 
@@ -333,6 +333,10 @@ public class Character {
         this.career = career;
     }
 
+    public Fiancee getFiancee() {
+        return fiancee;
+    }
+
     public boolean isFiancee() {
         if (fiancee == null) {
             return false;
@@ -477,5 +481,19 @@ public class Character {
 
     public boolean hasSpouse() {
         return (spouse != null);
+    }
+
+    public String getMainDetails() {
+        return "Character{" +
+                "id=" + id +
+                ", family=" + (family != null ? family.getFamilyName() : "") +
+                ", name='" + name + '\'' +
+                ", level=" + level +
+                ", sex='" + sex + '\'' +
+                ", father=" + (father != null ? father.getName() : "") +
+                ", spouse=" + (spouse != null ? spouse.getName() : "") +
+                ", fiancee=" + isFiancee() +
+                ", race=" + race.getName() +
+                '}';
     }
 }

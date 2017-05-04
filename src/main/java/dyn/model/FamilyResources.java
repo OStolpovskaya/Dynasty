@@ -198,4 +198,8 @@ public class FamilyResources implements ResourcesHolder {
     public void addWood(int num) {
         wood += num;
     }
+
+    public void addFood(int num) {
+        food += num;
+    }
 }

@@ -8,7 +8,7 @@
 </head>
 <body>
 <div th:replace="fragments/navigation :: nav-for-game"></div>
-<div class="container">
+<div class="container" style="width: 1900px;">
     <p th:text="${@careerService.getRandomFromMinToMax(1,100)}"></p>
     <!--/*@thymesVar id="user" type="dyn.model.User"*/-->
     <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
@@ -50,11 +50,133 @@
             </div>
         </div>
 
-        <div class="well">
+        <!--<div class="well">
             <form th:action="@{/game/postAllHumanFiancees}" method="post" class="form-inline">
                 <button class="btn btn-xs btn-primary" type="submit" name="postAllHumanFiancees">Поместить всех дочерей расы "Человек" в базу невест по стандартной стоимости</button>
             </form>
-        </div>
+        </div>-->
+        <th:block th:each="itemMapEntry : ${itemMap}" th:with="thing = ${itemMapEntry.getKey()}, projectMap = ${itemMapEntry.getValue()}">
+            <span th:text="${thing.getName()}"></span><br/>
+            <th:block th:each="projectMapEntry : ${projectMap}" th:with="project = ${projectMapEntry.getKey()}, items = ${projectMapEntry.getValue()}">
+                <span th:text="${' - ' + project.getName()}"></span><br/>
+                <th:block th:each="item : ${items}">
+                    <span th:text="${' --- ' + item.getId()}"></span><br/>
+                </th:block>
+            </th:block>
+        </th:block>
+
+
+        <th:block th:each="mapEntry : ${fathers}" th:with="father = ${mapEntry.getKey()}, childList = ${mapEntry.getValue()}">
+            <!--/*@thymesVar id="father" type="dyn.model.Character"*/-->
+            <a th:name="${'char'+father.getId()}"></a>
+            <div class="well" align="center">
+                <div class="well" style="display: inline-block; padding: 5px;" th:styleappend="${father.getSpouse() != null?'background-color: #dff0d8; border: solid 1px mediumseagreen':''}">
+                    <div style="display: inline-block;">
+                        <th:block th:replace="fragments/char :: char-panel (character=${father})"></th:block>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                    style="width: 180px; border-top-right-radius: 0; border-top-left-radius: 0; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+                                Действия <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">Action</a></li>
+                                <li><a href="#">Another action</a></li>
+                                <li><a href="#">Something else here</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href="#">Separated link</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <th:block th:if="${father.getSpouse() != null}">
+                        <div style="display: inline-block;">
+                            <th:block th:replace="fragments/char :: char-panel (character=${father.getSpouse()})"></th:block>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                        style="width: 180px; border-top-right-radius: 0; border-top-left-radius: 0; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+                                    Действия <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">Action</a></li>
+                                    <li><a href="#">Another action</a></li>
+                                    <li><a href="#">Something else here</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="#">Separated link</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </th:block>
+                </div>
+                <br/>
+                <th:block th:each="child : ${childList}">
+                    <div class="well" style="display: inline-block; padding: 5px;" th:styleappend="${child.getSpouse() != null?'background-color: #dff0d8; border: solid 1px mediumseagreen':''}">
+                        <!--/*@thymesVar id="child" type="dyn.model.Character"*/-->
+                        <div style="display: inline-block;">
+                            <th:block th:replace="fragments/char :: char-panel (character=${child})"></th:block>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                        style="width: 180px; border-top-right-radius: 0; border-top-left-radius: 0; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+                                    Действия <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <th:block th:if="${child.getSex() == 'male'}">
+                                        <th:block th:if="${child.getSpouse() == null and family.getPairsNum() lt family.getHouse().getPairsNum()}">
+                                            <li data-toggle="tooltip" th:title="'Можно создать еще пар: '+${family.getHouse().getPairsNum()-family.getPairsNum()}">
+                                                <form th:action="@{/game/chooseFiancee}" method="post" id="form_choose_fiancee" style="padding: 3px 20px;">
+                                                    <input type="hidden" name="characterId" th:value="${child.getId()}"/>
+                                                    <button type="submit" class="btn btn-primary">
+                                                        Выбрать невесту
+                                                    </button>
+                                                </form>
+                                            </li>
+                                        </th:block>
+                                        <th:block th:if="${child.getSpouse() != null}">
+                                            <th:block th:replace="fragments/char :: li-for-buff-married (character=${child}, projectItemsMap = ${buffsMarried})"></th:block>
+                                        </th:block>
+                                    </th:block>
+                                    <th:block th:if="${child.getSex() == 'female'}">
+                                        <th:block th:if="${child.getSpouse() == null and child.isFiancee() == false and family.getFianceeNum() lt family.getHouse().getFianceeNum()}">
+                                            <li data-toggle="tooltip" th:title="'Введите стоимость выкупа и нажмите кнопку. Можно опубликовать еще анкет: '+${family.getHouse().getFianceeNum()-family.getFianceeNum()}">
+                                                <a href="#">Анкета невесты:</a>
+                                                <form class="form-inline" th:action="@{/game/putUpForFiancee}" method="post" style="margin-left: 30px;">
+                                                    <input type="text" name="cost" class="form-control" th:value="${family.getLevel()}*50" style="width: 60px; margin-left: 4px;"/>
+                                                    <input type="hidden" name="female" th:value="${child.getId()}"/>
+                                                    <button class="btn btn-primary" type="submit"><span class="glyphicon glyphicon-ok"></span></button>
+                                                </form>
+                                            </li>
+                                        </th:block>
+                                    </th:block>
+                                    <th:block th:replace="fragments/char :: li-for-improve-education (character=${child})"></th:block>
+                                    <th:block th:replace="fragments/char :: li-for-buff-improve-skill (character=${child}, projectItemsMap = ${buffsSkillImprovement})"></th:block>
+
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="#">Separated link</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <th:block th:if="${child.getSpouse() != null}">
+                            <div style="display: inline-block;">
+                                <th:block th:replace="fragments/char :: char-panel (character=${child.getSpouse()})"></th:block>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                            style="width: 180px; border-top-right-radius: 0; border-top-left-radius: 0; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+                                        Действия <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <th:block th:replace="fragments/char :: li-for-improve-education (character=${child.getSpouse()})"></th:block>
+                                        <th:block th:replace="fragments/char :: li-for-buff-improve-skill (character=${child.getSpouse()}, projectItemsMap = ${buffsSkillImprovement})"></th:block>
+                                        <li><a href="#">Another action</a></li>
+                                        <li><a href="#">Something else here</a></li>
+                                        <li role="separator" class="divider"></li>
+                                        <li><a href="#">Separated link</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </th:block>
+                    </div>
+                </th:block>
+            </div>
+        </th:block>
+        <!--
         <div align="center" style="overflow-x: scroll; white-space: nowrap;">
 
             <div align="center" class="well" th:each="father : ${fathers}">
@@ -63,7 +185,7 @@
                     <div class="char-view-div">
                         <div th:replace="fragments/char :: char-view (character=${father})"></div>
                     </div>
-                    <!--/*@thymesVar id="father" type="dyn.model.Character"*/-->
+                    &lt;!&ndash;/*@thymesVar id="father" type="dyn.model.Character"*/&ndash;&gt;
                     <div class="char-view-div" style="vertical-align: top" th:if="${father.getSpouse() != null}">
                         <div th:replace="fragments/char :: char-view (character=${father.getSpouse()})"></div>
                     </div>
@@ -71,7 +193,7 @@
                 </div>
                 <div style="display: inline-block; margin-bottom: 3px; border: 2px solid lightgreen; vertical-align: top"
                      th:each="child : ${father.getChildren()}">
-                    <!--/*@thymesVar id="child" type="dyn.model.Character"*/-->
+                    &lt;!&ndash;/*@thymesVar id="child" type="dyn.model.Character"*/&ndash;&gt;
                     <a th:name="${'char'+child.getId()}"></a>
                     <div class="char-view-div" style="vertical-align: top;">
                         <div th:replace="fragments/char :: char-view (character=${child}, education=${@careerService.mayImproveEducation(child.getCareer())})"></div>
@@ -92,7 +214,7 @@
                             <form class="form-inline" th:action="@{/game/applyBuff}" method="post" th:if="${#lists.size(buffList) gt 0}">
                                 <div class="form-group" data-toggle="tooltip" th:title="'Выберите бафф для пары'">
                                     <select class="form-control input-sm" name="buff">
-                                        <!--getBuffListForCharacter(child.getId())-->
+                                        &lt;!&ndash;getBuffListForCharacter(child.getId())&ndash;&gt;
                                         <option th:each="buff : ${buffList}"
                                                 th:value="${buff.getId()}"
                                                 th:text="#{${buff.getTitle()}} + ' (' + ${buff.getCost()} + ' р.)'"
@@ -104,13 +226,13 @@
                                 </div>
                             </form>
                         </th:block>
-                        <!--
+                        &lt;!&ndash;
                         <form class="form-inline" th:action="@{/game/chooseBuffs}" method="post">
                             <input type="hidden" name="characterId" th:value="${child.getId()}"/>
                             <button class="btn btn-xs btn-primary" type="submit">Выбрать баффы</button>
                         </form>
-                        -->
-                        <!--<a href="/game/chooseBuffs" th:href="@{/game/chooseBuffs(characterId=${child.getId()})}" th:text="#{game.chooseBuffs}">Choose buffs</a>-->
+                        &ndash;&gt;
+                        &lt;!&ndash;<a href="/game/chooseBuffs" th:href="@{/game/chooseBuffs(characterId=${child.getId()})}" th:text="#{game.chooseBuffs}">Choose buffs</a>&ndash;&gt;
                     </div>
                     <div th:if="${child.getSex() == 'female' and child.getSpouse() == null and child.isFiancee() == false and family.getFianceeNum() lt family.getHouse().getFianceeNum()}"
                          data-toggle="tooltip" th:title="'Чтобы поместить анкету этого персонажа в базу невест, введите стоимость выкупа и нажмите кнопку. Можно опубликовать еще анкет: '+${family.getHouse().getFianceeNum()-family.getFianceeNum()}"
@@ -128,16 +250,29 @@
             </div>
 
         </div>
+        -->
         <form th:action="@{/game/turn}" method="post">
             <button class="btn btn-lg btn-primary center-block" type="submit" name="turn" th:text="#{game.turn}" style="margin-bottom: 10px; margin-top: 10px;">Turn!</button>
         </form>
     </div>
 </div>
+
 <script src="webjars/jquery/1.9.1/jquery.min.js"></script>
 <script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script>
     $(document).ready(function () {
-        $('[data-toggle="tooltip"]').tooltip();
+        $('[data-toggle="tooltip"]').tooltip({
+            container: 'body'
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $('.dropdown-submenu a.test').on("click", function (e) {
+            $(this).next('ul').toggle();
+            e.stopPropagation();
+            e.preventDefault();
+        });
     });
 </script>
 </body>

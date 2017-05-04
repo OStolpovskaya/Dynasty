@@ -8,7 +8,7 @@ package dyn.controllers;
 import dyn.model.*;
 import dyn.repository.FamilyRepository;
 import dyn.repository.UserRepository;
-import dyn.service.BuffService;
+import dyn.service.CharacterService;
 import dyn.service.FamilyLogService;
 import dyn.service.HouseInterior;
 import dyn.service.HouseService;
@@ -35,7 +35,7 @@ public class HouseController {
     @Autowired
     HouseService houseService;
     @Autowired
-    BuffService buffService;
+    CharacterService characterService;
     @Autowired
     FamilyLogService familyLogService;
     @Autowired
@@ -102,7 +102,10 @@ public class HouseController {
         model.addAttribute("family", family);
 
         model.addAttribute("itemsInStorage", houseService.getItemsInStorage(family));
-        model.addAttribute("serviceAndBuffsInStorage", houseService.getProductionsInStorage(family));
+
+        model.addAttribute("serviceAndBuffsInStorage", houseService.getBuffsInStorage(family));
+        model.addAttribute("levelCharactersAndTheirWifes", characterService.getLevelCharactersAndSonsWifes(family));
+
         model.addAttribute("itemsInStore", houseService.getItemsInStore(family));
 
         return "game/storage";

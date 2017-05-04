@@ -1,5 +1,6 @@
 package dyn.model;
 
+import dyn.service.Const;
 import dyn.utils.ResourcesHolder;
 import dyn.utils.ResourcesUtils;
 
@@ -162,6 +163,6 @@ public class Project implements ResourcesHolder {
     }
 
     public boolean isProductionProject() {
-        return thing.getCraftBranch().getId() == CraftBranch.SERVICE_AND_BUFFS;
+        return thing.getCraftBranch().getId() == Const.SERVICE_AND_BUFFS;
     }
 }

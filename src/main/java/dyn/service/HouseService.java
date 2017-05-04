@@ -138,12 +138,12 @@ public class HouseService {
     }
 
     public List<Item> getItemsInStorage(Family family) {
-        return itemRepository.findByFamilyAndPlaceAndProjectThingCraftBranchIdLessThanEqualOrderByProjectThing(family, ItemPlace.storage, CraftBranch.MEAL);
+        return itemRepository.findByFamilyAndPlaceAndProjectThingCraftBranchIdLessThanEqualOrderByProjectThing(family, ItemPlace.storage, Const.MEAL);
 //        return itemRepository.findByFamilyAndPlaceOrderByProjectThing(family, ItemPlace.storage);
     }
 
-    public List<Item> getProductionsInStorage(Family family) {
-        return itemRepository.findByFamilyAndPlaceAndProjectThingCraftBranchIdOrderByProjectThing(family, ItemPlace.storage, CraftBranch.SERVICE_AND_BUFFS);
+    public List<Item> getBuffsInStorage(Family family) {
+        return itemRepository.findByFamilyAndPlaceAndProjectThingCraftBranchIdOrderByProjectThing(family, ItemPlace.storage, Const.SERVICE_AND_BUFFS);
     }
 
     public List<Item> getItemsInStore(Family family) {

@@ -125,4 +125,22 @@ public class Career {
         sb.append('}');
         return sb.toString();
     }
+
+    public void addToIntelligence(int num) {
+        intelligence += num;
+    }
+
+    public void addToCharisma(int num) {
+        charisma += num;
+    }
+
+    public void addToStrength(int num) {
+        strength += num;
+    }
+
+    public void addToCreativity(int num) {
+        creativity += num;
+    }
+
+
 }
