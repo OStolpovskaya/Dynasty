@@ -25,7 +25,7 @@ public interface ItemRepository extends CrudRepository<Item, Long> {
 
     List<Item> findByFamilyAndPlaceAndProjectThingCraftBranchIdLessThanEqualOrderByProjectThing(Family family, ItemPlace place, Long maxCraftBranchIdForUsualThings);
 
-    List<Item> findByFamilyAndPlaceAndProjectThingCraftBranchIdOrderByProjectThing(Family family, ItemPlace place, Long craftBranchIdForServicesAndBuffs);
+    List<Item> findByFamilyAndPlaceAndProjectThingCraftBranchIdOrderByProjectThingAscProjectAsc(Family family, ItemPlace place, Long craftBranchIdForServicesAndBuffs);
 
     List<Item> findAllByProjectThingOrderByCost(Thing thing);
 }

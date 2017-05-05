@@ -7,13 +7,12 @@ package dyn.controllers;
 
 import dyn.model.*;
 import dyn.model.Character;
+import dyn.model.career.Vocation;
 import dyn.repository.BuffRepository;
 import dyn.repository.CharacterRepository;
 import dyn.repository.FamilyRepository;
 import dyn.repository.UserRepository;
-import dyn.service.Const;
-import dyn.service.FamilyLogService;
-import dyn.service.HouseService;
+import dyn.service.*;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +39,12 @@ public class BuffController {
     BuffRepository buffRepository;
     @Autowired
     FamilyLogService familyLogService;
+    @Autowired
+    AppearanceService app;
+    @Autowired
+    CareerService careerService;
+    @Autowired
+    RaceService raceService;
     @Autowired
     HouseService houseService;
     @Autowired
@@ -130,10 +135,28 @@ public class BuffController {
             Long projectId = item.getProject().getId();
             if (projectId.equals(Const.PROJECT_RES_WOOD)) {
                 family.getFamilyResources().addWood(10);
-                mess = "Добавлено дерево: 10 шт.";
+                mess = "Добавлено: " + Const.RES_WOOD_NAME + " (10 шт.)";
             } else if (projectId.equals(Const.PROJECT_RES_FOOD)) {
                 family.getFamilyResources().addFood(10);
-                mess = "Добавлены продукты: 10 шт.";
+                mess = "Добавлено: " + Const.RES_FOOD_NAME + " (10 шт.)";
+            } else if (projectId.equals(Const.PROJECT_RES_METALL)) {
+                family.getFamilyResources().addMetall(10);
+                mess = "Добавлено: " + Const.RES_METALL_NAME + " (10 шт.)";
+            } else if (projectId.equals(Const.PROJECT_RES_PLASTIC)) {
+                family.getFamilyResources().addPlastic(10);
+                mess = "Добавлено: " + Const.RES_PLASTIC_NAME + " (10 шт.)";
+            } else if (projectId.equals(Const.PROJECT_RES_MICROELECTRONICS)) {
+                family.getFamilyResources().addMicroelectronics(10);
+                mess = "Добавлено: " + Const.RES_MICROELECTRONICS_NAME + " (10 шт.)";
+            } else if (projectId.equals(Const.PROJECT_RES_CLOTH)) {
+                family.getFamilyResources().addCloth(10);
+                mess = "Добавлено: " + Const.RES_CLOTH_NAME + " (10 шт.)";
+            } else if (projectId.equals(Const.PROJECT_RES_STONE)) {
+                family.getFamilyResources().addStone(10);
+                mess = "Добавлено: " + Const.RES_STONE_NAME + " (10 шт.)";
+            } else if (projectId.equals(Const.PROJECT_RES_CHEMICAL)) {
+                family.getFamilyResources().addChemical(10);
+                mess = "Добавлено: " + Const.RES_CHEMICAL_NAME + " (10 шт.)";
             } else {
                 logger.error(family.logName() + "want to apply item of project with no rule: " + projectId);
                 redirectAttributes.addFlashAttribute("mess", "Проект этого предмета еще не описан");
@@ -175,6 +198,26 @@ public class BuffController {
                     if (projectId.equals(Const.PROJECT_SKILL_INTELLIGENCE)) {
                         character.getCareer().addToIntelligence(1);
                         mess = "Интеллект повышен у персонажа: " + character.getFullName();
+                    } else if (projectId.equals(Const.PROJECT_SKILL_CHARISMA)) {
+                        character.getCareer().addToCharisma(1);
+                        mess = "Харизма повышена у персонажа: " + character.getFullName();
+                    } else if (projectId.equals(Const.PROJECT_SKILL_STRENGTH)) {
+                        character.getCareer().addToStrength(1);
+                        mess = "Сила повышена у персонажа: " + character.getFullName();
+                    } else if (projectId.equals(Const.PROJECT_SKILL_CREATIVITY)) {
+                        character.getCareer().addToCreativity(1);
+                        mess = "Творчество повышено у персонажа: " + character.getFullName();
+                    } else if (projectId.equals(Const.PROJECT_SALARY_INC)) {
+                        Buff buff = buffRepository.findOne(Const.BUFF_SALARY_INC);
+                        if (!character.getBuffs().contains(buff) && !character.getBuffs().contains(buff.getContradictory())) {
+                            character.getBuffs().add(buff);
+                            mess = "Персонажу добавлен бафф: " + buff.getTitle();
+                            characterRepository.save(character);
+                        } else {
+                            logger.error(family.logName() + "want to apply buff, but character already has this buff or has contradictory buff: " + buff.getId());
+                            redirectAttributes.addFlashAttribute("mess", "Персонаж уже имеет этот или противоположный ему бафф");
+                            return "redirect:/game";
+                        }
                     } else {
                         logger.error(family.logName() + "want to apply item of project with no rule: " + projectId);
                         redirectAttributes.addFlashAttribute("mess", "Проект этого предмета еще не описан");
@@ -252,6 +295,287 @@ public class BuffController {
                     }
 
                     characterRepository.save(character);
+                    houseService.deleteItem(item);
+
+                    familyLogService.addToLog(family, mess);
+                    redirectAttributes.addFlashAttribute("mess", mess);
+                    logger.info(family.logName() + " apply item of project: '" + item.getProject());
+                    return "redirect:/game#char" + character.getFather().getId();
+                } else {
+                    logger.error(family.logName() + "want to apply item to not right character: " + character.getMainDetails());
+                    redirectAttributes.addFlashAttribute("mess", "Условия применения не подходят к выбранному персонажу " + character.getFullName());
+                    return "redirect:/game";
+                }
+            } else {
+                logger.error(family.logName() + "want to apply item to nonexisting character: " + characterId);
+                redirectAttributes.addFlashAttribute("mess", "Нет такого персонажа");
+                return "redirect:/game";
+            }
+        }
+        logger.error(family.logName() + "want to apply nonexisting item: " + itemId);
+        redirectAttributes.addFlashAttribute("mess", "Нет такого предмета или он вам не принадлежит");
+        return "redirect:/game";
+    }
+
+    @RequestMapping(value = "/game/applyItemParents", method = RequestMethod.POST)
+    public String applyItemParents(ModelMap model, RedirectAttributes redirectAttributes,
+                                   @RequestParam(value = "itemId") Long itemId,
+                                   @RequestParam(value = "characterId") Long characterId) {
+        User user = userRepository.findByUserName(getAuthUser().getUsername());
+        Family family = user.getCurrentFamily();
+
+        String mess = "";
+        Item item = houseService.getItemByFamilyAndItemId(family, itemId);
+        if (item != null) {
+            Character character = characterRepository.findOne(characterId);
+            if (character != null) {
+                boolean levelCheck = character.getLevel() == family.getLevel() - 1;
+                boolean familyCheck;
+                boolean hasChildren;
+
+                if (character.getSex().equals("male")) {
+                    hasChildren = character.getChildren().size() > 0;
+                    familyCheck = character.getFamily() == family;
+                } else {
+                    hasChildren = character.getSpouse().getChildren().size() > 0;
+                    familyCheck = character.getSpouse().getFamily() == family;
+                }
+                if (levelCheck && familyCheck && hasChildren) {
+                    Long projectId = item.getProject().getId();
+                    if (projectId.equals(Const.PROJECT_CLONE)) {
+                        String characterSex = character.getSex();
+
+                        Character clone = new Character();
+                        clone.setSex(characterSex);
+
+                        if (characterSex.equals("male")) {
+                            clone.setName(characterRepository.getRandomNameMale());
+                            clone.setFather(character);
+                        } else {
+                            clone.setName(characterRepository.getRandomNameFemale());
+                            clone.setFather(character.getSpouse());
+                        }
+                        clone.setRace(character.getRace());
+                        clone.setLevel(character.getLevel() + 1);
+
+                        clone.setCareer(careerService.copyCareer(character.getCareer()));
+
+                        clone.setBody(character.getBody());
+                        clone.setEars(character.getEars());
+                        clone.setEyebrows(character.getEyebrows());
+                        clone.setEyeColor(character.getEyeColor());
+                        clone.setEyes(character.getEyes());
+                        clone.setHairColor(character.getHairColor());
+                        clone.setHairType(character.getHairType());
+                        clone.setHairStyle(app.getRandomHairStyle(clone.getSex(), clone.getHairType()));
+                        clone.setHead(character.getHead());
+                        clone.setHeight(character.getHeight());
+                        clone.setMouth(character.getMouth());
+                        clone.setNose(character.getNose());
+                        clone.setSkinColor(character.getSkinColor());
+
+                        clone.generateView();
+
+                        clone.setFamily(family);
+                        characterRepository.save(clone);
+                        mess = "Вы клонировали персонажа " + character.getName() + ". Новый персонаж: " + clone.getName();
+                    } else if (projectId.equals(Const.PROJECT_ADOPTED_CHILD)) {
+                        Character adoptedChild = new Character();
+
+                        if (character.getSex().equals("male")) {
+                            adoptedChild.setFather(character);
+                        } else {
+                            adoptedChild.setFather(character.getSpouse());
+                        }
+
+                        if (Math.random() < 0.5) {
+                            adoptedChild.setSex("male");
+                            adoptedChild.setName(characterRepository.getRandomNameMale());
+                        } else {
+                            adoptedChild.setSex("female");
+                            adoptedChild.setName(characterRepository.getRandomNameFemale());
+                        }
+
+                        adoptedChild.setLevel(character.getLevel() + 1);
+
+                        adoptedChild.setCareer(careerService.generateRandomCareer());
+
+                        adoptedChild.setBody(app.getRandomBody(app.ALL));
+                        adoptedChild.setEars(app.getRandomEars(app.ALL));
+                        adoptedChild.setEyebrows(app.getRandomEyeBrows(app.ALL));
+                        adoptedChild.setEyeColor(app.getRandomEyeColor(app.ALL));
+                        adoptedChild.setEyes(app.getRandomEyes(app.ALL));
+                        adoptedChild.setHairColor(app.getRandomHairColor(app.ALL));
+                        adoptedChild.setHairType(app.getRandomHairType(app.ALL));
+                        adoptedChild.setHairStyle(app.getRandomHairStyle(adoptedChild.getSex(), adoptedChild.getHairType()));
+                        adoptedChild.setHead(app.getRandomHead(app.ALL));
+                        adoptedChild.setHeight(app.getRandomHeight(app.ALL));
+                        adoptedChild.setMouth(app.getRandomMouth(app.ALL));
+                        adoptedChild.setNose(app.getRandomNose(app.ALL));
+                        adoptedChild.setSkinColor(app.getRandomSkinColor(app.ALL));
+
+                        adoptedChild.generateView();
+
+                        Race race = raceService.defineRace(adoptedChild);
+                        adoptedChild.setRace(race);
+
+                        adoptedChild.setFamily(family);
+                        characterRepository.save(adoptedChild);
+                        mess = "Вы приняли в семью приемного ребенка: " + adoptedChild.getName();
+
+                    } else {
+                        logger.error(family.logName() + "want to apply item of project with no rule: " + projectId);
+                        redirectAttributes.addFlashAttribute("mess", "Проект этого предмета еще не описан");
+                        return "redirect:/game";
+                    }
+
+                    houseService.deleteItem(item);
+
+                    familyLogService.addToLog(family, mess);
+                    redirectAttributes.addFlashAttribute("mess", mess);
+                    logger.info(family.logName() + " apply item of project: '" + item.getProject());
+                    return "redirect:/game#char" + character.getId();
+                } else {
+                    logger.error(family.logName() + "want to apply item to not right character: " + character.getMainDetails() + ". Условия: " + levelCheck + "," + familyCheck + "," + hasChildren);
+                    redirectAttributes.addFlashAttribute("mess", "Условия применения не подходят к выбранному персонажу " + character.getFullName());
+                    return "redirect:/game";
+                }
+            } else {
+                logger.error(family.logName() + "want to apply item to nonexisting character: " + characterId);
+                redirectAttributes.addFlashAttribute("mess", "Нет такого персонажа");
+                return "redirect:/game";
+            }
+        }
+        logger.error(family.logName() + "want to apply nonexisting item: " + itemId);
+        redirectAttributes.addFlashAttribute("mess", "Нет такого предмета или он вам не принадлежит");
+        return "redirect:/game";
+    }
+
+    @RequestMapping(value = "/game/applyItemFamily", method = RequestMethod.POST)
+    public String applyItemFamily(ModelMap model, RedirectAttributes redirectAttributes,
+                                  @RequestParam(value = "itemId") Long itemId) {
+        User user = userRepository.findByUserName(getAuthUser().getUsername());
+        Family family = user.getCurrentFamily();
+
+        String mess = "";
+        Item item = houseService.getItemByFamilyAndItemId(family, itemId);
+        if (item != null) {
+            Long projectId = item.getProject().getId();
+            if (projectId.equals(Const.PROJECT_PAIR_ONE_MORE)) {
+                family.setPairsNum(family.getPairsNum() - 1);
+                mess = "Теперь вы можете создать еще одну пару";
+            } else if (projectId.equals(Const.PROJECT_BRIDE_ONE_MORE)) {
+                family.setFianceeNum(family.getFianceeNum() - 1);
+                mess = "Теперь вы можете опубликовать еще одну анкету невесты";
+            } else {
+                logger.error(family.logName() + "want to apply item of project with no rule: " + projectId);
+                redirectAttributes.addFlashAttribute("mess", "Проект этого предмета еще не описан");
+                return "redirect:/game";
+            }
+
+            familyRepository.save(family);
+            houseService.deleteItem(item);
+
+            familyLogService.addToLog(family, mess);
+            redirectAttributes.addFlashAttribute("mess", mess);
+            logger.info(family.logName() + " apply item of project: '" + item.getProject());
+            return "redirect:/game";
+        }
+        logger.error(family.logName() + "want to apply nonexisting item: " + itemId);
+        redirectAttributes.addFlashAttribute("mess", "Нет такого предмета или он вам не принадлежит");
+        return "redirect:/game";
+    }
+
+    @RequestMapping(value = "/game/applyItemChangeSomething", method = RequestMethod.POST)
+    public String applyItemChangeSomething(ModelMap model, RedirectAttributes redirectAttributes,
+                                           @RequestParam(value = "itemId") Long itemId,
+                                           @RequestParam(value = "characterId") Long characterId,
+                                           @RequestParam(value = "param") String param) {
+        User user = userRepository.findByUserName(getAuthUser().getUsername());
+        Family family = user.getCurrentFamily();
+
+        String mess = "";
+        Item item = houseService.getItemByFamilyAndItemId(family, itemId);
+        if (item != null) {
+            Character character = characterRepository.findOne(characterId);
+            if (character != null) {
+                boolean levelCheck = character.getLevel() == family.getLevel();
+                boolean sonCheck = character.getSex().equals("male") && character.getFamily() == family;
+                boolean wifeOfSonCheck = character.getSex().equals("female") && character.getFamily() != family && character.getSpouse().getFamily() == family;
+                boolean daughterCheck = character.getSex().equals("female") && character.getFamily() == family && character.getSpouse() == null && !character.isFiancee();
+                if (levelCheck && (sonCheck || wifeOfSonCheck || daughterCheck)) {
+                    Long projectId = item.getProject().getId();
+                    if (projectId.equals(Const.PROJECT_VOCATION_CHANGE)) {
+                        Vocation vocation = careerService.getVocation(Long.getLong(param));
+                        if (vocation != null) {
+                            character.getCareer().setVocation(vocation);
+                            characterRepository.save(character);
+                            mess = "Призвание персонажа изменено: " + vocation.getName();
+                        } else {
+                            logger.error(family.logName() + "want to change vocation to nonexisting vocation: " + param);
+                            redirectAttributes.addFlashAttribute("mess", "Такого призвания нет");
+                            return "redirect:/game";
+                        }
+                    } else if (projectId.equals(Const.PROJECT_BODY_PART_CHANGE)) {
+                        String part = "";
+                        switch (param) {
+                            case "body":
+                                character.setBody(app.getRandomBody(AppearanceService.USUAL));
+                                part = "тело";
+                                break;
+                            case "ears":
+                                character.setEars(app.getRandomEars(AppearanceService.USUAL));
+                                part = "уши";
+                                break;
+                            case "eyebrows":
+                                character.setEyebrows(app.getRandomEyeBrows(AppearanceService.USUAL));
+                                part = "брови";
+                                break;
+                            case "eyeColor":
+                                character.setEyeColor(app.getRandomEyeColor(AppearanceService.USUAL));
+                                part = "цвет глаз";
+                                break;
+                            case "eyes":
+                                character.setEyes(app.getRandomEyes(AppearanceService.USUAL));
+                                part = "глаза";
+                                break;
+                            case "hairColor":
+                                character.setHairColor(app.getRandomHairColor(AppearanceService.USUAL));
+                                part = "цвет волос";
+                                break;
+                            case "hairType":
+                                character.setHairType(app.getRandomHairType(AppearanceService.USUAL));
+                                part = "тип волос";
+                                break;
+                            case "head":
+                                character.setHead(app.getRandomHead(AppearanceService.USUAL));
+                                part = "голова";
+                                break;
+                            case "height":
+                                character.setHeight(app.getRandomHeight(AppearanceService.USUAL));
+                                part = "рост";
+                                break;
+                            case "mouth":
+                                character.setMouth(app.getRandomMouth(AppearanceService.USUAL));
+                                part = "рот";
+                                break;
+                            case "nose":
+                                character.setNose(app.getRandomNose(AppearanceService.USUAL));
+                                part = "нос";
+                                break;
+                            case "skinColor":
+                                character.setSkinColor(app.getRandomSkinColor(AppearanceService.USUAL));
+                                part = "цвет кожи";
+                                break;
+                        }
+                        characterRepository.save(character);
+                        mess = "У персонажа " + character.getName() + " проведена пластическая операция: " + part;
+                    } else {
+                        logger.error(family.logName() + "want to apply item of project with no rule: " + projectId);
+                        redirectAttributes.addFlashAttribute("mess", "Проект этого предмета еще не описан");
+                        return "redirect:/game";
+                    }
+
                     houseService.deleteItem(item);
 
                     familyLogService.addToLog(family, mess);

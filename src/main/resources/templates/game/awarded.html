@@ -5,17 +5,6 @@
     <title>Достижения</title>
     <link th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}" rel="stylesheet"></link>
     <link th:href="@{/css/common.css}" rel="stylesheet"></link>
-    <style>
-        .dropdown-submenu {
-            position: relative;
-        }
-
-        .dropdown-submenu .dropdown-menu {
-            top: 0;
-            left: 100%;
-            margin-top: -1px;
-        }
-    </style>
 </head>
 <body>
 <div th:replace="fragments/navigation :: nav-for-game"></div>
@@ -47,114 +36,12 @@
     <th:block th:unless="${not #lists.isEmpty(achievements)}">
         <p>Нет достижений</p>
     </th:block>
-    <th:block th:each="character : ${characters}">
-        <!--/*@thymesVar id="character" type="dyn.model.Character"*/-->
-        <div class="panel " th:classappend="${character.getSex() == 'male'?'panel-info':'panel-danger'}" style="width: 200px;float:left; margin: 5px;" align="center">
-            <div class="panel-heading">
-                <th:block th:text="${character.getFullName()}"></th:block>
-                <br/>
-                <p align="center" style="font-size: 10px; margin: 0px;" data-toggle="tooltip" th:alt-title="${'Раса'}">
-                    <span th:if="${character.getRace().getId() == 1}" th:text="${character.getRace().getName()}"></span>
-                    <span th:unless="${character.getRace().getId() == 1}" th:text="${character.getRace().getName()}" style="color:DarkOrchid"></span>
-                </p>
-            </div>
-            <img height="200px" width="200px"
-                 th:src="@{'data:image/png;base64,'+${character.getEncodedView()}}"
-                 data-toggle="tooltip" th:alt-title="#{tooltip(
-                                           ${character.getFullName()},
-                                           #{${character.getBody().getName()}}+${character.getBody().isRare()?'*':''},
-                                           #{${character.getEars().getName()}}+${character.getEars().isRare()?'*':''},
-                                           #{${character.getEyebrows().getName()}}+${character.getEyebrows().isRare()?'*':''},
-                                           #{${character.getEyeColor().getName()}}+${character.getEyeColor().isRare()?'*':''},
-                                           #{${character.getEyes().getName()}}+${character.getEyes().isRare()?'*':''},
-                                           #{${character.getHairColor().getName()}}+${character.getHairColor().isRare()?'*':''},
-                                           #{${character.getHairStyle().getName()}},
-                                           #{${character.getHairType().getName()}}+${character.getHairType().isRare()?'*':''},
-                                           #{${character.getHead().getName()}}+${character.getHead().isRare()?'*':''},
-                                           #{${character.getHeight().getName()}}+${character.getHeight().isRare()?'*':''},
-                                           #{${character.getMouth().getName()}}+${character.getMouth().isRare()?'*':''},
-                                           #{${character.getNose().getName()}}+${character.getNose().isRare()?'*':''},
-                                           #{${character.getSkinColor().getName()}}+${character.getSkinColor().isRare()?'*':''})}"
-                 data-placement="right"/>
-            <div class="btn-group">
-                <button type="button" th:with="career = ${character.getCareer()}" class="btn btn-xs btn-primary" style="width: 173px; height: 58px; border-top-left-radius: 0;">
-                    <div style="float: left;">
-                        <img th:src="@{'/graphics/vocation/vocations_'+${career.getVocation().getId()}+'.png' }" data-toggle="tooltip"
-                             th:alt-title="${'Призвание: ' + career.getVocation().getName() + '. Приносит ресурсы: ' + career.getVocation().resString(1)}"
-                             height="35px" width="35px">
-                        </img>
-                        <div style="position: relative; float: right"
-                             data-toggle="tooltip" th:title="${'Образование: '+career.getEducation().getName()+(@careerService.mayImproveEducation(career)==true?'. Можно повысить!':'')}">
-                            <span class="glyphicon glyphicon-education" style="position: absolute; top: 2px; left: 3px;"></span>
-                            <span th:if="${career.getEducation().getId() == 2}" class="glyphicon glyphicon-education" style="position: absolute; top: 12px; left: 3px;"></span>
-                            <span th:if="${career.getEducation().getId() == 3}" class="glyphicon glyphicon-education" style="position: absolute; top: 22px; left: 3px;"></span>
-                            <span th:if="${@careerService.mayImproveEducation(career)}" class="glyphicon glyphicon-upload" style="position: absolute; top: 23px; color: orange; left: 3px;"></span>
-                        </div>
-                    </div>
-                    <span th:text="${career.getIntelligence()}" class="badge" data-toggle="tooltip" title="Интеллект" style="width: 31px;"></span>&nbsp;
-                    <span th:text="${career.getCharisma()}" class="badge" data-toggle="tooltip" title="Харизма" style="width: 31px;">5</span><br/>
-                    <span th:text="${career.getStrength()}" class="badge" data-toggle="tooltip" title="Сила" style="width: 31px;">100</span>&nbsp;
-                    <span th:text="${career.getCreativity()}" class="badge" data-toggle="tooltip" title="Творчество" style="width: 31px;">5</span>
-                    <br/>
-                    <th:block th:if="${career.getProfession()!=null}">
-                        <span th:text="${career.getProfession().getName()+'(' + career.getProfession().getLevel() + ')'}"
-                              data-toggle="tooltip" th:alt-title="Профессия">
-                        </span>
-                    </th:block>
-                    <th:block th:unless="${career.getProfession()!=null}">
-                        &nbsp;
-                    </th:block>
-                </button>
-                <button type="button" class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 58px; border-top-right-radius: 0;">
-                    <span class="caret"></span>
-                    <span class="sr-only">Toggle Dropdown</span>
-                </button>
-                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel" style="width: 200px;">
-                    <li><a href="#">Action</a></li>
-                    <li><a href="#">Another action</a></li>
-                    <li><a href="#">Something else here</a></li>
-                    <li>
-                        <a href="javascript:{}" onclick="document.getElementById('form_improve_education').submit(); return false;">Повысить образование</a>
-                        <form th:action="@{/game/improveEducation}" method="post" id="form_improve_education">
-                            <input type="hidden" name="character" th:value="${character.getId()}"/>
-                        </form>
-                    </li>
-                    <li role="separator" class="divider"></li>
-                    <li><a href="#">Separated link</a></li>
-                    <li class="dropdown-submenu">
-                        <a class="test" tabindex="-1" href="#">New dropdown <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a tabindex="-1" href="#">2nd level dropdown</a></li>
-                            <li><a tabindex="-1" href="#">2nd level dropdown</a></li>
-                            <li class="dropdown-submenu">
-                                <a class="test" href="#">Another dropdown <span class="caret"></span></a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">3rd level dropdown</a></li>
-                                    <li><a href="#">3rd level dropdown</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-
-        </div>
-    </th:block>
 </div>
 <script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
 <script>
     $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip();
-    });
-</script>
-<script>
-    $(document).ready(function () {
-        $('.dropdown-submenu a.test').on("click", function (e) {
-            $(this).next('ul').toggle();
-            e.stopPropagation();
-            e.preventDefault();
-        });
     });
 </script>
 </body>

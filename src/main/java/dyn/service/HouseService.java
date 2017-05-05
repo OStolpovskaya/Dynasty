@@ -143,7 +143,7 @@ public class HouseService {
     }
 
     public List<Item> getBuffsInStorage(Family family) {
-        return itemRepository.findByFamilyAndPlaceAndProjectThingCraftBranchIdOrderByProjectThing(family, ItemPlace.storage, Const.SERVICE_AND_BUFFS);
+        return itemRepository.findByFamilyAndPlaceAndProjectThingCraftBranchIdOrderByProjectThingAscProjectAsc(family, ItemPlace.storage, Const.SERVICE_AND_BUFFS);
     }
 
     public List<Item> getItemsInStore(Family family) {

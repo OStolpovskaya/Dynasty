@@ -12,6 +12,8 @@ public class Buff {
     public static final String MANY_SONS = "buffs.title.manySons";
     public static final String MANY_DAUGHTERS = "buffs.title.manyDaughters";
     public static final String GENETIC_MOD = "buffs.title.geneticMod";
+    public static final String ONE_MORE_CHILD = "buffs.title.oneMoreChild";
+    public static final String SALARY_INC = "buffs.title.salaryInc";
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -8,7 +8,7 @@
 </head>
 <body>
 <div th:replace="fragments/navigation :: nav-for-game"></div>
-<div class="container" style="width: 1400px;">
+<div class="container" style="width: 1600px;">
     <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
     <th:block th:if="${family.getLevel() == 0}">
         <div class="alert alert-success">
@@ -24,6 +24,7 @@
     <th:block th:each="parentThing : ${parentThings}">
         <!--/*@thymesVar id="parentThing" type="dyn.model.Thing"*/-->
         <div class="well" style="height: 600px;">
+            <a th:name="${'craftbranch'+parentThing.getCraftBranch().getId()}"></a>
             <h3 th:text="${#strings.capitalize(parentThing.getCraftBranch().getName())}"></h3>
             <div class="tree">
                 <ul>

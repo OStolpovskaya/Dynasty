@@ -26,7 +26,7 @@
     </nav>
 </div>
 <div th:fragment="nav-for-game">
-    <nav role="navigation" class="navbar navbar-default">
+    <nav role="navigation" class="navbar navbar-default navbar-fixed-top">
         <div>
             <a href="/" class="navbar-brand">Dynasty</a>
         </div>
@@ -43,7 +43,48 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
-                <li th:if="${family != null}"><span th:text="${family.getMoney() + ' р.'}" class="navbar-brand"></span></li>
+                <li th:if="${family != null}">
+                    <!--<span th:text="${family.getMoney() + ' р.'}" data-toggle="tooltip" th:alt-title="${'Бюджет: '+family.getMoney() + ' р.\nДерево: ' + family.getFamilyResources().getWood()}" data-placement="bottom"
+                          class="navbar-text"></span>-->
+                    <!--<a href="#" data-toggle="popover" title="Popover Header" data-trigger="hover" data-placement="bottom" data-original-title="First<br />Second"
+                       th:text="${family.getMoney()+' р.'}">Toggle popover</a>-->
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default navbar-btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <th:block th:text="${family.getMoney()+' р.'}"></th:block>
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" style="width: 250px;">
+                            <li><a href="#">Продукты:
+                                <th:block th:text="${family.getFamilyResources().getFood()}"></th:block>
+                            </a></li>
+                            <li><a href="#">Дерево:
+                                <th:block th:text="${family.getFamilyResources().getWood()}"></th:block>
+                            </a></li>
+                            <li><a href="#">Металл:
+                                <th:block th:text="${family.getFamilyResources().getMetall()}"></th:block>
+                            </a></li>
+                            <li><a href="#">Пластик, резина:
+                                <th:block th:text="${family.getFamilyResources().getPlastic()}"></th:block>
+                            </a></li>
+                            <li><a href="#">Микроэлетроника:
+                                <th:block th:text="${family.getFamilyResources().getMicroelectronics()}"></th:block>
+                            </a></li>
+                            <li><a href="#">Ткань, кожа, бумага:
+                                <th:block th:text="${family.getFamilyResources().getCloth()}"></th:block>
+                            </a></li>
+                            <li><a href="#">Камень, стекло, керамика:
+                                <th:block th:text="${family.getFamilyResources().getStone()}"></th:block>
+                            </a></li>
+                            <li><a href="#">Химия, краски:
+                                <th:block th:text="${family.getFamilyResources().getChemical()}"></th:block>
+                            </a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="#">Крафт баллы:
+                                <th:block th:text="${family.getCraftPoint()}"></th:block>
+                            </a></li>
+                        </ul>
+                    </div>
+                </li>
                 <li th:if="${family != null}"><span th:text="${family.getFamilyName() + ' ('+family.getUser().getUserName()+') '}" class="navbar-brand"></span></li>
                 <li th:if="${family != null}"><span th:text="${family.getLevel()}" class="navbar-brand"></span></li>
                 <li><a href="?language=en">en</a></li>
@@ -52,7 +93,11 @@
             </ul>
         </div>
     </nav>
-    <div class="alert alert-warning" th:if="${mess!=null}" th:utext="${mess}"></div>
+    <!--<div class="alert alert-warning" th:if="${mess!=null}" th:utext="${mess}"></div>-->
+    <div class="alert alert-warning alert-dismissible" th:if="${mess!=null}" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <th:block th:utext="${mess}"></th:block>
+    </div>
 </div>
 <div th:fragment="nav-for-admin">
     <nav role="navigation" class="navbar navbar-default">

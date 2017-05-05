@@ -7,54 +7,100 @@
 </head>
 <body>
 
+<th:block th:fragment="li-for-buff-change (character, projectItemsMap)">
+    <th:block th:if="${#maps.size(projectItemsMap)>0}">
+
+        <th:block th:each="mapEntry : ${projectItemsMap}" th:with="project = ${mapEntry.getKey()}, items = ${mapEntry.getValue()}">
+            <!--/*@thymesVar id="project" type="dyn.model.Project"*/-->
+            <li style="height: 34px;">
+                <form th:action="@{/game/applyItemChangeSomething}" method="post" class="form-inline" style="margin-left: 10px;">
+                    <input type="hidden" name="characterId" th:value="${character.getId()}"/>
+                    <input type="hidden" name="itemId" th:value="${items.get(0).getId()}"/>
+                    <button type="submit" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-ok"></span></button>
+                    <th:block th:if="${project.getId() eq @const.PROJECT_BODY_PART_CHANGE}">
+                        <div class="form-group">
+                            <span th:text="${project.getName() + ' (' + #lists.size(items) + ' шт.): '}" style="padding-left: 5px;"></span>
+                            <select class="form-control input-sm" name="param">
+                                <option value="body">Тело</option>
+                                <option value="ears">Уши</option>
+                                <option value="eyebrows">Брови</option>
+                                <option value="eyeColor">Цвет глаз</option>
+                                <option value="eyes">Глаза</option>
+                                <option value="hairColor">Цвет волос</option>
+                                <option value="hairType">Тип волос</option>
+                                <option value="head">Голова</option>
+                                <option value="height">Рост</option>
+                                <option value="mouth">Рот</option>
+                                <option value="nose">Нос</option>
+                                <option value="skinColor">Цвет кожи</option>
+                            </select>
+                        </div>
+                    </th:block>
+                    <th:block th:if="${project.getId() eq @const.PROJECT_VOCATION_CHANGE}">
+                        <span th:text="${project.getName() + ' (' + #lists.size(items) + ' шт.): '}" style="padding-left: 5px;"></span>
+                        <select class="form-control input-sm" name="param">
+                            <option th:each="vocation : ${@vocationRepository.findAll()}" th:value="${vocation.getId()}" th:text="${vocation.getName()}">Тело</option>
+                        </select>
+                    </th:block>
+                </form>
+            </li>
+        </th:block>
+
+    </th:block>
+</th:block>
+
+<th:block th:fragment="li-for-buff-parents (character, projectItemsMap)">
+    <th:block th:if="${#maps.size(projectItemsMap)>0}">
+        <th:block th:each="mapEntry : ${projectItemsMap}" th:with="project = ${mapEntry.getKey()}, items = ${mapEntry.getValue()}">
+            <li>
+                <form th:action="@{/game/applyItemParents}" method="post" class="form-inline" style="margin-left: 10px;">
+                    <input type="hidden" name="characterId" th:value="${character.getId()}"/>
+                    <input type="hidden" name="itemId" th:value="${items.get(0).getId()}"/>
+                    <button type="submit" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-ok"></span></button>
+                    <span th:text="${project.getName() + ' (' + #lists.size(items) + ' шт.)'}" style="padding-left: 5px;"></span>
+                </form>
+            </li>
+        </th:block>
+    </th:block>
+</th:block>
+
 <th:block th:fragment="li-for-buff-improve-skill (character, projectItemsMap)">
     <th:block th:if="${#maps.size(projectItemsMap)>0}">
-        <li class="dropdown-submenu">
-            <a class="test" tabindex="-1" href="#">Повысить навык <span class="caret-right"></span></a>
-            <ul class="dropdown-menu" style="width: 200px;">
-                <th:block th:each="mapEntry : ${projectItemsMap}" th:with="project = ${mapEntry.getKey()}, items = ${mapEntry.getValue()}">
-                    <li>
-                        <form class="form-inline" th:action="@{/game/applyItemSkill}" method="post" style="margin-left: 10px;">
-                            <input type="hidden" name="characterId" th:value="${character.getId()}"/>
-                            <input type="hidden" name="itemId" th:value="${items.get(0).getId()}"/>
-                            <button type="submit" th:text="${project.getName() + ' (' + #lists.size(items) + ' шт.)'}"
-                                    class="btn btn-primary">
-                            </button>
-                        </form>
-                    </li>
-                </th:block>
-            </ul>
-        </li>
+        <th:block th:each="mapEntry : ${projectItemsMap}" th:with="project = ${mapEntry.getKey()}, items = ${mapEntry.getValue()}">
+            <li>
+                <form th:action="@{/game/applyItemSkill}" method="post" class="form-inline" style="margin-left: 10px;">
+                    <input type="hidden" name="characterId" th:value="${character.getId()}"/>
+                    <input type="hidden" name="itemId" th:value="${items.get(0).getId()}"/>
+                    <button type="submit" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-ok"></span></button>
+                    <span th:text="${project.getName() + ' (' + #lists.size(items) + ' шт.)'}" style="padding-left: 5px;"></span>
+                </form>
+            </li>
+        </th:block>
     </th:block>
 </th:block>
 
 <th:block th:fragment="li-for-buff-married (character, projectItemsMap)">
     <th:block th:if="${#maps.size(projectItemsMap)>0}">
-        <li class="dropdown-submenu">
-            <a class="test" tabindex="-1" href="#">Применить бафф <span class="caret-right"></span></a>
-            <ul class="dropdown-menu" style="width: 200px;">
-                <th:block th:each="mapEntry : ${projectItemsMap}" th:with="project = ${mapEntry.getKey()}, items = ${mapEntry.getValue()}">
-                    <li>
-                        <form class="form-inline" th:action="@{/game/applyItemMarried}" method="post" style="margin-left: 10px;">
-                            <input type="hidden" name="characterId" th:value="${character.getId()}"/>
-                            <input type="hidden" name="itemId" th:value="${items.get(0).getId()}"/>
-                            <button type="submit" th:text="${project.getName() + ' (' + #lists.size(items) + ' шт.)'}"
-                                    class="btn btn-primary">
-                            </button>
-                        </form>
-                    </li>
-                </th:block>
-            </ul>
-        </li>
+        <th:block th:each="mapEntry : ${projectItemsMap}" th:with="project = ${mapEntry.getKey()}, items = ${mapEntry.getValue()}">
+            <li>
+                <form th:action="@{/game/applyItemMarried}" method="post" class="form-inline" style="margin-left: 10px;">
+                    <input type="hidden" name="characterId" th:value="${character.getId()}"/>
+                    <input type="hidden" name="itemId" th:value="${items.get(0).getId()}"/>
+                    <button type="submit" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-ok"></span></button>
+                    <span th:text="${project.getName() + ' (' + #lists.size(items) + ' шт.)'}" style="padding-left: 5px;"></span>
+                </form>
+            </li>
+        </th:block>
     </th:block>
 </th:block>
 
 <th:block th:fragment="li-for-improve-education (character)">
     <!--/*@thymesVar id="character" type="dyn.model.Character"*/-->
     <li th:if="${@careerService.mayImproveEducation(character.getCareer())}">
-        <form th:action="@{/game/improveEducation}" method="post" style="padding: 3px 20px;">
+        <form th:action="@{/game/improveEducation}" method="post" style="margin-left: 10px;">
             <input type="hidden" name="character" th:value="${character.getId()}"/>
-            <button type="submit" class="btn btn-primary" th:disabled="${character.getFamily().getMoney() lt @const.EDUCATION_IMPROVE_COST}" th:text="${'Повысить образование (' + @const.EDUCATION_IMPROVE_COST + ' р.)'}"></button>
+            <button type="submit" class="btn btn-primary btn-xs" th:disabled="${character.getFamily().getMoney() lt @const.EDUCATION_IMPROVE_COST}"><span class="glyphicon glyphicon-ok"></span></button>
+            <span th:text="${'Повысить образование (' + @const.EDUCATION_IMPROVE_COST + ' р.)'}" style="padding-left: 5px;"></span>
         </form>
     </li>
 </th:block>
@@ -63,7 +109,7 @@
     <!--/*@thymesVar id="character" type="dyn.model.Character"*/-->
     <div class="panel " th:classappend="${character.getSex() == 'male'?'panel-info':'panel-danger'}" style="width: 200px; margin-bottom: 0px;">
         <div class="panel-heading" align="center" style="padding: 0">
-            <span th:text="${character.getName()}" data-toggle="tooltip" th:alt-title="${character.getFullName()}"></span>
+            <span th:text="${character.getName()+ ' (' + character.getId() + ')'}" data-toggle="tooltip" th:alt-title="${character.getFullName()}"></span>
             <br/>
             <p align="center" style="font-size: 10px; margin: 0px;" data-toggle="tooltip" th:alt-title="${'Раса'}">
                 <span th:if="${character.getRace().getId() == 1}" th:text="${character.getRace().getName()}"></span>
@@ -91,7 +137,8 @@
                  data-placement="right"/>
             <!--<div style="position: absolute; top: 0" th:each="buff : ${character.getBuffs()}">-->
             <th:block th:each="buff : ${character.getBuffs()}" th:with="count=${(buffStat.count-1) * 20}">
-                <img th:src="@{'/graphics/buffs/'+${buff.getTitle()}+'.png' }"
+                <!--/*@thymesVar id="buff" type="dyn.model.Buff"*/-->
+                <img th:src="@{'/graphics/buffs/buffs_'+${buff.getId() lt 10?'0'+buff.getId():buff.getId()}+'.png' }"
                      data-toggle="tooltip" th:alt-title="#{${buff.getTitle()}} + ': ' + #{${buff.getDescription()}}"
                      th:height="${imsize}==null?20:50" th:style="${'position: absolute; top: '+count+'px; left: 0'}">
                 </img>
@@ -330,7 +377,7 @@
     </a>
     <div>
         <div style="display: inline-block;" th:each="buff : ${character.getBuffs()}">
-            <img th:src="@{'/graphics/buffs/'+${buff.getTitle()}+'.png' }"
+            <img th:src="@{'/graphics/buffs/buffs_'+${buff.getId() lt 10?'0'+buff.getId():buff.getId()}+'.png' }"
                  data-toggle="tooltip" th:alt-title="#{${buff.getTitle()}} + ': ' + #{${buff.getDescription()}}"
                  th:height="${imsize}==null?20:50">
             </img>

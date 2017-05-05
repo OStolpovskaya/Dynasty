@@ -144,4 +144,28 @@ public class CareerService {
     public Vocation getVocation(long vocationId) {
         return vocationRepository.findOne(vocationId);
     }
+
+    public Career copyCareer(Career career) {
+        Career newCareer = new Career();
+        newCareer.setVocation(career.getVocation());
+        newCareer.setIntelligence(career.getIntelligence());
+        newCareer.setCharisma(career.getCharisma());
+        newCareer.setStrength(career.getStrength());
+        newCareer.setCreativity(career.getCreativity());
+        newCareer.setEducation(educationRepository.findOne(Education.PRIMARY));
+        newCareer.setProfession(null);
+        return newCareer;
+    }
+
+    public Career generateRandomCareer() {
+        Career newCareer = new Career();
+        newCareer.setVocation(getRandomVocation());
+        newCareer.setIntelligence((int) (1 + Math.random() * 50));
+        newCareer.setCharisma((int) (1 + Math.random() * 50));
+        newCareer.setStrength((int) (1 + Math.random() * 50));
+        newCareer.setCreativity((int) (1 + Math.random() * 50));
+        newCareer.setEducation(educationRepository.findOne(Education.PRIMARY));
+        newCareer.setProfession(null);
+        return newCareer;
+    }
 }

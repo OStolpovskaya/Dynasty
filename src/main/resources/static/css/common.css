@@ -1,3 +1,7 @@
+body {
+    padding-top: 70px;
+}
+
 .has-error {
     color: red
 }
@@ -212,4 +216,8 @@ right connector from last child*/
     top: 0;
     left: 100%;
     margin-top: -1px;
+}
+
+.popover {
+    width: 200px;
 }

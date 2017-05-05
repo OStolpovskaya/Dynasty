@@ -202,4 +202,30 @@ public class FamilyResources implements ResourcesHolder {
     public void addFood(int num) {
         food += num;
     }
+
+    public void addMetall(int num) {
+        metall += num;
+    }
+
+    public void addPlastic(int num) {
+        plastic += num;
+    }
+
+    public void addMicroelectronics(int num) {
+        microelectronics += num;
+    }
+
+    public void addCloth(int num) {
+        cloth += num;
+    }
+
+    public void addStone(int num) {
+        stone += num;
+    }
+
+    public void addChemical(int num) {
+        chemical += num;
+    }
+
+
 }

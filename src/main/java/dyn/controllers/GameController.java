@@ -96,30 +96,24 @@ public class GameController {
             fathers = characterRepository.findByFamilyAndLevel(family, family.getLevel());
         }
 
-        List<Item> buffsForAll = new ArrayList<>(); //клонировать
-
-        List<Item> buffsForParents = new ArrayList<>();
-        List<Item> buffsForFather = new ArrayList<>();
-        List<Item> buffsForMother = new ArrayList<>();
-
-        List<Item> buffsForChildren = new ArrayList<>(); // повышение навыка, зп
-        List<Item> buffsForSon = new ArrayList<>();
-        List<Item> buffsForSonMarried = new ArrayList<>();
-        List<Item> buffsForDaughter = new ArrayList<>();
-        List<Item> buffsForDaughterMarried = new ArrayList<>();
-        List<Item> buffsForDaughterBride = new ArrayList<>();
-
         List<Item> buffs = houseService.getBuffsInStorage(family);
         model.addAttribute("buffs", buffs);
 
-        Map<Project, List<Item>> buffsSkillImprovement = new LinkedHashMap<>();
+        Map<Project, List<Item>> buffsForParents = new LinkedHashMap<>();
         Map<Project, List<Item>> buffsMarried = new LinkedHashMap<>();
+        Map<Project, List<Item>> buffsResources = new LinkedHashMap<>();
+        Map<Project, List<Item>> buffsSkillImprovement = new LinkedHashMap<>();
+        Map<Project, List<Item>> buffsFamily = new LinkedHashMap<>();
+        Map<Project, List<Item>> buffsForChildrenChange = new LinkedHashMap<>();
 
         for (Item item : buffs) {
             Project project = item.getProject();
             Thing thing = project.getThing();
-            if (thing.getId() == Const.THING_RESOURCES_SERTIFICATE) {
-
+            if (thing.getId() == Const.THING_CHILDREN_BUFF) {
+                if (!buffsForChildrenChange.containsKey(project)) {
+                    buffsForChildrenChange.put(project, new ArrayList<>());
+                }
+                buffsForChildrenChange.get(project).add(item);
             }
             if (thing.getId() == Const.THING_SKILL_IMPROVEMENT) {
                 if (!buffsSkillImprovement.containsKey(project)) {
@@ -134,11 +128,30 @@ public class GameController {
                 buffsMarried.get(project).add(item);
             }
             if (thing.getId() == Const.THING_PARENTS_BUFF) {
-
+                if (!buffsForParents.containsKey(project)) {
+                    buffsForParents.put(project, new ArrayList<>());
+                }
+                buffsForParents.get(project).add(item);
+            }
+            if (thing.getId() == Const.THING_FAMILY_BUFF) {
+                if (!buffsFamily.containsKey(project)) {
+                    buffsFamily.put(project, new ArrayList<>());
+                }
+                buffsFamily.get(project).add(item);
+            }
+            if (thing.getId() == Const.THING_RESOURCES_SERTIFICATE) {
+                if (!buffsResources.containsKey(project)) {
+                    buffsResources.put(project, new ArrayList<>());
+                }
+                buffsResources.get(project).add(item);
             }
         }
         model.addAttribute("buffsSkillImprovement", buffsSkillImprovement);
         model.addAttribute("buffsMarried", buffsMarried);
+        model.addAttribute("buffsForParents", buffsForParents);
+        model.addAttribute("buffsForChildrenChange", buffsForChildrenChange);
+        model.addAttribute("buffsFamily", buffsFamily);
+        model.addAttribute("buffsResources", buffsResources);
 
 
         Map<Thing, Map<Project, List<Item>>> itemMap = new HashMap<>();
@@ -287,50 +300,13 @@ public class GameController {
         List<Character> workers = characterRepository.findByFamilyAndLevel(family, family.getLevel());
         for (Character worker : workers) {
             if (worker.getSex().equals("male")) {
-                careerService.generateProfession(worker);
-                int salary = worker.getCareer().getResultSalary();
-                family.setMoney(family.getMoney() + salary);
-                sb.append(worker.getName() + " приобретает профессию " + worker.getCareer().getProfession().getName() + " (" + worker.getCareer().getProfession().getLevel() + ") и зарабатывает " + salary + " р. ");
-
-                family.getFamilyResources().addResFromVocation(worker.getCareer());
-                sb.append("А его призвание приносит ресурсы: " + worker.getCareer().getVocation().resString(worker.getCareer().getProfession().getLevel()) + "<br>");
-
-                Achievement achievement = achievementService.checkAchievement(AchievementType.vocation10level, user, worker);
-                if (achievement != null) {
-                    String locAchievementName = messageSource.getMessage(achievement.getName(), null, loc());
-                    sb.append(messageSource.getMessage("turn.achievement", new Object[]{locAchievementName}, loc()));
-                }
+                genProfession(worker, family, user, sb);
                 if (worker.hasSpouse()) {
-                    Character workerWife = worker.getSpouse();
-                    careerService.generateProfession(workerWife);
-                    int wifeSalary = workerWife.getCareer().getResultSalary();
-                    family.setMoney(family.getMoney() + wifeSalary);
-                    sb.append("   Его жена " + workerWife.getName() + " приобретает профессию " + workerWife.getCareer().getProfession().getName() + " (" + workerWife.getCareer().getProfession().getLevel() + ") и зарабатывает " + wifeSalary + " р. ");
-
-                    family.getFamilyResources().addResFromVocation(workerWife.getCareer());
-                    sb.append("А ее призвание приносит ресурсы: " + workerWife.getCareer().getVocation().resString(workerWife.getCareer().getProfession().getLevel()) + "<br>");
-
-                    achievement = achievementService.checkAchievement(AchievementType.vocation10level, user, workerWife);
-                    if (achievement != null) {
-                        String locAchievementName = messageSource.getMessage(achievement.getName(), null, loc());
-                        sb.append(messageSource.getMessage("turn.achievement", new Object[]{locAchievementName}, loc()));
-                    }
+                    genProfession(worker.getSpouse(), family, user, sb);
                 }
             } else {
                 if (!worker.isFiancee() && !worker.hasSpouse()) {
-                    careerService.generateProfession(worker);
-                    int salary = worker.getCareer().getResultSalary();
-                    family.setMoney(family.getMoney() + salary);
-                    sb.append(worker.getName() + " приобретает профессию " + worker.getCareer().getProfession().getName() + " (" + worker.getCareer().getProfession().getLevel() + ") и зарабатывает " + salary + " р. ");
-
-                    family.getFamilyResources().addResFromVocation(worker.getCareer());
-                    sb.append("А ее призвание приносит ресурсы: " + worker.getCareer().getVocation().resString(worker.getCareer().getProfession().getLevel()) + "<br>");
-
-                    Achievement achievement = achievementService.checkAchievement(AchievementType.vocation10level, user, worker);
-                    if (achievement != null) {
-                        String locAchievementName = messageSource.getMessage(achievement.getName(), null, loc());
-                        sb.append(messageSource.getMessage("turn.achievement", new Object[]{locAchievementName}, loc()));
-                    }
+                    genProfession(worker, family, user, sb);
                 }
             }
         }
@@ -375,6 +351,9 @@ public class GameController {
                 childAmount = 6;
             } else {
                 childAmount = getAmountOfChildren(character);
+            }
+            if (character.isBuffedBy(Buff.ONE_MORE_CHILD)) {
+                childAmount += 1;
             }
 
             logger.info(user.getUserName() + "'s character " + character.getName() + " marries " + wife.getName() + " and they have " + childAmount + " children");
@@ -484,6 +463,27 @@ public class GameController {
 
         redirectAttributes.addFlashAttribute("mess", sb.toString());
         return "redirect:/game";
+    }
+
+    public void genProfession(Character worker, Family family, User user, StringBuilder sb) {
+        int inc = 0;
+        careerService.generateProfession(worker);
+        int salary = worker.getCareer().getResultSalary();
+        if (worker.isBuffedBy(Buff.SALARY_INC)) {
+            inc = (int) (0.5 * salary);
+        }
+        family.setMoney(family.getMoney() + salary + inc);
+        sb.append(worker.getName() + " приобретает профессию " + worker.getCareer().getProfession().getName() + " (" + worker.getCareer().getProfession().getLevel() + ") и зарабатывает " + salary + " р. " +
+                (inc == 0 ? "" : "Премия: " + inc + " р. "));
+
+        family.getFamilyResources().addResFromVocation(worker.getCareer());
+        sb.append("А призвание приносит ресурсы: " + worker.getCareer().getVocation().resString(worker.getCareer().getProfession().getLevel()) + "<br>");
+
+        Achievement achievement = achievementService.checkAchievement(AchievementType.vocation10level, user, worker);
+        if (achievement != null) {
+            String locAchievementName = messageSource.getMessage(achievement.getName(), null, loc());
+            sb.append(messageSource.getMessage("turn.achievement", new Object[]{locAchievementName}, loc()));
+        }
     }
 
     @RequestMapping(value = "/logout", method = RequestMethod.GET)

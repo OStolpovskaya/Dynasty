@@ -4,6 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>Склад</title>
     <link th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}" rel="stylesheet"></link>
+    <link th:href="@{/css/common.css}" rel="stylesheet"></link>
 </head>
 <body>
 <div th:replace="fragments/navigation :: nav-for-game"></div>
@@ -110,20 +111,7 @@
                                         <button type="submit" class="btn btn-default">Применить</button>
                                     </form>
                                 </th:block>
-                                <!--Повышение навыка-->
-                                <th:block th:case="118">
-                                    <form th:action="@{/game/applyItemSkill}" method="post" class="form-inline">
-                                        <input type="hidden" name="itemId" th:value="${item.getId()}"/>
-                                        <select name="characterId" class="form-control">
-                                            <!--/*@thymesVar id="character" type="dyn.model.Character"*/-->
-                                            <option th:each="character : ${levelCharactersAndTheirWifes}"
-                                                    th:value="${character.getId()}"
-                                                    th:text="${character.getFullName()}">option
-                                            </option>
-                                        </select>
-                                        <button type="submit" class="btn btn-default">Применить</button>
-                                    </form>
-                                </th:block>
+
 
                             </th:block>
 

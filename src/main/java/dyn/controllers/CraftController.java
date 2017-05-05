@@ -76,7 +76,7 @@ public class CraftController {
                     String mess = "Ваша семья выучила схему изготовления предмета " + thing.getName() + ". Использовано: " + thing.getCost() + " б.";
                     familyLogService.addToLog(family, mess);
                     redirectAttributes.addFlashAttribute("mess", mess);
-                    return "redirect:/game/craft";
+                    return "redirect:/game/craft#craftbranch" + thing.getCraftBranch().getId();
                 } else {
                     logger.error(family.logName() + " hasn't enough craft points to learn thing " + thing.getName() + "(" + thing.getId() + ")");
                     redirectAttributes.addFlashAttribute("mess", "Семья " + family.getFamilyName() + " не может выучить схему изготовления предмета " + thing.getName() + ". Недостаточно баллов развития. ");

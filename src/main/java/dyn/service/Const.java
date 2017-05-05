@@ -53,12 +53,20 @@ public class Const {
 
     public static final Long BUFF_FERTILITY = 1L;
     public static final Long BUFF_SIX_CHILDREN = 2L;
-    public static final Long BUFF_DOMINANT_MOTHER = 3L;
-    public static final Long BUFF_DOMINANT_FATHER = 4L;
+    public static final Long BUFF_DOMINANT_FATHER = 3L;
+    public static final Long BUFF_DOMINANT_MOTHER = 4L;
     public static final Long BUFF_MANY_SONS = 5L;
     public static final Long BUFF_MANY_DAUGHTERS = 6L;
     public static final Long BUFF_GENETIC_MOD = 7L;
     public static final Long BUFF_ONE_MORE_CHILD = 8L;
+    public static final Long BUFF_SALARY_INC = 9L;
 
-
+    public static final String RES_WOOD_NAME = "дерево";
+    public static final String RES_FOOD_NAME = "продукты";
+    public static final String RES_METALL_NAME = "металл";
+    public static final String RES_PLASTIC_NAME = "пластик, резина";
+    public static final String RES_MICROELECTRONICS_NAME = "микроэлектроника";
+    public static final String RES_CLOTH_NAME = "ткань, кожа, бумага";
+    public static final String RES_STONE_NAME = "камень, стекло, керамика";
+    public static final String RES_CHEMICAL_NAME = "химия, краски";
 }
