@@ -35,8 +35,32 @@ public class CraftService {
 
     public void newFamily(Family family) {
         family.setCraftPoint(3);
-        Item item = createItem(projectRepository.findOne(4L), familyRepository.findOne(1L)); // дарим новой семье плиту Скоровар
+
+        // дарим новой семье плиту Скоровар
+        giveGift(family, Const.PROJECT_SKOROVAR);
+
+        // дарим айтемы баффов: плодовитость 5, ген.мод. 3, доминант отца 1 и доминант мтери 1
+        for (int i = 0; i < 5; i++) {
+            giveGift(family, Const.PROJECT_FERTILITY);
+        }
+        for (int i = 0; i < 3; i++) {
+            giveGift(family, Const.PROJECT_GEN_MOD);
+        }
+        giveGift(family, Const.PROJECT_FATHER_DOMINANT);
+        giveGift(family, Const.PROJECT_MOTHER_DOMINANT);
+
+    }
+
+    private void giveGift(Family family, Long projectId) {
+        Project project = projectRepository.findOne(projectId);
+
+        Item item = new Item();
+        item.setProject(project);
         item.setFamily(family);
+        item.setAuthor(familyRepository.findOne(1L));
+        item.setPlace(ItemPlace.storage);
+        item.setInteriorId(0L);
+        item.setCost(0);
         itemRepository.save(item);
     }
 

@@ -17,10 +17,10 @@
                 <p>Так будут выглядеть основатели вашей династии:</p>
                 <div>
                     <div class="char-view-div">
-                        <div th:replace="fragments/char :: char-view (character=*{founder}, nolink=true)"></div>
+                        <div th:replace="fragments/char :: char-panel (character=*{founder}, nolink=true)"></div>
                     </div>
                     <div class="char-view-div">
-                        <div th:replace="fragments/char :: char-view (character=*{foundress}, nolink=true)"></div>
+                        <div th:replace="fragments/char :: char-panel (character=*{foundress}, nolink=true)"></div>
                     </div>
                 </div>
                 <p align="center"><a href="/game/addNewFamily">Сгенерировать заново</a></p>
@@ -100,10 +100,5 @@
 </div>
 <script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
-<script>
-    $(document).ready(function () {
-        $('[data-toggle="tooltip"]').tooltip();
-    });
-</script>
 </body>
 </html>

@@ -12,4 +12,6 @@ public interface FamilyLogRepository extends CrudRepository<FamilyLog, Long> {
     List<FamilyLog> findByFamily(Family family);
 
     FamilyLog findByFamilyAndLevel(Family family, int level);
+
+    List<FamilyLog> findByFamilyOrderByLevel(Family family);
 }

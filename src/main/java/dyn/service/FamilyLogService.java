@@ -9,6 +9,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Created by OM on 15.03.2017.
  */
@@ -38,6 +40,11 @@ public class FamilyLogService {
 
     public FamilyLog getLevelFamilyLog(Family family) {
         FamilyLog familyLog = familyLogRepository.findByFamilyAndLevel(family, family.getLevel());
+        return familyLog;
+    }
+
+    public List<FamilyLog> getFamilyLogOrderbyLevel(Family family) {
+        List<FamilyLog> familyLog = familyLogRepository.findByFamilyOrderByLevel(family);
         return familyLog;
     }
 

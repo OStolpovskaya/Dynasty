@@ -8,7 +8,7 @@
 </head>
 <body>
 <div th:replace="fragments/navigation :: nav-for-game"></div>
-<div class="container">
+<div class="container" style="width: 1200px;">
     <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
     <th:block th:if="${family.getLevel() == 0}">
         <div class="alert alert-success">
@@ -36,13 +36,59 @@
     <th:block th:unless="${not #lists.isEmpty(achievements)}">
         <p>Нет достижений</p>
     </th:block>
+
+    <!--levelFatherChildren-->
+    <th:block th:each="fatherChildrenMap : ${levelFatherChildren}">
+        <a th:name="${'level'+(fatherChildrenMapStat.count - 1)}"></a>
+        <!--familyLog-->
+        <ul class="list-inline">
+            <!--/*@thymesVar id="room" type="dyn.model.Room"*/-->
+            <li>
+                <button data-toggle="collapse" th:attr="data-target=${'#family-log'+(fatherChildrenMapStat.count-1)}" class="btn">
+                    Лог <span class="glyphicon glyphicon-menu-down"></span>
+                </button>
+            </li>
+        </ul>
+
+        <div th:id="${'family-log'+(fatherChildrenMapStat.count-1)}" class="collapse">
+            <pre class="pre-scrollable" style="height: 150px; max-height: 150px;" th:utext="${familyLog.get(fatherChildrenMapStat.count-1).getText()}"></pre>
+        </div>
+        <div class="well" align="center">
+            <th:block th:each="mapEntry : ${fatherChildrenMap}" th:with="father = ${mapEntry.getKey()}, childList = ${mapEntry.getValue()}">
+                <!--/*@thymesVar id="father" type="dyn.model.Character"*/-->
+                <div align="center" style="zoom: 0.5; display: inline-block; margin-right: 28px;">
+                    <div style="display: inline-block; padding: 5px; background-color: #dff0d8; border: solid 1px mediumseagreen;">
+                        <div style="display: inline-block;">
+                            <th:block th:replace="fragments/char :: char-panel (character=${father})"></th:block>
+                        </div>
+                        <th:block th:if="${father.getSpouse() != null}" th:with="mother=${father.getSpouse()}">
+                            <div style="display: inline-block;">
+                                <th:block th:replace="fragments/char :: char-panel (character=${mother})"></th:block>
+                            </div>
+                        </th:block>
+                    </div>
+                    <br/>
+                    <th:block th:each="child : ${childList}">
+                        <div class="well" style="display: inline-block; padding: 5px;">
+                            <!--/*@thymesVar id="child" type="dyn.model.Character"*/-->
+                            <div style="display: inline-block;">
+                                <th:block th:replace="fragments/char :: char-panel (character=${child})"></th:block>
+                            </div>
+                            <!--<th:block th:if="${child.getSpouse() != null}" th:with="spouse=${child.getSpouse()}">
+                                <div style="display: inline-block;">
+                                    <th:block th:replace="fragments/char :: char-panel (character=${spouse})"></th:block>
+                                </div>
+                            </th:block>-->
+                        </div>
+                    </th:block>
+                </div>
+            </th:block>
+        </div>
+    </th:block>
+
 </div>
 <script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
-<script>
-    $(document).ready(function () {
-        $('[data-toggle="tooltip"]').tooltip();
-    });
-</script>
+
 </body>
 </html>

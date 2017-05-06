@@ -18,33 +18,52 @@
         </div>
     </th:block>
     <h3>История семьи:</h3>
-    <div style="margin:10px; overflow-x: scroll; white-space: nowrap;">
-        <div align="center" th:each="level : ${levels}">
-            <div style="display: inline-block; margin-bottom: 3px; border: 2px solid; vertical-align: top" th:each="father : ${level}">
-                <div align="center">
-                    <div class="char-view-div">
-                        <div th:replace="fragments/char :: char-view (character=${father})"></div>
-                    </div>
-                    <!--/*@thymesVar id="father" type="dyn.model.Character"*/-->
-                    <div class="char-view-div" style="vertical-align: top" th:if="${father.getSpouse() != null}">
-                        <div th:replace="fragments/char :: char-view (character=${father.getSpouse()})"></div>
-                    </div>
-                    <br></br>
-                </div>
-                <div style="display: inline-block; margin-bottom: 3px; border: 2px solid lightgreen; vertical-align: top"
-                     th:each="child : ${father.getChildren()}">
-                    <!--/*@thymesVar id="child" type="dyn.model.Character"*/-->
-                    <div class="char-view-div" style="vertical-align: top;">
-                        <div th:replace="fragments/char :: char-view (character=${child})"></div>
-                    </div>
-                    <div class="char-view-div" th:if="${child.getSpouse() != null}">
-                        <div th:replace="fragments/char :: char-view (character=${child.getSpouse()})"></div>
-                    </div>
-                    <br></br>
-                </div>
-            </div>
+    <!--levelFatherChildren-->
+    <th:block th:each="fatherChildrenMap : ${levelFatherChildren}" th:with="level = ${fatherChildrenMapStat.count - 1}">
+        <a th:name="${'level'+level}"></a>
+        <!--familyLog-->
+        <ul class="list-inline">
+            <!--/*@thymesVar id="room" type="dyn.model.Room"*/-->
+            <li th:text="${'Уровень: '+level}">
+
+            </li>
+            <li>
+                <button data-toggle="collapse" th:attr="data-target=${'#family-log'+level}" class="btn">
+                    Лог <span class="glyphicon glyphicon-menu-down"></span>
+                </button>
+            </li>
+        </ul>
+
+        <div th:id="${'family-log'+(fatherChildrenMapStat.count-1)}" class="collapse">
+            <pre class="pre-scrollable" style="height: 150px; max-height: 150px;" th:utext="${familyLog.get(level).getText()}"></pre>
         </div>
-    </div>
+        <div class="well" align="center">
+            <th:block th:each="mapEntry : ${fatherChildrenMap}" th:with="father = ${mapEntry.getKey()}, childList = ${mapEntry.getValue()}">
+                <!--/*@thymesVar id="father" type="dyn.model.Character"*/-->
+                <div align="center" style="zoom: 0.5; display: inline-block; margin-right: 28px;">
+                    <div style="display: inline-block; padding: 5px; background-color: #dff0d8; border: solid 1px mediumseagreen;">
+                        <div style="display: inline-block;">
+                            <th:block th:replace="fragments/char :: char-panel (character=${father})"></th:block>
+                        </div>
+                        <th:block th:if="${father.getSpouse() != null}" th:with="mother=${father.getSpouse()}">
+                            <div style="display: inline-block;">
+                                <th:block th:replace="fragments/char :: char-panel (character=${mother})"></th:block>
+                            </div>
+                        </th:block>
+                    </div>
+                    <br/>
+                    <th:block th:each="child : ${childList}">
+                        <div class="well" style="display: inline-block; padding: 5px;">
+                            <!--/*@thymesVar id="child" type="dyn.model.Character"*/-->
+                            <div style="display: inline-block;">
+                                <th:block th:replace="fragments/char :: char-panel (character=${child})"></th:block>
+                            </div>
+                        </div>
+                    </th:block>
+                </div>
+            </th:block>
+        </div>
+    </th:block>
     <h3>Ваши семьи</h3>
     <table class="table table-striped">
         <thead>

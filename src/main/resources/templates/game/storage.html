@@ -11,34 +11,6 @@
 <div class="container" style="min-width: 1140px;">
     <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
     <!--/*@thymesVar id="item" type="dyn.model.Item"*/-->
-    <div class="well"><h4>Имеющиеся ресурсы:</h4>
-        <table class="table table-bordered" width="100%">
-            <thead>
-            <tr>
-                <th>Продукты</th>
-                <th>Дерево</th>
-                <th>Металл</th>
-                <th>Пластик, резина</th>
-                <th>Микроэлектроника</th>
-                <th>Ткань, кожа, бумага</th>
-                <th>Камень, стекло, керамика</th>
-                <th>Химия, краски</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td th:text="${family.getFamilyResources().getFood()}">John</td>
-                <td th:text="${family.getFamilyResources().getWood()}">John</td>
-                <td th:text="${family.getFamilyResources().getMetall()}">John</td>
-                <td th:text="${family.getFamilyResources().getPlastic()}">John</td>
-                <td th:text="${family.getFamilyResources().getMicroelectronics()}">John</td>
-                <td th:text="${family.getFamilyResources().getCloth()}">John</td>
-                <td th:text="${family.getFamilyResources().getStone()}">John</td>
-                <td th:text="${family.getFamilyResources().getChemical()}">John</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
     <div class="well">
         <h3>Склад:</h3>
         <th:block th:if="${not #lists.isEmpty(itemsInStorage)}">

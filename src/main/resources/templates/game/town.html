@@ -12,7 +12,8 @@
     <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
     <th:block th:if="${family.getLevel() == 0}">
         <div class="alert alert-success">
-            В городе вы можете посетить парк отдыха для увеличения плодовитости оджного из ваших персонажей или снять жилье для еще одной пары.<br/>
+            В городе вы можете посетить парк отдыха для увеличения плодовитости одного из ваших персонажей или снять жилье для создания еще одной пары. Вы можете приобрести любое из зданий, тогда производство услуг или баффов станет хорошим
+            источником дохода. <br/>
         </div>
     </th:block>
     <h3>Город</h3>
@@ -34,7 +35,7 @@
                 <th:block th:if="${building.getProduction() ne null}">
                     <form th:action="@{/game/chooseItemToBuy}" method="post" class="form-inline">
                         <input type="hidden" name="thingId" th:value="${building.getProduction().getThing().getId()}"/>
-                        <button type="submit" class="btn btn-default">Маркет</button>
+                        <button type="submit" class="btn btn-default">Посетить</button>
                     </form>
                 </th:block>
             </td>

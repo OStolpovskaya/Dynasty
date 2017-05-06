@@ -96,6 +96,12 @@ public class GameController {
             fathers = characterRepository.findByFamilyAndLevel(family, family.getLevel());
         }
 
+        Map<Character, List<Character>> fathersMap = new LinkedHashMap<>();
+        for (Character father : fathers) {
+            fathersMap.put(father, father.getChildren());
+        }
+        model.addAttribute("fathers", fathersMap);
+
         List<Item> buffs = houseService.getBuffsInStorage(family);
         model.addAttribute("buffs", buffs);
 
@@ -170,11 +176,6 @@ public class GameController {
         }
         model.addAttribute("itemMap", itemMap);
 
-        Map<Character, List<Character>> fathersMap = new LinkedHashMap<>();
-        for (Character father : fathers) {
-            fathersMap.put(father, father.getChildren());
-        }
-        model.addAttribute("fathers", fathersMap);
 
 
         model.addAttribute("familyLog", familyLogService.getLevelFamilyLog(family));
@@ -183,6 +184,17 @@ public class GameController {
 
         System.out.println("That took " + (endTime - startTime) + " milliseconds");
         return "game";
+    }
+
+    @RequestMapping("/game/vertTree")
+    public String thingTreeView(ModelMap model, RedirectAttributes redirectAttributes) {
+        User user = userRepository.findByUserName(getAuthUser().getUsername());
+        Family family = user.getCurrentFamily();
+
+        Character founder = characterRepository.findByFamilyAndLevelAndSexAndSpouseIsNotNull(family, 0, "male").get(0);
+        model.addAttribute("parent", founder);
+
+        return "game/vertTree";
     }
 
     @RequestMapping("/game/achievements")
@@ -194,10 +206,6 @@ public class GameController {
         Set<Achievement> achievements = user.getAchievements();
         model.addAttribute("achievements", achievements);
 
-        List<Character> characters = new ArrayList<>();
-        characters.add(characterRepository.findOne(1357L));
-        characters.add(characterRepository.findFirstBySex("female"));
-        model.addAttribute("characters", characters);
         return "/game/awarded";
     }
 

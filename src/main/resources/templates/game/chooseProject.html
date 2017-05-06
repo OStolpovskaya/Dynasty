@@ -17,100 +17,13 @@
             Давайте приобретем проект стула "Табуретка Самсколотил"!
             В самом низу страницы выберите проект табуретки и нажмите "Приобрести проект". Семейный бюджет указан в рублях в правом верхнем углу страницы.<br/>
             Наконец-то можно заняться крафтом! Под заголовком "Изготовление предметов..." выберите приобретенный проект и нажмите кнопку "Изготовить предмет".
-            Обратите внимание, изготовление вещей происходит из накопленных вашей семьей ресурсов (они представлены в таблице).
+            Обратите внимание, изготовление вещей происходит из накопленных вашей семьей ресурсов.
             Призвание персонажа определяет какой ресурс будет накоплен за ход, а уровень профессии - его количество. Ресурсы также могут быть получены и другим путем. Об этом позже.<br/>
             Изготовленный предмет помещается на ваш склад, а оттуда он может быть установлен в доме или выставлен на продажу. Пожалуйста, вернитесь на вкладку "Дом" и разместите новенькую табуретку на кухне.
             А потом, вернитесь на вкладку Игра, и пусть игра начнется!
         </div>
     </th:block>
     <h3 th:text="${#strings.toUpperCase(thing.getName())}"></h3>
-    <div class="well"><h4>Имеющиеся ресурсы:</h4>
-        <table class="table-bordered" width="100%">
-            <thead>
-            <tr>
-                <th>Продукты</th>
-                <th>Дерево</th>
-                <th>Металл</th>
-                <th>Пластик, резина</th>
-                <th>Микроэлектроника</th>
-                <th>Ткань, кожа, бумага</th>
-                <th>Камень, стекло, керамика</th>
-                <th>Химия, краски</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td th:text="${family.getFamilyResources().getFood()}">John</td>
-                <td th:text="${family.getFamilyResources().getWood()}">John</td>
-                <td th:text="${family.getFamilyResources().getMetall()}">John</td>
-                <td th:text="${family.getFamilyResources().getPlastic()}">John</td>
-                <td th:text="${family.getFamilyResources().getMicroelectronics()}">John</td>
-                <td th:text="${family.getFamilyResources().getCloth()}">John</td>
-                <td th:text="${family.getFamilyResources().getStone()}">John</td>
-                <td th:text="${family.getFamilyResources().getChemical()}">John</td>
-            </tr>
-            <tr>
-                <td>
-                    <form th:action="@{/game/buyResources}" method="post">
-                        <input type="hidden" name="res" value="food"/>
-                        <input type="hidden" name="thingId" th:value="${thing.getId()}"/>
-                        <button type="submit" class="btn btn-default btn-xs" th:disabled="${family.getMoney() lt T(dyn.model.FamilyResources).BUYCOST}">Купить 5 ед. за 500 р.</button>
-                    </form>
-                </td>
-                <td>
-                    <form th:action="@{/game/buyResources}" method="post">
-                        <input type="hidden" name="res" value="wood"/>
-                        <input type="hidden" name="thingId" th:value="${thing.getId()}"/>
-                        <button type="submit" class="btn btn-default btn-xs" th:disabled="${family.getMoney() lt T(dyn.model.FamilyResources).BUYCOST}">Купить 5 ед. за 500 р.</button>
-                    </form>
-                </td>
-                <td>
-                    <form th:action="@{/game/buyResources}" method="post">
-                        <input type="hidden" name="res" value="metall"/>
-                        <input type="hidden" name="thingId" th:value="${thing.getId()}"/>
-                        <button type="submit" class="btn btn-default btn-xs" th:disabled="${family.getMoney() lt T(dyn.model.FamilyResources).BUYCOST}">Купить 5 ед. за 500 р.</button>
-                    </form>
-                </td>
-                <td>
-                    <form th:action="@{/game/buyResources}" method="post">
-                        <input type="hidden" name="res" value="plastic"/>
-                        <input type="hidden" name="thingId" th:value="${thing.getId()}"/>
-                        <button type="submit" class="btn btn-default btn-xs" th:disabled="${family.getMoney() lt T(dyn.model.FamilyResources).BUYCOST}">Купить 5 ед. за 500 р.</button>
-                    </form>
-                </td>
-                <td>
-                    <form th:action="@{/game/buyResources}" method="post">
-                        <input type="hidden" name="res" value="microelectronics"/>
-                        <input type="hidden" name="thingId" th:value="${thing.getId()}"/>
-                        <button type="submit" class="btn btn-default btn-xs" th:disabled="${family.getMoney() lt T(dyn.model.FamilyResources).BUYCOST}">Купить 5 ед. за 500 р.</button>
-                    </form>
-                </td>
-                <td>
-                    <form th:action="@{/game/buyResources}" method="post">
-                        <input type="hidden" name="res" value="cloth"/>
-                        <input type="hidden" name="thingId" th:value="${thing.getId()}"/>
-                        <button type="submit" class="btn btn-default btn-xs" th:disabled="${family.getMoney() lt T(dyn.model.FamilyResources).BUYCOST}">Купить 5 ед. за 500 р.</button>
-                    </form>
-                </td>
-                <td>
-                    <form th:action="@{/game/buyResources}" method="post">
-                        <input type="hidden" name="res" value="stone"/>
-                        <input type="hidden" name="thingId" th:value="${thing.getId()}"/>
-                        <button type="submit" class="btn btn-default btn-xs" th:disabled="${family.getMoney() lt T(dyn.model.FamilyResources).BUYCOST}">Купить 5 ед. за 500 р.</button>
-                    </form>
-                </td>
-                <td>
-                    <form th:action="@{/game/buyResources}" method="post">
-                        <input type="hidden" name="res" value="chemical"/>
-                        <input type="hidden" name="thingId" th:value="${thing.getId()}"/>
-                        <button type="submit" class="btn btn-default btn-xs" th:disabled="${family.getMoney() lt T(dyn.model.FamilyResources).BUYCOST}">Купить 5 ед. за 500 р.</button>
-                    </form>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-
     <div class="well"><h4>Изготовление предметов по имеющимся проектам:</h4>
         <script>
             function enableMakeItemButton() {

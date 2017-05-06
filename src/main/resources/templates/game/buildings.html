@@ -9,6 +9,11 @@
 <body style="padding-top: 100px;">
 <div th:replace="fragments/navigation :: nav-for-game"></div>
 <div class="container">
+    <th:block th:if="${family.getLevel() == 0}">
+        <div class="alert alert-success">
+            На этой вкладке будут отображены здания в городе, которыми вы владеете. Ну, пока здесь пусто... <br/>
+        </div>
+    </th:block>
     <div class="well">
         <h3>Ваши здания:</h3>
         <ul class="list-inline">

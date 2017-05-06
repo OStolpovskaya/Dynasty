@@ -21,7 +21,7 @@
             <div class="col-md-6 col-md-offset-3">
                 <h3 th:text="#{chooseFiancee.yourCharacter}">Your character:</h3>
                 <div class="char-view-div">
-                    <div th:replace="fragments/char :: char-view (character=${character})"></div>
+                    <div th:replace="fragments/char :: char-panel (character=${character})"></div>
                 </div>
             </div>
         </div>
@@ -63,7 +63,7 @@
                 <!--/*@thymesVar id="fiancee" type="dyn.model.Fiancee"*/-->
                 <input style="display: inline-block;" type="radio" name="fiancee" th:value="${fiancee.getId()}" onclick="enableChooseButton()" th:disabled="${character.getFamily().getMoney() lt fiancee.getCost()}"/>
                 <div class="char-view-div">
-                    <div th:replace="fragments/char :: char-view (character=${fiancee.getCharacter()})"></div>
+                    <div th:replace="fragments/char :: char-panel (character=${fiancee.getCharacter()})"></div>
                     <label th:text="#{cost(${fiancee.getCost()})}">Cost</label>
                 </div>
             </div>

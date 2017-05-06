@@ -24,7 +24,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by OM on 01.03.2017.
@@ -71,12 +73,18 @@ public class FamilyController {
             Family family = user.getCurrentFamily();
             model.addAttribute("family", family);
 
-            List<List<Character>> levelOrderedFathers = new ArrayList<>();
-            for (int i = 0; i < family.getLevel(); i++) {
+            List<Map<Character, List<Character>>> levelFatherChildren = new ArrayList<>();
+            for (int i = 0; i <= family.getLevel(); i++) {
                 List<Character> fathersOnLevel = characterRepository.findByFamilyAndLevelAndSexAndSpouseIsNotNull(family, i, "male");
-                levelOrderedFathers.add(fathersOnLevel);
+                Map<Character, List<Character>> fatherChildrenMap = new LinkedHashMap<>();
+                for (Character father : fathersOnLevel) {
+                    fatherChildrenMap.put(father, father.getChildren());
+                }
+                levelFatherChildren.add(fatherChildrenMap);
             }
-            model.addAttribute("levels", levelOrderedFathers);
+            model.addAttribute("levelFatherChildren", levelFatherChildren);
+
+            model.addAttribute("familyLog", familyLogService.getFamilyLogOrderbyLevel(family));
         }
         return "game/families";
     }

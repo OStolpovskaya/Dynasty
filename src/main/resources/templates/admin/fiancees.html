@@ -15,7 +15,7 @@
             <div th:each="fiancee : ${levelList}" style="display: inline-block">
                 <!--/*@thymesVar id="fiancee" type="dyn.model.Fiancee"*/-->
                 <div class="char-view-div">
-                    <div th:replace="fragments/char :: char-view (character=${fiancee.getCharacter()})"></div>
+                    <div th:replace="fragments/char :: char-panel (character=${fiancee.getCharacter()})"></div>
                     <label th:text="#{cost(${fiancee.getCost()})}">Cost</label>
                 </div>
             </div>

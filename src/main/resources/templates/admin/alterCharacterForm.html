@@ -11,7 +11,7 @@
 <div class="container">
     <!--/*@thymesVar id="character" type="dyn.model.Character"*/-->
     <div class="char-view-div" style="margin-left: 180px; margin-bottom: 10px;">
-        <div th:replace="fragments/char :: char-view (character=${character}, imsize=200)"></div>
+        <div th:replace="fragments/char :: char-panel (character=${character})"></div>
     </div>
     <!--/*@thymesVar id="form" type="dyn.form.RaceAppearanceForm"*/-->
     <form class="form-horizontal" th:action="@{/admin/alterCharacter}" method="post" th:object="${form}">
