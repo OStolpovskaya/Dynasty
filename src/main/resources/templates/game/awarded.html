@@ -39,7 +39,7 @@
 
     <!--levelFatherChildren-->
     <th:block th:each="fatherChildrenMap : ${levelFatherChildren}">
-        <a th:name="${'level'+(fatherChildrenMapStat.count - 1)}"></a>
+        <a th:name="${'level'+(fatherChildrenMapStat.count - 1)}" class="anchor"></a>
         <!--familyLog-->
         <ul class="list-inline">
             <!--/*@thymesVar id="room" type="dyn.model.Room"*/-->
@@ -87,8 +87,7 @@
     </th:block>
 
 </div>
-<script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>
-<script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
+<th:block th:replace="fragments/scripts :: webjars"></th:block>
 
 </body>
 </html>

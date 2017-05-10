@@ -20,7 +20,7 @@
     <h3>История семьи:</h3>
     <!--levelFatherChildren-->
     <th:block th:each="fatherChildrenMap : ${levelFatherChildren}" th:with="level = ${fatherChildrenMapStat.count - 1}">
-        <a th:name="${'level'+level}"></a>
+        <a th:name="${'level'+level}" class="anchor"></a>
         <!--familyLog-->
         <ul class="list-inline">
             <!--/*@thymesVar id="room" type="dyn.model.Room"*/-->
@@ -83,8 +83,6 @@
     </table>
     <a href="/game/addNewFamily" class="btn btn-info" role="button">Создать новую семью!</a>
 </div>
-
-<script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>
-<script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
+<th:block th:replace="fragments/scripts :: webjars"></th:block>
 </body>
 </html>

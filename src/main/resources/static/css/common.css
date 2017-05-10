@@ -221,3 +221,10 @@ right connector from last child*/
 .popover {
     width: 200px;
 }
+
+a.anchor {
+    display: block;
+    position: relative;
+    top: -55px;
+    visibility: hidden;
+}

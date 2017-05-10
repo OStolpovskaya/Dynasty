@@ -25,7 +25,7 @@
     </div>
     <th:block th:if="${#lists.size(buildingList) > 0}">
         <th:block th:each="mapEntry : ${buildingMap}" th:with="building = ${mapEntry.getKey()}, roomViewList = ${mapEntry.getValue()}">
-            <a th:name="${'building'+building.getId()}"></a>
+            <a th:name="${'building'+building.getId()}" class="anchor"></a>
             <h3 th:text="${#strings.toUpperCase(building.getName())}">Здание</h3>
             <th:block th:with="roomView = ${roomViewList.get(0)}">
                 <!--/*@thymesVar id="roomView" type="dyn.model.RoomView"*/-->
@@ -56,8 +56,7 @@
     <!--/*@thymesVar id="building" type="dyn.model.buildings.Building"*/-->
     <!--/*@thymesVar id="buildingMap" type="Map<Building, List<BuildingThingWithItems>>"*/-->
 </div>
-<script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>
-<script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
+<th:block th:replace="fragments/scripts :: webjars"></th:block>
 <script>
     $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip();

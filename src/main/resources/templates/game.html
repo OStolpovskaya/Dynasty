@@ -59,7 +59,7 @@
 
     <th:block th:each="mapEntry : ${fathers}" th:with="father = ${mapEntry.getKey()}, childList = ${mapEntry.getValue()}">
         <!--/*@thymesVar id="father" type="dyn.model.Character"*/-->
-        <a th:name="${'char'+father.getId()}"></a>
+        <a th:name="${'char'+father.getId()}" class="anchor"></a>
         <div align="center">
             <div class="well" style="display: inline-block; padding: 5px;" th:styleappend="${father.getSpouse() != null?'background-color: #dff0d8; border: solid 1px mediumseagreen':''}">
                 <div style="display: inline-block;">
@@ -192,8 +192,8 @@
     </form>
 </div>
 
-<script src="webjars/jquery/1.9.1/jquery.min.js"></script>
-<script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<th:block th:replace="fragments/scripts :: webjars"></th:block>
+
 <script>
     $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip({
@@ -201,20 +201,7 @@
         });
     });
 </script>
-<script>
-    $(document).ready(function () {
-        $('.dropdown-submenu a.test').on("click", function (e) {
-            $(this).next('ul').toggle();
-            e.stopPropagation();
-            e.preventDefault();
-        });
-    });
-</script>
-<script>
-    $(document).ready(function () {
-        $('[data-toggle="popover"]').popover();
-    });
-</script>
+
 <script>
     $('.dropdown-menu').find('form').click(function (e) {
         e.stopPropagation();

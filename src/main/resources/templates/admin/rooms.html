@@ -23,7 +23,7 @@
     </ul>
     <th:block th:each="roomView : ${roomViewList}">
         <!--/*@thymesVar id="roomView" type="dyn.model.RoomView"*/-->
-        <a th:name="${'room'+roomView.getRoom().getId()}"></a>
+        <a th:name="${'room'+roomView.getRoom().getId()}" class="anchor"></a>
         <div class="well">
             <h4 th:text="${#strings.toUpperCase(roomView.getRoom().getName())}"></h4>
             <p>

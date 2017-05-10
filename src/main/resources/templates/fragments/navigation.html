@@ -93,11 +93,34 @@
             </ul>
         </div>
     </nav>
-    <!--<div class="alert alert-warning" th:if="${mess!=null}" th:utext="${mess}"></div>-->
-    <div class="alert alert-warning alert-dismissible" th:if="${mess!=null}" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <th:block th:utext="${mess}"></th:block>
-    </div>
+    <th:block th:if="${mess!=null}">
+        <script th:inline="javascript">
+
+            /*<![CDATA[*/
+
+            var message = /*[[${mess}]]*/ 'User Name';
+            window.onload = function () {
+                $.notify({
+                    title: '',
+                    icon: 'glyphicon glyphicon-star',
+                    message: message
+                }, {
+                    type: 'warning',
+                    placement: {
+                        from: "top",
+                        align: "center"
+                    },
+                    offset: 55,
+                    spacing: 10,
+                    z_index: 1031,
+                    delay: 5000
+                });
+            };
+
+            /*]]>*/
+        </script>
+    </th:block>
+
 </div>
 <div th:fragment="nav-for-admin">
     <nav role="navigation" class="navbar navbar-default">

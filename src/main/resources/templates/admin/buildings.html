@@ -17,7 +17,7 @@
         </li>
     </ul>
     <th:block th:each="mapEntry : ${buildingMap}" th:with="building = ${mapEntry.getKey()}, roomViewList = ${mapEntry.getValue()}">
-        <a th:name="${'building'+building.getId()}"></a>
+        <a th:name="${'building'+building.getId()}" class="anchor"></a>
         <div class="well">
             <h3 th:text="${#strings.toUpperCase(building.getName()) + ' (' + building.getId() + ')'}">Здание</h3>
 

@@ -72,13 +72,16 @@
 
 <div th:fragment="room-map (roomView)">
     <!--/*@thymesVar id="roomView" type="dyn.model.RoomView"*/-->
+    <!--/*@thymesVar id="roomThingWithItems" type="dyn.model.RoomThingWithItems"*/-->
     <div style="width: 1035px; height: 405px; position: relative; background: url(/graphics/room_grid.png) repeat-y #ffffff">
         <th:block th:each="roomThingWithItems : ${roomView.getRoomThingWithItemsList()}">
             <div align="center" style="border: solid 1px darkslategray; display: table; position: absolute; "
                  th:styleappend="${'width: '+ roomThingWithItems.getRoomThing().getThing().getWidth() +'px;'+
                                  'height: ' + roomThingWithItems.getRoomThing().getThing().getHeight()+'px;'+
                                  'left: ' + roomThingWithItems.getRoomThing().getX()+'px;'+
-                                 'top: ' + roomThingWithItems.getRoomThing().getY()+'px;'}">
+                                 'top: ' + roomThingWithItems.getRoomThing().getY()+'px;'}"
+                 data-toggle="modal" data-target="#roomThing"
+                 th:onclick="'javascript:roomViewPassDataToHouse(' + ${roomThingWithItems.getStringForModal()}+');'">
                 <div th:if="${roomThingWithItems.getCurrentItem()==null}" th:text="${roomThingWithItems.getRoomThing().getThing().getName()}"
                      style="color: dimgrey; display: table-cell; vertical-align: middle; font-size: 8px;">Нет вещи
                 </div>
@@ -95,7 +98,7 @@
 </div>
 <div th:fragment="room-view (roomView)">
     <!--/*@thymesVar id="roomView" type="dyn.model.RoomView"*/-->
-    <a th:name="${'room'+roomView.getRoom().getId()}"></a>
+    <a th:name="${'room'+roomView.getRoom().getId()}" class="anchor"></a>
     <div class="well">
         <h4 th:text="${#strings.toUpperCase(roomView.getRoom().getName())}"></h4>
         <p th:text="${'Заполнена: '+roomView.isFull()}"></p>

@@ -1,5 +1,6 @@
 package dyn.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,5 +42,31 @@ public class RoomThingWithItems {
 
     public void setKnownThing(boolean knownThing) {
         this.knownThing = knownThing;
+    }
+
+    public String getStringForModal() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(roomThing.getThing().getId()).append(",");
+        sb.append("'").append(roomThing.getThing().getName()).append("',");
+        sb.append(roomThing.getId()).append(",");
+        sb.append(knownThing).append(",");
+        sb.append(currentItem == null ? "0" : currentItem.getId()).append(",");
+        sb.append("'").append(currentItem == null ? "Нет вещи" : currentItem.getProject().getName()).append("',");
+        List<String> availableItemIds = new ArrayList<>();
+        List<String> availableItemNames = new ArrayList<>();
+        for (Item availableItem : availableItems) {
+            availableItemIds.add(availableItem.getId().toString());
+            availableItemNames.add("'" + availableItem.getProject().getName() + "'");
+        }
+        sb.append("[").append(String.join(",", availableItemNames)).append("],");
+        sb.append("[").append(String.join(",", availableItemIds)).append("]");
+        return sb.toString();
+        /*
+        .getRoomThing().getThing().getId()}+','+
+        + '\'' + ${roomThingWithItems.getRoomThing().getThing().getName()} + '\','+
+        + ${roomThingWithItems.getRoomThing().getId()}+','+
+        + ${roomThingWithItems.isKnownThing()}+','+
+        + ${roomThingWithItems.isKnownThing()}+','+
+        ');'">*/
     }
 }
