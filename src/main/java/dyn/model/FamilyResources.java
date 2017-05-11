@@ -191,6 +191,17 @@ public class FamilyResources implements ResourcesHolder {
         chemical += vocation.getChemical() * professionLevel;
     }
 
+    public void addResFromRace(Race race) {
+        food += race.getFood();
+        wood += race.getWood();
+        metall += race.getMetall();
+        plastic += race.getPlastic();
+        microelectronics += race.getMicroelectronics();
+        cloth += race.getCloth();
+        stone += race.getStone();
+        chemical += race.getChemical();
+    }
+
     public String resString() {
         return ResourcesUtils.getResString(this);
     }

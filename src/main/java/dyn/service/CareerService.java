@@ -92,7 +92,7 @@ public class CareerService {
 
         childCareer.setEducation(educationRepository.findOne(Education.PRIMARY));
 
-        int incCoefficient = 2;
+        int incCoefficient = 1;
 
         childCareer.setIntelligence(getRandomFromMinToMax(fatherCareer.getIntelligence(), motherCareer.getIntelligence()) + incCoefficient);
         childCareer.setCharisma(getRandomFromMinToMax(fatherCareer.getCharisma(), motherCareer.getCharisma()) + incCoefficient);

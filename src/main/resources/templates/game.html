@@ -37,6 +37,12 @@
     <ul class="list-inline">
         <!--/*@thymesVar id="room" type="dyn.model.Room"*/-->
         <li>
+            Можно создать пар: <span th:text="${family.getHouse().getPairsNum() - family.getPairsNum()}"></span>;
+        </li>
+        <li>
+            Можно запостить анкет невест: <span th:text="${family.getHouse().getFianceeNum() - family.getFianceeNum()}"></span>;
+        </li>
+        <li>
             <button data-toggle="collapse" data-target="#family-log" class="btn">
                 Лог <span class="glyphicon glyphicon-menu-down"></span>
             </button>

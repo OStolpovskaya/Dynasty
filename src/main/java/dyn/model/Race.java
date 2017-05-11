@@ -1,6 +1,8 @@
 package dyn.model;
 
 import dyn.form.RaceAppearanceForm;
+import dyn.utils.ResourcesHolder;
+import dyn.utils.ResourcesUtils;
 
 import javax.persistence.*;
 import java.util.List;
@@ -10,7 +12,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "race")
-public class Race {
+public class Race implements ResourcesHolder {
     public static final long RACE_HUMAN = 1;
     public static final long RACE_GM_HUMAN = 2;
     @Id
@@ -18,6 +20,15 @@ public class Race {
     private Long id;
 
     private String name;
+
+    private int food;
+    private int wood;
+    private int metall;
+    private int plastic;
+    private int microelectronics;
+    private int cloth;
+    private int stone;
+    private int chemical;
 
     // ===================================
     @OneToMany(mappedBy = "race")
@@ -67,11 +78,55 @@ public class Race {
     }
 
     @Override
+    public int getFood() {
+        return food;
+    }
+
+    @Override
+    public int getWood() {
+        return wood;
+    }
+
+    @Override
+    public int getMetall() {
+        return metall;
+    }
+
+    @Override
+    public int getPlastic() {
+        return plastic;
+    }
+
+    @Override
+    public int getMicroelectronics() {
+        return microelectronics;
+    }
+
+    @Override
+    public int getCloth() {
+        return cloth;
+    }
+
+    @Override
+    public int getStone() {
+        return stone;
+    }
+
+    @Override
+    public int getChemical() {
+        return chemical;
+    }
+
+    @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Race{");
         sb.append("id=").append(id);
         sb.append(", name='").append(name).append('\'');
         sb.append('}');
         return sb.toString();
+    }
+
+    public String resString(int coeff) {
+        return ResourcesUtils.getResString(this, coeff);
     }
 }

@@ -485,13 +485,22 @@ public class GameController {
                 (inc == 0 ? "" : "Премия: " + inc + " р. "));
 
         family.getFamilyResources().addResFromVocation(worker.getCareer());
-        sb.append("А призвание приносит ресурсы: " + worker.getCareer().getVocation().resString(worker.getCareer().getProfession().getLevel()) + "<br>");
+        sb.append("А призвание приносит ресурсы: " + worker.getCareer().getVocation().resString(worker.getCareer().getProfession().getLevel()) + ". ");
 
         Achievement achievement = achievementService.checkAchievement(AchievementType.vocation10level, user, worker);
         if (achievement != null) {
             String locAchievementName = messageSource.getMessage(achievement.getName(), null, loc());
             sb.append(messageSource.getMessage("turn.achievement", new Object[]{locAchievementName}, loc()));
         }
+
+        //resources from race
+        Race race = worker.getRace();
+        Long raceId = race.getId();
+        if (raceId != Race.RACE_HUMAN && raceId != Race.RACE_GM_HUMAN) {
+            family.getFamilyResources().addResFromRace(race);
+            sb.append("Раса приносит ресурсы: " + race.resString(1) + ". ");
+        }
+        sb.append("<br>");
     }
 
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
