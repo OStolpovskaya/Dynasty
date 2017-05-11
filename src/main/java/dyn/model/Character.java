@@ -106,6 +106,7 @@ public class Character {
 
     // ============ VIEW ============
     @Lob
+    @Column(name = "view", nullable = true)
     private byte[] view;
 
     // ============ RELATIONS ============

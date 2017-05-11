@@ -118,9 +118,10 @@
         </div>
         <div style="position: relative">
             <a href="/game/character" th:href="${nolink}==null?@{/game/character(characterId=${character.getId()})}:'#'">
-                <img height="200px" width="200px"
-                     th:src="@{'data:image/png;base64,'+${character.getEncodedView()}}"
-                     data-toggle="tooltip" th:alt-title="#{tooltip(
+                <th:block th:with="view = ${character.getEncodedView()}">
+                    <img height="200px" width="200px"
+                         th:src="${view != null?'data:image/png;base64,'+character.getEncodedView():(character.getSex() == 'male'?'/graphics/male.png':'/graphics/female.png')}"
+                         data-toggle="tooltip" th:alt-title="#{tooltip(
                                            ${character.getFullName()},
                                            #{${character.getBody().getName()}}+${character.getBody().isRare()?'*':''},
                                            #{${character.getEars().getName()}}+${character.getEars().isRare()?'*':''},
@@ -135,7 +136,8 @@
                                            #{${character.getMouth().getName()}}+${character.getMouth().isRare()?'*':''},
                                            #{${character.getNose().getName()}}+${character.getNose().isRare()?'*':''},
                                            #{${character.getSkinColor().getName()}}+${character.getSkinColor().isRare()?'*':''})}"
-                     data-placement="right"/>
+                         data-placement="right"/>
+                </th:block>
             </a>
             <th:block th:each="buff : ${character.getBuffs()}" th:with="count=${(buffStat.count-1) * 20}">
                 <!--/*@thymesVar id="buff" type="dyn.model.Buff"*/-->

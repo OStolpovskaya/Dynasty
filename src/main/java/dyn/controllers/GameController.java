@@ -469,6 +469,16 @@ public class GameController {
 
         familyLogService.createNewLevelFamilyLog(family, sb.toString());
 
+        // deleting image
+        List<Character> levelChars = characterRepository.findByFamilyAndLevel(family, newLevel - 1);
+        for (Character levelChar : levelChars) {
+            if ((levelChar.getSex().equals("male") && !levelChar.hasSpouse()) || (levelChar.getSex().equals("female") && !levelChar.isFiancee() && !levelChar.hasSpouse())) {
+
+                levelChar.setView(null);
+                characterRepository.save(levelChar);
+            }
+        }
+
         redirectAttributes.addFlashAttribute("mess", sb.toString());
         return "redirect:/game";
     }
