@@ -7,12 +7,12 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class Const {
-    public static final Long FURNITURE = 1L;
-    public static final Long DEVICES = 2L;
-    public static final Long DECOR = 3L;
-    public static final Long CLOTH = 4L;
-    public static final Long MEAL = 5L;
-    public static final Long SERVICE_AND_BUFFS = 10L;
+    public static final Long CRAFTBRANCH_FURNITURE = 1L;
+    public static final Long CRAFTBRANCH_DEVICES = 2L;
+    public static final Long CRAFTBRANCH_DECOR = 3L;
+    public static final Long CRAFTBRANCH_CLOTH = 4L;
+    public static final Long CRAFTBRANCH_MEAL = 5L;
+    public static final Long CRAFTBRANCH_SERVICE_AND_BUFFS = 10L;
 
     public static final Long THING_SKILL_IMPROVEMENT = 118L;
     public static final Long THING_RESOURCES_SERTIFICATE = 117L;
@@ -71,4 +71,9 @@ public class Const {
     public static final String RES_CLOTH_NAME = "ткань, кожа, бумага";
     public static final String RES_STONE_NAME = "камень, стекло, керамика";
     public static final String RES_CHEMICAL_NAME = "химия, краски";
+
+    public static final int COST_GEN_MOD = 600;
+    public static final int COST_FERTILITY = 600;
+    public static final int COST_FATHER_DOMINANT = 400;
+    public static final int COST_MOTHER_DOMINANT = 400;
 }

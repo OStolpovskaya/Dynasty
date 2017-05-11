@@ -398,6 +398,7 @@ public class Character {
             BufferedImage headImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + sex + "/" + getHead().getName() + ".png"));
             BufferedImage mouthImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + sex + "/" + getMouth().getName() + ".png"));
             BufferedImage noseImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + sex + "/" + getNose().getName() + ".png"));
+            BufferedImage heightImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + sex + "/" + getHeight().getName() + ".png"));
 
             // create the new image, canvas size is the max. of both image sizes
             BufferedImage combined = new BufferedImage(200, 200, BufferedImage.TYPE_INT_ARGB);
@@ -418,6 +419,7 @@ public class Character {
             g.drawImage(hairStyleImage, 0, 0, null);
             g.drawImage(earsImageSub, 0, 0, null);
             g.drawImage(earsImage, 0, 0, null);
+            g.drawImage(heightImage, 0, 0, null);
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ImageIO.write(combined, "png", baos);

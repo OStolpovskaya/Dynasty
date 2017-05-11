@@ -97,8 +97,8 @@
 
                         </td>
                         <td>
-                            <form th:action="@{/game/chooseItemToBuy}" method="post" class="form-inline">
-                                <input type="hidden" name="thingId" th:value="${item.getProject().getThing().getId()}"/>
+                            <form th:action="@{/game/chooseProductionToBuy}" method="post" class="form-inline">
+                                <input type="hidden" name="projectId" th:value="${item.getProject().getId()}"/>
                                 <button type="submit" class="btn btn-default">Маркет</button>
                             </form>
                         </td>

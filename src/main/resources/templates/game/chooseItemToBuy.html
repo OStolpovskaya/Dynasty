@@ -13,6 +13,7 @@
     <!--/*@thymesVar id="thing" type="dyn.model.Thing"*/-->
     <!--/*@thymesVar id="item" type="dyn.model.Item"*/-->
     <h3 th:text="${#strings.toUpperCase(thing.getName())}"></h3>
+    <h4 th:if="${project ne null}" th:text="${#strings.toUpperCase(project.getName())}"></h4>
     <table class="table table-striped">
         <thead>
         <tr>

@@ -84,6 +84,23 @@ public class CraftService {
         return item;
     }
 
+    public List<Item> createItemForStore(Project project, Family family, int cost) {
+        List<Item> items = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            Item item = new Item();
+            item.setProject(project);
+            item.setFamily(family);
+            item.setAuthor(family);
+            item.setPlace(ItemPlace.store);
+            item.setInteriorId(0L);
+            item.setCost(cost);
+            itemRepository.save(item);
+
+            items.add(item);
+        }
+        return items;
+    }
+
     public List<Thing> getThingsForTree() {
         List<Thing> things = new ArrayList<>();
         things.add(thingRepository.getParentThingForCraftBranchId(1));

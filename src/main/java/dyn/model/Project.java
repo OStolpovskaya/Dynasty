@@ -163,6 +163,6 @@ public class Project implements ResourcesHolder {
     }
 
     public boolean isProductionProject() {
-        return thing.getCraftBranch().getId() == Const.SERVICE_AND_BUFFS;
+        return thing.getCraftBranch().getId() == Const.CRAFTBRANCH_SERVICE_AND_BUFFS;
     }
 }

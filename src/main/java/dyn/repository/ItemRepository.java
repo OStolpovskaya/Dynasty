@@ -1,9 +1,6 @@
 package dyn.repository;
 
-import dyn.model.Family;
-import dyn.model.Item;
-import dyn.model.ItemPlace;
-import dyn.model.Thing;
+import dyn.model.*;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -28,4 +25,6 @@ public interface ItemRepository extends CrudRepository<Item, Long> {
     List<Item> findByFamilyAndPlaceAndProjectThingCraftBranchIdOrderByProjectThingAscProjectAsc(Family family, ItemPlace place, Long craftBranchIdForServicesAndBuffs);
 
     List<Item> findAllByProjectThingOrderByCost(Thing thing);
+
+    List<Item> findByPlaceAndProject(ItemPlace store, Project project);
 }

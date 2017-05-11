@@ -8,10 +8,7 @@ package dyn.controllers;
 import dyn.model.*;
 import dyn.repository.FamilyRepository;
 import dyn.repository.UserRepository;
-import dyn.service.CharacterService;
-import dyn.service.FamilyLogService;
-import dyn.service.HouseInterior;
-import dyn.service.HouseService;
+import dyn.service.*;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +31,8 @@ public class HouseController {
     private static final Logger logger = LogManager.getLogger(HouseController.class);
     @Autowired
     HouseService houseService;
+    @Autowired
+    CraftService craftService;
     @Autowired
     CharacterService characterService;
     @Autowired
@@ -245,6 +244,47 @@ public class HouseController {
 
     }
 
+    @RequestMapping(value = "/game/chooseProductionToBuy", method = RequestMethod.POST)
+    public String chooseProductionToBuy(ModelMap model, RedirectAttributes redirectAttributes,
+                                        @RequestParam(value = "projectId") Long projectId) {
+        User user = userRepository.findByUserName(getAuthUser().getUsername());
+        Family family = user.getCurrentFamily();
+
+        Project project = craftService.getProject(projectId);
+        if (project != null) {
+            List<Item> items = houseService.getItemsInStoreByProject(project);
+            int size = items.size();
+            if (size == 0) {
+                Family producer = familyRepository.findOne(1L);
+                if (projectId.equals(Const.PROJECT_GEN_MOD)) {
+                    items = craftService.createItemForStore(project, producer, Const.COST_GEN_MOD);
+                }
+                if (projectId.equals(Const.PROJECT_FERTILITY)) {
+                    items = craftService.createItemForStore(project, producer, Const.COST_FERTILITY);
+                }
+                if (projectId.equals(Const.PROJECT_FATHER_DOMINANT)) {
+                    items = craftService.createItemForStore(project, producer, Const.COST_FATHER_DOMINANT);
+                }
+                if (projectId.equals(Const.PROJECT_MOTHER_DOMINANT)) {
+                    items = craftService.createItemForStore(project, producer, Const.COST_MOTHER_DOMINANT);
+                }
+            }
+
+
+            model.addAttribute("family", family);
+            model.addAttribute("thing", project.getThing());
+            model.addAttribute("project", project);
+            model.addAttribute("items", items);
+            return "game/chooseItemToBuy";
+        }
+
+
+        logger.error(family.logName() + " want to buy items for non existing project: " + projectId);
+        redirectAttributes.addFlashAttribute("mess", "Предмет не найден");
+        return "redirect:/game/house";
+
+    }
+
     @RequestMapping(value = "/game/buyItem", method = RequestMethod.POST)
     public String buyItem(ModelMap model, RedirectAttributes redirectAttributes,
                           @RequestParam(value = "itemId") Long itemId) {
@@ -285,11 +325,10 @@ public class HouseController {
         }
         logger.error(family.logName() + "want to buy non existing item: " + itemId);
         redirectAttributes.addFlashAttribute("mess", "Предмет не найден");
-        return "redirect:/game/house";
+        return "redirect:/game";
 
     }
 
-    //buyNewHouse
     @RequestMapping(value = "/game/buyNewHouse", method = RequestMethod.POST)
     public String buyNewHouse(ModelMap model, RedirectAttributes redirectAttributes) {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
