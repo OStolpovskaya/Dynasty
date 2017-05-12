@@ -150,6 +150,10 @@ public class Project implements ResourcesHolder {
         return ResourcesUtils.getResString(this);
     }
 
+    public String resDestroyString() {
+        return ResourcesUtils.getResString(this, 0.5);
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Project{");

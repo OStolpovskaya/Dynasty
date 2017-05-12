@@ -239,4 +239,15 @@ public class FamilyResources implements ResourcesHolder {
     }
 
 
+    public void addResFromDestroyedItem(Item item) {
+        Project project = item.getProject();
+        food += Math.ceil(project.getFood() * 0.5);
+        wood += Math.ceil(project.getWood() * 0.5);
+        metall += Math.ceil(project.getMetall() * 0.5);
+        plastic += Math.ceil(project.getPlastic() * 0.5);
+        microelectronics += Math.ceil(project.getMicroelectronics() * 0.5);
+        cloth += Math.ceil(project.getCloth() * 0.5);
+        stone += Math.ceil(project.getStone() * 0.5);
+        chemical += Math.ceil(project.getChemical() * 0.5);
+    }
 }

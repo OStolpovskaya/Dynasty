@@ -189,6 +189,32 @@ public class HouseController {
         return "redirect:/game";
     }
 
+    @RequestMapping(value = "/game/destroyItem", method = RequestMethod.POST)
+    public String destroyItem(ModelMap model, RedirectAttributes redirectAttributes,
+                              @RequestParam(value = "itemId") Long itemId) {
+        User user = userRepository.findByUserName(getAuthUser().getUsername());
+        Family family = user.getCurrentFamily();
+
+        Item item = houseService.getItemByFamilyAndItemId(family, itemId);
+        if (item != null) {
+            Project project = item.getProject();
+            family.getFamilyResources().addResFromDestroyedItem(item);
+            familyRepository.save(family);
+
+            logger.info(family.logName() + " destroy item: " + item.getProject().getName() + "(" + item.getId() + ")");
+            String mess = "Вещь разобрана: " + item.getFullName() + ". Получены ресурсы: " + project.resDestroyString();
+            familyLogService.addToLog(family, mess);
+
+            houseService.deleteItem(item);
+
+            redirectAttributes.addFlashAttribute("mess", mess);
+            return "redirect:/game/storage";
+        }
+        logger.error(family.logName() + " want to put in store non existing item: " + itemId);
+        redirectAttributes.addFlashAttribute("mess", "Вещь не найдена");
+        return "redirect:/game/storage";
+    }
+
     @RequestMapping(value = "/game/putItemToStore", method = RequestMethod.POST)
     public String putItemToStore(ModelMap model, RedirectAttributes redirectAttributes,
                                  @RequestParam(value = "itemId") Long itemId,

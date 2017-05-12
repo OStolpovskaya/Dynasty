@@ -20,6 +20,7 @@
                     <th>Предмет</th>
                     <th>Изготовитель</th>
                     <th>Продать</th>
+                    <th>Разобрать</th>
                     <th>Просмотреть маркет</th>
                 </tr>
                 </thead>
@@ -34,7 +35,12 @@
                                 <input type="text" name="cost" th:value="${family.getLevel()}*100" class="form-control" style="width: 60px;" data-toggle="tooltip" title="Стоимость"/>
                                 <button type="submit" class="btn btn-default">Выставить на продажу</button>
                             </form>
-
+                        </td>
+                        <td>
+                            <form th:action="@{/game/destroyItem}" method="post" class="form-inline" data-toggle="tooltip" th:title="${'Ресурсы: '+ item.getProject().resDestroyString()}">
+                                <input type="hidden" name="itemId" th:value="${item.getId()}"/>
+                                <button type="submit" class="btn btn-default">Разобрать</button>
+                            </form>
                         </td>
                         <td>
                             <form th:action="@{/game/chooseItemToBuy}" method="post" class="form-inline">

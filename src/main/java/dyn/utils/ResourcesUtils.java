@@ -31,6 +31,19 @@ public class ResourcesUtils {
         return org.springframework.util.StringUtils.arrayToDelimitedString(resources.toArray(), ", ");
     }
 
+    public static String getResString(ResourcesHolder resHolder, double coeff) {
+        List<String> resources = new ArrayList<>();
+        if (resHolder.getFood() > 0) resources.add("Продукты: " + Math.ceil(resHolder.getFood() * coeff));
+        if (resHolder.getWood() > 0) resources.add("Дерево: " + Math.ceil(resHolder.getWood() * coeff));
+        if (resHolder.getMetall() > 0) resources.add("Металл: " + Math.ceil(resHolder.getMetall() * coeff));
+        if (resHolder.getPlastic() > 0) resources.add("Пластик, резина: " + Math.ceil(resHolder.getPlastic() * coeff));
+        if (resHolder.getMicroelectronics() > 0) resources.add("Микроэлектроника: " + Math.ceil(resHolder.getMicroelectronics() * coeff));
+        if (resHolder.getCloth() > 0) resources.add("Ткань, кожа, бумага: " + Math.ceil(resHolder.getCloth() * coeff));
+        if (resHolder.getStone() > 0) resources.add("Камень, стекло, керамика: " + Math.ceil(resHolder.getStone() * coeff));
+        if (resHolder.getChemical() > 0) resources.add("Химия, краски: " + Math.ceil(resHolder.getChemical() * coeff));
+        return org.springframework.util.StringUtils.arrayToDelimitedString(resources.toArray(), ", ");
+    }
+
     public void saveInitValues(Family family) {
         FamilyResources familyResources = family.getFamilyResources();
         initValues = new HashMap<>();
