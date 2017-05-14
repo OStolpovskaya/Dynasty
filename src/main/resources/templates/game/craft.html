@@ -18,7 +18,14 @@
             Теперь ваша семья умеет изготавливать кухонный стул! Но, чтобы его изготовить, нужна схема или проект. Нажмите на значок Кухонного стула.
         </div>
     </th:block>
-    <h3>Предметы, которые можно изготовить:</h3>
+    <h3>Ветви знаний</h3>
+    <ul class="list-inline">
+        <!--/*@thymesVar id="craftBranch" type="dyn.model.CraftBranch"*/-->
+        <li th:each="craftBranch : ${craftBranchList}">
+            <a th:href="${'/game/house#craftbranch'+craftBranch.getId()}" th:text="${craftBranch.getName()}">craftbranch</a>
+        </li>
+        <li><a href="#createdProjects">Авторские проекты</a></li>
+    </ul>
     <p>Нажмите на значок изученного предмета, чтобы перейти к изготовлению. Или кнопку "Выучить" под значком для изучения</p>
     <th:block th:each="parentThing : ${parentThings}">
         <!--/*@thymesVar id="parentThing" type="dyn.model.Thing"*/-->
@@ -69,6 +76,34 @@
             </div>
         </div>
     </th:block>
+    <!--authorProjects-->
+    <div class="well">
+        <a name="createdProjects" class="anchor"></a>
+        <h3>Авторские проекты</h3>
+        <table class="table table-sm">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Статус</th>
+                <th>Тип вещи</th>
+                <th>Название проекта</th>
+                <th>Стоимость</th>
+                <th>Ресурсы</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="project : ${authorProjects}">
+                <th scope="row" th:text="${projectStat.count}">1</th>
+                <!--/*@thymesVar id="project" type="dyn.model.Project"*/-->
+                <td th:text="${project.getStatus()}">Mark</td>
+                <td th:text="${project.getThing().getName()}">Mark</td>
+                <td th:text="${project.getName()}">Otto</td>
+                <td th:text="${project.getCost()}">@mdo</td>
+                <td th:text="${project.resString()}">@mdo</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 <th:block th:replace="fragments/scripts :: webjars"></th:block>
 <script>

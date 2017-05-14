@@ -119,6 +119,7 @@
         <div style="position: relative">
             <a href="/game/character" th:href="${nolink}==null?@{/game/character(characterId=${character.getId()})}:'#'">
                 <th:block th:with="view = ${character.getEncodedView()}">
+                    <!--/*@thymesVar id="getEncodedView" type="dyn.model.Character"*/-->
                     <img height="200px" width="200px"
                          th:src="${view != null?'data:image/png;base64,'+character.getEncodedView():(character.getSex() == 'male'?'/graphics/male.png':'/graphics/female.png')}"
                          data-toggle="tooltip" th:alt-title="#{tooltip(

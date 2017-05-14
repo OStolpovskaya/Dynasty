@@ -123,7 +123,7 @@
 
 </div>
 <div th:fragment="nav-for-admin">
-    <nav role="navigation" class="navbar navbar-default">
+    <nav role="navigation" class="navbar navbar-default navbar-fixed-top">
         <div>
             <a href="/" class="navbar-brand">Dynasty</a>
         </div>
@@ -143,6 +143,23 @@
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="?language=en">en</a></li>
                 <li><a href="?language=ru">ru</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="alert alert-warning" th:if="${mess!=null}" th:utext="${mess}"></div>
+</div>
+<div th:fragment="nav-for-moder">
+    <nav role="navigation" class="navbar navbar-default navbar-fixed-top">
+        <div>
+            <a href="/" class="navbar-brand">Dynasty</a>
+        </div>
+        <div>
+            <ul class="nav navbar-nav">
+                <li><a href="/moder">Модераторская</a></li>
+                <li><a href="/moder/projects">Проекты</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
                 <li><a href="/logout">Logout</a></li>
             </ul>
         </div>

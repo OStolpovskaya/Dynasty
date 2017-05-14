@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Проекты</title>
+    <link th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}" rel="stylesheet"></link>
+    <link th:href="@{/css/common.css}" rel="stylesheet"></link>
+</head>
+<body>
+<div th:replace="fragments/navigation :: nav-for-moder"></div>
+<div class="container">
+    <div class="well">
+        <h3>Новые проекты</h3>
+        <table class="table table-sm">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Статус</th>
+                <th>Семья</th>
+                <th>Тип вещи</th>
+                <th>Название проекта</th>
+                <th>Стоимость</th>
+                <th>Ресурсы</th>
+                <th>Изображение</th>
+                <th>Принять</th>
+                <th>На доработку</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="project : ${newProjects}">
+                <th scope="row" th:text="${projectStat.count}">1</th>
+                <!--/*@thymesVar id="project" type="dyn.model.Project"*/-->
+                <td th:text="${project.getStatus()}">Mark</td>
+                <td th:text="${project.getAuthor().getFamilyName()+' ('+project.getAuthor().getId()+')'}">Mark</td>
+                <td th:text="${project.getThing().getName()}">Mark</td>
+                <td th:text="${project.getName()}">Otto</td>
+                <td th:text="${project.getCost()}">@mdo</td>
+                <td th:text="${project.resString()}">@mdo</td>
+                <td><img th:if="${project.getView() != null}" th:src="${'data:image/png;base64,'+project.getEncodedView()}" style="border: solid 1px green;"/></td>
+                <td>
+                    <form th:action="@{/moder/setNewProjectApproved}" method="post" class="form-inline">
+                        <input type="hidden" name="projectId" th:value="${project.getId()}"/>
+                        <button class="btn btn-sm btn-success" type="submit" style="width: 75px; margin: 2px;">Принять</button>
+                    </form>
+                </td>
+                <td>
+                    <form th:action="@{/moder/setNewProjectRework}" method="post">
+                        <div class="form-group">
+                            <textarea name="reason" class="form-control" rows="3" maxlength="100" placeholder="Причина отправки на доработку" style="width: 150px;"/>
+                            <input type="hidden" name="projectId" th:value="${project.getId()}"/>
+                            <button class="btn btn-sm btn-danger" type="submit" style="width: 85px; margin: 2px;">Доработать</button>
+                        </div>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<th:block th:replace="fragments/scripts :: webjars"></th:block>
+</body>
+</html>

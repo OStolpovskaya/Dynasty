@@ -155,4 +155,20 @@ public class CraftService {
     public List<Item> getItemsOfThing(Thing thing) {
         return itemRepository.findAllByProjectThingOrderByCost(thing);
     }
+
+    public void saveProject(Project project) {
+        projectRepository.save(project);
+    }
+
+    public List<Project> getApprovedProjectsByThing(Thing thing) {
+        return projectRepository.findByThingAndStatus(thing, ProjectStatus.approved);
+    }
+
+    public List<Project> getAuthorProjects(Family family) {
+        return projectRepository.findByAuthor(family);
+    }
+
+    public List<Project> getNewProjects() {
+        return projectRepository.findAllByStatusOrderByThing(ProjectStatus.newProject);
+    }
 }

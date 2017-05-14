@@ -3,6 +3,7 @@ package dyn.model;
 import dyn.service.Const;
 import dyn.utils.ResourcesHolder;
 import dyn.utils.ResourcesUtils;
+import org.springframework.util.Base64Utils;
 
 import javax.persistence.*;
 import java.util.List;
@@ -20,6 +21,13 @@ public class Project implements ResourcesHolder {
     @ManyToOne
     private Thing thing;
 
+    @ManyToOne
+    @JoinColumn(name = "author_id")
+    private Family author;
+
+    @Enumerated(EnumType.STRING)
+    private ProjectStatus status;
+
     private String name;
 
     private int cost;
@@ -35,6 +43,9 @@ public class Project implements ResourcesHolder {
     private int cloth;
     private int stone;
     private int chemical;
+
+    @Column(name = "status_mess")
+    private String statusMessage;
 
     // =================================================
     @OneToMany(mappedBy = "project")
@@ -56,6 +67,22 @@ public class Project implements ResourcesHolder {
 
     public void setThing(Thing thing) {
         this.thing = thing;
+    }
+
+    public Family getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(Family author) {
+        this.author = author;
+    }
+
+    public ProjectStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ProjectStatus status) {
+        this.status = status;
     }
 
     public String getName() {
@@ -146,6 +173,14 @@ public class Project implements ResourcesHolder {
         this.chemical = chemical;
     }
 
+    public String getStatusMessage() {
+        return statusMessage;
+    }
+
+    public void setStatusMessage(String statusMessage) {
+        this.statusMessage = statusMessage;
+    }
+
     public String resString() {
         return ResourcesUtils.getResString(this);
     }
@@ -158,6 +193,7 @@ public class Project implements ResourcesHolder {
     public String toString() {
         final StringBuilder sb = new StringBuilder("Project{");
         sb.append("id=").append(id);
+        sb.append(", author=").append(author.getFamilyName());
         sb.append(", thing=").append(thing.getName());
         sb.append(", name='").append(name).append('\'');
         sb.append(", cost='").append(cost).append('\'');
@@ -168,5 +204,10 @@ public class Project implements ResourcesHolder {
 
     public boolean isProductionProject() {
         return thing.getCraftBranch().getId() == Const.CRAFTBRANCH_SERVICE_AND_BUFFS;
+    }
+
+    public String getEncodedView() {
+        String encodeToString = Base64Utils.encodeToString(view);
+        return encodeToString;
     }
 }

@@ -68,6 +68,116 @@
             <p>Нет проектов для покупки</p>
         </th:block>
     </div>
+    <div class="well">
+        <button data-toggle="collapse" data-target="#project-creating" class="btn">
+            Создание нового проекта <span class="glyphicon glyphicon-menu-down"></span>
+        </button>
+        <div id="project-creating" class="collapse">
+            <p>Вы можете добавить свой проект вещи за
+                <th:block th:text="${@const.COST_NEW_PROJECT}"></th:block>
+                р. Для этого создайте изображение вещи указанных размеров и сохраните картинку в <strong>png</strong> формате. Задайте стоимость проекта и количество
+                ресурсов,
+                необходимых для его
+                изготовления. Новый проект проходит модерацию. Если изображение соответствует изготавливаемой вещи, имеет необходимые ширину и высоту, то проект добавляется в базу, и любой игрок сможет его купить.
+                Деньги передаются вашей семье. Модератор оставляет за собой право изменить количество необходимых ресурсов и стоимость проекта. Также он может вернуть проект на доработку с указанием причины.
+            </p>
+            <h4>Создание нового проекта</h4>
+            <form th:action="@{/game/createProject}" enctype="multipart/form-data" method="post">
+                <input type="hidden" name="newProjectThingId" th:value="${thing.getId()}"/>
+                <div class="form-group row">
+                    <span class="col-sm-3 ">Название проекта</span>
+                    <div class="col-sm-5">
+                        <input name="newProjectName" type="text" class="form-control"/>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <span class="col-sm-3 ">Стоимость</span>
+                    <div class="col-sm-3">
+                        <input name="newProjectCost" type="number" class="form-control"/>
+                    </div>
+                </div>
+                <label>Изображение PNG (ширина:
+                    <th:block th:text="${thing.getWidth()}"></th:block>
+                    px, высота:
+                    <th:block th:text="${thing.getHeight()}"></th:block>
+                    px)</label>
+                <div class="form-group row">
+                    <span class="col-sm-3 ">Файл</span>
+                    <input name="newProjectFile" type="file" class="form-control-file" aria-describedby="fileHelp" style="padding-left: 15px;"/>
+                </div>
+                <label>Ресурсы, необходимые для изготовления вещей по проекту:</label>
+                <div class="form-group row">
+                <span class="col-sm-3 ">
+                    <th:block th:text="${#strings.capitalize(@const.RES_FOOD_NAME)}"></th:block>
+                </span>
+                    <div class="col-sm-3">
+                        <input name="newProjectFood" type="number" class="form-control" value="0"/>
+                    </div>
+                </div>
+                <div class="form-group row">
+                <span class="col-sm-3 ">
+                    <th:block th:text="${#strings.capitalize(@const.RES_WOOD_NAME)}"></th:block>
+                </span>
+                    <div class="col-sm-3">
+                        <input name="newProjectWood" type="number" class="form-control" value="0"/>
+                    </div>
+                </div>
+                <div class="form-group row">
+                <span class="col-sm-3 ">
+                    <th:block th:text="${#strings.capitalize(@const.RES_METALL_NAME)}"></th:block>
+                </span>
+                    <div class="col-sm-3">
+                        <input name="newProjectMetall" type="number" class="form-control" value="0"/>
+                    </div>
+                </div>
+                <div class="form-group row">
+                <span class="col-sm-3 ">
+                    <th:block th:text="${#strings.capitalize(@const.RES_PLASTIC_NAME)}"></th:block>
+                </span>
+                    <div class="col-sm-3">
+                        <input name="newProjectPlastic" type="number" class="form-control" value="0"/>
+                    </div>
+                </div>
+                <div class="form-group row">
+                <span class="col-sm-3 ">
+                    <th:block th:text="${#strings.capitalize(@const.RES_MICROELECTRONICS_NAME)}"></th:block>
+                </span>
+                    <div class="col-sm-3">
+                        <input name="newProjectMicroelectronics" type="number" class="form-control" value="0"/>
+                    </div>
+                </div>
+                <div class="form-group row">
+                <span class="col-sm-3 ">
+                    <th:block th:text="${#strings.capitalize(@const.RES_CLOTH_NAME)}"></th:block>
+                </span>
+                    <div class="col-sm-3">
+                        <input name="newProjectCloth" type="number" class="form-control" value="0"/>
+                    </div>
+                </div>
+                <div class="form-group row">
+                <span class="col-sm-3">
+                    <th:block th:text="${#strings.capitalize(@const.RES_STONE_NAME)}"></th:block>
+                </span>
+                    <div class="col-sm-3">
+                        <input name="newProjectStone" type="number" class="form-control" value="0"/>
+                    </div>
+                </div>
+                <div class="form-group row">
+                <span class="col-sm-3 ">
+                    <th:block th:text="${#strings.capitalize(@const.RES_CHEMICAL_NAME)}"></th:block>
+                </span>
+                    <div class="col-sm-3">
+                        <input name="newProjectChemical" type="number" class="form-control" value="0"/>
+                    </div>
+                </div>
+                <button type="submit" th:disabled="${family.getMoney() lt @const.COST_NEW_PROJECT}" class="btn btn-primary">Подать заявку на создание нового проекта:
+                    <th:block th:text="${@const.COST_NEW_PROJECT}"></th:block>
+                    р.
+                </button>
+            </form>
+        </div>
+
+    </div>
 </div>
 <th:block th:replace="fragments/scripts :: webjars"></th:block>
 </body>
