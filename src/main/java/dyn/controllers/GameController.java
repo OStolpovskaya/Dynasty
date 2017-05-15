@@ -549,4 +549,59 @@ public class GameController {
 
         return 1;
     }
+
+    //game/userview?userId
+    @RequestMapping(value = "/game/userview", method = RequestMethod.GET)
+    public String userview(ModelMap model, RedirectAttributes redirectAttributes,
+                           @RequestParam(value = "userId") Long userId) {
+        if (userId.equals(1L)) {
+            redirectAttributes.addFlashAttribute("mess", "У разработчиков нет текущей семьи, просмотр не разрешен");
+            return "redirect:/game";
+        }
+        User user = userRepository.findByUserName(getAuthUser().getUsername());
+        Family family = user.getCurrentFamily();
+        model.addAttribute("family", family);
+
+        User player = userRepository.findOne(userId);
+        if (player == null) {
+            redirectAttributes.addFlashAttribute("mess", "Нет такого игрока");
+            return "redirect:/game";
+        }
+        model.addAttribute("player", player);
+
+        Family playerCurrentFamily = player.getCurrentFamily();
+        model.addAttribute("playerCurrentFamily", playerCurrentFamily);
+
+        List<Character> fathers;
+        if (playerCurrentFamily.getLevel() > 0) {
+            fathers = characterRepository.findByFamilyAndLevelAndSexAndSpouseIsNotNull(playerCurrentFamily, playerCurrentFamily.getLevel() - 1, "male");
+        } else {
+            fathers = characterRepository.findByFamilyAndLevel(playerCurrentFamily, playerCurrentFamily.getLevel());
+        }
+
+        Map<Character, List<Character>> fathersMap = new LinkedHashMap<>();
+        for (Character father : fathers) {
+            fathersMap.put(father, father.getChildren());
+        }
+        model.addAttribute("fathers", fathersMap);
+
+        Set<Achievement> achievements = player.getAchievements();
+        model.addAttribute("achievements", achievements);
+
+        model.addAttribute("roomList", houseService.getRoomsByHouseId(playerCurrentFamily.getHouse().getId()));
+
+        List<RoomView> roomViewList = houseService.getRoomMaps(playerCurrentFamily.getHouse(), playerCurrentFamily);
+        model.addAttribute("roomViewList", roomViewList);
+
+        List<House> buildingList = playerCurrentFamily.getBuildings();
+        model.addAttribute("buildingList", buildingList);
+
+        Map<House, List<RoomView>> buildingMap = new LinkedHashMap<>();
+        for (House house : buildingList) {
+            buildingMap.put(house, houseService.getRoomMaps(house, playerCurrentFamily));
+        }
+        model.addAttribute("buildingMap", buildingMap);
+
+        return "game/userview";
+    }
 }

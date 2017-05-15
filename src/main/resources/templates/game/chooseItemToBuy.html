@@ -28,8 +28,12 @@
         <th:block th:each="item : ${items}">
             <tr>
                 <td th:text="${item.getProject().getName()}"></td>
-                <td th:text="${item.getFamily().getFamilyName()+'('+item.getFamily().getUser().getUserName()+')'}"></td>
-                <td th:text="${item.getAuthor().getFamilyName()+'('+item.getAuthor().getUser().getUserName()+')'}"></td>
+                <td>
+                    <a th:href="${'/game/userview?userId='+item.getFamily().getUser().getUserid()}" th:text="${item.getFamily().familyNameAndUserName()}"></a>
+                </td>
+                <td>
+                    <a th:href="${'/game/userview?userId='+item.getAuthor().getUser().getUserid()}" th:text="${item.getAuthor().familyNameAndUserName()}"></a>
+                </td>
                 <td th:text="${item.getCost()+' р.'}"></td>
                 <td>
                     <form th:action="@{/game/buyItem}" method="post">

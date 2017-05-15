@@ -24,7 +24,7 @@
         <li th:each="craftBranch : ${craftBranchList}">
             <a th:href="${'/game/craft#craftbranch'+craftBranch.getId()}" th:text="${craftBranch.getName()}">craftbranch</a>
         </li>
-        <li><a href="#createdProjects">Авторские проекты</a></li>
+        <li><a href="#createdProjects">авторские проекты</a></li>
     </ul>
     <p>Нажмите на значок изученного предмета, чтобы перейти к изготовлению. Или кнопку "Выучить" под значком для изучения</p>
     <th:block th:each="parentThing : ${parentThings}">

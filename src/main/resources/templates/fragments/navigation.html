@@ -85,7 +85,7 @@
                         </ul>
                     </div>
                 </li>
-                <li th:if="${family != null}"><span th:text="${family.getFamilyName() + ' ('+family.getUser().getUserName()+') '}" class="navbar-brand"></span></li>
+                <li th:if="${family != null}"><a th:href="${'/game/userview?userId='+family.getUser().getUserid()}" th:text="${family.familyNameAndUserName()}" class="navbar-brand"></a></li>
                 <li th:if="${family != null}"><span th:text="${family.getLevel()}" class="navbar-brand"></span></li>
                 <li><a href="?language=en">en</a></li>
                 <li><a href="?language=ru">ru</a></li>

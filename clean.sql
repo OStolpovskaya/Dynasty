@@ -12,6 +12,6 @@ truncate table item;
 DELETE FROM `family` WHERE `id`>1; ALTER TABLE family AUTO_INCREMENT = 2;
 DELETE FROM `family_resources` WHERE `id`>1; ALTER TABLE family_resources AUTO_INCREMENT = 2;
 DELETE FROM  family_log; WHERE `id`>1; ALTER TABLE family_log AUTO_INCREMENT = 2;
-
+delete from project where author_id>1;
 truncate table user_achievements;
 

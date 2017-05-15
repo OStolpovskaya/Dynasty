@@ -246,11 +246,11 @@ public class Family {
                 familyResources.getChemical() >= project.getChemical();
     }
 
-    public String logName() {
-        return "Family " + familyName + "(" + id + ") ";
+    public String familyNameAndId() {
+        return familyName + " (" + id + ") ";
     }
 
-    public String familyNameAndId() {
-        return familyName + " (" + id + ")";
+    public String familyNameAndUserName() {
+        return familyName + " (" + user.getUserName() + ") ";
     }
 }
