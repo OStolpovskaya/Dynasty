@@ -6,6 +6,7 @@ import dyn.utils.ResourcesUtils;
 import org.springframework.util.Base64Utils;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 /**
@@ -28,6 +29,7 @@ public class Project implements ResourcesHolder {
     @Enumerated(EnumType.STRING)
     private ProjectStatus status;
 
+    @Size(min = 2, max = 30, message = "{project.namesize}")
     private String name;
 
     private int cost;
@@ -193,8 +195,8 @@ public class Project implements ResourcesHolder {
     public String toString() {
         final StringBuilder sb = new StringBuilder("Project{");
         sb.append("id=").append(id);
-        sb.append(", author=").append(author.getFamilyName());
-        sb.append(", thing=").append(thing.getName());
+        sb.append(", author=").append(author == null ? "" : author.getFamilyName());
+        sb.append(", thing=").append(thing == null ? "" : thing.getName());
         sb.append(", name='").append(name).append('\'');
         sb.append(", cost='").append(cost).append('\'');
         sb.append(", res='").append(resString()).append('\'');
@@ -209,5 +211,19 @@ public class Project implements ResourcesHolder {
     public String getEncodedView() {
         String encodeToString = Base64Utils.encodeToString(view);
         return encodeToString;
+    }
+
+    public String getStatusWithMessage() {
+        StringBuilder stringBuilder = new StringBuilder();
+        if (status == ProjectStatus.approved) {
+            stringBuilder.append("Принят");
+        } else if (status == ProjectStatus.newProject) {
+            stringBuilder.append("Новый");
+        } else if (status == ProjectStatus.rework) {
+            stringBuilder.append("Требует доработки (").append(statusMessage).append(")");
+        } else if (status == ProjectStatus.corrected) {
+            stringBuilder.append("Исправлен (").append(statusMessage).append(")");
+        }
+        return stringBuilder.toString();
     }
 }

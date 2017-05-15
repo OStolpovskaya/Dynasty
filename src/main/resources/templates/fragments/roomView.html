@@ -74,7 +74,8 @@
     <!--/*@thymesVar id="roomView" type="dyn.model.RoomView"*/-->
     <!--/*@thymesVar id="roomThingWithItems" type="dyn.model.RoomThingWithItems"*/-->
     <div style="width: 1035px; height: 405px; position: relative; background: url(/graphics/room_grid.png) repeat-y #ffffff">
-        <th:block th:each="roomThingWithItems : ${roomView.getRoomThingWithItemsList()}">
+        <th:block th:each="roomThingWithItems : ${roomView.getRoomThingWithItemsList()}" th:with="curItem = ${roomThingWithItems.getCurrentItem()}">
+
             <div align="center" style="border: solid 1px darkslategray; display: table; position: absolute; "
                  th:styleappend="${'width: '+ roomThingWithItems.getRoomThing().getThing().getWidth() +'px;'+
                                  'height: ' + roomThingWithItems.getRoomThing().getThing().getHeight()+'px;'+
@@ -82,14 +83,21 @@
                                  'top: ' + roomThingWithItems.getRoomThing().getY()+'px;'}"
                  data-toggle="modal" data-target="#roomThing"
                  th:onclick="'javascript:roomViewPassDataToHouse(' + ${roomThingWithItems.getStringForModal()}+');'">
-                <div th:if="${roomThingWithItems.getCurrentItem()==null}" th:text="${roomThingWithItems.getRoomThing().getThing().getName()}"
-                     style="color: dimgrey; display: table-cell; vertical-align: middle; font-size: 8px;">Нет вещи
+                <div th:if="${curItem == null}" th:text="${roomThingWithItems.getRoomThing().getThing().getName()}" style="color: dimgrey; display: table-cell; vertical-align: middle; font-size: 8px;">
+                    Нет вещи
                 </div>
-                <th:block th:unless="${roomThingWithItems.getCurrentItem()==null}">
-                                    <span th:text="${roomThingWithItems.getCurrentItem().getProject().getName()}"
-                                          style="color: cornflowerblue;  display: table-cell; vertical-align: middle; font-size: 8px;"
-                                          data-toggle="tooltip"
-                                          th:title="${roomThingWithItems.getCurrentItem().getFullName() + ' от '+roomThingWithItems.getCurrentItem().getAuthor().getFamilyName()}"></span>
+                <th:block th:if="${curItem != null}">
+                    <th:block th:if="${curItem.getProject().getView() != null}">
+                        <img th:src="${'data:image/png;base64,'+curItem.getProject().getEncodedView()}"
+                             data-toggle="tooltip"
+                             th:title="${curItem.getFullName() + ' от '+curItem.getAuthor().getFamilyName()}"/>
+                    </th:block>
+                    <th:block th:if="${curItem.getProject().getView() == null}">
+                        <span th:text="${curItem.getProject().getName()}" style="color: cornflowerblue;  display: table-cell; vertical-align: middle; font-size: 8px;"
+                              data-toggle="tooltip"
+                              th:title="${curItem.getFullName() + ' от '+curItem.getAuthor().getFamilyName()}"></span>
+                    </th:block>
+
                 </th:block>
 
             </div>

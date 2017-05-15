@@ -168,7 +168,7 @@ public class CraftService {
         return projectRepository.findByAuthor(family);
     }
 
-    public List<Project> getNewProjects() {
-        return projectRepository.findAllByStatusOrderByThing(ProjectStatus.newProject);
+    public List<Project> getProjectsByStatus(ProjectStatus status) {
+        return projectRepository.findAllByStatusOrderByThing(status);
     }
 }

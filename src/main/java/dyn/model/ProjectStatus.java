@@ -5,7 +5,6 @@ package dyn.model;
  */
 public enum ProjectStatus {
     approved,
-    verification,
     newProject,
     rework,
     corrected

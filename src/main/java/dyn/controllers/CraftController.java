@@ -21,6 +21,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.imageio.ImageIO;
+import javax.validation.Valid;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -179,90 +182,143 @@ public class CraftController {
         return "redirect:/game/craft";
     }
 
-    @RequestMapping(value = "/game/createProject", method = RequestMethod.POST)
-    public String createProject(ModelMap model, RedirectAttributes redirectAttributes,
-                                @RequestParam(value = "newProjectThingId") Long thingId,
-                                @RequestParam(value = "newProjectName") String name,
-                                @RequestParam(value = "newProjectCost", defaultValue = "0") int cost,
-                                @RequestParam(value = "newProjectFile") MultipartFile file,
-                                @RequestParam(value = "newProjectFood", defaultValue = "0") int food,
-                                @RequestParam(value = "newProjectWood", defaultValue = "0") int wood,
-                                @RequestParam(value = "newProjectMetall", defaultValue = "0") int metall,
-                                @RequestParam(value = "newProjectPlastic", defaultValue = "0") int plastic,
-                                @RequestParam(value = "newProjectMicroelectronics", defaultValue = "0") int microelectronics,
-                                @RequestParam(value = "newProjectCloth", defaultValue = "0") int cloth,
-                                @RequestParam(value = "newProjectStone", defaultValue = "0") int stone,
-                                @RequestParam(value = "newProjectChemical", defaultValue = "0") int chemical) {
+    @RequestMapping(value = "/game/editProject", method = RequestMethod.POST)
+    public String editProject(ModelMap model, RedirectAttributes redirectAttributes,
+                              @RequestParam(value = "projectId") Long projectId) {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         Family family = user.getCurrentFamily();
+        model.addAttribute("family", family);
+
+        Project project = craftService.getProject(projectId);
+        if (project != null) {
+            model.addAttribute("thing", project.getThing());
+            model.addAttribute("project", project);
+            model.addAttribute("formType", "edit");
+            return "game/projectForm";
+        }
+        logger.error(family.logName() + " want to edit non-existing project id=" + projectId);
+        redirectAttributes.addFlashAttribute("mess", "Такого проекта нет");
+        return "redirect:/game/craft";
+    }
+
+    @RequestMapping(value = "/game/newProject", method = RequestMethod.POST)
+    public String newProject(ModelMap model, RedirectAttributes redirectAttributes,
+                             @RequestParam(value = "newProjectThingId") Long thingId) {
+        User user = userRepository.findByUserName(getAuthUser().getUsername());
+        Family family = user.getCurrentFamily();
+        model.addAttribute("family", family);
 
         Thing thing = craftService.getThing(thingId);
         if (thing != null) {
-            if (family.getMoney() >= Const.COST_NEW_PROJECT) {
-                if (name.length() <= 30) {
-                    if (!file.isEmpty() && file.getSize() != 0 && file.getContentType().equalsIgnoreCase("image/png")) {
-                        BufferedImage image = null;
-                        try {
-                            image = ImageIO.read(file.getInputStream());
-                            int width = image.getWidth();
-                            int height = image.getHeight();
-                            if (width == thing.getWidth() && height == thing.getHeight()) {
-                                Project project = new Project();
-                                project.setThing(thing);
-                                project.setAuthor(family);
-                                project.setStatus(ProjectStatus.newProject);
-                                project.setName(name);
-                                project.setCost(cost);
-
-                                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                                ImageIO.write(image, "png", baos);
-                                baos.flush();
-                                byte[] imageInByte = baos.toByteArray();
-                                baos.close();
-
-                                project.setView(imageInByte);
-
-                                project.setFood(food);
-                                project.setWood(wood);
-                                project.setMetall(metall);
-                                project.setPlastic(plastic);
-                                project.setMicroelectronics(microelectronics);
-                                project.setCloth(cloth);
-                                project.setStone(stone);
-                                project.setChemical(chemical);
-
-                                craftService.saveProject(project);
-
-                                family.setMoney(family.getMoney() - Const.COST_NEW_PROJECT);
-                                familyRepository.save(family);
-
-                                logger.info(family.logName() + " created new project " + project.getName());
-                                redirectAttributes.addFlashAttribute("mess", "Ваша заявка на создание нового проекта зарегистрирована. Ждите сообщений от модератора.");
-                                return "redirect:/game/chooseProject?thingId=" + thing.getId();
-                            }
-                            logger.error(family.logName() + " uploaded image for new project with incorrect size " + file.getOriginalFilename());
-                            redirectAttributes.addFlashAttribute("mess", "Изображение имеет неверные размеры: " + width + "x" + height + ", а нужно: " + thing.getWidth() + "x" + thing.getHeight());
-                            return "redirect:/game/chooseProject?thingId=" + thing.getId();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            logger.error(family.logName() + " has error in reading uploaded file " + file.getOriginalFilename());
-                            redirectAttributes.addFlashAttribute("mess", "Ошибка при чтении файла");
-                            return "redirect:/game/chooseProject?thingId=" + thing.getId();
-                        }
-
-                    }
-                }
-                logger.error(family.logName() + " file is empty or has size 0 or not png " + thing.getName());
-                redirectAttributes.addFlashAttribute("mess", "Загружаемый файл пустой или имеет размер 0 или это не png");
-                return "redirect:/game/chooseProject?thingId=" + thing.getId();
-            }
-            logger.error(family.logName() + " has not enough money to create project for thing " + thing.getName());
-            redirectAttributes.addFlashAttribute("mess", "Недостаточно денег для создания нового проекта");
-            return "redirect:/game/chooseProject?thingId=" + thing.getId();
+            Project project = new Project();
+            project.setThing(thing);
+            project.setAuthor(family);
+            model.addAttribute("thing", thing);
+            model.addAttribute("project", project);
+            model.addAttribute("formType", "new");
+            return "game/projectForm";
         }
-        logger.error(family.logName() + " want to buy projects for non-existing thing id=" + thingId);
-        redirectAttributes.addFlashAttribute("mess", "Такого предмета нет");
+
+        logger.error(family.logName() + " want to create project for non-existing thing id=" + thingId);
+        redirectAttributes.addFlashAttribute("mess", "Такой вещи нет");
         return "redirect:/game/craft";
+    }
+
+
+    @RequestMapping(value = "/game/saveProject", method = RequestMethod.POST)
+    public String saveProject(ModelMap model, @ModelAttribute("project") @Valid Project project,
+                              BindingResult result,
+                              RedirectAttributes redirectAttributes,
+                              @RequestParam(value = "formType") String formType,
+                              @RequestParam(value = "newProjectFile") MultipartFile file) {
+        User user = userRepository.findByUserName(getAuthUser().getUsername());
+        Family family = user.getCurrentFamily();
+
+        System.out.println("CraftController.saveProject");
+        System.out.println("model = " + model);
+        System.out.println("project = " + project);
+        System.out.println("formType = " + formType);
+        System.out.println("file.getOriginalFilename() = " + file.getOriginalFilename());
+
+        Thing thing = project.getThing();
+        BufferedImage image = null;
+        byte[] imageInByte = null;
+
+        if (file.isEmpty() || file.getSize() == 0) {
+            System.out.println("file.isEmpty() = " + file.isEmpty());
+            System.out.println("file.getSize() = " + file.getSize());
+            logger.error(family.logName() + " file is empty or has size 0 ");
+            result.rejectValue("view", "project.fileSize");
+        } else {
+            if (!file.getContentType().equalsIgnoreCase("image/png")) {
+                System.out.println("file.getContentType() = " + file.getContentType());
+                logger.error(family.logName() + " file is not png ");
+                result.rejectValue("view", "project.fileType");
+
+            } else {
+                try {
+                    image = ImageIO.read(file.getInputStream());
+                    int width = image.getWidth();
+                    int height = image.getHeight();
+                    if (width != thing.getWidth() || height != thing.getHeight()) {
+                        logger.error(family.logName() + " uploaded image for new project with incorrect size " + file.getOriginalFilename());
+                        result.rejectValue("view", "project.imageSize");
+                    } else {
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        ImageIO.write(image, "png", baos);
+                        baos.flush();
+                        imageInByte = baos.toByteArray();
+                        baos.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    logger.error(family.logName() + " has error in reading uploaded file " + file.getOriginalFilename());
+                    result.rejectValue("view", "project.imageReadError");
+                }
+            }
+        }
+
+        if (formType.equals("new") && family.getMoney() < Const.COST_NEW_PROJECT) {
+            logger.error(family.logName() + " has not enough money to create project for thing " + thing.getName());
+            result.rejectValue("cost", "project.notEnoughMoney");
+        }
+
+        if (result.hasErrors()) {
+            System.out.println("result.hasErrors() = " + result.hasErrors());
+            System.out.println(result);
+            model.addAttribute("family", family);
+            model.addAttribute("formType", formType);
+            return "game/projectForm";
+        }
+
+        project.setView(imageInByte);
+
+        if (formType.equals("new")) {
+            project.setStatus(ProjectStatus.newProject);
+            project.setStatusMessage("");
+        }
+
+        if (formType.equals("edit")) {
+            project.setStatus(ProjectStatus.corrected);
+            project.setStatusMessage(project.getStatusMessage());
+        }
+
+        craftService.saveProject(project);
+
+        if (formType.equals("new")) {
+            family.setMoney(family.getMoney() - Const.COST_NEW_PROJECT);
+            familyRepository.save(family);
+        }
+
+        logger.info(family.logName() + " saved project " + project.getName());
+
+        if (formType.equals("edit")) {
+            redirectAttributes.addFlashAttribute("mess", "Проект отредактирован. Ждите сообщений от модератора.");
+            return "redirect:/game/craft#createdProjects";
+        }
+        redirectAttributes.addFlashAttribute("mess", "Ваша заявка на создание нового проекта зарегистрирована. Ждите сообщений от модератора.");
+        return "redirect:/game/chooseProject?thingId=" + thing.getId();
+
     }
 
     @RequestMapping(value = "/game/makeItem", method = RequestMethod.POST)

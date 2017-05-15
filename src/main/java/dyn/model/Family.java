@@ -95,7 +95,6 @@ public class Family {
     public boolean isCurrent() {
         return current;
     }
-
     public void setCurrent(boolean current) {
         this.current = current;
     }
@@ -132,7 +131,6 @@ public class Family {
         this.craftThings = craftThings;
     }
 
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "family_craft_project",
             joinColumns = {@JoinColumn(name = "family_id")},
@@ -153,7 +151,6 @@ public class Family {
     public List<House> getBuildings() {
         return buildings;
     }
-
     public void setBuildings(List<House> buildings) {
         this.buildings = buildings;
     }
@@ -169,7 +166,6 @@ public class Family {
     public int getPairsNum() {
         return pairsNum;
     }
-
     public void setPairsNum(int pairs_num) {
         this.pairsNum = pairs_num;
     }
@@ -177,7 +173,6 @@ public class Family {
     public int getFianceeNum() {
         return fianceeNum;
     }
-
     public void setFianceeNum(int fiancee_num) {
         this.fianceeNum = fiancee_num;
     }
@@ -199,25 +194,24 @@ public class Family {
         this.familyResources = familyResources;
     }
 
-    public List<Project> getCraftProjectsForThing(Thing thing) {
-        List<Project> craftProjectsForThing = new ArrayList<>();
-        for (Project craftProject : craftProjects) {
-            if (craftProject.getThing() == thing) {
-                craftProjectsForThing.add(craftProject);
-            }
-        }
-        return craftProjectsForThing;
-    }
-
     @OneToMany(mappedBy = "family", fetch = FetchType.LAZY)
     public List<Item> getItems() {
         return items;
     }
-
     public void setItems(List<Item> items) {
         this.items = items;
     }
 
+    @OneToMany(mappedBy = "family", fetch = FetchType.LAZY)
+    public List<FamilyLog> getFamilyLogs() {
+        return familyLogs;
+    }
+
+    public void setFamilyLogs(List<FamilyLog> familyLogs) {
+        this.familyLogs = familyLogs;
+    }
+
+    // ===================================
     @Override
     public String toString() {
         return "Family{" +
@@ -229,6 +223,16 @@ public class Family {
                 ", femaleLastname='" + femaleLastname + '\'' +
                 ", level=" + level +
                 '}';
+    }
+
+    public List<Project> getCraftProjectsForThing(Thing thing) {
+        List<Project> craftProjectsForThing = new ArrayList<>();
+        for (Project craftProject : craftProjects) {
+            if (craftProject.getThing() == thing) {
+                craftProjectsForThing.add(craftProject);
+            }
+        }
+        return craftProjectsForThing;
     }
 
     public boolean hasResourcesForProject(Project project) {
@@ -246,12 +250,7 @@ public class Family {
         return "Family " + familyName + "(" + id + ") ";
     }
 
-    @OneToMany(mappedBy = "family", fetch = FetchType.LAZY)
-    public List<FamilyLog> getFamilyLogs() {
-        return familyLogs;
-    }
-
-    public void setFamilyLogs(List<FamilyLog> familyLogs) {
-        this.familyLogs = familyLogs;
+    public String familyNameAndId() {
+        return familyName + " (" + id + ")";
     }
 }

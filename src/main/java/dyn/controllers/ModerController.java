@@ -42,11 +42,13 @@ public class ModerController {
 
     @RequestMapping("/moder/projects")
     public String projects(ModelMap model) {
-        model.addAttribute("newProjects", craftService.getNewProjects());
+        model.addAttribute("newProjects", craftService.getProjectsByStatus(ProjectStatus.newProject));
+        model.addAttribute("reworkProjects", craftService.getProjectsByStatus(ProjectStatus.rework));
+        model.addAttribute("correctedProjects", craftService.getProjectsByStatus(ProjectStatus.corrected));
         return "moder/projects";
     }
 
-    @RequestMapping(value = "/moder/setNewProjectApproved", method = RequestMethod.POST)
+    @RequestMapping(value = "/moder/setProjectApproved", method = RequestMethod.POST)
     public String setNewProjectApproved(ModelMap model,
                                         @RequestParam(value = "projectId") Long projectId) {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
@@ -64,6 +66,25 @@ public class ModerController {
             return "redirect:/moder/projects";
         }
         logger.error(user.getUserName() + " want to set status approved for non-existing project id=" + projectId);
+        return "redirect:/moder/projects";
+    }
+
+    @RequestMapping(value = "/moder/setProjectRework", method = RequestMethod.POST)
+    public String setNewProjectRework(ModelMap model,
+                                      @RequestParam(value = "projectId") Long projectId,
+                                      @RequestParam(value = "reason") String reason) {
+        User user = userRepository.findByUserName(getAuthUser().getUsername());
+
+        Project project = craftService.getProject(projectId);
+        if (project != null) {
+            project.setStatus(ProjectStatus.rework);
+            project.setStatusMessage(reason);
+            craftService.saveProject(project);
+
+            logger.info(user.getUserName() + " set status rework for project: " + project);
+            return "redirect:/moder/projects";
+        }
+        logger.error(user.getUserName() + " want to set status rework for non-existing project id=" + projectId);
         return "redirect:/moder/projects";
     }
 

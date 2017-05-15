@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Проекты</title>
+    <link th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}" rel="stylesheet"></link>
+    <link th:href="@{/css/common.css}" rel="stylesheet"></link>
+</head>
+<body>
+<div th:replace="fragments/navigation :: nav-for-game"></div>
+<div class="container">
+    <!--/*@thymesVar id="thing" type="dyn.model.Thing"*/-->
+    <!--/*@thymesVar id="project" type="dyn.model.Project"*/-->
+    <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
+    <h3 th:text="${#strings.toUpperCase(project.getThing().getName())}"></h3>
+
+    <div class="well">
+        <th:block th:if="${formType == 'new'}">
+            <p>Вы можете добавить свой проект вещи за
+                <th:block th:text="${@const.COST_NEW_PROJECT}"></th:block>
+                р. Для этого создайте изображение вещи указанных размеров и сохраните картинку в <strong>png</strong> формате. Задайте стоимость проекта и количество
+                ресурсов,
+                необходимых для его
+                изготовления. Новый проект проходит модерацию. Если изображение соответствует изготавливаемой вещи, имеет необходимые ширину и высоту, то проект добавляется в базу, и любой игрок сможет его купить.
+                Деньги передаются вашей семье. Модератор может вернуть проект на доработку с указанием причины (изменить название, стоимость или количество ресурсов, перерисовать и т.п.)
+            </p>
+            <h4>Создание нового проекта</h4>
+        </th:block>
+        <th:block th:if="${formType == 'edit'}">
+            <p>Отредактируйте ваш проект в соответствии с рекомендациями модератора.
+            </p>
+            <h4>Редактирование нового проекта</h4>
+        </th:block>
+        <form th:action="@{/game/saveProject}" enctype="multipart/form-data" method="post" th:object="${project}">
+            <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="alert alert-danger"> Incorrect</div>
+            <div th:if="${#fields.hasErrors('view')}" th:errors="*{view}" class="alert alert-danger"> Incorrect</div>
+            <div th:if="${#fields.hasErrors('cost')}" th:errors="*{cost}" class="alert alert-danger"> Incorrect</div>
+            <input type="hidden" name="formType" th:value="${formType}"/>
+            <input type="hidden" th:field="*{id}"/>
+            <input type="hidden" th:field="*{thing}"/>
+            <input type="hidden" th:field="*{author}"/>
+            <input type="hidden" th:field="*{statusMessage}"/>
+            <div class="form-group row">
+                <span class="col-sm-3 ">Название проекта</span>
+                <div class="col-sm-5">
+                    <input th:field="*{name}" type="text" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group row">
+                <span class="col-sm-3 ">Стоимость</span>
+                <div class="col-sm-3">
+                    <input th:field="*{cost}" type="number" class="form-control"/>
+                </div>
+            </div>
+            <label>Изображение PNG (ширина:
+                <th:block th:text="*{thing.getWidth()}"></th:block>
+                px, высота:
+                <th:block th:text="*{thing.getHeight()}"></th:block>
+                px)</label>
+            <div class="form-group row">
+                <span class="col-sm-3 ">Файл</span>
+                <input name="newProjectFile" type="file" class="form-control-file" aria-describedby="fileHelp" style="padding-left: 15px;"/>
+            </div>
+            <label>Ресурсы, необходимые для изготовления вещей по проекту:</label>
+            <div class="form-group row">
+                <span class="col-sm-3 ">
+                    <th:block th:text="${#strings.capitalize(@const.RES_FOOD_NAME)}"></th:block>
+                </span>
+                <div class="col-sm-3">
+                    <input th:field="*{food}" type="number" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group row">
+                <span class="col-sm-3 ">
+                    <th:block th:text="${#strings.capitalize(@const.RES_WOOD_NAME)}"></th:block>
+                </span>
+                <div class="col-sm-3">
+                    <input th:field="*{wood}" type="number" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group row">
+                <span class="col-sm-3 ">
+                    <th:block th:text="${#strings.capitalize(@const.RES_METALL_NAME)}"></th:block>
+                </span>
+                <div class="col-sm-3">
+                    <input th:field="*{metall}" type="number" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group row">
+                <span class="col-sm-3 ">
+                    <th:block th:text="${#strings.capitalize(@const.RES_PLASTIC_NAME)}"></th:block>
+                </span>
+                <div class="col-sm-3">
+                    <input th:field="*{plastic}" type="number" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group row">
+                <span class="col-sm-3 ">
+                    <th:block th:text="${#strings.capitalize(@const.RES_MICROELECTRONICS_NAME)}"></th:block>
+                </span>
+                <div class="col-sm-3">
+                    <input th:field="*{microelectronics}" type="number" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group row">
+                <span class="col-sm-3 ">
+                    <th:block th:text="${#strings.capitalize(@const.RES_CLOTH_NAME)}"></th:block>
+                </span>
+                <div class="col-sm-3">
+                    <input th:field="*{cloth}" type="number" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group row">
+                <span class="col-sm-3">
+                    <th:block th:text="${#strings.capitalize(@const.RES_STONE_NAME)}"></th:block>
+                </span>
+                <div class="col-sm-3">
+                    <input th:field="*{stone}" type="number" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group row">
+                <span class="col-sm-3 ">
+                    <th:block th:text="${#strings.capitalize(@const.RES_CHEMICAL_NAME)}"></th:block>
+                </span>
+                <div class="col-sm-3">
+                    <input th:field="*{chemical}" type="number" class="form-control"/>
+                </div>
+            </div>
+            <th:block th:if="${formType == 'new'}">
+                <button type="submit" th:disabled="${family.getMoney() lt @const.COST_NEW_PROJECT}" class="btn btn-primary">Подать заявку на создание нового проекта:
+                    <th:block th:text="${@const.COST_NEW_PROJECT}"></th:block>
+                    р.
+                </button>
+            </th:block>
+            <th:block th:if="${formType == 'edit'}">
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+            </th:block>
+        </form>
+    </div>
+</div>
+<th:block th:replace="fragments/scripts :: webjars"></th:block>
+</body>
+</html>

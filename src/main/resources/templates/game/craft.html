@@ -22,7 +22,7 @@
     <ul class="list-inline">
         <!--/*@thymesVar id="craftBranch" type="dyn.model.CraftBranch"*/-->
         <li th:each="craftBranch : ${craftBranchList}">
-            <a th:href="${'/game/house#craftbranch'+craftBranch.getId()}" th:text="${craftBranch.getName()}">craftbranch</a>
+            <a th:href="${'/game/craft#craftbranch'+craftBranch.getId()}" th:text="${craftBranch.getName()}">craftbranch</a>
         </li>
         <li><a href="#createdProjects">Авторские проекты</a></li>
     </ul>
@@ -89,17 +89,24 @@
                 <th>Название проекта</th>
                 <th>Стоимость</th>
                 <th>Ресурсы</th>
+                <th>Действия</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="project : ${authorProjects}">
                 <th scope="row" th:text="${projectStat.count}">1</th>
                 <!--/*@thymesVar id="project" type="dyn.model.Project"*/-->
-                <td th:text="${project.getStatus()}">Mark</td>
+                <td th:text="${project.getStatusWithMessage()}">Mark</td>
                 <td th:text="${project.getThing().getName()}">Mark</td>
                 <td th:text="${project.getName()}">Otto</td>
                 <td th:text="${project.getCost()}">@mdo</td>
                 <td th:text="${project.resString()}">@mdo</td>
+                <td>
+                    <form th:if="${project.getStatus() eq T(dyn.model.ProjectStatus).rework}" th:action="@{/game/editProject}" method="post" class="form-inline">
+                        <input type="hidden" name="projectId" th:value="${project.getId()}"/>
+                        <button class="btn btn-sm btn-success" type="submit">Редактировать</button>
+                    </form>
+                </td>
             </tr>
             </tbody>
         </table>
