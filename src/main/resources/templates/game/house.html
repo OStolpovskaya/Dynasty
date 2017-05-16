@@ -25,7 +25,8 @@
             <div class="col-md-6">
                 <h3 th:text="${'Ваш дом: '+ family.getHouse().getName()}">Родовое гнездо</h3>
                 <p>В этом доме может проживать пар: <strong th:text="${family.getHouse().getPairsNum()}"></strong><br/>
-                    Позволяет поместить столько анкет в базу невест: <strong th:text="${family.getHouse().getFianceeNum()}"></strong>
+                    Позволяет поместить столько анкет в базу невест: <strong th:text="${family.getHouse().getFianceeNum()}"></strong><br/>
+                    Среднее значение качества предметов в доме: <strong th:text="${family.getHouseQuality()}"></strong>
                 </p>
                 <ul class="list-inline">
                     <!--/*@thymesVar id="room" type="dyn.model.Room"*/-->

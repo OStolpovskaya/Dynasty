@@ -568,6 +568,7 @@ public class BuffController {
                                 part = "цвет кожи";
                                 break;
                         }
+                        character.generateView();
                         characterRepository.save(character);
                         mess = "У персонажа " + character.getName() + " проведена пластическая операция: " + part;
                     } else {

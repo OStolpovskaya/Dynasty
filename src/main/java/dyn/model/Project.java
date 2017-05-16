@@ -188,7 +188,7 @@ public class Project implements ResourcesHolder {
     }
 
     public String resDestroyString() {
-        return ResourcesUtils.getResString(this, 0.5);
+        return ResourcesUtils.getResString(this, Const.DESTROY_ITEM_COEFF);
     }
 
     @Override
@@ -225,5 +225,10 @@ public class Project implements ResourcesHolder {
             stringBuilder.append("Исправлен (").append(statusMessage).append(")");
         }
         return stringBuilder.toString();
+    }
+
+    public String getFullName() {
+
+        return getThing().getName() + " '" + getName() + "'";
     }
 }

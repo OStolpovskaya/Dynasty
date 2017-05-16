@@ -90,12 +90,12 @@
                     <th:block th:if="${curItem.getProject().getView() != null}">
                         <img th:src="${'data:image/png;base64,'+curItem.getProject().getEncodedView()}"
                              data-toggle="tooltip"
-                             th:title="${curItem.getFullName() + ' от '+curItem.getAuthor().getFamilyName()}"/>
+                             th:title="${curItem.getFullName() + ' от '+curItem.getAuthor().getFamilyName() + '. Качество: ' + curItem.getQuality()}"/>
                     </th:block>
                     <th:block th:if="${curItem.getProject().getView() == null}">
                         <span th:text="${curItem.getProject().getName()}" style="color: cornflowerblue;  display: table-cell; vertical-align: middle; font-size: 8px;"
                               data-toggle="tooltip"
-                              th:title="${curItem.getFullName() + ' от '+curItem.getAuthor().getFamilyName()}"></span>
+                              th:title="${curItem.getFullName() + ' от '+curItem.getAuthor().getFamilyName() + '. Качество: ' + curItem.getQuality()}"></span>
                     </th:block>
 
                 </th:block>

@@ -20,7 +20,7 @@ public interface ItemRepository extends CrudRepository<Item, Long> {
 
     List<Item> findByFamilyAndPlaceOrderByProjectThing(Family family, ItemPlace place);
 
-    List<Item> findByFamilyAndPlaceAndProjectThingCraftBranchIdLessThanEqualOrderByProjectThing(Family family, ItemPlace place, Long maxCraftBranchIdForUsualThings);
+    List<Item> findByFamilyAndPlaceAndProjectThingCraftBranchIdLessThanEqualOrderByProjectThingAscProjectAscQualityAsc(Family family, ItemPlace place, Long maxCraftBranchIdForUsualThings);
 
     List<Item> findByFamilyAndPlaceAndProjectThingCraftBranchIdOrderByProjectThingAscProjectAsc(Family family, ItemPlace place, Long craftBranchIdForServicesAndBuffs);
 

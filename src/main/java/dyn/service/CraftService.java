@@ -23,14 +23,16 @@ public class CraftService {
     private final ProjectRepository projectRepository;
     private final ItemRepository itemRepository;
     private final FamilyRepository familyRepository;
+    private final FamilyProjectRepository familyProjectRepository;
 
     @Autowired
-    public CraftService(ThingRepository thingRepository, ProjectRepository projectRepository, ItemRepository itemRepository, CraftBranchRepository craftBranchRepository, FamilyRepository familyRepository) {
+    public CraftService(ThingRepository thingRepository, ProjectRepository projectRepository, ItemRepository itemRepository, CraftBranchRepository craftBranchRepository, FamilyRepository familyRepository, FamilyProjectRepository familyProjectRepository) {
         this.thingRepository = thingRepository;
         this.projectRepository = projectRepository;
         this.itemRepository = itemRepository;
         this.familyRepository = familyRepository;
         this.craftBranchRepository = craftBranchRepository;
+        this.familyProjectRepository = familyProjectRepository;
     }
 
     public void newFamily(Family family) {
@@ -73,6 +75,8 @@ public class CraftService {
     }
 
     public Item createItem(Project project, Family family) {
+        FamilyProject familyProject = familyProjectRepository.findByFamilyAndProject(family, project);
+
         Item item = new Item();
         item.setProject(project);
         item.setFamily(family);
@@ -80,7 +84,47 @@ public class CraftService {
         item.setPlace(ItemPlace.storage);
         item.setInteriorId(0L);
         item.setCost(0);
+
+        int quality = 0;
+        if (project.getAuthor().getId() != 1L) {
+            quality += 1;
+        }
+        if (familyProject.getCount() >= 5) {
+            quality += 1;
+        }
+        if (familyProject.getCount() >= 25) {
+            quality += 1;
+        }
+        if (familyProject.getCount() >= 50) {
+            quality += 1;
+        }
+        // todo: Добавить бафф повышенное качество???
+
+        item.setQuality(quality);
         itemRepository.save(item);
+
+        familyProject.incCount();
+        familyProjectRepository.save(familyProject);
+
+        return item;
+    }
+
+    public Item createProductionItem(Project project, Family family) {
+        FamilyProject familyProject = familyProjectRepository.findByFamilyAndProject(family, project);
+
+        Item item = new Item();
+        item.setProject(project);
+        item.setFamily(family);
+        item.setAuthor(family);
+        item.setPlace(ItemPlace.storage);
+        item.setInteriorId(0L);
+        item.setCost(0);
+        item.setQuality(0);
+        itemRepository.save(item);
+
+        familyProject.incCount();
+        familyProjectRepository.save(familyProject);
+
         return item;
     }
 
@@ -170,5 +214,9 @@ public class CraftService {
 
     public List<Project> getProjectsByStatus(ProjectStatus status) {
         return projectRepository.findAllByStatusOrderByThing(status);
+    }
+
+    public List<FamilyProject> getFamilyProjectsForThing(Family family, Thing thing) {
+        return familyProjectRepository.findByFamilyAndProjectThing(family, thing);
     }
 }

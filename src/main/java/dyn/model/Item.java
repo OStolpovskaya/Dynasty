@@ -21,6 +21,8 @@ public class Item {
     @ManyToOne
     private Family author;
 
+    private int quality;
+
     @Enumerated(EnumType.STRING)
     private ItemPlace place;
 
@@ -66,6 +68,14 @@ public class Item {
 
     public void setAuthor(Family author) {
         this.author = author;
+    }
+
+    public int getQuality() {
+        return quality;
+    }
+
+    public void setQuality(int quality) {
+        this.quality = quality;
     }
 
     public ItemPlace getPlace() {

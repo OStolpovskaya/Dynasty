@@ -80,12 +80,14 @@ public class HouseController {
         Family family = user.getCurrentFamily();
         model.addAttribute("family", family);
 
-        List<House> buildingList = family.getBuildings();
+//        List<House> buildingList = family.getBuildings();
+        List<FamilyBuilding> buildingList = houseService.getFamilyBuildings(family);
         model.addAttribute("buildingList", buildingList);
 
-        Map<House, List<RoomView>> buildingMap = new LinkedHashMap<>();
-        for (House house : buildingList) {
-            buildingMap.put(house, houseService.getRoomMaps(house, family));
+        Map<FamilyBuilding, List<RoomView>> buildingMap = new LinkedHashMap<>();
+        for (FamilyBuilding familyBuilding : buildingList) {
+            House building = familyBuilding.getBuilding();
+            buildingMap.put(familyBuilding, houseService.getRoomMaps(building, family));
         }
         model.addAttribute("buildingMap", buildingMap);
 
@@ -130,14 +132,23 @@ public class HouseController {
                 houseService.saveItem(oldItem);
             }
 
-            item.setPlace(ItemPlace.home);
-            String returnTo = "house#room" + roomThing.getRoom().getId();
+
+            String returnTo;
             if (roomThing.getHouse().getType().equals(HouseType.building)) {
                 item.setPlace(ItemPlace.building);
                 returnTo = "buildings#building" + roomThing.getHouse().getId();
+            } else {
+                item.setPlace(ItemPlace.home);
+                returnTo = "house#room" + roomThing.getRoom().getId();
             }
             item.setInteriorId(roomThing.getId());
             houseService.saveItem(item);
+
+            if (roomThing.getHouse().getType().equals(HouseType.building)) {
+                recountBuidingQuality(family, roomThing.getHouse());
+            } else {
+                recountHouseQuality(family);
+            }
 
             logger.debug(family.familyNameAndId() + "set item " + item.getProject().getName() + "(" + item.getId() + ") to room interior thing=" + roomThing.getThing().getName());
             redirectAttributes.addFlashAttribute("mess", "Предмет размещен на месте вещи: " + roomThing.getThing().getName());
@@ -158,18 +169,30 @@ public class HouseController {
         Item item = houseService.getItemByFamilyAndItemId(family, itemId);
         if (item != null) {
             String returnTo = "house";
+            RoomThing roomThing;
             switch (item.getPlace()) {
                 case home:
+                    roomThing = houseService.getRoomThingById(item.getInteriorId());
                     item.setInteriorId(0L);
                     logger.debug(family.familyNameAndId() + "unset item " + item.getProject().getName() + "(" + item.getId() + ") from room ");
                     redirectAttributes.addFlashAttribute("mess", "Предмет перенесен из дома на склад: " + item.getFullName());
-                    returnTo = "house";
+                    item.setPlace(ItemPlace.storage);
+                    houseService.saveItem(item);
+
+                    recountHouseQuality(family);
+                    returnTo = "house#room" + roomThing.getRoom().getId();
                     break;
                 case building:
+                    roomThing = houseService.getRoomThingById(item.getInteriorId());
+
                     item.setInteriorId(0L);
                     logger.debug(family.familyNameAndId() + "unset item " + item.getProject().getName() + "(" + item.getId() + ") from building ");
                     redirectAttributes.addFlashAttribute("mess", "Предмет перенесен из помещения на склад: " + item.getFullName());
-                    returnTo = "buildings";
+                    item.setPlace(ItemPlace.storage);
+                    houseService.saveItem(item);
+
+                    recountBuidingQuality(family, roomThing.getHouse());
+                    returnTo = "buildings#building" + roomThing.getHouse().getId();
                     break;
                 case store:
                     String mess = "Предмет удален из базы продаж и перенесен на склад: " + item.getFullName() + ". Стоимость: " + item.getCost() + " р.";
@@ -177,16 +200,61 @@ public class HouseController {
                     logger.debug(family.familyNameAndId() + "put item " + item.getProject().getName() + "(" + item.getId() + ") back from store to storage");
                     familyLogService.addToLog(family, mess);
                     redirectAttributes.addFlashAttribute("mess", mess);
+                    item.setPlace(ItemPlace.storage);
+                    houseService.saveItem(item);
+
                     returnTo = "storage";
                     break;
             }
-            item.setPlace(ItemPlace.storage);
-            houseService.saveItem(item);
             return "redirect:/game/" + returnTo;
         }
         logger.error(family.familyNameAndId() + "want to unset nonexisting item: " + itemId);
         redirectAttributes.addFlashAttribute("mess", "Нет такого предмета");
         return "redirect:/game";
+    }
+
+    private void recountBuidingQuality(Family family, House house) {
+        List<RoomView> roomViewList = houseService.getRoomMaps(house, family);
+        int numThings = 0;
+        int sumItemQuality = 0;
+        for (RoomView roomView : roomViewList) {
+            List<RoomThingWithItems> roomThingWithItems = roomView.getRoomThingWithItemsList();
+            for (RoomThingWithItems roomThingWithItem : roomThingWithItems) {
+                numThings += 1;
+                if (roomThingWithItem.getCurrentItem() != null) {
+                    sumItemQuality += roomThingWithItem.getCurrentItem().getQuality();
+                }
+            }
+        }
+        System.out.println("numThings = " + numThings);
+        System.out.println("sumItemQuality = " + sumItemQuality);
+        float buildingQuality = (float) sumItemQuality / numThings;
+        buildingQuality = (float) Math.round(buildingQuality * 100) / 100;
+        System.out.println("buildingQuality = " + buildingQuality);
+
+        houseService.updateBuildingQuality(family, house, buildingQuality);
+    }
+
+    private void recountHouseQuality(Family family) {
+        List<RoomView> roomViewList = houseService.getRoomMaps(family.getHouse(), family);
+        int numThings = 0;
+        int sumItemQuality = 0;
+        for (RoomView roomView : roomViewList) {
+            List<RoomThingWithItems> roomThingWithItems = roomView.getRoomThingWithItemsList();
+            for (RoomThingWithItems roomThingWithItem : roomThingWithItems) {
+                numThings += 1;
+                if (roomThingWithItem.getCurrentItem() != null) {
+                    sumItemQuality += roomThingWithItem.getCurrentItem().getQuality();
+                }
+            }
+        }
+        System.out.println("numThings = " + numThings);
+        System.out.println("sumItemQuality = " + sumItemQuality);
+        float houseQuality = (float) sumItemQuality / numThings;
+        houseQuality = (float) Math.round(houseQuality * 100) / 100;
+        System.out.println("houseQuality = " + houseQuality);
+        family.setHouseQuality(houseQuality);
+        familyRepository.save(family);
     }
 
     @RequestMapping(value = "/game/destroyItem", method = RequestMethod.POST)

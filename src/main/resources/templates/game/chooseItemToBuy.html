@@ -18,6 +18,7 @@
         <thead>
         <tr>
             <th>Предмет</th>
+            <th>Качество</th>
             <th>Продавец</th>
             <th>Изготовитель</th>
             <th>Цена</th>
@@ -28,6 +29,7 @@
         <th:block th:each="item : ${items}">
             <tr>
                 <td th:text="${item.getProject().getName()}"></td>
+                <td th:text="${item.getQuality()}"></td>
                 <td>
                     <a th:href="${'/game/userview?userId='+item.getFamily().getUser().getUserid()}" th:text="${item.getFamily().familyNameAndUserName()}"></a>
                 </td>

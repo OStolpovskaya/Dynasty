@@ -14,10 +14,11 @@
     <div class="well">
         <h3>Склад:</h3>
         <th:block th:if="${not #lists.isEmpty(itemsInStorage)}">
-            <table class="table table-striped">
+            <table class="table table-sm table-striped">
                 <thead>
                 <tr>
                     <th>Предмет</th>
+                    <th>Качество</th>
                     <th>Изготовитель</th>
                     <th>Продать</th>
                     <th>Разобрать</th>
@@ -28,26 +29,31 @@
                 <th:block th:each="item : ${itemsInStorage}">
                     <tr>
                         <td th:text="${item.getFullName()}"></td>
+                        <td th:text="${item.getQuality()}"></td>
                         <td>
                             <a th:href="${'/game/userview?userId='+item.getAuthor().getUser().getUserid()}" th:text="${item.getAuthor().familyNameAndUserName()}"></a>
                         </td>
                         <td>
                             <form th:action="@{/game/putItemToStore}" method="post" class="form-inline">
                                 <input type="hidden" name="itemId" th:value="${item.getId()}"/>
-                                <input type="text" name="cost" th:value="${family.getLevel()}*100" class="form-control" style="width: 60px;" data-toggle="tooltip" title="Стоимость"/>
-                                <button type="submit" class="btn btn-default">Выставить на продажу</button>
+                                <input type="text" name="cost" th:value="${family.getLevel()}*100" class="form-control input-sm" style="width: 60px;" data-toggle="tooltip" title="Стоимость"/>
+                                <button type="submit" class="btn btn-sm btn-warning" data-toggle="tooltip" title="Выставить на продажу">
+                                    <span class="glyphicon glyphicon glyphicon-log-out"></span>
+                                </button>
                             </form>
                         </td>
                         <td>
-                            <form th:action="@{/game/destroyItem}" method="post" class="form-inline" data-toggle="tooltip" th:title="${'Ресурсы: '+ item.getProject().resDestroyString()}">
+                            <form th:action="@{/game/destroyItem}" method="post" class="form-inline" data-toggle="tooltip" th:title="${'Разобрать. Будут получены ресурсы: '+ item.getProject().resDestroyString()}">
                                 <input type="hidden" name="itemId" th:value="${item.getId()}"/>
-                                <button type="submit" class="btn btn-default">Разобрать</button>
+                                <button type="submit" class="btn btn-sm btn-danger">
+                                    <span class="glyphicon glyphicon glyphicon-download-alt"></span>
+                                </button>
                             </form>
                         </td>
                         <td>
                             <form th:action="@{/game/chooseItemToBuy}" method="post" class="form-inline">
                                 <input type="hidden" name="thingId" th:value="${item.getProject().getThing().getId()}"/>
-                                <button type="submit" class="btn btn-default">Маркет</button>
+                                <button type="submit" class="btn btn-sm btn-default">Маркет</button>
                             </form>
                         </td>
                     </tr>
@@ -67,12 +73,11 @@
         </th:block>
 
         <th:block th:if="${not #lists.isEmpty(serviceAndBuffsInStorage)}">
-            <table class="table table-striped">
+            <table class="table table-sm table-striped">
                 <thead>
                 <tr>
                     <th>Предмет</th>
                     <th>Изготовитель</th>
-                    <th>Применить</th>
                     <th>Продать</th>
                     <th>Просмотреть маркет</th>
                 </tr>
@@ -80,36 +85,43 @@
                 <tbody>
                 <th:block th:each="item : ${serviceAndBuffsInStorage}">
                     <tr>
-                        <td th:text="${item.getFullName()}"></td>
+                        <td>
+                            <ul class="list-inline" style="margin-bottom: 0px;">
+                                <li><span th:text="${item.getFullName()}"></span></li>
+                                <th:block th:switch="${item.getProject().getThing().getId()}">
+                                    <!--Сертификат на ресурсы 10 шт.-->
+                                    <th:block th:case="117">
+                                        <li>
+                                            <form th:action="@{/game/applyItemResource}" method="post" class="form-inline">
+                                                <input type="hidden" name="itemId" th:value="${item.getId()}"/>
+                                                <button type="submit" class="btn btn-sm btn-success" data-toggle="tooltip" title="Применить">
+                                                    <span class="glyphicon glyphicon glyphicon glyphicon-share-alt"></span>
+                                                </button>
+                                            </form>
+                                        </li>
+                                    </th:block>
+                                </th:block>
+                            </ul>
+                        </td>
                         <td>
                             <a th:href="${'/game/userview?userId='+item.getAuthor().getUser().getUserid()}" th:text="${item.getAuthor().familyNameAndUserName()}"></a>
-                        </td>
-                        <td>
-                            <th:block th:switch="${item.getProject().getThing().getId()}">
-                                <!--Сертификат на ресурсы 10 шт.-->
-                                <th:block th:case="117">
-                                    <form th:action="@{/game/applyItemResource}" method="post" class="form-inline">
-                                        <input type="hidden" name="itemId" th:value="${item.getId()}"/>
-                                        <button type="submit" class="btn btn-default">Применить</button>
-                                    </form>
-                                </th:block>
-
-
-                            </th:block>
 
                         </td>
+
                         <td>
                             <form th:action="@{/game/putItemToStore}" method="post" class="form-inline">
                                 <input type="hidden" name="itemId" th:value="${item.getId()}"/>
-                                <input type="text" name="cost" th:value="${family.getLevel()}*100" class="form-control" style="width: 60px;" data-toggle="tooltip" title="Стоимость"/>
-                                <button type="submit" class="btn btn-default">Выставить на продажу</button>
+                                <input type="text" name="cost" th:value="${family.getLevel()}*100" class="form-control input-sm" style="width: 60px;" data-toggle="tooltip" title="Стоимость"/>
+                                <button type="submit" class="btn btn-sm btn-warning" data-toggle="tooltip" title="Выставить на продажу">
+                                    <span class="glyphicon glyphicon glyphicon-log-out"></span>
+                                </button>
                             </form>
 
                         </td>
                         <td>
                             <form th:action="@{/game/chooseProductionToBuy}" method="post" class="form-inline">
                                 <input type="hidden" name="projectId" th:value="${item.getProject().getId()}"/>
-                                <button type="submit" class="btn btn-default">Маркет</button>
+                                <button type="submit" class="btn btn-sm btn-default">Маркет</button>
                             </form>
                         </td>
                     </tr>
@@ -124,20 +136,22 @@
     <div class="well">
         <h3>Выставлены на продажу:</h3>
         <th:block th:if="${not #lists.isEmpty(itemsInStore)}">
-            <table class="table table-striped">
+            <table class="table table-sm table-striped">
                 <thead>
                 <tr>
                     <th>Предмет</th>
+                    <th>Качество</th>
                     <th>Изготовитель</th>
                     <th>Цена</th>
-                    <th>Продать</th>
-                    <th>Просмотреть маркет</th>
+                    <th>Вернуть</th>
+                    <th>Маркет</th>
                 </tr>
                 </thead>
                 <tbody>
                 <th:block th:each="item : ${itemsInStore}">
                     <tr>
                         <td th:text="${item.getFullName()}"></td>
+                        <td th:text="${item.getQuality()}"></td>
                         <td>
                             <a th:href="${'/game/userview?userId='+item.getAuthor().getUser().getUserid()}" th:text="${item.getAuthor().familyNameAndUserName()}"></a>
                         </td>
@@ -145,14 +159,14 @@
                         <td>
                             <form th:action="@{/game/unsetItem}" method="post" class="form-inline">
                                 <input type="hidden" name="itemId" th:value="${item.getId()}"/>
-                                <button type="submit" class="btn btn-default">Вернуть на склад</button>
+                                <button type="submit" class="btn btn-sm btn-warning" data-toggle="tooltip" title="Вернуть на склад"><span class="glyphicon glyphicon glyphicon-log-in"></span></button>
                             </form>
 
                         </td>
                         <td>
                             <form th:action="@{/game/chooseItemToBuy}" method="post" class="form-inline">
                                 <input type="hidden" name="thingId" th:value="${item.getProject().getThing().getId()}"/>
-                                <button type="submit" class="btn btn-default">Маркет</button>
+                                <button type="submit" class="btn btn-sm btn-default">Маркет</button>
                             </form>
                         </td>
                     </tr>

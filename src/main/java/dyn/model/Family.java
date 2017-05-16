@@ -27,6 +27,7 @@ public class Family {
     private int craftPoint;
 
     private House house;
+    private float houseQuality;
 
     private int pairsNum;
     private int fianceeNum;
@@ -42,6 +43,8 @@ public class Family {
     private List<FamilyLog> familyLogs;
 
     private List<House> buildings = new ArrayList<>();
+
+    private List<FamilyProject> familyProjects;
     // ===================================
 
     public Family() {
@@ -163,6 +166,15 @@ public class Family {
         this.house = house;
     }
 
+    @Column(name = "house_quality")
+    public float getHouseQuality() {
+        return houseQuality;
+    }
+
+    public void setHouseQuality(float houseQuality) {
+        this.houseQuality = houseQuality;
+    }
+
     public int getPairsNum() {
         return pairsNum;
     }
@@ -209,6 +221,15 @@ public class Family {
 
     public void setFamilyLogs(List<FamilyLog> familyLogs) {
         this.familyLogs = familyLogs;
+    }
+
+    @OneToMany(mappedBy = "family", fetch = FetchType.LAZY)
+    public List<FamilyProject> getFamilyProjects() {
+        return familyProjects;
+    }
+
+    public void setFamilyProjects(List<FamilyProject> familyProjects) {
+        this.familyProjects = familyProjects;
     }
 
     // ===================================

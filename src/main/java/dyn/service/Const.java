@@ -77,4 +77,5 @@ public class Const {
     public static final int COST_FATHER_DOMINANT = 400;
     public static final int COST_MOTHER_DOMINANT = 400;
     public static final int COST_NEW_PROJECT = 10000;
+    public static final double DESTROY_ITEM_COEFF = 0.5;
 }

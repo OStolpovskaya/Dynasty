@@ -28,6 +28,9 @@ public class HouseService {
     private HouseRepository houseRepository;
 
     @Autowired
+    private FamilyBuildingRepository familyBuildingRepository;
+
+    @Autowired
     private ItemRepository itemRepository;
 
     @Autowired
@@ -138,8 +141,7 @@ public class HouseService {
     }
 
     public List<Item> getItemsInStorage(Family family) {
-        return itemRepository.findByFamilyAndPlaceAndProjectThingCraftBranchIdLessThanEqualOrderByProjectThing(family, ItemPlace.storage, Const.CRAFTBRANCH_MEAL);
-//        return itemRepository.findByFamilyAndPlaceOrderByProjectThing(family, ItemPlace.storage);
+        return itemRepository.findByFamilyAndPlaceAndProjectThingCraftBranchIdLessThanEqualOrderByProjectThingAscProjectAscQualityAsc(family, ItemPlace.storage, Const.CRAFTBRANCH_MEAL);
     }
 
     public List<Item> getBuffsInStorage(Family family) {
@@ -237,5 +239,19 @@ public class HouseService {
 
     public List<Item> getItemsInStoreByProject(Project project) {
         return itemRepository.findByPlaceAndProject(ItemPlace.store, project);
+    }
+
+    public void updateBuildingQuality(Family family, House building, float buildingQuality) {
+        FamilyBuilding familyBuilding = familyBuildingRepository.findByFamilyAndBuilding(family, building);
+        familyBuilding.setBuildingQuality(buildingQuality);
+        familyBuildingRepository.save(familyBuilding);
+    }
+
+    public List<FamilyBuilding> getFamilyBuildings(Family family) {
+        return familyBuildingRepository.findByFamily(family);
+    }
+
+    public FamilyBuilding getFamilyBuildingByFamilyAndBuilding(Family family, House building) {
+        return familyBuildingRepository.findByFamilyAndBuilding(family, building);
     }
 }

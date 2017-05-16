@@ -116,15 +116,15 @@ public class CraftController {
         if (thing != null) {
             if (family.getCraftThings().contains(thing)) {
                 List<Project> availableProjects = craftService.getApprovedProjectsByThing(thing);//thing.getProjects();
-                List<Project> projects = new ArrayList<>();
-                List<Project> familyCraftProjects = family.getCraftProjectsForThing(thing);
+                List<Project> projectsToBuy = new ArrayList<>();
+                List<FamilyProject> familyCraftProjects = craftService.getFamilyProjectsForThing(family, thing);//family.getCraftProjectsForThing(thing);
                 for (Project availableProject : availableProjects) {
                     if (!familyCraftProjects.contains(availableProject)) {
-                        projects.add(availableProject);
+                        projectsToBuy.add(availableProject);
                     }
                 }
                 model.addAttribute("familyProjects", familyCraftProjects);
-                model.addAttribute("projects", projects);
+                model.addAttribute("projects", projectsToBuy);
                 model.addAttribute("thing", thing);
                 return "game/chooseProject";
             } else {
@@ -344,6 +344,7 @@ public class CraftController {
                     }
                     familyRepository.save(family);
 
+
                     logger.info(family.familyNameAndId() + " makes the item:" + item.getFullName());
                     String mess = "Ваша семья изготавливает предмет " + item.getFullName() + ". Израсходовано: " + project.resString();
 
@@ -358,6 +359,56 @@ public class CraftController {
                         return "redirect:/game/buildings#building" + building.getId();
                     }
                     return "redirect:/game/chooseProject?thingId=" + project.getThing().getId();
+                }
+                logger.error(family.familyNameAndId() + " doesn't have resources to make item for project:" + project.getName());
+                redirectAttributes.addFlashAttribute("mess", "Недостаточно ресурсов для изготовления предмета по проекту: " + project.getName());
+                return "redirect:/game/chooseProject?thingId=" + project.getThing().getId();
+            }
+            logger.error(family.familyNameAndId() + " doesn't have the project:" + project.getName());
+            redirectAttributes.addFlashAttribute("mess", "Ваша семья не владеет таким проектом: " + project.getName());
+            return "redirect:/game/craft";
+        }
+        logger.error(family.familyNameAndId() + " want to make item for non-existing project id=" + projectId);
+        redirectAttributes.addFlashAttribute("mess", "Такого проекта нет");
+        return "redirect:/game";
+    }
+
+    @RequestMapping(value = "/game/makeProduction", method = RequestMethod.POST)
+    public String makeProduction(ModelMap model, RedirectAttributes redirectAttributes,
+                                 @RequestParam(value = "projectId") Long projectId) {
+        User user = userRepository.findByUserName(getAuthUser().getUsername());
+        Family family = user.getCurrentFamily();
+
+        Project project = craftService.getProject(projectId);
+        if (project != null) {
+            if (family.getCraftProjects().contains(project)) {
+                if (family.hasResourcesForProject(project) && family.getMoney() >= project.getCost()) {
+                    House building = houseService.getBuildingByProduction(project);
+                    FamilyBuilding familyBuilding = houseService.getFamilyBuildingByFamilyAndBuilding(family, building);
+                    int count = 1;
+                    if (familyBuilding.getBuildingQuality() >= 3) {
+                        count += 1;
+                    }
+                    if (familyBuilding.getBuildingQuality() >= 5) {
+                        count += 1;
+                    }
+                    Item item = null;
+                    for (int i = 0; i < count; i++) {
+                        item = craftService.createProductionItem(project, family);
+                        family.getItems().add(item);
+                    }
+                    family.getFamilyResources().makingProject(project);
+                    family.setMoney(family.getMoney() - project.getCost());
+                    familyRepository.save(family);
+
+                    logger.info(family.familyNameAndId() + " makes the item:" + item.getFullName() + ". Count: " + count);
+                    String mess = "Ваша семья изготавливает " + project.getThing().getName() + " " + project.getName() + "(" + count + " шт.). Израсходовано: " + project.getCost() + (project.resString() != "" ? ", " + project.resString() : "");
+
+                    familyLogService.addToLog(family, mess);
+                    redirectAttributes.addFlashAttribute("mess", mess);
+
+
+                    return "redirect:/game/buildings#building" + building.getId();
                 }
                 logger.error(family.familyNameAndId() + " doesn't have resources to make item for project:" + project.getName());
                 redirectAttributes.addFlashAttribute("mess", "Недостаточно ресурсов для изготовления предмета по проекту: " + project.getName());

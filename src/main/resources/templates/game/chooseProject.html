@@ -33,10 +33,11 @@
         <th:block th:if="${not #lists.isEmpty(familyProjects)}">
             <form th:action="@{/game/makeItem}" method="post">
 
-                <div class="radio" th:each="project : ${familyProjects}">
+                <div class="radio" th:each="familyProject : ${familyProjects}">
                     <label>
-                        <input type="radio" name="projectId" th:value="${project.getId()}" th:required="required" onclick="enableMakeItemButton()" th:disabled="${not family.hasResourcesForProject(project)}"/>
-                        <th:block th:text="${project.getName() + ' ('+project.resString()+')'}"></th:block>
+                        <!--/*@thymesVar id="familyProject" type="dyn.model.FamilyProject"*/-->
+                        <input type="radio" name="projectId" th:value="${familyProject.getProject().getId()}" th:required="required" onclick="enableMakeItemButton()" th:disabled="${not family.hasResourcesForProject(familyProject.getProject())}"/>
+                        <th:block th:text="${familyProject.getProject().getName() + ' ('+familyProject.getProject().resString()+') Произведено '+familyProject.getCount()+' раз'}"></th:block>
                     </label>
                 </div>
                 <button id="makeItemButton" type="submit" class="btn btn-default btn-md" th:disabled="${true}">Изготовить предмет</button>
