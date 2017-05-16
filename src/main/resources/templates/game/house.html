@@ -26,7 +26,9 @@
                 <h3 th:text="${'Ваш дом: '+ family.getHouse().getName()}">Родовое гнездо</h3>
                 <p>В этом доме может проживать пар: <strong th:text="${family.getHouse().getPairsNum()}"></strong><br/>
                     Позволяет поместить столько анкет в базу невест: <strong th:text="${family.getHouse().getFianceeNum()}"></strong><br/>
-                    Среднее значение качества предметов в доме: <strong th:text="${family.getHouseQuality()}"></strong>
+                    Среднее значение качества предметов в доме: <strong th:text="${family.getHouseQuality()}"></strong><br/>
+                    Прибавка к плодовитости: <strong th:text="${@houseService.countHouseQualityFertilitySub(family.getHouseQuality())}"></strong><br/>
+                    Коэффициент надбавки к зарплате: <strong th:text="${@houseService.countHouseQualitySalaryCoeff(family.getHouseQuality())}"></strong>
                 </p>
                 <ul class="list-inline">
                     <!--/*@thymesVar id="room" type="dyn.model.Room"*/-->

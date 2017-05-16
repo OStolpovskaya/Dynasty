@@ -177,7 +177,6 @@ public class GameController {
         model.addAttribute("itemMap", itemMap);
 
 
-
         model.addAttribute("familyLog", familyLogService.getLevelFamilyLog(family));
 
         long endTime = System.currentTimeMillis();
@@ -305,16 +304,21 @@ public class GameController {
         ResourcesUtils resourcesUtils = new ResourcesUtils();
         resourcesUtils.saveInitValues(family);
 
+        // расчет надбавки за качество дома
+        float houseQualitySalaryCoeff = houseService.countHouseQualitySalaryCoeff(family.getHouseQuality());
+        logger.debug(family.familyNameAndUserName() + " houseQualitySalaryCoeff = " + houseQualitySalaryCoeff);
+
+
         List<Character> workers = characterRepository.findByFamilyAndLevel(family, family.getLevel());
         for (Character worker : workers) {
             if (worker.getSex().equals("male")) {
-                genProfession(worker, family, user, sb);
+                genProfession(worker, family, houseQualitySalaryCoeff, user, sb);
                 if (worker.hasSpouse()) {
-                    genProfession(worker.getSpouse(), family, user, sb);
+                    genProfession(worker.getSpouse(), family, houseQualitySalaryCoeff, user, sb);
                 }
             } else {
                 if (!worker.isFiancee() && !worker.hasSpouse()) {
-                    genProfession(worker, family, user, sb);
+                    genProfession(worker, family, houseQualitySalaryCoeff, user, sb);
                 }
             }
         }
@@ -327,6 +331,28 @@ public class GameController {
         }
 
         int newLevel = family.getLevel() + 1;
+
+        //  расчет плодовитости
+        float houseQualityFertilitySub = houseService.countHouseQualityFertilitySub(family.getHouseQuality());
+        logger.debug(family.familyNameAndUserName() + " houseQualityFertilitySub = " + houseQualityFertilitySub);
+
+        float[] standartFertility = new float[]{
+                0.20f - houseQualityFertilitySub,
+                0.60f - houseQualityFertilitySub,
+                0.85f - houseQualityFertilitySub,
+                0.93f - houseQualityFertilitySub,
+                0.97f - houseQualityFertilitySub,
+                0.99f - houseQualityFertilitySub,
+                1.00f};
+        float[] buffedFertility = new float[]{
+                ((0.05f - houseQualityFertilitySub) < 0 ? 0 : (0.05f - houseQualityFertilitySub)),
+                0.15f - houseQualityFertilitySub,
+                0.30f - houseQualityFertilitySub,
+                0.50f - houseQualityFertilitySub,
+                0.75f - houseQualityFertilitySub,
+                0.90f - houseQualityFertilitySub,
+                1.00f};
+
         for (Character character : characters) {
 
             double dominantPercent = 0.5; // whose feature is inherited, father or mother
@@ -358,7 +384,12 @@ public class GameController {
             if (character.isBuffedBy(Buff.SIX_CHILDREN)) {
                 childAmount = 6;
             } else {
-                childAmount = getAmountOfChildren(character);
+                if (character.isBuffedBy(Buff.FERTILITY)) {
+                    childAmount = getAmountOfChildren(buffedFertility);
+                } else {
+                    childAmount = getAmountOfChildren(standartFertility);
+                }
+
             }
             if (character.isBuffedBy(Buff.ONE_MORE_CHILD)) {
                 childAmount += 1;
@@ -483,16 +514,18 @@ public class GameController {
         return "redirect:/game";
     }
 
-    public void genProfession(Character worker, Family family, User user, StringBuilder sb) {
+    public void genProfession(Character worker, Family family, double houseQualitySalaryCoeff, User user, StringBuilder sb) {
         int inc = 0;
         careerService.generateProfession(worker);
         int salary = worker.getCareer().getResultSalary();
         if (worker.isBuffedBy(Buff.SALARY_INC)) {
             inc = (int) (0.5 * salary);
         }
-        family.setMoney(family.getMoney() + salary + inc);
+        int houseInc = (int) (houseQualitySalaryCoeff * salary);
+        family.setMoney(family.getMoney() + salary + inc + houseInc);
         sb.append(worker.getName() + " приобретает профессию " + worker.getCareer().getProfession().getName() + " (" + worker.getCareer().getProfession().getLevel() + ") и зарабатывает " + salary + " р. " +
-                (inc == 0 ? "" : "Премия: " + inc + " р. "));
+                (inc == 0 ? "" : "Премия: " + inc + " р. ") +
+                (houseInc == 0 ? "" : "Надбавка за дом: " + houseInc + " р. "));
 
         family.getFamilyResources().addResFromVocation(worker.getCareer());
         sb.append("А призвание приносит ресурсы: " + worker.getCareer().getVocation().resString(worker.getCareer().getProfession().getLevel()) + ". ");
@@ -524,12 +557,7 @@ public class GameController {
         return "redirect:/";
     }
 
-    private int getAmountOfChildren(Character character) {
-        double[] percentage = new double[]{0.20, 0.60, 0.85, 0.93, 0.97, 0.99, 1.00}; // normal
-        if (character.isBuffedBy(Buff.FERTILITY)) {
-            percentage = new double[]{0.05, 0.15, 0.30, 0.50, 0.75, 0.90, 1.00}; // buff fertility
-        }
-
+    private int getAmountOfChildren(float[] percentage) {
         double random = Math.random();
         if (0 <= random && random < percentage[0]) {
             return 1;

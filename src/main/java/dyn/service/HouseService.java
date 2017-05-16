@@ -254,4 +254,38 @@ public class HouseService {
     public FamilyBuilding getFamilyBuildingByFamilyAndBuilding(Family family, House building) {
         return familyBuildingRepository.findByFamilyAndBuilding(family, building);
     }
+
+    public float countHouseQualitySalaryCoeff(float houseQuality) {
+        float houseInc = 0;
+        if (1 <= houseQuality && houseQuality < 2) {
+            houseInc = 0.1f;
+        } else if (2 <= houseQuality && houseQuality < 3) {
+            houseInc = 0.2f;
+        } else if (3 <= houseQuality && houseQuality < 4) {
+            houseInc = 0.3f;
+        } else if (4 <= houseQuality && houseQuality < 5) {
+            houseInc = 0.4f;
+        } else if (5 <= houseQuality) {
+            houseInc = 0.5f;
+        }
+
+        return houseInc;
+    }
+
+    public float countHouseQualityFertilitySub(float houseQuality) {
+        float houseInc = 0;
+        if (1 <= houseQuality && houseQuality < 2) {
+            houseInc = 0.02f;
+        } else if (2 <= houseQuality && houseQuality < 3) {
+            houseInc = 0.04f;
+        } else if (3 <= houseQuality && houseQuality < 4) {
+            houseInc = 0.06f;
+        } else if (4 <= houseQuality && houseQuality < 5) {
+            houseInc = 0.08f;
+        } else if (5 <= houseQuality) {
+            houseInc = 0.10f;
+        }
+
+        return houseInc;
+    }
 }
