@@ -569,6 +569,7 @@ public class BuffController {
                                 break;
                         }
                         character.generateView();
+                        raceService.defineRace(character);
                         characterRepository.save(character);
                         mess = "У персонажа " + character.getName() + " проведена пластическая операция: " + part;
                     } else {

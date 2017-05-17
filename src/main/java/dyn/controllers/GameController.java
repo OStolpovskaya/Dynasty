@@ -431,7 +431,7 @@ public class GameController {
                 int featureToGenMod = 0; // which feature will have genetic modification
                 if (genModded == false && Math.random() < genModPercent) {
                     featureToGenMod = (int) (1 + Math.random() * 12);
-                    if (character.isBuffedBy(Buff.SIX_CHILDREN)) {
+                    if (character.isBuffedBy(Buff.SIX_CHILDREN)) { // с этим баффом только один старший сын будет иметь гм черту
                         genModded = true;
                     }
                 }
