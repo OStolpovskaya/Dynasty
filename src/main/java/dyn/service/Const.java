@@ -77,5 +77,22 @@ public class Const {
     public static final int COST_FATHER_DOMINANT = 400;
     public static final int COST_MOTHER_DOMINANT = 400;
     public static final int COST_NEW_PROJECT = 10000;
+
     public static final double DESTROY_ITEM_COEFF = 0.5;
+
+    public static final Long ROOM_KITCHEN = 1L;    //кухня
+    public static final Long ROOM_BEDROOM = 2L;    //спальня
+    public static final Long ROOM_BATHROOM = 3L;    //ванная
+    public static final Long ROOM_LIVINGROOM = 4L;    //гостиная
+    public static final Long ROOM_CHILDROOM = 5L;    //детская
+    public static final Long ROOM_DININGROOM = 6L;    //столовая
+    public static final Long ROOM_WARDROBE = 7L;    //гардероб
+    public static final Long ROOM_OFFICE = 8L;    //кабинет
+    public static final Long ROOM_GARAGE = 9L;    //гараж
+    public static final Long ROOM_LIBRARY = 10L;    //библиотека
+    public static final Long ROOM_POOL = 11L;    //спортзал и бассейн
+    public static final Long ROOM_GARDEN = 12L;    //сад
+    public static final Long ROOM_GALERY = 13L;    //галерея
+    public static final Long ROOM_TABLE = 14L;    //стол
+
 }

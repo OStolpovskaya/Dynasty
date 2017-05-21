@@ -53,10 +53,10 @@ public class HouseService {
 
             ItemPlace itemPlace;
             if (house.getType() == HouseType.home) {
-                roomThings = roomThingRepository.findByHouseIdLessThanEqualAndRoomIdOrderById(house.getId(), room.getId());
+                roomThings = roomThingRepository.findByHouseIdLessThanEqualAndRoomIdOrderByLayerAsc(house.getId(), room.getId());
                 itemPlace = ItemPlace.home;
             } else {
-                roomThings = roomThingRepository.findByHouseIdAndRoomIdOrderById(house.getId(), room.getId());
+                roomThings = roomThingRepository.findByHouseIdAndRoomIdOrderByLayerAsc(house.getId(), room.getId());
                 itemPlace = ItemPlace.building;
             }
             for (RoomThing roomThing : roomThings) {
@@ -87,53 +87,6 @@ public class HouseService {
             roomViewList.add(roomView);
         }
         return roomViewList;
-    }
-
-    public HouseInterior getHouseInterior(Family family) {
-
-        House house = family.getHouse();
-
-        HouseInterior houseInterior = new HouseInterior();
-        houseInterior.setFamily(family);
-        houseInterior.setHouse(house);
-
-        boolean allItems = true;
-        List<Room> rooms = roomRepository.findByHouseIdLessThanEqualOrderById(house.getId());
-        for (Room room : rooms) {
-            List<RoomThing> interiorList = roomThingRepository.findByHouseIdLessThanEqualAndRoomIdOrderById(house.getId(), room.getId());
-            for (RoomThing roomThing : interiorList) {
-                RoomThingWithItems roomThingWithItems = new RoomThingWithItems(roomThing);
-
-                Item currentItem = null;
-                List<Item> availableItems = new ArrayList<>();
-
-                List<Item> itemList = itemRepository.findByFamilyAndProjectThing(family, roomThing.getThing());
-                for (Item availableItem : itemList) {
-                    if (availableItem.getPlace().equals(ItemPlace.home) && availableItem.getInteriorId() == roomThing.getId()) {
-                        currentItem = availableItem;
-                    }
-                    if (availableItem.getPlace().equals(ItemPlace.storage)) {
-                        availableItems.add(availableItem);
-                    }
-                }
-                roomThingWithItems.setCurrentItem(currentItem);
-                roomThingWithItems.setAvailableItems(availableItems);
-                roomThingWithItems.setKnownThing(family.getCraftThings().contains(roomThing.getThing()));
-                houseInterior.addRoomInterior(room, roomThingWithItems);
-
-                if (currentItem == null) {
-                    allItems = false;
-                }
-            }
-
-        }
-        houseInterior.setFull(allItems);
-
-        if (house.hasNextLevel()) {
-            houseInterior.setNextHouse(getNextHouse(house));
-        }
-
-        return houseInterior;
     }
 
     public House getNextHouse(House house) {
@@ -174,7 +127,7 @@ public class HouseService {
     }
 
     public List<RoomThing> getRoomInteriorByRoomIdAndHouseId(Long roomId, Long houseId) {
-        List<RoomThing> roomThingList = roomThingRepository.findByHouseIdLessThanEqualAndRoomIdOrderById(houseId, roomId);
+        List<RoomThing> roomThingList = roomThingRepository.findByHouseIdLessThanEqualAndRoomIdOrderByLayerAsc(houseId, roomId);
         return roomThingList;
     }
 

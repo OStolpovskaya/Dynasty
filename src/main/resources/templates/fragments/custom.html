@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Scripts in webjars (bottom)</title>
+</head>
+<body>
+
+<th:block th:fragment="project-view (project)">
+    <!--/*@thymesVar id="project" type="dyn.model.Project"*/-->
+    <th:block th:if="${project.getView()!=null}">
+        <div class="my_dropdown">
+            <img th:src="${'data:image/png;base64,'+project.getEncodedView()}" height="30"></img>
+            <div class="my_dropdown-content">
+                <img th:src="${'data:image/png;base64,'+project.getEncodedView()}"></img>
+            </div>
+        </div>
+    </th:block>
+</th:block>
+
+
+</body>
+</html>

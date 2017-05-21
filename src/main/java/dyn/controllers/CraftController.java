@@ -117,9 +117,10 @@ public class CraftController {
             if (family.getCraftThings().contains(thing)) {
                 List<Project> availableProjects = craftService.getApprovedProjectsByThing(thing);//thing.getProjects();
                 List<Project> projectsToBuy = new ArrayList<>();
-                List<FamilyProject> familyCraftProjects = craftService.getFamilyProjectsForThing(family, thing);//family.getCraftProjectsForThing(thing);
+                List<FamilyProject> familyCraftProjects = craftService.getFamilyProjectsForThing(family, thing);//
+                List<Project> haveProjects = family.getCraftProjectsForThing(thing);
                 for (Project availableProject : availableProjects) {
-                    if (!familyCraftProjects.contains(availableProject)) {
+                    if (!haveProjects.contains(availableProject)) {
                         projectsToBuy.add(availableProject);
                     }
                 }

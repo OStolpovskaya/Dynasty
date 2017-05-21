@@ -20,11 +20,26 @@
             Обратите внимание, изготовление вещей происходит из накопленных вашей семьей ресурсов.
             Призвание персонажа определяет какой ресурс будет накоплен за ход, а уровень профессии - его количество. Ресурсы также могут быть получены и другим путем. Об этом позже.<br/>
             Изготовленный предмет помещается на ваш склад, а оттуда он может быть установлен в доме или выставлен на продажу. Пожалуйста, вернитесь на вкладку "Дом" и разместите новенькую табуретку на кухне.
-            А потом, вернитесь на вкладку Игра, и пусть игра начнется!
+            А потом, вернитесь на вкладку Игра, и начинайте игру!
         </div>
     </th:block>
     <h3 th:text="${#strings.toUpperCase(thing.getName())}"></h3>
-    <div class="well"><h4>Изготовление предметов по имеющимся проектам:</h4>
+
+
+    <div class="well">
+        <h4>Изготовление предметов по имеющимся проектам:
+            <div class="my_tooltip"><span class="glyphicon glyphicon-question-sign" style="color: black;"></span>
+                <span class="my_tooltiptext">Качество изготавливаемых предметов определяется так: <br/>
+        +1 за дизайнерскую вещь (проект которой создан игроками)<br/>
+        +1 если Вы создали более 5 вещей по этому проекту<br/>
+        +1 если Вы создали более 25 вещей по этому проекту<br/>
+        +1 если Вы создали более 50 вещей по этому проекту<br/>
+        +1 если применен бафф 'Улучшенный крафт'<br/>
+        Таким образом, наибольшее качество предмета 5. Среднее значение качества всех предметов в доме влияет на плодовитость персонажей и на увеличение заработной платы.
+        </span>
+            </div>
+        </h4>
+
         <script>
             function enableMakeItemButton() {
                 $("#makeItemButton").attr("disabled", false);
@@ -36,8 +51,10 @@
                 <div class="radio" th:each="familyProject : ${familyProjects}">
                     <label>
                         <!--/*@thymesVar id="familyProject" type="dyn.model.FamilyProject"*/-->
-                        <input type="radio" name="projectId" th:value="${familyProject.getProject().getId()}" th:required="required" onclick="enableMakeItemButton()" th:disabled="${not family.hasResourcesForProject(familyProject.getProject())}"/>
+                        <input type="radio" name="projectId" th:value="${familyProject.getProject().getId()}" th:required="required" onclick="enableMakeItemButton()" th:disabled="${not family.hasResourcesForProject(familyProject.getProject())}"
+                               style="position: inherit;"/>
                         <th:block th:text="${familyProject.getProject().getName() + ' ('+familyProject.getProject().resString()+') Произведено '+familyProject.getCount()+' раз'}"></th:block>
+                        <th:block th:replace="fragments/custom :: project-view (project=${familyProject.getProject()})"></th:block>
                     </label>
                 </div>
                 <button id="makeItemButton" type="submit" class="btn btn-default btn-md" th:disabled="${true}">Изготовить предмет</button>
@@ -58,8 +75,10 @@
             <form th:action="@{/game/buyProject}" method="post">
                 <div class="radio" th:each="project : ${projects}">
                     <label>
-                        <input type="radio" name="projectId" th:value="${project.getId()}" th:required="required" onclick="enableBuyProjectButton()" th:disabled="${family.getMoney() lt project.getCost()}"/>
+                        <input type="radio" name="projectId" th:value="${project.getId()}" th:required="required" onclick="enableBuyProjectButton()" th:disabled="${family.getMoney() lt project.getCost()}"
+                               style="position: inherit;"/>
                         <th:block th:text="${project.getName()+' ('+project.getCost() +' р.) ('+project.resString()+')'}"></th:block>
+                        <th:block th:replace="fragments/custom :: project-view (project=${project})"></th:block>
                     </label>
                 </div>
                 <button id="buyProjectButton" type="submit" class="btn btn-default btn-md" th:disabled="${true}">Приобрести проект</button>
@@ -70,7 +89,7 @@
         </th:block>
     </div>
     <div class="well">
-            <h4>Создание нового проекта</h4>
+        <h4>Создание нового проекта</h4>
         <p>
             Вы можете создать свой проект вещи '
             <th:block th:text="${thing.getName()}"></th:block>

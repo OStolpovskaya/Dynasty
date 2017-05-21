@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Проекты</title>
+    <link th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}" rel="stylesheet"></link>
+    <link th:href="@{/css/common.css}" rel="stylesheet"></link>
+</head>
+<body>
+<div th:replace="fragments/navigation :: nav-for-admin"></div>
+<div class="container" style="width: 1900px;">
+    <h3>Проекты
+        <th:block th:text="${#strings.toUpperCase(thing.getName())}"></th:block>
+    </h3>
+    <label>Изображение PNG (ширина:
+        <th:block th:text="${thing.getWidth()}"></th:block>
+        px, высота:
+        <th:block th:text="${thing.getHeight()}"></th:block>
+        px)
+    </label>
+    <table class="table table-striped table-condensed">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Название</th>
+            <th>Автор</th>
+            <th>Вид</th>
+            <th>Обновить вид</th>
+            <th>Стоимость</th>
+            <th>Ресурсы</th>
+            <th>Статус</th>
+            <th>Сообщение</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="project : ${projects}">
+            <!--/*@thymesVar id="project" type="dyn.model.Project"*/-->
+            <td th:text="${project.getId()}">id</td>
+            <td>
+                <form th:action="@{/admin/updateProjectName}" method="post" class="form-inline">
+
+                    <input type="text" name="name" th:value="${project.getName()}" class="form-control input-sm"/>
+                    <input type="hidden" name="projectId" th:value="${project.getId()}"/>
+                    <button type="submit" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Сохранить новое название" style="display: inline-block"><span class="glyphicon glyphicon-ok"></span></button>
+                </form>
+            </td>
+            <td th:text="${project.getAuthor().familyNameAndUserName()}">type</td>
+            <td>
+                <th:block th:if="${project.getView()!=null}">
+                    <div class="my_dropdown">
+                        <img th:src="${'data:image/png;base64,'+project.getEncodedView()}" height="30"></img>
+                        <div class="my_dropdown-content">
+                            <img th:src="${'data:image/png;base64,'+project.getEncodedView()}"></img>
+
+                        </div>
+                    </div>
+                </th:block>
+
+            </td>
+            <td>
+                <form th:action="@{/admin/updateProjectView}" enctype="multipart/form-data" method="post" class="form-inline" style="margin-top: 2px;">
+                    <input type="file" name="file" style="display: inline-block"/>
+                    <input type="hidden" name="projectId" th:value="${project.getId()}"/>
+                    <button type="submit" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Обновить изображение" style="display: inline-block"><span class="glyphicon glyphicon-ok"></span></button>
+                </form>
+            </td>
+            <td>
+                <form th:action="@{/admin/updateProjectCost}" method="post" class="form-inline">
+                    <input type="text" name="cost" th:value="${project.getCost()}" class="form-control input-sm" style="width: 60px;"/>
+                    <input type="hidden" name="projectId" th:value="${project.getId()}"/>
+                    <button type="submit" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Сохранить новую стоимость" style="display: inline-block"><span class="glyphicon glyphicon-ok"></span></button>
+                </form>
+            </td>
+            <td>
+                <form th:action="@{/admin/updateProjectResources}" method="post" class="form-inline">
+                    <input type="text" name="food" th:value="${project.getFood()}" data-toggle="tooltip" th:title="${@const.RES_FOOD_NAME}" class="form-control input-sm"
+                           style="width: 40px; background-color: #d5797c; padding: 0; text-align: center;"/>
+                    <input type="text" name="wood" th:value="${project.getWood()}" data-toggle="tooltip" th:title="${@const.RES_WOOD_NAME}" class="form-control input-sm"
+                           style="width: 40px; background-color: #7ac1a3; padding: 0; text-align: center;"/>
+                    <input type="text" name="metall" th:value="${project.getMetall()}" data-toggle="tooltip" th:title="${@const.RES_METALL_NAME}" class="form-control input-sm"
+                           style="width: 40px; background-color: #c7a488; padding: 0; text-align: center;"/>
+                    <input type="text" name="plastic" th:value="${project.getPlastic()}" data-toggle="tooltip" th:title="${@const.RES_PLASTIC_NAME}" class="form-control input-sm"
+                           style="width: 40px; background-color: #06a3b6; padding: 0; text-align: center;"/>
+                    <input type="text" name="microelectronics" th:value="${project.microelectronics}" data-toggle="tooltip" th:title="${@const.RES_MICROELECTRONICS_NAME}" class="form-control input-sm"
+                           style="width: 40px; background-color: #96b6c5; padding: 0; text-align: center;"/>
+                    <input type="text" name="cloth" th:value="${project.cloth}" data-toggle="tooltip" th:title="${@const.RES_CLOTH_NAME}" class="form-control input-sm"
+                           style="width: 40px; background-color: #dec978; padding: 0; text-align: center;"/>
+                    <input type="text" name="stone" th:value="${project.stone}" data-toggle="tooltip" th:title="${@const.RES_STONE_NAME}" class="form-control input-sm"
+                           style="width: 40px; background-color: #bcbdb8; padding: 0; text-align: center;"/>
+                    <input type="text" name="chemical" th:value="${project.chemical}" data-toggle="tooltip" th:title="${@const.RES_CHEMICAL_NAME}" class="form-control input-sm"
+                           style="width: 40px; background-color: #e98547; padding: 0; text-align: center;"/>
+                    <input type="hidden" name="projectId" th:value="${project.getId()}"/>
+                    <button type="submit" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Сохранить новые ресурсы" style="display: inline-block"><span class="glyphicon glyphicon-ok"></span></button>
+                </form>
+            </td>
+            <td th:text="${project.getStatus()}">title</td>
+            <td th:text="${project.getStatusMessage()}">title</td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="well">
+
+        <h3>Создание нового проекта</h3>
+
+        <form th:action="@{/admin/createProject}" enctype="multipart/form-data" method="post" th:object="${newProject}">
+            <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="alert alert-danger"> Incorrect</div>
+            <div th:if="${#fields.hasErrors('view')}" th:errors="*{view}" class="alert alert-danger"> Incorrect</div>
+            <div th:if="${#fields.hasErrors('cost')}" th:errors="*{cost}" class="alert alert-danger"> Incorrect</div>
+            <input type="hidden" th:field="*{id}"/>
+            <input type="hidden" th:field="*{thing}"/>
+            <input type="hidden" th:field="*{author}"/>
+            <input type="hidden" th:field="*{statusMessage}"/>
+            <div class="form-group row">
+                <span class="col-sm-3 ">Название проекта</span>
+                <div class="col-sm-5">
+                    <input th:field="*{name}" type="text" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group row">
+                <span class="col-sm-3 ">Стоимость</span>
+                <div class="col-sm-3">
+                    <input th:field="*{cost}" type="number" class="form-control"/>
+                </div>
+            </div>
+            <label>Изображение PNG (ширина:
+                <th:block th:text="*{thing.getWidth()}"></th:block>
+                px, высота:
+                <th:block th:text="*{thing.getHeight()}"></th:block>
+                px)</label>
+            <div class="form-group row">
+                <span class="col-sm-3 ">Файл</span>
+                <input name="newProjectFile" type="file" class="form-control-file" aria-describedby="fileHelp" style="padding-left: 15px;"/>
+            </div>
+            <label>Ресурсы, необходимые для изготовления вещей по проекту:</label>
+            <div class="form-group row">
+                <span class="col-sm-3 ">
+                    <th:block th:text="${#strings.capitalize(@const.RES_FOOD_NAME)}"></th:block>
+                </span>
+                <div class="col-sm-3">
+                    <input th:field="*{food}" type="number" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group row">
+                <span class="col-sm-3 ">
+                    <th:block th:text="${#strings.capitalize(@const.RES_WOOD_NAME)}"></th:block>
+                </span>
+                <div class="col-sm-3">
+                    <input th:field="*{wood}" type="number" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group row">
+                <span class="col-sm-3 ">
+                    <th:block th:text="${#strings.capitalize(@const.RES_METALL_NAME)}"></th:block>
+                </span>
+                <div class="col-sm-3">
+                    <input th:field="*{metall}" type="number" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group row">
+                <span class="col-sm-3 ">
+                    <th:block th:text="${#strings.capitalize(@const.RES_PLASTIC_NAME)}"></th:block>
+                </span>
+                <div class="col-sm-3">
+                    <input th:field="*{plastic}" type="number" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group row">
+                <span class="col-sm-3 ">
+                    <th:block th:text="${#strings.capitalize(@const.RES_MICROELECTRONICS_NAME)}"></th:block>
+                </span>
+                <div class="col-sm-3">
+                    <input th:field="*{microelectronics}" type="number" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group row">
+                <span class="col-sm-3 ">
+                    <th:block th:text="${#strings.capitalize(@const.RES_CLOTH_NAME)}"></th:block>
+                </span>
+                <div class="col-sm-3">
+                    <input th:field="*{cloth}" type="number" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group row">
+                <span class="col-sm-3">
+                    <th:block th:text="${#strings.capitalize(@const.RES_STONE_NAME)}"></th:block>
+                </span>
+                <div class="col-sm-3">
+                    <input th:field="*{stone}" type="number" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group row">
+                <span class="col-sm-3 ">
+                    <th:block th:text="${#strings.capitalize(@const.RES_CHEMICAL_NAME)}"></th:block>
+                </span>
+                <div class="col-sm-3">
+                    <input th:field="*{chemical}" type="number" class="form-control"/>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Создать</button>
+        </form>
+    </div>
+</div>
+<th:block th:replace="fragments/scripts :: webjars"></th:block>
+<script>
+    $('my_dropdown-content').find('form').click(function (e) {
+        e.stopPropagation();
+    });
+</script>
+</body>
+</html>

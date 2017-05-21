@@ -8,7 +8,7 @@ import java.util.List;
 
 @Repository
 public interface RoomThingRepository extends CrudRepository<RoomThing, Long> {
-    List<RoomThing> findByHouseIdLessThanEqualAndRoomIdOrderById(long houseId, long roomId);
+    List<RoomThing> findByHouseIdLessThanEqualAndRoomIdOrderByLayerAsc(long houseId, long roomId);
 
-    List<RoomThing> findByHouseIdAndRoomIdOrderById(Long houseId, Long roomId);
+    List<RoomThing> findByHouseIdAndRoomIdOrderByLayerAsc(Long houseId, Long roomId);
 }

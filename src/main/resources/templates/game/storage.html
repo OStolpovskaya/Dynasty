@@ -18,6 +18,7 @@
                 <thead>
                 <tr>
                     <th>Предмет</th>
+                    <th>Вид</th>
                     <th>Качество</th>
                     <th>Изготовитель</th>
                     <th>Продать</th>
@@ -29,10 +30,11 @@
                 <th:block th:each="item : ${itemsInStorage}">
                     <tr>
                         <td th:text="${item.getFullName()}"></td>
-                        <td th:text="${item.getQuality()}"></td>
                         <td>
-                            <a th:href="${'/game/userview?userId='+item.getAuthor().getUser().getUserid()}" th:text="${item.getAuthor().familyNameAndUserName()}"></a>
+                            <th:block th:replace="fragments/custom :: project-view (project=${item.getProject()})"></th:block>
                         </td>
+                        <td th:text="${item.getQuality()}"></td>
+                        <td><a th:href="${'/game/userview?userId='+item.getAuthor().getUser().getUserid()}" th:text="${item.getAuthor().familyNameAndUserName()}"></a></td>
                         <td>
                             <form th:action="@{/game/putItemToStore}" method="post" class="form-inline">
                                 <input type="hidden" name="itemId" th:value="${item.getId()}"/>
@@ -140,6 +142,7 @@
                 <thead>
                 <tr>
                     <th>Предмет</th>
+                    <th>Вид</th>
                     <th>Качество</th>
                     <th>Изготовитель</th>
                     <th>Цена</th>
@@ -151,6 +154,9 @@
                 <th:block th:each="item : ${itemsInStore}">
                     <tr>
                         <td th:text="${item.getFullName()}"></td>
+                        <td>
+                            <th:block th:replace="fragments/custom :: project-view (project=${item.getProject()})"></th:block>
+                        </td>
                         <td th:text="${item.getQuality()}"></td>
                         <td>
                             <a th:href="${'/game/userview?userId='+item.getAuthor().getUser().getUserid()}" th:text="${item.getAuthor().familyNameAndUserName()}"></a>

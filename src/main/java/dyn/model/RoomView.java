@@ -1,5 +1,7 @@
 package dyn.model;
 
+import dyn.service.Const;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +12,8 @@ public class RoomView {
     private Room room;
     private List<RoomThingWithItems> roomThingWithItemsList = new ArrayList<>();
     private boolean full;
+
+    private String backgroundUrl;
 
     public RoomView(Room room) {
         this.room = room;
@@ -33,5 +37,25 @@ public class RoomView {
 
     public void setFull(boolean full) {
         this.full = full;
+    }
+
+    public String getBackgroundUrl() {
+        backgroundUrl = "/graphics/room_background_brown.png";
+        if (room.getId() == Const.ROOM_BATHROOM) {
+            backgroundUrl = "/graphics/room_background_white.png";
+        }
+        if (room.getId() == Const.ROOM_GARAGE) {
+            backgroundUrl = "/graphics/room_background_grey.png";
+        }
+        if (room.getId() == Const.ROOM_POOL) {
+            backgroundUrl = "/graphics/room_background_pool.png";
+        }
+        if (room.getId() == Const.ROOM_GARDEN) {
+            backgroundUrl = "/graphics/room_background_garden.png";
+        }
+        if (room.getId() == Const.ROOM_TABLE) {
+            backgroundUrl = "/graphics/room_background_table.png";
+        }
+        return backgroundUrl;
     }
 }

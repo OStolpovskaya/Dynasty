@@ -431,8 +431,14 @@ public class HouseController {
         House currentHouse = family.getHouse();
 
         if (currentHouse.hasNextLevel()) {
-            HouseInterior houseInterior = houseService.getHouseInterior(family);
-            if (houseInterior.isFull()) {
+            List<RoomView> roomViewList = houseService.getRoomMaps(currentHouse, family);
+            boolean houseIsFull = true;
+            for (RoomView roomView : roomViewList) {
+                if (!roomView.isFull()) {
+                    houseIsFull = false;
+                }
+            }
+            if (houseIsFull) {
                 House nextHouse = houseService.getNextHouse(currentHouse);
                 if (family.getMoney() >= nextHouse.getCost()) {
                     family.setMoney(family.getMoney() - nextHouse.getCost());

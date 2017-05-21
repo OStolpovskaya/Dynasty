@@ -20,6 +20,11 @@
 </script>
 <div class="container" style="width: 1600px;">
     <h3>Крафт</h3>
+    <ul class="list-inline">
+        <li th:each="craftBranch : ${craftBranchList}"><!--/*@thymesVar id="houseMenu" type="dyn.model.House"*/-->
+            <a th:href="${'#craftBranch'+craftBranch.getId()}" th:text="${craftBranch.getName()}">Home</a>
+        </li>
+    </ul>
     <div class="well">
         <p>Создание новой вещи:</p>
         <form th:action="@{/admin/newThing}" method="post" class="form-inline">
@@ -57,19 +62,25 @@
         <!--/*@thymesVar id="parentThing" type="dyn.model.Thing"*/-->
         <div class="well" style="height: 800px;">
             <th:block th:with="craftBranch = ${parentThing.getCraftBranch()}">
+                <a th:name="${'craftBranch'+craftBranch.getId()}" class="anchor"></a>
                 <h3 th:text="${#strings.capitalize(craftBranch.getName())}"></h3>
                 <div class="tree">
                     <ul>
                         <li>
-                            <a th:text="${parentThing.getName()}" th:title="${parentThing.getId() + ' ('+parentThing.getCost() + ')'}">Parent</a>
+                            <a th:text="${parentThing.getName()+ ' ('+parentThing.getCost() + 'б.)'}" th:title="${parentThing.getId() + ' ('+parentThing.getCost() + ')'}"
+                               style="border-bottom-right-radius: 0; border-bottom-left-radius: 0;">Parent</a><br/>
+                            <a th:href="${'/admin/projectsForThing?thingId='+parentThing.getId()}" style="border-top-right-radius: 0; border-top-left-radius: 0;"
+                               th:text="${'Проектов: '+parentThing.getProjects().size()}">projects</a>
 
                             <th:block th:fragment="submenu">
                                 <ul>
                                     <li th:each="thing : ${parentThing.getChildThings()}">
-                                        <a th:text="${thing.getName()+ ' ('+thing.getCost() + ' б.)' + '['+ thing.getProjects().size()+']'}" th:title="${'Нажмите для редактирования: ' + thing.getId()}"
-                                           data-toggle="modal" data-target="#myModal"
+                                        <a th:text="${thing.getName()+ ' ('+thing.getCost() + 'б.)'}" th:title="${'Нажмите для редактирования: ' + thing.getId()}"
+                                           data-toggle="modal" data-target="#myModal" style="border-bottom-right-radius: 0; border-bottom-left-radius: 0;"
                                            th:onclick="'javascript:passData('+${thing.getId()}+',\'' + ${thing.getName()} + '\','+${thing.getParent().getId()}+','+${thing.getCost()}+','+${thing.getWidth()}+','+${thing.getHeight()}+');'">Thing
-                                        </a>
+                                        </a><br/>
+                                        <a th:href="${'/admin/projectsForThing?thingId='+thing.getId()}" style="border-top-right-radius: 0; border-top-left-radius: 0;"
+                                           th:text="${'Проектов: '+thing.getProjects().size()}">projects</a>
                                         <th:block th:if="${#lists.size(thing.getChildThings()) > 0}" th:with="parentThing = ${thing}" th:include="this :: submenu"/>
                                     </li>
                                 </ul>

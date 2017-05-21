@@ -8,7 +8,7 @@
 </head>
 <body>
 <div th:replace="fragments/navigation :: nav-for-game"></div>
-<div class="container" style="min-width: 1140px;">
+<div class="container" style="width: 1110px;">
     <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
     <th:block th:if="${family.getLevel() == 0}">
         <div class="alert alert-success">
@@ -19,19 +19,37 @@
             Предметы для дома вы можете купить или изготовить самому. Пожалуйста, перейдите в меню на вкладку "Мастерская".
         </div>
     </th:block>
-    <!--/*@thymesVar id="houseInterior" type="dyn.service.HouseInterior"*/-->
     <div class="well">
         <div class="row">
             <div class="col-md-6">
                 <h3 th:text="${'Ваш дом: '+ family.getHouse().getName()}">Родовое гнездо</h3>
-                <p>В этом доме может проживать пар: <strong th:text="${family.getHouse().getPairsNum()}"></strong><br/>
+                <p style="display: inline-block;">В этом доме может проживать пар: <strong th:text="${family.getHouse().getPairsNum()}"></strong><br/>
                     Позволяет поместить столько анкет в базу невест: <strong th:text="${family.getHouse().getFianceeNum()}"></strong><br/>
-                    Среднее значение качества предметов в доме: <strong th:text="${family.getHouseQuality()}"></strong><br/>
-                    Прибавка к плодовитости: <strong th:text="${@houseService.countHouseQualityFertilitySub(family.getHouseQuality())}"></strong><br/>
-                    Коэффициент надбавки к зарплате: <strong th:text="${@houseService.countHouseQualitySalaryCoeff(family.getHouseQuality())}"></strong>
+                    Среднее значение качества предметов в доме: <strong th:text="${family.getHouseQuality()}"></strong>
+                <div class="my_tooltip">&nbsp;<span class="glyphicon glyphicon-question-sign" style="color: black;"></span>
+                    <span class="my_tooltiptext">
+                    Чем выше показатель, тем больше плодовитость и выше заработная плата: <br/>
+                    1 +2% к плодовитости и +10% надбавка к зп<br/>
+                    2 +4% к плодовитости и +20% надбавка к зп<br/>
+                    3 +6% к плодовитости и +30% надбавка к зп<br/>
+                    4 +8% к плодовитости и +40% надбавка к зп<br/>
+                    5 +10% к плодовитости и +50% надбавка к зп
+                </span>
+                </div>
+                <br/>
+                Прибавка к плодовитости: <strong th:text="${@houseService.countHouseQualityFertilitySub(family.getHouseQuality())*100 + ' %'}"></strong><br/>
+                Коэффициент надбавки к зарплате: <strong th:text="${@houseService.countHouseQualitySalaryCoeff(family.getHouseQuality())*100 + ' %'}"></strong>
                 </p>
                 <ul class="list-inline">
                     <!--/*@thymesVar id="room" type="dyn.model.Room"*/-->
+                    <li>
+                        <div class="my_tooltip"><span class="glyphicon glyphicon-question-sign" style="color: black;"></span>
+                            <span class="my_tooltiptext">Если установлены все вещи в комнате, то возле названия комнаты появится зеленая галочка. <br/>
+                                Вы можете кликнуть на кнопку "Табличный вид интерьера", чтобы наглядно видеть, какая вещь не установлена.<br/>
+                                Особенное внимание стоит уделить <strong>стенам</strong> (уютный домик). Они на картинке не кликабельны, но присутствуют в табличном виде.
+                            </span>
+                        </div>
+                    </li>
                     <li th:each="room : ${roomList}">
                         <a th:href="${'/game/house#room'+room.getId()}" th:text="${room.getName()}">Home</a>
                     </li>
@@ -156,10 +174,10 @@
     }
     //]]>
 </script>
-<script>
+<!--<script>
     $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip();
     });
-</script>
+</script>-->
 </body>
 </html>

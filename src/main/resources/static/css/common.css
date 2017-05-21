@@ -228,3 +228,51 @@ a.anchor {
     top: -55px;
     visibility: hidden;
 }
+
+/*tooltips*/
+.my_tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.my_tooltip .my_tooltiptext {
+    visibility: hidden;
+    width: 450px;
+    font-size: 12px;
+    background-color: #f9f9f9;
+    color: #333;
+    text-align: left;
+    border-radius: 6px;
+    padding: 15px;
+
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+}
+
+.my_tooltip:hover .my_tooltiptext {
+    visibility: visible;
+}
+
+/*dropdowns*/
+.my_dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.my_dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    z-index: 1;
+    padding: 15px;
+}
+
+.my_dropdown:hover .my_dropdown-content {
+    display: block;
+}

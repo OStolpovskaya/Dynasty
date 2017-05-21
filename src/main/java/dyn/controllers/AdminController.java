@@ -18,12 +18,19 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.imageio.ImageIO;
+import javax.validation.Valid;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -316,6 +323,196 @@ public class AdminController {
         model.addAttribute("craftBranchList", craftService.getCraftBranches());
         model.addAttribute("parentThings", craftService.getThingsForTree());
         return "admin/craft";
+    }
+
+    //projectsForThing
+    @RequestMapping("/admin/projectsForThing")
+    public String projectsForThing(ModelMap model, @RequestParam("thingId") Long thingId) {
+        Thing thing = thingRepository.findOne(thingId);
+        if (thing != null) {
+            model.addAttribute("thing", thing);
+            model.addAttribute("projects", thing.getProjects());
+
+            Project project = new Project();
+            project.setThing(thing);
+            project.setAuthor(familyRepository.findOne(1L));
+            model.addAttribute("newProject", project);
+
+            return "admin/projectsForThing";
+        }
+        return "admin/craft";
+    }
+
+    //createProject
+    @RequestMapping(value = "/admin/createProject", method = RequestMethod.POST)
+    public String createProject(ModelMap model, @ModelAttribute("newProject") @Valid Project project,
+                                BindingResult result,
+                                RedirectAttributes redirectAttributes,
+                                @RequestParam(value = "newProjectFile") MultipartFile file) {
+        String username = getAuthUser().getUsername();
+        Thing thing = project.getThing();
+
+        BufferedImage image = null;
+        byte[] imageInByte = null;
+
+        if (file.isEmpty() || file.getSize() == 0) {
+            logger.error(username + " try to create project. File is empty or has size 0 ");
+            redirectAttributes.addFlashAttribute("mess", "Пустой файл или размер 0");
+        } else {
+            if (!file.getContentType().equalsIgnoreCase("image/png")) {
+                logger.error(username + " try to create project . File is not png ");
+                redirectAttributes.addFlashAttribute("mess", "Не PNG");
+            } else {
+                try {
+                    image = ImageIO.read(file.getInputStream());
+                    int width = image.getWidth();
+                    int height = image.getHeight();
+                    if (width != thing.getWidth() || height != thing.getHeight()) {
+                        logger.error(username + " try to create project. Uploaded image has incorrect size " + file.getOriginalFilename());
+                        redirectAttributes.addFlashAttribute("mess", "Размеры не соответствуют thing");
+                    } else {
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        ImageIO.write(image, "png", baos);
+                        baos.flush();
+                        imageInByte = baos.toByteArray();
+                        baos.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    logger.error(username + " try to create project. Error in reading uploaded file " + file.getOriginalFilename());
+                    redirectAttributes.addFlashAttribute("mess", "Ошибка чтения файла");
+                }
+            }
+        }
+        if (imageInByte != null) {
+            project.setView(imageInByte);
+            project.setStatus(ProjectStatus.approved);
+            project.setStatusMessage("");
+            craftService.saveProject(project);
+            logger.info(username + " create project " + project.getFullName());
+            redirectAttributes.addFlashAttribute("mess", "Проект создан: " + project.getFullName());
+        }
+        return "redirect:/admin/projectsForThing?thingId=" + thing.getId();
+    }
+
+    //updateProjectName
+    @RequestMapping(value = "/admin/updateProjectName", method = RequestMethod.POST)
+    public String updateProjectName(ModelMap model, RedirectAttributes redirectAttributes,
+                                    @RequestParam("projectId") Long projectId,
+                                    @RequestParam("name") String name) {
+        String username = getAuthUser().getUsername();
+        Project project = craftService.getProject(projectId);
+        Thing thing = project.getThing();
+        if (name.length() >= 2 && name.length() <= 30) {
+            project.setName(name);
+            craftService.saveProject(project);
+            logger.info(username + " update project name: " + project.getFullName());
+            redirectAttributes.addFlashAttribute("mess", "Название проекта изменено: " + project.getFullName());
+        } else {
+            logger.error(username + " try to update project name. Name length is incorrect. ");
+            redirectAttributes.addFlashAttribute("mess", "Имя должно быть больше 2, но меньше 30 символов");
+        }
+        return "redirect:/admin/projectsForThing?thingId=" + thing.getId();
+    }
+
+    //updateProjectCost
+    @RequestMapping(value = "/admin/updateProjectCost", method = RequestMethod.POST)
+    public String updateProjectCost(ModelMap model, RedirectAttributes redirectAttributes,
+                                    @RequestParam("projectId") Long projectId,
+                                    @RequestParam("cost") int cost) {
+        String username = getAuthUser().getUsername();
+        Project project = craftService.getProject(projectId);
+        Thing thing = project.getThing();
+
+        project.setCost(cost);
+        craftService.saveProject(project);
+        logger.info(username + " update project cost " + project.getFullName() + ": " + project.getCost());
+        redirectAttributes.addFlashAttribute("mess", "Стоимость проекта изменена " + project.getFullName() + ": " + project.getCost());
+
+        return "redirect:/admin/projectsForThing?thingId=" + thing.getId();
+    }
+
+    //updateProjectResources
+    @RequestMapping(value = "/admin/updateProjectResources", method = RequestMethod.POST)
+    public String updateProjectResources(ModelMap model, RedirectAttributes redirectAttributes,
+                                         @RequestParam("projectId") Long projectId,
+                                         @RequestParam("food") int food,
+                                         @RequestParam("wood") int wood,
+                                         @RequestParam("metall") int metall,
+                                         @RequestParam("plastic") int plastic,
+                                         @RequestParam("microelectronics") int microelectronics,
+                                         @RequestParam("cloth") int cloth,
+                                         @RequestParam("stone") int stone,
+                                         @RequestParam("chemical") int chemical) {
+        String username = getAuthUser().getUsername();
+        Project project = craftService.getProject(projectId);
+        Thing thing = project.getThing();
+
+        project.setFood(food);
+        project.setWood(wood);
+        project.setMetall(metall);
+        project.setPlastic(plastic);
+        project.setMicroelectronics(microelectronics);
+        project.setCloth(cloth);
+        project.setStone(stone);
+        project.setChemical(chemical);
+        craftService.saveProject(project);
+        logger.info(username + " update project resources " + project.getFullName() + ": " + project.resString());
+        redirectAttributes.addFlashAttribute("mess", "Ресурсы проекта изменены " + project.getFullName() + ": " + project.resString());
+
+        return "redirect:/admin/projectsForThing?thingId=" + thing.getId();
+    }
+
+    //updateProjectView
+    @RequestMapping(value = "/admin/updateProjectView", method = RequestMethod.POST)
+    public String updateProjectView(ModelMap model, RedirectAttributes redirectAttributes,
+                                    @RequestParam("projectId") Long projectId,
+                                    @RequestParam(value = "file") MultipartFile file) {
+        String username = getAuthUser().getUsername();
+
+        Family family = familyRepository.findOne(1L);
+        Project project = craftService.getProject(projectId);
+        Thing thing = project.getThing();
+
+        BufferedImage image = null;
+        byte[] imageInByte = null;
+
+        if (file.isEmpty() || file.getSize() == 0) {
+            logger.error(username + " try to update project view. File is empty or has size 0 ");
+            redirectAttributes.addFlashAttribute("mess", "Пустой файл или размер 0");
+        } else {
+            if (!file.getContentType().equalsIgnoreCase("image/png")) {
+                logger.error(username + " try to update project view. File is not png ");
+                redirectAttributes.addFlashAttribute("mess", "Не PNG");
+            } else {
+                try {
+                    image = ImageIO.read(file.getInputStream());
+                    int width = image.getWidth();
+                    int height = image.getHeight();
+                    if (width != thing.getWidth() || height != thing.getHeight()) {
+                        logger.error(username + " try to update project view. Uploaded image has incorrect size " + file.getOriginalFilename());
+                        redirectAttributes.addFlashAttribute("mess", "Размеры не соответствуют thing");
+                    } else {
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        ImageIO.write(image, "png", baos);
+                        baos.flush();
+                        imageInByte = baos.toByteArray();
+                        baos.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    logger.error(username + " try to update project view. Error in reading uploaded file " + file.getOriginalFilename());
+                    redirectAttributes.addFlashAttribute("mess", "Ошибка чтения файла");
+                }
+            }
+        }
+        if (imageInByte != null) {
+            project.setView(imageInByte);
+            craftService.saveProject(project);
+            logger.info(username + " update project view " + project.getFullName());
+            redirectAttributes.addFlashAttribute("mess", "Изображение проекта обновлено: " + project.getFullName());
+        }
+        return "redirect:/admin/projectsForThing?thingId=" + thing.getId();
     }
 
     @RequestMapping("/admin/rooms")
