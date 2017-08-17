@@ -14,12 +14,13 @@ public class Room {
     private String name;
     private House house;
 
+    private String background;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long getId() {
         return id;
     }
-
     public void setId(Long id) {
         this.id = id;
     }
@@ -27,7 +28,6 @@ public class Room {
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
@@ -37,9 +37,16 @@ public class Room {
     public House getHouse() {
         return house;
     }
-
     public void setHouse(House house) {
         this.house = house;
+    }
+
+    public String getBackground() {
+        return background;
+    }
+
+    public void setBackground(String background) {
+        this.background = background;
     }
 
     @Override
@@ -47,7 +54,8 @@ public class Room {
         final StringBuilder sb = new StringBuilder("Room{");
         sb.append("id=").append(id);
         sb.append(", name='").append(name).append('\'');
-        sb.append(", house=").append(house.getName());
+        sb.append(", house=").append(house.getName()).append('\'');
+        sb.append(", background=").append(background);
         sb.append('}');
         return sb.toString();
     }

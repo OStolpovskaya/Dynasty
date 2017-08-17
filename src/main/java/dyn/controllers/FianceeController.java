@@ -94,7 +94,7 @@ public class FianceeController {
                 }
             }
             cq.where(cb.and(predicates.toArray(new Predicate[predicates.size()])));
-            cq.orderBy(cb.asc(fianceeRoot.get(Fiancee_.cost)), cb.asc(fianceeCharacter.get(Character_.race)), cb.asc(fianceeCharacterCareer.get(Career_.vocation)));
+            cq.orderBy(cb.asc(fianceeCharacter.get(Character_.race)), cb.asc(fianceeRoot.get(Fiancee_.cost)), cb.asc(fianceeCharacterCareer.get(Career_.vocation)));
 
             TypedQuery<Fiancee> q = em.createQuery(cq);
             List<Fiancee> fianceeList = q.getResultList();

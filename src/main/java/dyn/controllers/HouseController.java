@@ -362,6 +362,9 @@ public class HouseController {
                 if (projectId.equals(Const.PROJECT_MOTHER_DOMINANT)) {
                     items = craftService.createItemForStore(project, producer, Const.COST_MOTHER_DOMINANT);
                 }
+                if (projectId.equals(Const.PROJECT_RES_WOOD)) {
+                    items = craftService.createItemForStore(project, producer, Const.COST_RES_WOOD);
+                }
             }
 
 

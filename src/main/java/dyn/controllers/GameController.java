@@ -345,7 +345,7 @@ public class GameController {
                 0.99f - houseQualityFertilitySub,
                 1.00f};
         float[] buffedFertility = new float[]{
-                ((0.05f - houseQualityFertilitySub) < 0 ? 0 : (0.05f - houseQualityFertilitySub)),
+                ((0.01f - houseQualityFertilitySub) < 0 ? 0 : (0.01f - houseQualityFertilitySub)),
                 0.15f - houseQualityFertilitySub,
                 0.30f - houseQualityFertilitySub,
                 0.50f - houseQualityFertilitySub,
@@ -496,7 +496,8 @@ public class GameController {
         familyRepository.save(family);
 
         sb.append("Всего получено: <br>");
-        sb.append(resourcesUtils.getDifference(family));
+        String resourceDifference = resourcesUtils.getDifference(family);
+        sb.append(resourceDifference);
 
         familyLogService.createNewLevelFamilyLog(family, sb.toString());
 
@@ -510,7 +511,7 @@ public class GameController {
             }
         }
 
-        redirectAttributes.addFlashAttribute("mess", sb.toString());
+        redirectAttributes.addFlashAttribute("mess", "Всего получено: " + resourceDifference);
         return "redirect:/game";
     }
 
@@ -559,6 +560,7 @@ public class GameController {
 
     private int getAmountOfChildren(float[] percentage) {
         double random = Math.random();
+        System.out.println("getAmountOfChildren: " + Arrays.toString(percentage) + ", random=" + random);
         if (0 <= random && random < percentage[0]) {
             return 1;
         } else if (percentage[0] <= random && random < percentage[1]) {

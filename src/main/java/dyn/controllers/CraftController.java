@@ -402,7 +402,7 @@ public class CraftController {
                     family.setMoney(family.getMoney() - project.getCost());
                     familyRepository.save(family);
 
-                    logger.info(family.familyNameAndId() + " makes the item:" + item.getFullName() + ". Count: " + count);
+                    logger.info(family.familyNameAndId() + " makes the production:" + item.getFullName() + ". Count: " + count);
                     String mess = "Ваша семья изготавливает " + project.getThing().getName() + " " + project.getName() + "(" + count + " шт.). Израсходовано: " + project.getCost() + (project.resString() != "" ? ", " + project.resString() : "");
 
                     familyLogService.addToLog(family, mess);

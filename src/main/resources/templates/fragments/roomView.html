@@ -79,7 +79,7 @@
                 <th:block th:if="${curItem != null and curItem.getProject().getView() != null}">
                     <div style="display: table; position: absolute; "
                          th:styleappend="${'width: '+ (1035-roomThing.getX()) +'px;'+
-                                 'height: ' + roomThing.getThing().getHeight()+'px;'+
+                                 'height: ' + (roomView.getRoom().getId() == 11 or roomView.getRoom().getId() == 125? '315px;':roomThing.getThing().getHeight()+'px;')+
                                  'left: ' + roomThing.getX()+'px;'+
                                  'top: ' + roomThing.getY()+'px;' +
                                  'background: url(data:image/png;base64,'+curItem.getProject().getEncodedView()+') repeat-x'}">

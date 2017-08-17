@@ -69,11 +69,12 @@
                              data-toggle="tooltip" th:title="${roomThing.getThing().getName() + ' (' + roomThing.getX() + ',' + roomThing.getY() + ')'}"
                              style="color: dimgrey; display: table-cell; vertical-align: middle; font-size: 10px;">Нет вещи
                         </div>-->
-                        <a th:text="${roomThing.getThing().getName()}" th:title="${roomThing.getThing().getName() + ' (' + roomThing.getX() + ',' + roomThing.getY() + ')'}"
+                        <a th:text="${roomThing.getThing().getName()}"
+                           th:title="${roomThing.getThing().getName() + ' (x:' + roomThing.getX() + ',y:' + roomThing.getY()+ ',w:' + roomThing.getThing().getWidth() + ',h:' + roomThing.getThing().getHeight() + ')'}"
                            data-toggle="modal" data-target="#myModal" style="cursor: pointer; font-size: 10px;" th:styleappend="${roomThing.getHouse().getId() eq house.getId()? 'color: darkgreen;' : 'color: cornflowerblue;'}"
                            th:onclick="'javascript:passData('+${roomThing.getId()}+',\'' + ${roomThing.getX()} + '\','+${roomThing.getY()}+','+${roomThing.getLayer()}+','+${roomThing.getHouse().getId()}+');'">Thing
                         </a>
-
+                        <a th:href="${'/admin/projectsForThing?thingId='+roomThing.getThing().getId()}" target="_blank"><span class="glyphicon glyphicon-bookmark" style="color: black;"></span></a>
                     </div>
                 </th:block>
             </div>

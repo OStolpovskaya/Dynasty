@@ -15,7 +15,7 @@
     <th:block th:if="${family.getLevel() == 0}">
         <div class="alert alert-success">
             Давайте приобретем проект стула "Табуретка Самсколотил"!
-            В самом низу страницы выберите проект табуретки и нажмите "Приобрести проект". Семейный бюджет указан в рублях в правом верхнем углу страницы.<br/>
+            В разделе "Покупка новых проектов" выберите проект табуретки и нажмите "Приобрести проект". <br/>
             Наконец-то можно заняться крафтом! Под заголовком "Изготовление предметов..." выберите приобретенный проект и нажмите кнопку "Изготовить предмет".
             Обратите внимание, изготовление вещей происходит из накопленных вашей семьей ресурсов.
             Призвание персонажа определяет какой ресурс будет накоплен за ход, а уровень профессии - его количество. Ресурсы также могут быть получены и другим путем. Об этом позже.<br/>
@@ -34,7 +34,7 @@
         +1 если Вы создали более 5 вещей по этому проекту<br/>
         +1 если Вы создали более 25 вещей по этому проекту<br/>
         +1 если Вы создали более 50 вещей по этому проекту<br/>
-        +1 если применен бафф 'Улучшенный крафт'<br/>
+        +1 если применен Бафф к производству 'Качество предметов +1'<br/>
         Таким образом, наибольшее качество предмета 5. Среднее значение качества всех предметов в доме влияет на плодовитость персонажей и на увеличение заработной платы.
         </span>
             </div>
@@ -49,15 +49,15 @@
             <form th:action="@{/game/makeItem}" method="post">
 
                 <div class="radio" th:each="familyProject : ${familyProjects}">
-                    <label>
+                    <label th:with="hasResources = ${family.hasResourcesForProject(familyProject.getProject())}">
                         <!--/*@thymesVar id="familyProject" type="dyn.model.FamilyProject"*/-->
-                        <input type="radio" name="projectId" th:value="${familyProject.getProject().getId()}" th:required="required" onclick="enableMakeItemButton()" th:disabled="${not family.hasResourcesForProject(familyProject.getProject())}"
-                               style="position: inherit;"/>
-                        <th:block th:text="${familyProject.getProject().getName() + ' ('+familyProject.getProject().resString()+') Произведено '+familyProject.getCount()+' раз'}"></th:block>
+                        <input type="radio" name="projectId" th:value="${familyProject.getProject().getId()}" th:required="required" onclick="enableMakeItemButton()" th:disabled="${not hasResources}"
+                               style="position: inherit;" data-toggle="tooltip" th:title="${hasResources?'':'Не хватает ресурсов'}"/>
                         <th:block th:replace="fragments/custom :: project-view (project=${familyProject.getProject()})"></th:block>
+                        <th:block th:text="${familyProject.getProject().getName()+' от '+familyProject.getProject().getAuthor().getFamilyName()+' ('+familyProject.getProject().resString()+') Произведено '+familyProject.getCount()+' раз'}"></th:block>
                     </label>
                 </div>
-                <button id="makeItemButton" type="submit" class="btn btn-default btn-md" th:disabled="${true}">Изготовить предмет</button>
+                <button id="makeItemButton" type="submit" class="btn btn-default btn-md center-block" th:disabled="${true}">Изготовить предмет</button>
             </form>
         </th:block>
         <th:block th:unless="${not #lists.isEmpty(familyProjects)}">
@@ -77,11 +77,11 @@
                     <label>
                         <input type="radio" name="projectId" th:value="${project.getId()}" th:required="required" onclick="enableBuyProjectButton()" th:disabled="${family.getMoney() lt project.getCost()}"
                                style="position: inherit;"/>
-                        <th:block th:text="${project.getName()+' ('+project.getCost() +' р.) ('+project.resString()+')'}"></th:block>
                         <th:block th:replace="fragments/custom :: project-view (project=${project})"></th:block>
+                        <th:block th:text="${project.getName()+' от '+project.getAuthor().getFamilyName()+' ('+project.getCost() +' р.) ('+project.resString()+')'}"></th:block>
                     </label>
                 </div>
-                <button id="buyProjectButton" type="submit" class="btn btn-default btn-md" th:disabled="${true}">Приобрести проект</button>
+                <button id="buyProjectButton" type="submit" class="btn btn-default btn-md center-block" th:disabled="${true}">Приобрести проект</button>
             </form>
         </th:block>
         <th:block th:unless="${not #lists.isEmpty(projects)}">

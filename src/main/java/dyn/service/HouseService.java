@@ -137,7 +137,7 @@ public class HouseService {
 
 
     public List<House> getBuildingList() {
-        return houseRepository.findAllByType(HouseType.building);
+        return houseRepository.findAllByTypeOrderByPairsNum(HouseType.building);
     }
 
     public House getHouse(Long buildingId) {
@@ -201,7 +201,7 @@ public class HouseService {
     }
 
     public List<FamilyBuilding> getFamilyBuildings(Family family) {
-        return familyBuildingRepository.findByFamily(family);
+        return familyBuildingRepository.findByFamilyOrderByBuildingPairsNum(family);
     }
 
     public FamilyBuilding getFamilyBuildingByFamilyAndBuilding(Family family, House building) {
@@ -240,5 +240,15 @@ public class HouseService {
         }
 
         return houseInc;
+    }
+
+    public void removeRoomThing(Long roomThingId) {
+        List<Item> items = itemRepository.findByInteriorId(roomThingId);
+        for (Item item : items) {
+            item.setInteriorId(0L);
+            item.setPlace(ItemPlace.storage);
+            itemRepository.save(item);
+        }
+        roomThingRepository.delete(roomThingId);
     }
 }

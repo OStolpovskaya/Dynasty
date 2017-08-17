@@ -56,6 +56,7 @@ public class ResourcesUtils {
         initValues.put("Cloth", familyResources.getCloth());
         initValues.put("Stone", familyResources.getStone());
         initValues.put("Chemical", familyResources.getChemical());
+        initValues.put("CraftPoints", family.getCraftPoint());
     }
 
     public String getDifference(Family family) {
@@ -69,6 +70,7 @@ public class ResourcesUtils {
         sb.append(" Ткань, кожа, бумага: ").append(family.getFamilyResources().getCloth() - initValues.get("Cloth")).append(", ");
         sb.append(" Камень, стекло, керамика: ").append(family.getFamilyResources().getStone() - initValues.get("Stone")).append(", ");
         sb.append(" Химия, краски: ").append(family.getFamilyResources().getChemical() - initValues.get("Chemical")).append("<br>");
+        sb.append(" Крафт баллы: ").append(family.getCraftPoint() - initValues.get("CraftPoints")).append("<br>");
         return sb.toString();
     }
 }

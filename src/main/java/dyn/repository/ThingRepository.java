@@ -21,4 +21,6 @@ public interface ThingRepository extends CrudRepository<Thing, Long> {
     List<Thing> findByCraftBranchId(Long craftBranchId);
 
     List<Thing> findByCraftBranchIdLessThanEqualOrderByName(Long craftBranchId);
+
+    List<Thing> findAllByOrderByName();
 }

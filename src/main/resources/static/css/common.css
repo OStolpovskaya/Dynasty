@@ -233,6 +233,7 @@ a.anchor {
 .my_tooltip {
     position: relative;
     display: inline-block;
+    color: black;
 }
 
 .my_tooltip .my_tooltiptext {

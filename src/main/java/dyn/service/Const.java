@@ -12,7 +12,11 @@ public class Const {
     public static final Long CRAFTBRANCH_DECOR = 3L;
     public static final Long CRAFTBRANCH_CLOTH = 4L;
     public static final Long CRAFTBRANCH_MEAL = 5L;
+    public static final Long CRAFTBRANCH_EQUIPMENT = 6L;
     public static final Long CRAFTBRANCH_SERVICE_AND_BUFFS = 10L;
+
+    public static final Long CRAFTBRANCH_MAX = 6L;
+
 
     public static final Long THING_SKILL_IMPROVEMENT = 118L;
     public static final Long THING_RESOURCES_SERTIFICATE = 117L;
@@ -76,6 +80,7 @@ public class Const {
     public static final int COST_FERTILITY = 600;
     public static final int COST_FATHER_DOMINANT = 400;
     public static final int COST_MOTHER_DOMINANT = 400;
+    public static final int COST_RES_WOOD = 500;
     public static final int COST_NEW_PROJECT = 10000;
 
     public static final double DESTROY_ITEM_COEFF = 0.5;

@@ -4,6 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>Здания</title>
     <link th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}" rel="stylesheet"></link>
+    <link th:href="@{/css/common.css}" rel="stylesheet"></link>
 </head>
 <body>
 <div th:replace="fragments/navigation :: nav-for-admin"></div>
@@ -20,9 +21,18 @@
         <a th:name="${'building'+building.getId()}" class="anchor"></a>
         <div class="well">
             <h3 th:text="${#strings.toUpperCase(building.getName()) + ' (' + building.getId() + ')'}">Здание</h3>
+            <p th:text="${building.getDesc()}"></p>
+
+            <th:block th:with="roomView = ${roomViewList.get(0)}">
+                <!--/*@thymesVar id="roomView" type="dyn.model.RoomView"*/-->
+
+                <p>Крафт-пойнты:
+                    <th:block th:text="${roomView.getSumOfCraftPoints()}"></th:block>
+                </p>
+            </th:block>
 
             <form th:action="@{/admin/newRoomThing}" method="post" class="form-inline" style="padding-bottom: 10px;">
-                <div class="form-group"><label>Вещь:</label>
+                <div class="form-group"><label>Добавить вещь:</label>
                     <select name="roomThingThingId" class="form-control">
                         <option th:each="thing : ${thingList}"
                                 th:value="${thing.getId()}"
@@ -35,7 +45,7 @@
                 <div class="form-group"><label>Y:</label>
                     <input type="text" name="roomThingY" value="" class="form-control" style="width: 60px;"/></div>
                 <div class="form-group"><label>Слой:</label>
-                    <input type="text" name="roomThingLayer" value="0" class="form-control" style="width: 60px;"/>
+                    <input type="text" name="roomThingLayer" value="1" class="form-control" style="width: 60px;"/>
                 </div>
                 <input type="hidden" name="roomThingRoomId" th:value="${building.getRoomList().get(0).getId()}"/>
                 <input type="hidden" name="roomThingHouseId" th:value="${building.getId()}"/>
@@ -56,11 +66,11 @@
                                  data-toggle="tooltip" th:title="${roomThing.getThing().getName() + ' (' + roomThing.getX() + ',' + roomThing.getY() + ')'}"
                                  style="color: dimgrey; display: table-cell; vertical-align: middle; font-size: 10px;">Нет вещи
                             </div>-->
-                            <a th:text="${roomThing.getThing().getName()}" th:title="${roomThing.getThing().getName() + ' (' + roomThing.getX() + ',' + roomThing.getY() + ')'}"
+                            <a th:text="${roomThing.getThing().getName()}" th:title="${roomThing.getThing().getName() + ' (' + roomThing.getX() + ',' + roomThing.getY() + ')' + roomThing.getThing().getCost() + ' б.'}"
                                data-toggle="modal" data-target="#myModal" style="cursor: pointer; font-size: 10px;color: cornflowerblue;"
                                th:onclick="'javascript:passData('+${roomThing.getId()}+',\'' + ${roomThing.getX()} + '\','+${roomThing.getY()}+','+${roomThing.getLayer()}+','+${roomThing.getHouse().getId()}+');'">Thing
                             </a>
-
+                            <a th:href="${'/admin/projectsForThing?thingId='+roomThing.getThing().getId()}" target="_blank"><span class="glyphicon glyphicon-bookmark" style="color: black;"></span></a>
                         </div>
                     </th:block>
                 </div>
@@ -87,7 +97,13 @@
                     <h4 class="modal-title">Изменение положения вещи в интерьере комнаты</h4>
                 </div>
                 <div class="modal-body">
-                    <p>Введите новые значения:</p>
+                    <p>Удалить вещь (все items, размещенные в этой ячейке, будут перемещены на склад игроков ):</p>
+                    <form th:action="@{/admin/removeRoomThing}" method="post">
+                        <input type="hidden" name="roomThingHouseId" id="roomThingHouseId" value=""/>
+                        <input type="hidden" name="roomThingId" id="roomThingId" value=""/>
+                        <button type="submit" class="btn btn-danger">Удалить</button>
+                    </form>
+                    <p>Для изменения положения вещи, введите новые значения:</p>
                     <form th:action="@{/admin/changeRoomThing}" method="post">
                         <div class="form-group"><label>X:</label>
                             <input type="text" name="roomThingX" id="roomThingX" value="" class="form-control"/></div>
@@ -100,6 +116,7 @@
                         <input type="hidden" name="roomThingId" id="roomThingId" value=""/>
                         <button type="submit" class="btn btn-info">Изменить</button>
                     </form>
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

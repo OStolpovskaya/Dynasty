@@ -3,6 +3,7 @@ package dyn.controllers;
 import dyn.form.FamilyForm;
 import dyn.model.*;
 import dyn.model.Character;
+import dyn.model.appearance.SkinColor;
 import dyn.repository.*;
 import dyn.service.AppearanceService;
 import dyn.service.CareerService;
@@ -93,6 +94,8 @@ public class FamilyController {
     public String createNewFamily(ModelMap model, @ModelAttribute("familyForm") FamilyForm familyForm) {
         Race race = raceRepository.findOne(Race.RACE_HUMAN);
 
+        SkinColor skinColor = app.getRandomSkinColor(app.USUAL);
+
         Character male = new Character();
         male.setName(characterRepository.getRandomNameMale());
         male.setSex("male");
@@ -113,7 +116,7 @@ public class FamilyController {
         male.setHeight(app.getRandomHeight(app.USUAL));
         male.setMouth(app.getRandomMouth(app.USUAL));
         male.setNose(app.getRandomNose(app.USUAL));
-        male.setSkinColor(app.getRandomSkinColor(app.USUAL));
+        male.setSkinColor(skinColor);
 
         male.generateView();
 
@@ -137,7 +140,7 @@ public class FamilyController {
         female.setHeight(app.getRandomHeight(app.USUAL));
         female.setMouth(app.getRandomMouth(app.USUAL));
         female.setNose(app.getRandomNose(app.USUAL));
-        female.setSkinColor(app.getRandomSkinColor(app.USUAL));
+        female.setSkinColor(skinColor);
 
         female.generateView();
 

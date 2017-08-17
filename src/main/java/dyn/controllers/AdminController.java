@@ -522,7 +522,7 @@ public class AdminController {
         List<House> houseList = houseService.getHomeList();
         model.addAttribute("houseList", houseList);
 
-        model.addAttribute("thingList", thingRepository.findByCraftBranchIdLessThanEqualOrderByName(5L));
+        model.addAttribute("thingList", thingRepository.findByCraftBranchIdLessThanEqualOrderByName(Const.CRAFTBRANCH_MAX));
 
         House house = houseService.getHouse(houseId);
         model.addAttribute("house", house);
@@ -545,7 +545,7 @@ public class AdminController {
         }
         model.addAttribute("buildingMap", buildingMap);
 
-        Iterable<Thing> thingList = thingRepository.findAll();
+        Iterable<Thing> thingList = thingRepository.findAllByOrderByName();
         model.addAttribute("thingList", thingList);
 
         return "admin/buildings";
@@ -610,6 +610,22 @@ public class AdminController {
             return "redirect:/admin/buildings#building" + house.getId();
         }
         return "redirect:/admin/rooms?houseId=" + roomThingHouseId + "#room" + roomThing.getRoom().getId();
+    }
+
+    @RequestMapping(value = "/admin/removeRoomThing", method = RequestMethod.POST)
+    public String removeRoomThing(ModelMap model,
+                                  @RequestParam("roomThingId") Long roomThingId,
+                                  @RequestParam("roomThingHouseId") Long roomThingHouseId,
+                                  RedirectAttributes redirectAttributes) {
+        RoomThing roomThing = houseService.getRoomThingById(roomThingId);
+        House house = roomThing.getHouse();
+        String redirect = "redirect:/admin/rooms?houseId=" + roomThingHouseId + "#room" + roomThing.getRoom().getId();
+        if (house.getType() == HouseType.building) {
+            redirect = "redirect:/admin/buildings#building" + house.getId();
+        }
+
+        houseService.removeRoomThing(roomThingId);
+        return redirect;
     }
 
     @RequestMapping(value = "/admin/newRoomThing", method = RequestMethod.POST)

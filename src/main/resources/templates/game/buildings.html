@@ -29,6 +29,7 @@
             <th:block th:with="building = ${familyBuilding.getBuilding()}">
                 <a th:name="${'building'+building.getId()}" class="anchor"></a>
                 <h3 th:text="${#strings.toUpperCase(building.getName())}">Здание</h3>
+                <p><strong th:text="${building.getDesc()}"></strong></p>
                 <p>Среднее значение качества предметов в здании: <strong th:text="${familyBuilding.getBuildingQuality()}"></strong></p>
                 <th:block th:with="roomView = ${roomViewList.get(0)}">
                     <!--/*@thymesVar id="roomView" type="dyn.model.RoomView"*/-->

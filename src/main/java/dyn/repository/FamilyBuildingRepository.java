@@ -12,6 +12,8 @@ import java.util.List;
 public interface FamilyBuildingRepository extends CrudRepository<FamilyBuilding, Long> {
     List<FamilyBuilding> findByFamily(Family family);
 
+    List<FamilyBuilding> findByFamilyOrderByBuildingPairsNum(Family family);
+
     FamilyBuilding findByFamilyAndBuilding(Family family, House project);
 
 }

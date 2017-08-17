@@ -14,5 +14,7 @@ public interface HouseRepository extends CrudRepository<House, Long> {
 
     List<House> findAllByType(HouseType type);
 
+    List<House> findAllByTypeOrderByPairsNum(HouseType type);
+
     House findByProduction(Project project);
 }

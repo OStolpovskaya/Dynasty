@@ -16,6 +16,8 @@ public interface ItemRepository extends CrudRepository<Item, Long> {
 
     Item findByFamilyAndInteriorId(Family family, Long roomInteriorId);
 
+    List<Item> findByInteriorId(Long roomInteriorId);
+
     List<Item> findByPlaceAndProjectThing(ItemPlace place, Thing thing);
 
     List<Item> findByFamilyAndPlaceOrderByProjectThing(Family family, ItemPlace place);

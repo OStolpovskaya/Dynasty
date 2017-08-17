@@ -1,7 +1,5 @@
 package dyn.model;
 
-import dyn.service.Const;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,22 +38,21 @@ public class RoomView {
     }
 
     public String getBackgroundUrl() {
-        backgroundUrl = "/graphics/room_background_brown.png";
-        if (room.getId() == Const.ROOM_BATHROOM) {
-            backgroundUrl = "/graphics/room_background_white.png";
-        }
-        if (room.getId() == Const.ROOM_GARAGE) {
-            backgroundUrl = "/graphics/room_background_grey.png";
-        }
-        if (room.getId() == Const.ROOM_POOL) {
-            backgroundUrl = "/graphics/room_background_pool.png";
-        }
-        if (room.getId() == Const.ROOM_GARDEN) {
-            backgroundUrl = "/graphics/room_background_garden.png";
-        }
-        if (room.getId() == Const.ROOM_TABLE) {
-            backgroundUrl = "/graphics/room_background_table.png";
-        }
+        backgroundUrl = "/graphics/" + room.getBackground();
+
         return backgroundUrl;
+    }
+
+    public int getSumOfCraftPoints() {
+        List<Thing> list = new ArrayList<>();
+        int sum = 0;
+        for (RoomThingWithItems roomThingWithItems : roomThingWithItemsList) {
+            Thing thing = roomThingWithItems.getRoomThing().getThing();
+            if (!list.contains(thing)) {
+                list.add(thing);
+                sum = sum + thing.getCost();
+            }
+        }
+        return sum;
     }
 }

@@ -110,18 +110,7 @@
             <input type="hidden" th:field="*{thing}"/>
             <input type="hidden" th:field="*{author}"/>
             <input type="hidden" th:field="*{statusMessage}"/>
-            <div class="form-group row">
-                <span class="col-sm-3 ">Название проекта</span>
-                <div class="col-sm-5">
-                    <input th:field="*{name}" type="text" class="form-control"/>
-                </div>
-            </div>
-            <div class="form-group row">
-                <span class="col-sm-3 ">Стоимость</span>
-                <div class="col-sm-3">
-                    <input th:field="*{cost}" type="number" class="form-control"/>
-                </div>
-            </div>
+
             <label>Изображение PNG (ширина:
                 <th:block th:text="*{thing.getWidth()}"></th:block>
                 px, высота:
@@ -131,7 +120,43 @@
                 <span class="col-sm-3 ">Файл</span>
                 <input name="newProjectFile" type="file" class="form-control-file" aria-describedby="fileHelp" style="padding-left: 15px;"/>
             </div>
-            <label>Ресурсы, необходимые для изготовления вещей по проекту:</label>
+
+            <div class="form-group row">
+                <span class="col-sm-3 ">Название проекта</span>
+                <div class="col-sm-5">
+                    <input th:field="*{name}" type="text" class="form-control"/>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <span class="col-sm-3 ">Стоимость</span>
+                <div class="col-sm-3">
+                    <input th:field="*{cost}" type="number" class="form-control"/>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <span class="col-sm-3 ">Ресурсы, необходимые для изготовления вещей по проекту:</span>
+                <div class="col-sm-3">
+                    <input th:field="*{food}" data-toggle="tooltip" th:title="${@const.RES_FOOD_NAME}" class="form-control input-sm"
+                           style="width: 40px; background-color: #d5797c; padding: 0; text-align: center; display: inline-block;"/>
+                    <input th:field="*{wood}" data-toggle="tooltip" th:title="${@const.RES_WOOD_NAME}" class="form-control input-sm"
+                           style="width: 40px; background-color: #7ac1a3; padding: 0; text-align: center; display: inline-block;"/>
+                    <input th:field="*{metall}" data-toggle="tooltip" th:title="${@const.RES_METALL_NAME}" class="form-control input-sm"
+                           style="width: 40px; background-color: #c7a488; padding: 0; text-align: center; display: inline-block;"/>
+                    <input th:field="*{plastic}" data-toggle="tooltip" th:title="${@const.RES_PLASTIC_NAME}" class="form-control input-sm"
+                           style="width: 40px; background-color: #06a3b6; padding: 0; text-align: center; display: inline-block;"/>
+                    <input th:field="*{microelectronics}" data-toggle="tooltip" th:title="${@const.RES_MICROELECTRONICS_NAME}" class="form-control input-sm"
+                           style="width: 40px; background-color: #96b6c5; padding: 0; text-align: center; display: inline-block;"/>
+                    <input th:field="*{cloth}" data-toggle="tooltip" th:title="${@const.RES_CLOTH_NAME}" class="form-control input-sm"
+                           style="width: 40px; background-color: #dec978; padding: 0; text-align: center; display: inline-block;"/>
+                    <input th:field="*{stone}" data-toggle="tooltip" th:title="${@const.RES_STONE_NAME}" class="form-control input-sm"
+                           style="width: 40px; background-color: #bcbdb8; padding: 0; text-align: center; display: inline-block;"/>
+                    <input th:field="*{chemical}" data-toggle="tooltip" th:title="${@const.RES_CHEMICAL_NAME}" class="form-control input-sm"
+                           style="width: 40px; background-color: #e98547; padding: 0; text-align: center; display: inline-block;"/>
+                </div>
+            </div>
+            <!--
             <div class="form-group row">
                 <span class="col-sm-3 ">
                     <th:block th:text="${#strings.capitalize(@const.RES_FOOD_NAME)}"></th:block>
@@ -196,6 +221,7 @@
                     <input th:field="*{chemical}" type="number" class="form-control"/>
                 </div>
             </div>
+            -->
             <button type="submit" class="btn btn-primary">Создать</button>
         </form>
     </div>

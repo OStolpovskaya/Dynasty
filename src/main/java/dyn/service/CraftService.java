@@ -152,6 +152,7 @@ public class CraftService {
         things.add(thingRepository.getParentThingForCraftBranchId(3));
         things.add(thingRepository.getParentThingForCraftBranchId(4));
         things.add(thingRepository.getParentThingForCraftBranchId(5));
+        things.add(thingRepository.getParentThingForCraftBranchId(6));
         return things;
     }
 
@@ -179,6 +180,7 @@ public class CraftService {
         craftBranchList.add(craftBranchRepository.findOne(3L));
         craftBranchList.add(craftBranchRepository.findOne(4L));
         craftBranchList.add(craftBranchRepository.findOne(5L));
+        craftBranchList.add(craftBranchRepository.findOne(6L));
         return craftBranchList;
     }
 

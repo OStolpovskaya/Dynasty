@@ -379,27 +379,27 @@ public class Character {
     // =============================================================================
     public void generateView() {
         try {
-
+            String folder = sex;
             // load source images
-            BufferedImage bodyImageSub = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + sex + "/" + getBody().getName() + "_sub.png"));
+            BufferedImage bodyImageSub = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + folder + "/" + getBody().getName() + "_sub.png"));
             bodyImageSub = colorImage(bodyImageSub, getSkinColor().getColor());
-            BufferedImage bodyImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + sex + "/" + getBody().getName() + ".png"));
-            BufferedImage earsImageSub = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + sex + "/" + getEars().getName() + "_sub.png"));
+            BufferedImage bodyImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + folder + "/" + getBody().getName() + ".png"));
+            BufferedImage earsImageSub = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + folder + "/" + getEars().getName() + "_sub.png"));
             earsImageSub = colorImage(earsImageSub, getSkinColor().getColor());
-            BufferedImage earsImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + sex + "/" + getEars().getName() + ".png"));
-            BufferedImage eyebrowsImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + sex + "/" + getEyebrows().getName() + ".png"));
-            BufferedImage eyesImageSub = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + sex + "/" + getEyes().getName() + "_sub.png"));
-            BufferedImage eyeColorImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + sex + "/" + getEyeColor().getName() + ".png"));
-            BufferedImage eyesImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + sex + "/" + getEyes().getName() + ".png"));
-            BufferedImage hairStyleImageSub = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + sex + "/" + getHairStyle().getName() + "_sub.png"));
+            BufferedImage earsImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + folder + "/" + getEars().getName() + ".png"));
+            BufferedImage eyebrowsImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + folder + "/" + getEyebrows().getName() + ".png"));
+            BufferedImage eyeColorImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + folder + "/" + getEyeColor().getName() + ".png"));
+            BufferedImage eyesImageSub = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + folder + "/pupil.png"));
+            BufferedImage eyesImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + folder + "/" + getEyes().getName() + ".png"));
+            BufferedImage hairStyleImageSub = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + folder + "/" + getHairStyle().getName() + "_sub.png"));
             hairStyleImageSub = colorImage(hairStyleImageSub, getHairColor().getColor());
-            BufferedImage hairStyleImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + sex + "/" + getHairStyle().getName() + ".png"));
-            BufferedImage headImageSub = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + sex + "/" + getHead().getName() + "_sub.png"));
+            BufferedImage hairStyleImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + folder + "/" + getHairStyle().getName() + ".png"));
+            BufferedImage headImageSub = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + folder + "/" + getHead().getName() + "_sub.png"));
             headImageSub = colorImage(headImageSub, getSkinColor().getColor());
-            BufferedImage headImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + sex + "/" + getHead().getName() + ".png"));
-            BufferedImage mouthImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + sex + "/" + getMouth().getName() + ".png"));
-            BufferedImage noseImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + sex + "/" + getNose().getName() + ".png"));
-            BufferedImage heightImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + sex + "/" + getHeight().getName() + ".png"));
+            BufferedImage headImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + folder + "/" + getHead().getName() + ".png"));
+            BufferedImage mouthImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + folder + "/" + getMouth().getName() + ".png"));
+            BufferedImage noseImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + folder + "/" + getNose().getName() + ".png"));
+            BufferedImage heightImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + folder + "/" + getHeight().getName() + ".png"));
 
             // create the new image, canvas size is the max. of both image sizes
             BufferedImage combined = new BufferedImage(200, 200, BufferedImage.TYPE_INT_ARGB);
@@ -411,8 +411,8 @@ public class Character {
             g.drawImage(headImageSub, 0, 0, null);
             g.drawImage(headImage, 0, 0, null);
             g.drawImage(eyebrowsImage, 0, 0, null);
-            g.drawImage(eyesImageSub, 0, 0, null);
             g.drawImage(eyeColorImage, 0, 0, null);
+            g.drawImage(eyesImageSub, 0, 0, null);
             g.drawImage(eyesImage, 0, 0, null);
             g.drawImage(mouthImage, 0, 0, null);
             g.drawImage(noseImage, 0, 0, null);
