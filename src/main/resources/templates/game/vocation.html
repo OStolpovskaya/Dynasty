@@ -4,13 +4,19 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>Призвание</title>
     <link th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}" rel="stylesheet"></link>
+    <link th:href="@{/css/common.css}" rel="stylesheet"></link>
 </head>
 <body>
 <div th:replace="fragments/navigation :: nav-for-game"></div>
 <div class="container">
     <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
     <!--/*@thymesVar id="vocation" type="dyn.model.career.Vocation"*/-->
-    <h3 th:text="${'Призвание: '+ vocation.getName()}"></h3>
+    <h3>
+        Призвание:
+        <th:block th:text="${vocation.getName()}"></th:block>
+        <img th:src="@{'/graphics/vocation/vocations_'+${vocation.getId()}+'.png' }" height="35px" width="35px" style="background-color: #337ab7;">
+        </img>
+    </h3>
     <p>Ресурсы, которые призвание приносит персонажу. Количество ресурсов умножается на уровень его професии. </p>
     <table class="table table-striped">
         <thead>

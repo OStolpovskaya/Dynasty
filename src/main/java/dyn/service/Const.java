@@ -65,8 +65,8 @@ public class Const {
     public static final Long BUFF_MANY_DAUGHTERS = 6L;
     public static final Long BUFF_GENETIC_MOD = 7L;
     public static final Long BUFF_ONE_MORE_CHILD = 8L;
-
     public static final Long BUFF_SALARY_INC = 9L;
+
     public static final String RES_WOOD_NAME = "дерево";
     public static final String RES_FOOD_NAME = "продукты";
     public static final String RES_METALL_NAME = "металл";

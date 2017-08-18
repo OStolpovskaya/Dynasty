@@ -108,6 +108,7 @@
 <th:block th:fragment="char-panel (character)">
     <!--/*@thymesVar id="character" type="dyn.model.Character"*/-->
     <div class="panel " th:classappend="${character.getSex() == 'male'?'panel-info':'panel-danger'}" style="width: 200px; margin-bottom: 0px;">
+        <!--NAME AND RACE-->
         <div class="panel-heading" align="center" style="padding: 0">
             <span th:text="${character.getName()}" data-toggle="tooltip" th:alt-title="${character.getFullName() + ' (' + character.getId() + ')'}"></span>
             <br/>
@@ -116,28 +117,79 @@
                 <span th:unless="${character.getRace().getId() == 1}" th:text="${character.getRace().getName()}" style="color:DarkOrchid"></span>
             </p>
         </div>
+        <!--IMAGE-->
         <div style="position: relative">
             <a href="/game/character" th:href="${nolink}==null?@{/game/character(characterId=${character.getId()})}:'#'">
                 <th:block th:with="view = ${character.getEncodedView()}">
                     <!--/*@thymesVar id="getEncodedView" type="dyn.model.Character"*/-->
+
+                    <!-- with css only:
+                    <div class="my_tooltip">
+                        <img height="200px" width="200px"
+                             th:src="${view != null?'data:image/png;base64,'+character.getEncodedView():(character.getSex() == 'male'?'/graphics/male.png':'/graphics/female.png')}"/>
+                        <span class="my_tooltiptext">
+                            <strong><th:block th:text="${character.getFullName()}"></th:block></strong>
+                            <br/>
+                                <ul class="my_tooltip_list">
+                                    <li th:text="#{app.skin_color} + ': ' + ${character.getSkinColor().getTitle()}"></li>
+                                    <li th:text="#{app.height} + ': ' + ${character.getHeight().getTitle()}"></li>
+                                    <li th:text="#{app.body} + ': ' + ${character.getBody().getTitle()}"></li>
+                                    <li th:text="#{app.head} + ': ' + ${character.getHead().getTitle()}"></li>
+                                    <li th:text="#{app.ears} + ': ' + ${character.getEars().getTitle()}"></li>
+                                    <li th:text="#{app.eyebrows} + ': ' + ${character.getEyebrows().getTitle()}"></li>
+                                    <li th:text="#{app.eyes} + ': ' + ${character.getEyes().getTitle()}"></li>
+                                    <li th:text="#{app.eye_color} + ': ' + ${character.getEyeColor().getTitle()}"></li>
+                                    <li th:text="#{app.nose} + ': ' + ${character.getNose().getTitle()}"></li>
+                                    <li th:text="#{app.mouth} + ': ' + ${character.getMouth().getTitle()}"></li>
+                                    <li th:text="#{app.hair_type} + ': ' + ${character.getHairType().getTitle()}"></li>
+                                    <li th:text="#{app.hair_color} + ': ' + ${character.getHairColor().getTitle()}"></li>
+                                    <li th:text="#{app.hair_style} + ': ' + ${character.getHairStyle().getTitle()}"></li>
+                                </ul>
+                        </span>
+                    </div>
+                     -->
+
+                    <img height="200px" width="200px"
+                         th:src="${view != null?'data:image/png;base64,'+character.getEncodedView():(character.getSex() == 'male'?'/graphics/male.png':'/graphics/female.png')}"
+                         th:alt-title="#{tooltip(
+                                       ${character.getFullName()},
+                                       ${character.getSkinColor().getTitle()},
+                                       ${character.getHeight().getTitle()},
+                                       ${character.getBody().getTitle()},
+                                       ${character.getHead().getTitle()},
+                                       ${character.getEars().getTitle()},
+                                       ${character.getEyebrows().getTitle()},
+                                       ${character.getEyes().getTitle()},
+                                       ${character.getEyeColor().getTitle()},
+                                       ${character.getNose().getTitle()},
+                                       ${character.getMouth().getTitle()},
+                                       ${character.getHairType().getTitle()},
+                                       ${character.getHairColor().getTitle()},
+                                       ${character.getHairStyle().getTitle()}
+                                       )}"
+                         data-placement="right"/>
+
+                    <!-- with js:
                     <img height="200px" width="200px"
                          th:src="${view != null?'data:image/png;base64,'+character.getEncodedView():(character.getSex() == 'male'?'/graphics/male.png':'/graphics/female.png')}"
                          data-toggle="tooltip" th:alt-title="#{tooltip(
-                                           ${character.getFullName()},
-                                           #{${character.getBody().getName()}}+${character.getBody().isRare()?'*':''},
-                                           #{${character.getEars().getName()}}+${character.getEars().isRare()?'*':''},
-                                           #{${character.getEyebrows().getName()}}+${character.getEyebrows().isRare()?'*':''},
-                                           #{${character.getEyeColor().getName()}}+${character.getEyeColor().isRare()?'*':''},
-                                           #{${character.getEyes().getName()}}+${character.getEyes().isRare()?'*':''},
-                                           #{${character.getHairColor().getName()}}+${character.getHairColor().isRare()?'*':''},
-                                           #{${character.getHairStyle().getName()}},
-                                           #{${character.getHairType().getName()}}+${character.getHairType().isRare()?'*':''},
-                                           #{${character.getHead().getName()}}+${character.getHead().isRare()?'*':''},
-                                           #{${character.getHeight().getName()}}+${character.getHeight().isRare()?'*':''},
-                                           #{${character.getMouth().getName()}}+${character.getMouth().isRare()?'*':''},
-                                           #{${character.getNose().getName()}}+${character.getNose().isRare()?'*':''},
-                                           #{${character.getSkinColor().getName()}}+${character.getSkinColor().isRare()?'*':''})}"
+                                       ${character.getFullName()},
+                                       ${character.getSkinColor().getTitle()},
+                                       ${character.getHeight().getTitle()},
+                                       ${character.getBody().getTitle()},
+                                       ${character.getHead().getTitle()},
+                                       ${character.getEars().getTitle()},
+                                       ${character.getEyebrows().getTitle()},
+                                       ${character.getEyes().getTitle()},
+                                       ${character.getEyeColor().getTitle()},
+                                       ${character.getNose().getTitle()},
+                                       ${character.getMouth().getTitle()},
+                                       ${character.getHairType().getTitle()},
+                                       ${character.getHairColor().getTitle()},
+                                       ${character.getHairStyle().getTitle()}
+                                       )}"
                          data-placement="right"/>
+                    -->
                 </th:block>
             </a>
             <th:block th:each="buff : ${character.getBuffs()}" th:with="count=${(buffStat.count-1) * 20}">
@@ -148,13 +200,14 @@
                 </img>
             </th:block>
         </div>
+        <!--CAREER-->
         <button type="button" th:with="career = ${character.getCareer()}" class="btn btn-xs btn-primary" style="width: 199px; height: 58px; border-top-left-radius: 0; border-top-right-radius: 0">
             <table>
                 <tr>
                     <td width="35px">
                         <a th:href="${'/game/vocation?vocationId=' + career.getVocation().getId()}" style="text-decoration: none;">
                             <img th:src="@{'/graphics/vocation/vocations_'+${career.getVocation().getId()}+'.png' }" data-toggle="tooltip"
-                                 th:alt-title="${'Призвание: ' + career.getVocation().getName() + '. Приносит ресурсы: ' + career.getVocation().resString(1)}"
+                                 th:alt-title="#{vocation.name_and_resources(${career.getVocation().getName()}, ${career.getVocation().resString(1)})}"
                                  height="35px" width="35px">
                             </img>
                         </a>

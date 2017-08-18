@@ -11,6 +11,8 @@ public class HairStyle {
 
     private String name;
 
+    private String title;
+
     private String sex;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -31,6 +33,14 @@ public class HairStyle {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getSex() {

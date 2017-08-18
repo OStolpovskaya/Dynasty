@@ -27,7 +27,7 @@
             <tbody>
             <tr th:each="achievement : ${achievements}">
                 <!--/*@thymesVar id="achievement" type="dyn.model.Achievement"*/-->
-                <td th:text="#{${achievement.getName()}}">name</td>
+                <td th:text="${achievement.getName()}">name</td>
                 <td>-</td>
             </tr>
             </tbody>

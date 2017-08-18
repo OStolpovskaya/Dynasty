@@ -14,6 +14,8 @@ public class SkinColor {
 
     private String name;
 
+    private String title;
+
     @Enumerated(EnumType.STRING)
     private AppearanceType type;
 
@@ -33,6 +35,14 @@ public class SkinColor {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public AppearanceType getType() {

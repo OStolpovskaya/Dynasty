@@ -48,6 +48,8 @@ public class GameController {
     CareerService careerService;
     @Autowired
     AchievementService achievementService;
+    @Autowired
+    CharacterService characterService;
 
     @Autowired
     FamilyLogService familyLogService;
@@ -354,13 +356,14 @@ public class GameController {
                 1.00f};
 
         for (Character character : characters) {
+            boolean firstTurn = character.isBuffedBy(Buff.SIX_CHILDREN);
 
-            double dominantPercent = 0.5; // whose feature is inherited, father or mother
+            double fatherFeaturePercent = 0.5; // whose feature is inherited, father or mother
             if (character.isBuffedBy(Buff.DOMINANT_MOTHER)) {
-                dominantPercent = 0.2;
+                fatherFeaturePercent = 0.2;
             }
             if (character.isBuffedBy(Buff.DOMINANT_FATHER)) {
-                dominantPercent = 0.8;
+                fatherFeaturePercent = 0.8;
             }
 
             double sonOrDaughterPercent = 0.5; // male or female child
@@ -375,13 +378,10 @@ public class GameController {
             if (character.isBuffedBy(Buff.GENETIC_MOD)) {
                 genModPercent = 0.40;
             }
-            if (character.isBuffedBy(Buff.SIX_CHILDREN)) {
-                genModPercent = 1.00;
-            }
 
             Character wife = character.getSpouse();
             int childAmount;
-            if (character.isBuffedBy(Buff.SIX_CHILDREN)) {
+            if (firstTurn) {
                 childAmount = 6;
             } else {
                 if (character.isBuffedBy(Buff.FERTILITY)) {
@@ -398,92 +398,111 @@ public class GameController {
             logger.info(user.getUserName() + "'s character " + character.getName() + " marries " + wife.getName() + " and they have " + childAmount + " children");
             sb.append(messageSource.getMessage("turn.marriage", new Object[]{character.getName(), wife.getName(), childAmount}, loc()));
             sb.append("<br>");
-            boolean genModded = false;
 
-            for (int i = 0; i < childAmount; i++) {
+            for (int childSeqNum = 0; childSeqNum < childAmount; childSeqNum++) {
                 Character child = new Character();
-                if (character.isBuffedBy(Buff.SIX_CHILDREN)) {
-                    if (i < 3) {
-                        child.setSex("male");
-                    } else {
-                        child.setSex("female");
-                    }
-                } else {
-                    if (Math.random() < sonOrDaughterPercent) {
-                        child.setSex("male");
-                    } else {
-                        child.setSex("female");
-                    }
-                }
 
-                if (child.getSex().equals("male")) {
-                    child.setName(characterRepository.getRandomNameMale());
-                } else {
-                    child.setName(characterRepository.getRandomNameFemale());
-                }
-                sb.append(child.getName());
-
-
+                // main properties
+                child.setSex(getSexForNewChild(firstTurn, sonOrDaughterPercent, childSeqNum));
+                child.setName(characterService.getNameForNewChild(child));
                 child.setFather(character);
                 child.setFamily(family);
                 child.setLevel(newLevel);
 
-                int featureToGenMod = 0; // which feature will have genetic modification
-                if (genModded == false && Math.random() < genModPercent) {
-                    featureToGenMod = (int) (1 + Math.random() * 12);
-                    if (character.isBuffedBy(Buff.SIX_CHILDREN)) { // с этим баффом только один старший сын будет иметь гм черту
-                        genModded = true;
+                // features
+                child.setBody(Math.random() < fatherFeaturePercent ? character.getBody() : wife.getBody());
+                child.setEars(Math.random() < fatherFeaturePercent ? character.getEars() : wife.getEars());
+                child.setEyebrows(Math.random() < fatherFeaturePercent ? character.getEyebrows() : wife.getEyebrows());
+                child.setEyeColor(Math.random() < fatherFeaturePercent ? character.getEyeColor() : wife.getEyeColor());
+                child.setEyes(Math.random() < fatherFeaturePercent ? character.getEyes() : wife.getEyes());
+                child.setHairColor(Math.random() < fatherFeaturePercent ? character.getHairColor() : wife.getHairColor());
+                child.setHairType(Math.random() < fatherFeaturePercent ? character.getHairType() : wife.getHairType());
+                child.setHead(Math.random() < fatherFeaturePercent ? character.getHead() : wife.getHead());
+                child.setHeight(Math.random() < fatherFeaturePercent ? character.getHeight() : wife.getHeight());
+                child.setMouth(Math.random() < fatherFeaturePercent ? character.getMouth() : wife.getMouth());
+                child.setNose(Math.random() < fatherFeaturePercent ? character.getNose() : wife.getNose());
+                child.setSkinColor(Math.random() < fatherFeaturePercent ? character.getSkinColor() : wife.getSkinColor());
+
+                sb.append(child.getName());
+
+                // apply genetic modification if needed
+                String feature = "";
+                if ((firstTurn && childSeqNum == 0) || (!firstTurn && Math.random() < genModPercent)) {
+                    int featureToModify = (int) (1 + Math.random() * 12);
+                    switch (featureToModify) {
+                        case 1:
+                            child.setBody(app.getRandomBody(app.RARE));
+                            feature = messageSource.getMessage("app.body", null, loc()) + ": " + child.getBody().getTitle();
+                            break;
+                        case 2:
+                            child.setEars(app.getRandomEars(app.RARE));
+                            feature = messageSource.getMessage("app.ears", null, loc()) + ": " + child.getEars().getTitle();
+                            break;
+                        case 3:
+                            child.setEyebrows(app.getRandomEyeBrows(app.RARE));
+                            feature = messageSource.getMessage("app.eyebrows", null, loc()) + ": " + child.getEyebrows().getTitle();
+                            break;
+                        case 4:
+                            child.setEyeColor(app.getRandomEyeColor(app.RARE));
+                            feature = messageSource.getMessage("app.eye_color", null, loc()) + ": " + child.getEyeColor().getTitle();
+                            break;
+                        case 5:
+                            child.setEyes(app.getRandomEyes(app.RARE));
+                            feature = messageSource.getMessage("app.eyes", null, loc()) + ": " + child.getEyes().getTitle();
+                            break;
+                        case 6:
+                            child.setHairColor(app.getRandomHairColor(app.RARE));
+                            feature = messageSource.getMessage("app.hair_color", null, loc()) + ": " + child.getHairColor().getTitle();
+                            break;
+                        case 7:
+                            child.setHairType(app.getRandomHairType(app.RARE));
+                            feature = messageSource.getMessage("app.hair_type", null, loc()) + ": " + child.getHairType().getTitle();
+                            break;
+                        case 8:
+                            child.setHead(app.getRandomHead(app.RARE));
+                            feature = messageSource.getMessage("app.head", null, loc()) + ": " + child.getHead().getTitle();
+                            break;
+                        case 9:
+                            child.setHeight(app.getRandomHeight(app.RARE));
+                            feature = messageSource.getMessage("app.height", null, loc()) + ": " + child.getHeight().getTitle();
+                            break;
+                        case 10:
+                            child.setMouth(app.getRandomMouth(app.RARE));
+                            feature = messageSource.getMessage("app.mouth", null, loc()) + ": " + child.getMouth().getTitle();
+                            break;
+                        case 11:
+                            child.setNose(app.getRandomNose(app.RARE));
+                            feature = messageSource.getMessage("app.nose", null, loc()) + ": " + child.getNose().getTitle();
+                            break;
+                        case 12:
+                            child.setSkinColor(app.getRandomSkinColor(app.RARE));
+                            feature = messageSource.getMessage("app.skin_color", null, loc()) + ": " + child.getSkinColor().getTitle();
+                            break;
+                        default:
+                            feature = "Error: " + featureToModify;
                     }
+                    sb.append(messageSource.getMessage("turn.genModObtained", new Object[]{feature}, loc()));
                 }
-
-                child.setBody(featureToGenMod == 1 ? app.getRandomBody(app.RARE) : (Math.random() < dominantPercent ? character.getBody() : wife.getBody()));
-                child.setEars(featureToGenMod == 2 ? app.getRandomEars(app.RARE) : (Math.random() < dominantPercent ? character.getEars() : wife.getEars()));
-                child.setEyebrows(featureToGenMod == 3 ? app.getRandomEyeBrows(app.RARE) : (Math.random() < dominantPercent ? character.getEyebrows() : wife.getEyebrows()));
-                child.setEyeColor(featureToGenMod == 4 ? app.getRandomEyeColor(app.RARE) : (Math.random() < dominantPercent ? character.getEyeColor() : wife.getEyeColor()));
-                child.setEyes(featureToGenMod == 5 ? app.getRandomEyes(app.RARE) : (Math.random() < dominantPercent ? character.getEyes() : wife.getEyes()));
-                child.setHairColor(featureToGenMod == 6 ? app.getRandomHairColor(app.RARE) : (Math.random() < dominantPercent ? character.getHairColor() : wife.getHairColor()));
-                child.setHairType(featureToGenMod == 7 ? app.getRandomHairType(app.RARE) : (Math.random() < dominantPercent ? character.getHairType() : wife.getHairType()));
-                child.setHead(featureToGenMod == 8 ? app.getRandomHead(app.RARE) : (Math.random() < dominantPercent ? character.getHead() : wife.getHead()));
-                child.setHeight(featureToGenMod == 9 ? app.getRandomHeight(app.RARE) : (Math.random() < dominantPercent ? character.getHeight() : wife.getHeight()));
-                child.setMouth(featureToGenMod == 10 ? app.getRandomMouth(app.RARE) : (Math.random() < dominantPercent ? character.getMouth() : wife.getMouth()));
-                child.setNose(featureToGenMod == 11 ? app.getRandomNose(app.RARE) : (Math.random() < dominantPercent ? character.getNose() : wife.getNose()));
-                child.setSkinColor(featureToGenMod == 12 ? app.getRandomSkinColor(app.RARE) : (Math.random() < dominantPercent ? character.getSkinColor() : wife.getSkinColor()));
-
-                if (featureToGenMod > 0) {
-                    String genModefeature = "";
-                    if (featureToGenMod == 1) genModefeature = messageSource.getMessage("app.body", null, loc());
-                    if (featureToGenMod == 2) genModefeature = messageSource.getMessage("app.ears", null, loc());
-                    if (featureToGenMod == 3) genModefeature = messageSource.getMessage("app.eyebrows", null, loc());
-                    if (featureToGenMod == 4) genModefeature = messageSource.getMessage("app.eye_color", null, loc());
-                    if (featureToGenMod == 5) genModefeature = messageSource.getMessage("app.eyes", null, loc());
-                    if (featureToGenMod == 6) genModefeature = messageSource.getMessage("app.hair_color", null, loc());
-                    if (featureToGenMod == 7) genModefeature = messageSource.getMessage("app.hair_type", null, loc());
-                    if (featureToGenMod == 8) genModefeature = messageSource.getMessage("app.head", null, loc());
-                    if (featureToGenMod == 9) genModefeature = messageSource.getMessage("app.height", null, loc());
-                    if (featureToGenMod == 10) genModefeature = messageSource.getMessage("app.mouth", null, loc());
-                    if (featureToGenMod == 11) genModefeature = messageSource.getMessage("app.nose", null, loc());
-                    if (featureToGenMod == 12) genModefeature = messageSource.getMessage("app.skin_color", null, loc());
-                    sb.append(messageSource.getMessage("turn.genModObtained", new Object[]{genModefeature}, loc()));
-                }
-
+                // hairstyle after set hair type
                 child.setHairStyle(app.getRandomHairStyle(child.getSex(), child.getHairType()));
 
-                Race race = raceService.defineRace(child);
-                child.setRace(race);
+                // picture
+                child.generateView();
+
+                // race and check newborn achievement
+                child.setRace(raceService.defineRace(child));
+                Achievement achievement = achievementService.checkAchievement(AchievementType.newborn, user, child);
+                if (achievement != null) {
+                    sb.append(messageSource.getMessage("turn.achievement", new Object[]{achievement.getName()}, loc()));
+                }
 
                 // vocation and skills
                 child.setCareer(new Career());
                 careerService.inheritVocationAndSkills(child.getCareer(), character.getCareer(), wife.getCareer());
 
-                child.generateView();
-                logger.info("   child: " + child.getName() + ", genModFeature = " + featureToGenMod + ", race: " + race.getName());
+                logger.info("   child: " + child.getName() + ", genModFeature = " + feature + ", race: " + child.getRace().getName());
                 characterRepository.save(child);
 
-                Achievement achievement = achievementService.checkAchievement(AchievementType.newborn, user, child);
-                if (achievement != null) {
-                    String locAchievementName = messageSource.getMessage(achievement.getName(), null, loc());
-                    sb.append(messageSource.getMessage("turn.achievement", new Object[]{locAchievementName}, loc()));
-                }
                 sb.append("<br>");
             }
             sb.append("<br>");
@@ -515,6 +534,20 @@ public class GameController {
         return "redirect:/game";
     }
 
+    public String getSexForNewChild(boolean firstTurn, double sonOrDaughterPercent, int sequenceNumberOFChild) {
+        String sex = "female";
+        if (firstTurn) {
+            if (sequenceNumberOFChild < 3) {
+                sex = "male";
+            }
+        } else {
+            if (Math.random() < sonOrDaughterPercent) {
+                sex = "male";
+            }
+        }
+        return sex;
+    }
+
     public void genProfession(Character worker, Family family, double houseQualitySalaryCoeff, User user, StringBuilder sb) {
         int inc = 0;
         careerService.generateProfession(worker);
@@ -533,8 +566,7 @@ public class GameController {
 
         Achievement achievement = achievementService.checkAchievement(AchievementType.vocation10level, user, worker);
         if (achievement != null) {
-            String locAchievementName = messageSource.getMessage(achievement.getName(), null, loc());
-            sb.append(messageSource.getMessage("turn.achievement", new Object[]{locAchievementName}, loc()));
+            sb.append("Получено достижение: " + achievement.getName() + "!");
         }
 
         //resources from race

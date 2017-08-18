@@ -240,24 +240,32 @@ a.anchor {
     visibility: hidden;
     width: 450px;
     font-size: 12px;
-    background-color: #f9f9f9;
-    color: #333;
+    background-color: #000000;
+    color: #ffffff;
     text-align: left;
     border-radius: 6px;
-    padding: 15px;
+    padding: 5px;
 
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
 
     /* Position the tooltip */
     position: absolute;
     z-index: 1;
+
 }
 
 .my_tooltip:hover .my_tooltiptext {
     visibility: visible;
+    opacity: 0.8;
+    top: -25%;
+    left: 105%;
 }
 
-/*dropdowns*/
+.my_tooltip_list li {
+    margin-left: 15px;
+}
+
+/* dropdowns used for small images in projects with big image in tooltip */
 .my_dropdown {
     position: relative;
     display: inline-block;
@@ -277,3 +285,5 @@ a.anchor {
 .my_dropdown:hover .my_dropdown-content {
     display: block;
 }
+
+/* dropdowns */

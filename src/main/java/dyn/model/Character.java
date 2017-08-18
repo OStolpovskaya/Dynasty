@@ -463,19 +463,19 @@ public class Character {
                 ", spouse=" + (spouse != null ? spouse.getName() : "") +
                 ", level=" + level +
                 ", race=" + race.getName() +
-                ", body=" + body.getName() +
-                ", ears=" + ears.getName() +
-                ", eyebrows=" + eyebrows.getName() +
-                ", eyeColor=" + eyeColor.getName() +
-                ", eyes=" + eyes.getName() +
-                ", hairColor=" + hairColor.getName() +
-                ", hairStyle=" + hairStyle.getName() +
-                ", hairType=" + hairType.getName() +
-                ", head=" + head.getName() +
-                ", height=" + height.getName() +
-                ", mouth=" + mouth.getName() +
-                ", nose=" + nose.getName() +
-                ", skinColor=" + skinColor.getName() +
+                ", body=" + body.getTitle() +
+                ", ears=" + ears.getTitle() +
+                ", eyebrows=" + eyebrows.getTitle() +
+                ", eyeColor=" + eyeColor.getTitle() +
+                ", eyes=" + eyes.getTitle() +
+                ", hairColor=" + hairColor.getTitle() +
+                ", hairStyle=" + hairStyle.getTitle() +
+                ", hairType=" + hairType.getTitle() +
+                ", head=" + head.getTitle() +
+                ", height=" + height.getTitle() +
+                ", mouth=" + mouth.getTitle() +
+                ", nose=" + nose.getTitle() +
+                ", skinColor=" + skinColor.getTitle() +
                 ", children amount =" + (children != null ? children.size() : "-") +
                 ", fiancee=" + isFiancee() +
                 ", buffs=" + (buffs != null ? buffs.size() : "-") +

@@ -18,65 +18,65 @@
         <div class="form-group">
             <label class="control-label col-sm-2">Тело:</label>
             <select th:field="${character.body}" class="form-control" style="width:250px;">
-                <option th:each="body : *{getBodyList()}" th:value="${body.getId()}" th:text="#{${body.getName()}}+${body.isRare()?'*':''}"></option>
+                <option th:each="body : *{getBodyList()}" th:value="${body.getId()}" th:text="${body.getTitle()}"></option>
             </select>
         </div>
         <div class="form-group">
             <label class="control-label col-sm-2">Уши:</label>
             <select th:field="${character.ears}" class="form-control" style="width:250px;">
-                <option th:each="ears : *{getEarsList()}" th:value="${ears.getId()}" th:text="#{${ears.getName()}}+${ears.isRare()?'*':''}"></option>
+                <option th:each="ears : *{getEarsList()}" th:value="${ears.getId()}" th:text="${ears.getTitle()}"></option>
             </select>
         </div>
         <div class="form-group">
             <label class="control-label col-sm-2">Брови:</label>
             <select th:field="${character.eyebrows}" class="form-control" style="width:250px;">
-                <option th:each="eyebrows : *{getEyebrowsList()}" th:value="${eyebrows.getId()}" th:text="#{${eyebrows.getName()}}+${eyebrows.isRare()?'*':''}"></option>
+                <option th:each="eyebrows : *{getEyebrowsList()}" th:value="${eyebrows.getId()}" th:text="${eyebrows.getTitle()}"></option>
             </select>
         </div>
         <div class="form-group">
             <label class="control-label col-sm-2">Цвет глаз:</label>
             <select th:field="${character.eyeColor}" class="form-control" style="width:250px;">
-                <option th:each="eyeColor : *{getEyeColorList()}" th:value="${eyeColor.getId()}" th:text="#{${eyeColor.getName()}}+${eyeColor.isRare()?'*':''}"></option>
+                <option th:each="eyeColor : *{getEyeColorList()}" th:value="${eyeColor.getId()}" th:text="${eyeColor.getTitle()}"></option>
             </select></div>
         <div class="form-group">
             <label class="control-label col-sm-2">Глаза:</label>
             <select th:field="${character.eyes}" class="form-control" style="width:250px;">
-                <option th:each="eyes : *{getEyesList()}" th:value="${eyes.getId()}" th:text="#{${eyes.getName()}}+${eyes.isRare()?'*':''}"></option>
+                <option th:each="eyes : *{getEyesList()}" th:value="${eyes.getId()}" th:text="${eyes.getTitle()}"></option>
             </select></div>
         <div class="form-group">
             <label class="control-label col-sm-2">Цвет волос:</label>
             <select th:field="${character.hairColor}" class="form-control" style="width:250px;">
-                <option th:each="hairColor : *{getHairColorList()}" th:value="${hairColor.getId()}" th:text="#{${hairColor.getName()}}+${hairColor.isRare()?'*':''}"></option>
+                <option th:each="hairColor : *{getHairColorList()}" th:value="${hairColor.getId()}" th:text="${hairColor.getTitle()}"></option>
             </select></div>
         <div class="form-group">
             <label class="control-label col-sm-2">Тип волос:</label>
             <select th:field="${character.hairType}" class="form-control" style="width:250px;">
-                <option th:each="hairType : *{getHairTypeList()}" th:value="${hairType.getId()}" th:text="#{${hairType.getName()}}+${hairType.isRare()?'*':''}"></option>
+                <option th:each="hairType : *{getHairTypeList()}" th:value="${hairType.getId()}" th:text="${hairType.getTitle()}"></option>
             </select></div>
         <div class="form-group">
             <label class="control-label col-sm-2">Голова:</label>
             <select th:field="${character.head}" class="form-control" style="width:250px;">
-                <option th:each="head : *{getHeadList()}" th:value="${head.getId()}" th:text="#{${head.getName()}}+${head.isRare()?'*':''}"></option>
+                <option th:each="head : *{getHeadList()}" th:value="${head.getId()}" th:text="${head.getTitle()}"></option>
             </select></div>
         <div class="form-group">
             <label class="control-label col-sm-2">Рост:</label>
             <select th:field="${character.height}" class="form-control" style="width:250px;">
-                <option th:each="height : *{getHeightList()}" th:value="${height.getId()}" th:text="#{${height.getName()}}+${height.isRare()?'*':''}"></option>
+                <option th:each="height : *{getHeightList()}" th:value="${height.getId()}" th:text="${height.getTitle()}"></option>
             </select></div>
         <div class="form-group">
             <label class="control-label col-sm-2">Рот:</label>
             <select th:field="${character.mouth}" class="form-control" style="width:250px;">
-                <option th:each="mouth : *{getMouthList()}" th:value="${mouth.getId()}" th:text="#{${mouth.getName()}}+${mouth.isRare()?'*':''}"></option>
+                <option th:each="mouth : *{getMouthList()}" th:value="${mouth.getId()}" th:text="${mouth.getTitle()}"></option>
             </select></div>
         <div class="form-group">
             <label class="control-label col-sm-2">Нос:</label>
             <select th:field="${character.nose}" class="form-control" style="width:250px;">
-                <option th:each="nose : *{getNoseList()}" th:value="${nose.getId()}" th:text="#{${nose.getName()}}+${nose.isRare()?'*':''}"></option>
+                <option th:each="nose : *{getNoseList()}" th:value="${nose.getId()}" th:text="${nose.getTitle()}"></option>
             </select></div>
         <div class="form-group">
             <label class="control-label col-sm-2">Цвет кожи:</label>
             <select th:field="${character.skinColor}" class="form-control" style="width:250px;">
-                <option th:each="skinColor : *{getSkinColorList()}" th:value="${skinColor.getId()}" th:text="#{${skinColor.getName()}}+${skinColor.isRare()?'*':''}"></option>
+                <option th:each="skinColor : *{getSkinColorList()}" th:value="${skinColor.getId()}" th:text="${skinColor.getTitle()}"></option>
             </select>
         </div>
         <div class="form-group">

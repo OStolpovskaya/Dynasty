@@ -95,19 +95,19 @@
                 <td><label>Тело:</label>
                     <div th:each="body : ${bodyList}">
                         <!--/*@thymesVar id="body" type="dyn.model.appearance.Body"*/-->
-                        <input type="checkbox" th:field="*{bodyList}" th:value="${body.getId()}" th:text="#{${body.getName()}}+${body.isRare()?'*':''}"></input>
+                        <input type="checkbox" th:field="*{bodyList}" th:value="${body.getId()}" th:text="${body.getTitle()}"></input>
                     </div>
                 </td>
                 <td><label>Уши:</label>
                     <div th:each="ears : ${earsList}">
                         <!--/*@thymesVar id="ears" type="dyn.model.appearance.Ears"*/-->
-                        <input type="checkbox" th:field="*{earsList}" th:value="${ears.getId()}" th:text="#{${ears.getName()}}+${ears.isRare()?'*':''}"></input>
+                        <input type="checkbox" th:field="*{earsList}" th:value="${ears.getId()}" th:text="${ears.getTitle()}"></input>
                     </div>
                 </td>
                 <td><label>Брови:</label>
                     <div th:each="eyebrows : ${eyebrowsList}">
                         <!--/*@thymesVar id="eyebrows" type="dyn.model.appearance.Eyebrows"*/-->
-                        <input type="checkbox" th:field="*{eyebrowsList}" th:value="${eyebrows.getId()}" th:text="#{${eyebrows.getName()}}+${eyebrows.isRare()?'*':''}"></input>
+                        <input type="checkbox" th:field="*{eyebrowsList}" th:value="${eyebrows.getId()}" th:text="${eyebrows.getTitle()}"></input>
                     </div>
                 </td>
             </tr>
@@ -115,19 +115,19 @@
                 <td><label>Цвет глаз:</label>
                     <div th:each="eyeColor : ${eyeColorList}">
                         <!--/*@thymesVar id="eyeColor" type="dyn.model.appearance.EyeColor"*/-->
-                        <input type="checkbox" th:field="*{eyeColorList}" th:value="${eyeColor.getId()}" th:text="#{${eyeColor.getName()}}+${eyeColor.isRare()?'*':''}"></input>
+                        <input type="checkbox" th:field="*{eyeColorList}" th:value="${eyeColor.getId()}" th:text="${eyeColor.getTitle()}"></input>
                     </div>
                 </td>
                 <td><label>Глаза:</label>
                     <div th:each="eyes : ${eyesList}">
                         <!--/*@thymesVar id="eyes" type="dyn.model.appearance.Eyes"*/-->
-                        <input type="checkbox" th:field="*{eyesList}" th:value="${eyes.getId()}" th:text="#{${eyes.getName()}}+${eyes.isRare()?'*':''}"></input>
+                        <input type="checkbox" th:field="*{eyesList}" th:value="${eyes.getId()}" th:text="${eyes.getTitle()}"></input>
                     </div>
                 </td>
                 <td><label>Цвет волос:</label>
                     <div th:each="hairColor : ${hairColorList}">
                         <!--/*@thymesVar id="hairColor" type="dyn.model.appearance.HairColor"*/-->
-                        <input type="checkbox" th:field="*{hairColorList}" th:value="${hairColor.getId()}" th:text="#{${hairColor.getName()}}+${hairColor.isRare()?'*':''}"></input>
+                        <input type="checkbox" th:field="*{hairColorList}" th:value="${hairColor.getId()}" th:text="${hairColor.getTitle()}"></input>
                     </div>
                 </td>
             </tr>
@@ -135,19 +135,19 @@
                 <td><label>Тип волос:</label>
                     <div th:each="hairType : ${hairTypeList}">
                         <!--/*@thymesVar id="hairType" type="dyn.model.appearance.HairType"*/-->
-                        <input type="checkbox" th:field="*{hairTypeList}" th:value="${hairType.getId()}" th:text="#{${hairType.getName()}}+${hairType.isRare()?'*':''}"></input>
+                        <input type="checkbox" th:field="*{hairTypeList}" th:value="${hairType.getId()}" th:text="${hairType.getTitle()}"></input>
                     </div>
                 </td>
                 <td><label>Голова:</label>
                     <div th:each="head : ${headList}">
                         <!--/*@thymesVar id="head" type="dyn.model.appearance.Head"*/-->
-                        <input type="checkbox" th:field="*{headList}" th:value="${head.getId()}" th:text="#{${head.getName()}}+${head.isRare()?'*':''}"></input>
+                        <input type="checkbox" th:field="*{headList}" th:value="${head.getId()}" th:text="${head.getTitle()}"></input>
                     </div>
                 </td>
                 <td><label>Рост:</label>
                     <div th:each="height : ${heightList}">
                         <!--/*@thymesVar id="height" type="dyn.model.appearance.Height"*/-->
-                        <input type="checkbox" th:field="*{heightList}" th:value="${height.getId()}" th:text="#{${height.getName()}}+${height.isRare()?'*':''}"></input>
+                        <input type="checkbox" th:field="*{heightList}" th:value="${height.getId()}" th:text="${height.getTitle()}"></input>
                     </div>
                 </td>
             </tr>
@@ -156,21 +156,21 @@
                     <label>Рот:</label>
                     <div th:each="mouth : ${mouthList}">
                         <!--/*@thymesVar id="mouth" type="dyn.model.appearance.Mouth"*/-->
-                        <input type="checkbox" th:field="*{mouthList}" th:value="${mouth.getId()}" th:text="#{${mouth.getName()}}+${mouth.isRare()?'*':''}"></input>
+                        <input type="checkbox" th:field="*{mouthList}" th:value="${mouth.getId()}" th:text="${mouth.getTitle()}"></input>
                     </div>
                 </td>
                 <td>
                     <label>Нос:</label>
                     <div th:each="nose : ${noseList}">
                         <!--/*@thymesVar id="nose" type="dyn.model.appearance.Nose"*/-->
-                        <input type="checkbox" th:field="*{noseList}" th:value="${nose.getId()}" th:text="#{${nose.getName()}}+${nose.isRare()?'*':''}"></input>
+                        <input type="checkbox" th:field="*{noseList}" th:value="${nose.getId()}" th:text="${nose.getTitle()}"></input>
                     </div>
                 </td>
                 <td>
                     <label>Цвет кожи:</label>
                     <div th:each="skinColor : ${skinColorList}">
                         <!--/*@thymesVar id="skinColor" type="dyn.model.appearance.SkinColor"*/-->
-                        <input type="checkbox" th:field="*{skinColorList}" th:value="${skinColor.getId()}" th:text="#{${skinColor.getName()}}+${skinColor.isRare()?'*':''}"></input>
+                        <input type="checkbox" th:field="*{skinColorList}" th:value="${skinColor.getId()}" th:text="${skinColor.getTitle()}"></input>
                     </div>
                 </td>
             </tr>

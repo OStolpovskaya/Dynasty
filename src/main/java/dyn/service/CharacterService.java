@@ -40,4 +40,12 @@ public class CharacterService {
 
         return resultList;
     }
+
+    public String getNameForNewChild(Character child) {
+        if (child.getSex().equals("male")) {
+            return characterRepository.getRandomNameMale();
+        } else {
+            return characterRepository.getRandomNameFemale();
+        }
+    }
 }
