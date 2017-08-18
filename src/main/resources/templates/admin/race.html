@@ -40,40 +40,40 @@
             <td th:text="${race.getName()}">name</td>
             <th:block th:object="${race.getSummary()}">
                 <td style="font-size: 10px;">
-                    <li th:each="body : *{getBodyList()}" th:text="#{${body.getName()}}+${body.isRare()?'*':''}"></li>
+                    <li th:each="body : *{getBodyList()}" th:text="${body.getTitle()}"></li>
                 </td>
                 <td style="font-size: 10px;">
-                    <li th:each="ears : *{getEarsList()}" th:text="#{${ears.getName()}}+${ears.isRare()?'*':''}"></li>
+                    <li th:each="ears : *{getEarsList()}" th:text="${ears.getTitle()}"></li>
                 </td>
                 <td style="font-size: 10px;">
-                    <li th:each="eyebrows : *{getEyebrowsList()}" th:text="#{${eyebrows.getName()}}+${eyebrows.isRare()?'*':''}"></li>
+                    <li th:each="eyebrows : *{getEyebrowsList()}" th:text="${eyebrows.getTitle()}"></li>
                 </td>
                 <td style="font-size: 10px;">
-                    <li th:each="eyeColor : *{getEyeColorList()}" th:text="#{${eyeColor.getName()}}+${eyeColor.isRare()?'*':''}"></li>
+                    <li th:each="eyeColor : *{getEyeColorList()}" th:text="${eyeColor.getTitle()}"></li>
                 </td>
                 <td style="font-size: 10px;">
-                    <li th:each="eyes : *{getEyesList()}" th:text="#{${eyes.getName()}}+${eyes.isRare()?'*':''}"></li>
+                    <li th:each="eyes : *{getEyesList()}" th:text="${eyes.getTitle()}"></li>
                 </td>
                 <td style="font-size: 10px;">
-                    <li th:each="hairColor : *{getHairColorList()}" th:text="#{${hairColor.getName()}}+${hairColor.isRare()?'*':''}"></li>
+                    <li th:each="hairColor : *{getHairColorList()}" th:text="${hairColor.getTitle()}"></li>
                 </td>
                 <td style="font-size: 10px;">
-                    <li th:each="hairType : *{getHairTypeList()}" th:text="#{${hairType.getName()}}+${hairType.isRare()?'*':''}"></li>
+                    <li th:each="hairType : *{getHairTypeList()}" th:text="${hairType.getTitle()}"></li>
                 </td>
                 <td style="font-size: 10px;">
-                    <li th:each="head : *{getHeadList()}" th:text="#{${head.getName()}}+${head.isRare()?'*':''}"></li>
+                    <li th:each="head : *{getHeadList()}" th:text="${head.getTitle()}"></li>
                 </td>
                 <td style="font-size: 10px;">
-                    <li th:each="height : *{getHeightList()}" th:text="#{${height.getName()}}+${height.isRare()?'*':''}"></li>
+                    <li th:each="height : *{getHeightList()}" th:text="${height.getTitle()}"></li>
                 </td>
                 <td style="font-size: 10px;">
-                    <li th:each="mouth : *{getMouthList()}" th:text="#{${mouth.getName()}}+${mouth.isRare()?'*':''}"></li>
+                    <li th:each="mouth : *{getMouthList()}" th:text="${mouth.getTitle()}"></li>
                 </td>
                 <td style="font-size: 10px;">
-                    <li th:each="nose : *{getNoseList()}" th:text="#{${nose.getName()}}+${nose.isRare()?'*':''}"></li>
+                    <li th:each="nose : *{getNoseList()}" th:text="${nose.getTitle()}"></li>
                 </td>
                 <td style="font-size: 10px;">
-                    <li th:each="skinColor : *{getSkinColorList()}" th:text="#{${skinColor.getName()}}+${skinColor.isRare()?'*':''}"></li>
+                    <li th:each="skinColor : *{getSkinColorList()}" th:text="${skinColor.getTitle()}"></li>
                 </td>
             </th:block>
         </tr>

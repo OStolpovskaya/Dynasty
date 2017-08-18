@@ -57,7 +57,7 @@ public class FianceeController {
     private EntityManager em;
 
 
-    @RequestMapping(value = "/game/chooseFiancee", params = "characterId", method = RequestMethod.POST)
+    @RequestMapping(value = "/game/chooseFiancee", params = "characterId", method = RequestMethod.GET)
     public String chooseFiancee(ModelMap model, RedirectAttributes redirectAttributes,
                                 @RequestParam(value = "characterId") long characterId,
                                 @ModelAttribute(value = "fianceeFilter") FianceeFilter fianceeFilter) {
@@ -126,7 +126,13 @@ public class FianceeController {
         Character character = characterRepository.findByIdAndFamilyAndLevelAndSexAndSpouseIsNull(characterId, family, family.getLevel(), "male");
         Fiancee fiancee = fianceeRepository.findOne(fianceeId);
 
-        if (character != null && fiancee != null) {
+        if (fiancee == null) { // другой игрок выкупил
+            logger.error(user.getUserName() + " try to choose fiancee, but no such character in fiancee database");
+            redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("chooseFiancee.noSuchFiancee", null, loc()));
+            return "redirect:/game/chooseFiancee?characterId=" + characterId;
+        }
+
+        if (character != null) {
             Character wife = fiancee.getCharacter();
             if (family.getMoney() >= fiancee.getCost()) {
 
@@ -154,7 +160,7 @@ public class FianceeController {
             } else {
                 logger.error(user.getUserName() + " hasn't enough money to choose fiancee " + wife.getName());
                 redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("chooseFiancee.notEnoughMoney", null, loc()));
-                return "redirect:/game/chooseFiancee";
+                return "redirect:/game/chooseFiancee?characterId=" + characterId;
             }
         }
 
