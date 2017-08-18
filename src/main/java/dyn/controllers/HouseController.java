@@ -316,7 +316,7 @@ public class HouseController {
         return "redirect:/game/storage";
     }
 
-    @RequestMapping(value = "/game/chooseItemToBuy", method = RequestMethod.POST)
+    @RequestMapping(value = "/game/chooseItemToBuy", method = RequestMethod.GET)
     public String chooseItemToBuy(ModelMap model, RedirectAttributes redirectAttributes,
                                   @RequestParam(value = "thingId") Long thingId) {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
@@ -338,7 +338,7 @@ public class HouseController {
 
     }
 
-    @RequestMapping(value = "/game/chooseProductionToBuy", method = RequestMethod.POST)
+    @RequestMapping(value = "/game/chooseProductionToBuy", method = RequestMethod.GET)
     public String chooseProductionToBuy(ModelMap model, RedirectAttributes redirectAttributes,
                                         @RequestParam(value = "projectId") Long projectId) {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
@@ -390,35 +390,43 @@ public class HouseController {
 
         Item item = houseService.getItem(itemId);
         if (item != null) {
-            Family seller = item.getFamily();
-            if (seller != family) {
-                if (family.getMoney() >= item.getCost()) {
-                    seller.setMoney(seller.getMoney() + item.getCost());
-                    family.setMoney(family.getMoney() - item.getCost());
-                    familyRepository.save(seller);
-                    familyRepository.save(family);
+            if (!item.getPlace().equals(ItemPlace.store)) {
+                logger.error(family.familyNameAndId() + "want to buy item, but item is not in store: " + item.getId());
+                redirectAttributes.addFlashAttribute("mess", "Вещь больше не продается (кто-то уже выкупил или владелец снял с продажи)");
+            } else {
+                Family seller = item.getFamily();
+                if (seller != family) {
+                    if (family.getMoney() >= item.getCost()) {
+                        seller.setMoney(seller.getMoney() + item.getCost());
+                        family.setMoney(family.getMoney() - item.getCost());
+                        familyRepository.save(seller);
+                        familyRepository.save(family);
 
-                    familyLogService.addToLog(seller, "Семья " + family.getFamilyName() + " приобрела ваш предмет " + item.getFullName() + ". Получено: " + item.getCost() + " р.");
+                        familyLogService.addToLog(seller, "Семья " + family.getFamilyName() + " приобрела ваш предмет " + item.getFullName() + ". Получено: " + item.getCost() + " р.");
 
-                    String mess = "Вы купили предмет " + item.getFullName() + ". Потрачено: " + item.getCost() + " р.";
-                    familyLogService.addToLog(family, mess);
+                        String mess = "Вы купили предмет " + item.getFullName() + ". Потрачено: " + item.getCost() + " р.";
+                        familyLogService.addToLog(family, mess);
 
-                    item.setFamily(family);
-                    item.setPlace(ItemPlace.storage);
-                    item.setCost(0);
-                    houseService.saveItem(item);
+                        item.setFamily(family);
+                        item.setPlace(ItemPlace.storage);
+                        item.setCost(0);
+                        houseService.saveItem(item);
 
-                    logger.info(family.familyNameAndId() + "buy item: " + item.getId());
-                    redirectAttributes.addFlashAttribute("mess", mess);
-                    return "redirect:/game/storage";
+                        logger.info(family.familyNameAndId() + "buy item: " + item.getId());
+                        redirectAttributes.addFlashAttribute("mess", mess);
+                    } else {
+                        logger.error(family.familyNameAndId() + "want to buy item, but has not enough money: " + item.getId());
+                        redirectAttributes.addFlashAttribute("mess", "Недостаточно денег для покупки этого предмета");
+                    }
+                } else {
+                    logger.error(family.familyNameAndId() + "want to buy their own item: " + item.getId());
+                    redirectAttributes.addFlashAttribute("mess", "Предмет принадлежит Вашей семье и выставлен вами на продажу.");
                 }
-                logger.error(family.familyNameAndId() + "want to buy item, but has not enough money: " + item.getId());
-                redirectAttributes.addFlashAttribute("mess", "Недостаточно денег для покупки этого предмета");
-                return "redirect:/game/house";
             }
-            logger.error(family.familyNameAndId() + "want to buy their own item: " + item.getId());
-            redirectAttributes.addFlashAttribute("mess", "Предмет принадлежит Вашей семье и выставлен вами на продажу.");
-            return "redirect:/game/storage";
+            if (craftService.isItemBelongsToBuffAndServices(item)) {
+                return "redirect:/game/chooseProductionToBuy?projectId=" + item.getProject().getId();
+            }
+            return "redirect:/game/chooseItemToBuy?thingId=" + item.getProject().getThing().getId();
         }
         logger.error(family.familyNameAndId() + "want to buy non existing item: " + itemId);
         redirectAttributes.addFlashAttribute("mess", "Предмет не найден");

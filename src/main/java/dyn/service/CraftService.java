@@ -221,4 +221,11 @@ public class CraftService {
     public List<FamilyProject> getFamilyProjectsForThing(Family family, Thing thing) {
         return familyProjectRepository.findByFamilyAndProjectThing(family, thing);
     }
+
+    public boolean isItemBelongsToBuffAndServices(Item item) {
+        if (item.getProject().getThing().getCraftBranch().getId() == Const.CRAFTBRANCH_SERVICE_AND_BUFFS) {
+            return true;
+        }
+        return false;
+    }
 }

@@ -38,7 +38,7 @@
                         <td>
                             <form th:action="@{/game/putItemToStore}" method="post" class="form-inline">
                                 <input type="hidden" name="itemId" th:value="${item.getId()}"/>
-                                <input type="text" name="cost" th:value="${family.getLevel()}*100" class="form-control input-sm" style="width: 60px;" data-toggle="tooltip" title="Стоимость"/>
+                                <input type="text" name="cost" th:value="${item.getProject().getCost()}+500" class="form-control input-sm" style="width: 60px;" data-toggle="tooltip" title="Стоимость"/>
                                 <button type="submit" class="btn btn-sm btn-warning" data-toggle="tooltip" title="Выставить на продажу">
                                     <span class="glyphicon glyphicon glyphicon-log-out"></span>
                                 </button>
@@ -53,9 +53,9 @@
                             </form>
                         </td>
                         <td>
-                            <form th:action="@{/game/chooseItemToBuy}" method="post" class="form-inline">
+                            <form th:action="@{/game/chooseItemToBuy}" method="get" class="form-inline">
                                 <input type="hidden" name="thingId" th:value="${item.getProject().getThing().getId()}"/>
-                                <button type="submit" class="btn btn-sm btn-default">Маркет</button>
+                                <button type="submit" class="btn btn-sm btn-success">Маркет</button>
                             </form>
                         </td>
                     </tr>
@@ -113,7 +113,7 @@
                         <td>
                             <form th:action="@{/game/putItemToStore}" method="post" class="form-inline">
                                 <input type="hidden" name="itemId" th:value="${item.getId()}"/>
-                                <input type="text" name="cost" th:value="${family.getLevel()}*100" class="form-control input-sm" style="width: 60px;" data-toggle="tooltip" title="Стоимость"/>
+                                <input type="text" name="cost" th:value="${item.getProject().getCost()}+500" class="form-control input-sm" style="width: 60px;" data-toggle="tooltip" title="Стоимость"/>
                                 <button type="submit" class="btn btn-sm btn-warning" data-toggle="tooltip" title="Выставить на продажу">
                                     <span class="glyphicon glyphicon glyphicon-log-out"></span>
                                 </button>
@@ -121,9 +121,9 @@
 
                         </td>
                         <td>
-                            <form th:action="@{/game/chooseProductionToBuy}" method="post" class="form-inline">
+                            <form th:action="@{/game/chooseProductionToBuy}" method="get" class="form-inline">
                                 <input type="hidden" name="projectId" th:value="${item.getProject().getId()}"/>
-                                <button type="submit" class="btn btn-sm btn-default">Маркет</button>
+                                <button type="submit" class="btn btn-sm btn-success">Маркет</button>
                             </form>
                         </td>
                     </tr>
@@ -170,9 +170,9 @@
 
                         </td>
                         <td>
-                            <form th:action="@{/game/chooseItemToBuy}" method="post" class="form-inline">
+                            <form th:action="@{/game/chooseItemToBuy}" method="get" class="form-inline">
                                 <input type="hidden" name="thingId" th:value="${item.getProject().getThing().getId()}"/>
-                                <button type="submit" class="btn btn-sm btn-default">Маркет</button>
+                                <button type="submit" class="btn btn-sm btn-success">Маркет</button>
                             </form>
                         </td>
                     </tr>

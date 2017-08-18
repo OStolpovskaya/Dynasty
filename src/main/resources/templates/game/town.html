@@ -65,9 +65,9 @@
             <td th:text="${building.getDesc()}">desc</td>
             <td>
                 <th:block th:if="${building.getProduction() ne null}">
-                    <form th:action="@{/game/chooseProductionToBuy}" method="post" class="form-inline">
+                    <form th:action="@{/game/chooseProductionToBuy}" method="get" class="form-inline">
                         <input type="hidden" name="projectId" th:value="${building.getProduction().getId()}"/>
-                        <button type="submit" class="btn btn-default">Посетить</button>
+                        <button type="submit" class="btn btn-success">Посетить</button>
                     </form>
                 </th:block>
             </td>
@@ -75,7 +75,7 @@
                 <th:block th:if="${not #lists.contains(familyBuildingList,building)}">
                     <form th:action="@{/game/buyBuilding}" method="post" class="form-inline">
                         <input type="hidden" name="buildingId" th:value="${building.getId()}"/>
-                        <button type="submit" class="btn btn-default" th:text="${'Купить: ' + building.getCost() + ' р.'}" th:disabled="${family.getMoney() lt building.getCost()}">Купить</button>
+                        <button type="submit" class="btn btn-info" th:text="${'Купить: ' + building.getCost() + ' р.'}" th:disabled="${family.getMoney() lt building.getCost()}">Купить</button>
                     </form>
                 </th:block>
             </td>

@@ -14,43 +14,48 @@
     <!--/*@thymesVar id="item" type="dyn.model.Item"*/-->
     <h3 th:text="${#strings.toUpperCase(thing.getName())}"></h3>
     <h4 th:if="${project ne null}" th:text="${#strings.toUpperCase(project.getName())}"></h4>
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>Предмет</th>
-            <th>Вид</th>
-            <th>Качество</th>
-            <th>Продавец</th>
-            <th>Изготовитель</th>
-            <th>Цена</th>
-            <th>Действия</th>
-        </tr>
-        </thead>
-        <tbody>
-        <th:block th:each="item : ${items}">
+    <th:block th:if="${not #lists.isEmpty(items)}">
+        <table class="table table-striped">
+            <thead>
             <tr>
-                <td th:text="${item.getProject().getName()}"></td>
-                <td>
-                    <th:block th:replace="fragments/custom :: project-view (project=${item.getProject()})"></th:block>
-                </td>
-                <td th:text="${item.getQuality()}"></td>
-                <td>
-                    <a th:href="${'/game/userview?userId='+item.getFamily().getUser().getUserid()}" th:text="${item.getFamily().familyNameAndUserName()}"></a>
-                </td>
-                <td>
-                    <a th:href="${'/game/userview?userId='+item.getAuthor().getUser().getUserid()}" th:text="${item.getAuthor().familyNameAndUserName()}"></a>
-                </td>
-                <td th:text="${item.getCost()+' р.'}"></td>
-                <td>
-                    <form th:action="@{/game/buyItem}" method="post">
-                        <input type="hidden" name="itemId" th:value="${item.getId()}"/>
-                        <button type="submit" class="btn btn-default" th:disabled="${family.getMoney() lt item.getCost()}">Купить</button>
-                    </form>
-                </td>
+                <th>Предмет</th>
+                <th>Вид</th>
+                <th>Качество</th>
+                <th>Продавец</th>
+                <th>Изготовитель</th>
+                <th>Цена</th>
+                <th>Действия</th>
             </tr>
-        </th:block>
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            <th:block th:each="item : ${items}">
+                <tr>
+                    <td th:text="${item.getProject().getName()}"></td>
+                    <td>
+                        <th:block th:replace="fragments/custom :: project-view (project=${item.getProject()})"></th:block>
+                    </td>
+                    <td th:text="${item.getQuality()}"></td>
+                    <td>
+                        <a th:href="${'/game/userview?userId='+item.getFamily().getUser().getUserid()}" th:text="${item.getFamily().familyNameAndUserName()}"></a>
+                    </td>
+                    <td>
+                        <a th:href="${'/game/userview?userId='+item.getAuthor().getUser().getUserid()}" th:text="${item.getAuthor().familyNameAndUserName()}"></a>
+                    </td>
+                    <td th:text="${item.getCost()+' р.'}"></td>
+                    <td>
+                        <form th:action="@{/game/buyItem}" method="post">
+                            <input type="hidden" name="itemId" th:value="${item.getId()}"/>
+                            <button type="submit" class="btn btn-info" th:disabled="${family.getMoney() lt item.getCost()}">Купить</button>
+                        </form>
+                    </td>
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
+    </th:block>
+    <th:block th:unless="${not #lists.isEmpty(items)}">
+        <p>Нет вещей на продажу</p>
+    </th:block>
 </div>
 <th:block th:replace="fragments/scripts :: webjars"></th:block>
 </body>

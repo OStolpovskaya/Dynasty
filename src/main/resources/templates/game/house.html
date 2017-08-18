@@ -101,7 +101,7 @@
                     <label>Установленная вещь:</label>
                     <span id="curItemName"></span>
                     <input type="hidden" name="itemId" id="curItemId" value=""/>
-                    <button type="submit" id="curItemUnsetButton" class="btn btn-default">Убрать</button>
+                    <button type="submit" id="curItemUnsetButton" class="btn btn-warning">Убрать</button>
                 </form>
                 <form id="formSetItemToThing" th:action="@{/game/setItemToThing}" method="post" class="form-inline" style="margin-top: 5px;">
                     <label>Установить вещь:</label>
@@ -111,12 +111,12 @@
                             <option value="0">0</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-default">Выбрать</button>
+                    <button type="submit" class="btn btn-success">Выбрать</button>
                 </form>
-                <form th:action="@{/game/chooseItemToBuy}" method="post" class="form-inline" style="margin-top: 5px;">
+                <form th:action="@{/game/chooseItemToBuy}" method="get" class="form-inline" style="margin-top: 5px;">
                     <label>Приобрести вещь на маркете:</label>
                     <input type="hidden" name="thingId" id="thingId" value=""/>
-                    <button type="submit" class="btn btn-default">Купить</button>
+                    <button type="submit" class="btn btn-info">Купить</button>
                 </form>
             </div>
             <div class="modal-footer">

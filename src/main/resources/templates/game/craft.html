@@ -46,7 +46,7 @@
                             <a th:text="${parentThing.getName()}" data-toggle="tooltip" th:title="${parentThing.getId() + ' ('+parentThing.getCost() + ')'}" style="color: #2BB67E">Parent</a>
                             <form class="form-inline" th:action="@{/game/learnThing}" method="post">
                                 <input type="hidden" name="thingId" th:value="${parentThing.getId()}"/>
-                                <button type="submit" class="btn btn-info btn-xs" th:disabled="${family.getCraftPoint() lt parentThing.getCost()}" th:text="${'Выучить: '+parentThing.getCost() + ' б.'}">Выучить</button>
+                                <button type="submit" class="btn btn-primary btn-xs" th:disabled="${family.getCraftPoint() lt parentThing.getCost()}" th:text="${'Выучить: '+parentThing.getCost() + ' б.'}">Выучить</button>
                             </form>
                         </th:block>
                         <th:block th:fragment="submenu">
@@ -61,7 +61,7 @@
                                             <a th:text="${thing.getName()}" data-toggle="tooltip" th:title="${thing.getId()}" style="color: #2BB67E">Parent</a>
                                             <form class="form-inline" th:action="@{/game/learnThing}" method="post">
                                                 <input type="hidden" name="thingId" th:value="${thing.getId()}"/>
-                                                <button type="submit" class="btn btn-info btn-xs" th:disabled="${family.getCraftPoint() lt thing.getCost()}" th:text="${'Выучить: '+thing.getCost() + ' б.'}">Выучить</button>
+                                                <button type="submit" class="btn btn-primary btn-xs" th:disabled="${family.getCraftPoint() lt thing.getCost()}" th:text="${'Выучить: '+thing.getCost() + ' б.'}">Выучить</button>
                                             </form>
                                         </th:block>
                                         <th:block th:if="${not family.getCraftThings().contains(thing.getParent())}">
