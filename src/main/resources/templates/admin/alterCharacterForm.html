@@ -86,6 +86,46 @@
             </div>
         </div>
     </form>
+
+    <h3>Карьера:</h3>
+    <form class="form-horizontal" th:action="@{/admin/alterCharacterCareer}" method="post">
+        <!--/*@thymesVar id="career" type="dyn.model.career.Career"*/-->
+        <div class="form-group">
+            <label class="control-label col-sm-2">Призвание:</label>
+            <select th:field="${career.vocation}" class="form-control" style="width:250px;">
+                <option th:each="vocation : ${vocationList}" th:value="${vocation.getId()}" th:text="${vocation.getName()}"></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">Интеллект:</label>
+            <input type="text" name="intelligence" th:value="${career.getIntelligence()}" class="form-control input-sm" style="width: 60px;"/>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">Харизма:</label>
+            <input type="text" name="charisma" th:value="${career.getCharisma()}" class="form-control input-sm" style="width: 60px;"/>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">Сила:</label>
+            <input type="text" name="strength" th:value="${career.getStrength()}" class="form-control input-sm" style="width: 60px;"/>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">Творчество:</label>
+            <input type="text" name="creativity" th:value="${career.getCreativity()}" class="form-control input-sm" style="width: 60px;"/>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">Образование:</label>
+            <select th:field="${career.education}" class="form-control" style="width:250px;">
+                <option th:each="education : ${educationList}" th:value="${education.getId()}" th:text="${education.getName()}"></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <input type="hidden" name="character_id" th:value="${character.getId()}"/>
+                <button type="submit" class="btn btn-default">Изменить</button>
+            </div>
+        </div>
+
+    </form>
 </div>
 <script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>

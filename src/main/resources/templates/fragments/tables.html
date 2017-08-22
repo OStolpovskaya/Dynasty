@@ -21,7 +21,7 @@
         <tr th:each="element : ${list}">
             <td th:text="${element.getId()}">1</td>
             <td th:text="${element.getName()}">name</td>
-            <td th:text="#{${element.getName()}}">name</td>
+            <td th:text="${element.getTitle()}">name</td>
             <td th:text="${element.getType()}">name</td>
         </tr>
         </tbody>
@@ -44,7 +44,7 @@
         <tr th:each="element : ${list}">
             <td th:text="${element.getId()}">1</td>
             <td th:text="${element.getName()}">name</td>
-            <td th:text="#{${element.getName()}}">name</td>
+            <td th:text="${element.getTitle()}">name</td>
             <td th:text="${element.getType()}">name</td>
             <td th:text="${element.getColor()}">name</td>
         </tr>
@@ -69,7 +69,7 @@
             <td th:text="${element.getId()}">1</td>
             <td th:text="${element.getSex()}">1</td>
             <td th:text="${element.getName()}">name</td>
-            <td th:text="#{${element.getName()}}">name</td>
+            <td th:text="${element.getTitle()}">name</td>
             <td th:text="${element.getHairType().getName()}">name</td>
         </tr>
         </tbody>

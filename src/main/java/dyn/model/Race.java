@@ -2,7 +2,6 @@ package dyn.model;
 
 import dyn.form.RaceAppearanceForm;
 import dyn.utils.ResourcesHolder;
-import dyn.utils.ResourcesUtils;
 
 import javax.persistence.*;
 import java.util.List;
@@ -83,8 +82,18 @@ public class Race implements ResourcesHolder {
     }
 
     @Override
+    public void setFood(int food) {
+        this.food = food;
+    }
+
+    @Override
     public int getWood() {
         return wood;
+    }
+
+    @Override
+    public void setWood(int wood) {
+        this.wood = wood;
     }
 
     @Override
@@ -93,8 +102,18 @@ public class Race implements ResourcesHolder {
     }
 
     @Override
+    public void setMetall(int metall) {
+        this.metall = metall;
+    }
+
+    @Override
     public int getPlastic() {
         return plastic;
+    }
+
+    @Override
+    public void setPlastic(int plastic) {
+        this.plastic = plastic;
     }
 
     @Override
@@ -103,8 +122,18 @@ public class Race implements ResourcesHolder {
     }
 
     @Override
+    public void setMicroelectronics(int microelectronics) {
+        this.microelectronics = microelectronics;
+    }
+
+    @Override
     public int getCloth() {
         return cloth;
+    }
+
+    @Override
+    public void setCloth(int cloth) {
+        this.cloth = cloth;
     }
 
     @Override
@@ -113,8 +142,18 @@ public class Race implements ResourcesHolder {
     }
 
     @Override
+    public void setStone(int stone) {
+        this.stone = stone;
+    }
+
+    @Override
     public int getChemical() {
         return chemical;
+    }
+
+    @Override
+    public void setChemical(int chemical) {
+        this.chemical = chemical;
     }
 
     @Override
@@ -126,7 +165,4 @@ public class Race implements ResourcesHolder {
         return sb.toString();
     }
 
-    public String resString(int coeff) {
-        return ResourcesUtils.getResString(this, coeff);
-    }
 }

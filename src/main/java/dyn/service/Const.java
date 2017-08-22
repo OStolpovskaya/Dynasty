@@ -100,4 +100,8 @@ public class Const {
     public static final Long ROOM_GALERY = 13L;    //галерея
     public static final Long ROOM_TABLE = 14L;    //стол
 
+    public static final int CRAFT_POINTS_START = 3;
+    public static final int CRAFT_POINTS_FOR_LEVEL = 1;
+    public static final int CRAFT_POINTS_FOR_ACHIEVEMENT = 2;
+    public static final int CRAFT_POINTS_FOR_NEW_HOUSE = 10;
 }

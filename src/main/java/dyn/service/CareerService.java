@@ -168,4 +168,18 @@ public class CareerService {
         newCareer.setProfession(null);
         return newCareer;
     }
+
+    public List<Vocation> getVocationList() {
+        List<Vocation> vocationList = vocationRepository.findAllByOrderByName();
+        return vocationList;
+    }
+
+    public List<Education> getEducationList() {
+        List<Education> educationList = educationRepository.findAllBy();
+        return educationList;
+    }
+
+    public Education getEducation(long education) {
+        return educationRepository.findOne(education);
+    }
 }

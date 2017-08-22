@@ -43,8 +43,8 @@ public class AchievementService {
             user.getAchievements().add(achievement);
             userRepository.save(user);
 
-            Family family = character.getFamily();
-            family.setCraftPoint(family.getCraftPoint() + 2);
+            Family family = user.getCurrentFamily();
+            family.setCraftPoint(family.getCraftPoint() + Const.CRAFT_POINTS_FOR_ACHIEVEMENT);
             familyRepository.save(family);
 
             logger.info(user.getUserName() + " is awarded! Achievement: " + achievement.getName() + ". Added 2 craft points to family " + family.getFamilyName());

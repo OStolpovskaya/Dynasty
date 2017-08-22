@@ -2,6 +2,7 @@ package dyn.utils;
 
 import dyn.model.Family;
 import dyn.model.FamilyResources;
+import dyn.service.Const;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,8 +12,19 @@ import java.util.Map;
 /**
  * Created by OM on 07.04.2017.
  */
-public class ResourcesUtils {
+public class ResUtils {
     private Map<String, Integer> initValues;
+
+    public static void copyResources(ResourcesHolder from, ResourcesHolder to) {
+        to.setFood(from.getFood());
+        to.setWood(from.getWood());
+        to.setMetall(from.getMetall());
+        to.setPlastic(from.getPlastic());
+        to.setMicroelectronics(from.getMicroelectronics());
+        to.setCloth(from.getCloth());
+        to.setStone(from.getStone());
+        to.setChemical(from.getChemical());
+    }
 
     public static String getResString(ResourcesHolder resHolder) {
         return getResString(resHolder, 1);
@@ -44,6 +56,35 @@ public class ResourcesUtils {
         return org.springframework.util.StringUtils.arrayToDelimitedString(resources.toArray(), ", ");
     }
 
+    public static String differenceToString(ResourcesHolder previous, ResourcesHolder current) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(" ").append(Const.RES_FOOD_NAME).append(": ").append(current.getFood() - previous.getFood()).append("; ");
+        sb.append(" ").append(Const.RES_WOOD_NAME).append(": ").append(current.getWood() - previous.getWood()).append("; ");
+        sb.append(" ").append(Const.RES_METALL_NAME).append(": ").append(current.getMetall() - previous.getMetall()).append("; ");
+        sb.append(" ").append(Const.RES_PLASTIC_NAME).append(": ").append(current.getPlastic() - previous.getPlastic()).append("; ");
+        sb.append(" ").append(Const.RES_MICROELECTRONICS_NAME).append(": ").append(current.getMicroelectronics() - previous.getMicroelectronics()).append("; ");
+        sb.append(" ").append(Const.RES_CLOTH_NAME).append(": ").append(current.getCloth() - previous.getCloth()).append("; ");
+        sb.append(" ").append(Const.RES_STONE_NAME).append(": ").append(current.getStone() - previous.getStone()).append("; ");
+        sb.append(" ").append(Const.RES_CHEMICAL_NAME).append(": ").append(current.getChemical() - previous.getChemical());
+
+        return sb.toString();
+    }
+
+   /* public String getDifference(Family family) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(" Деньги: ").append(family.getMoney() - initValues.get("Money")).append(" р. <br>");
+        sb.append(" Продукты: ").append(family.getFamilyResources().getFood() - initValues.get("Food")).append(", ");
+        sb.append(" Дерево: ").append(family.getFamilyResources().getWood() - initValues.get("Wood")).append(", ");
+        sb.append(" Металл: ").append(family.getFamilyResources().getMetall() - initValues.get("Metall")).append(", ");
+        sb.append(" Пластик, резина: ").append(family.getFamilyResources().getPlastic() - initValues.get("Plastic")).append(", ");
+        sb.append(" Микроэлектроника: ").append(family.getFamilyResources().getMicroelectronics() - initValues.get("Microelectronics")).append(", ");
+        sb.append(" Ткань, кожа, бумага: ").append(family.getFamilyResources().getCloth() - initValues.get("Cloth")).append(", ");
+        sb.append(" Камень, стекло, керамика: ").append(family.getFamilyResources().getStone() - initValues.get("Stone")).append(", ");
+        sb.append(" Химия, краски: ").append(family.getFamilyResources().getChemical() - initValues.get("Chemical")).append("<br>");
+        sb.append(" Крафт баллы: ").append(family.getCraftPoint() - initValues.get("CraftPoints")).append("<br>");
+        return sb.toString();
+    }*/
+
     public void saveInitValues(Family family) {
         FamilyResources familyResources = family.getFamilyResources();
         initValues = new HashMap<>();
@@ -57,20 +98,5 @@ public class ResourcesUtils {
         initValues.put("Stone", familyResources.getStone());
         initValues.put("Chemical", familyResources.getChemical());
         initValues.put("CraftPoints", family.getCraftPoint());
-    }
-
-    public String getDifference(Family family) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(" Деньги: ").append(family.getMoney() - initValues.get("Money")).append(" р. <br>");
-        sb.append(" Продукты: ").append(family.getFamilyResources().getFood() - initValues.get("Food")).append(", ");
-        sb.append(" Дерево: ").append(family.getFamilyResources().getWood() - initValues.get("Wood")).append(", ");
-        sb.append(" Металл: ").append(family.getFamilyResources().getMetall() - initValues.get("Metall")).append(", ");
-        sb.append(" Пластик, резина: ").append(family.getFamilyResources().getPlastic() - initValues.get("Plastic")).append(", ");
-        sb.append(" Микроэлектроника: ").append(family.getFamilyResources().getMicroelectronics() - initValues.get("Microelectronics")).append(", ");
-        sb.append(" Ткань, кожа, бумага: ").append(family.getFamilyResources().getCloth() - initValues.get("Cloth")).append(", ");
-        sb.append(" Камень, стекло, керамика: ").append(family.getFamilyResources().getStone() - initValues.get("Stone")).append(", ");
-        sb.append(" Химия, краски: ").append(family.getFamilyResources().getChemical() - initValues.get("Chemical")).append("<br>");
-        sb.append(" Крафт баллы: ").append(family.getCraftPoint() - initValues.get("CraftPoints")).append("<br>");
-        return sb.toString();
     }
 }

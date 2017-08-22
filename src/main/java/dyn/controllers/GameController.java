@@ -13,7 +13,7 @@ import dyn.repository.CharacterRepository;
 import dyn.repository.FamilyRepository;
 import dyn.repository.UserRepository;
 import dyn.service.*;
-import dyn.utils.ResourcesUtils;
+import dyn.utils.ResUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,8 +75,8 @@ public class GameController {
 
     @RequestMapping("/game")
     public String main(ModelMap model, RedirectAttributes redirectAttributes) {
-        System.out.println("GameController.main");
-        long startTime = System.currentTimeMillis();
+        //System.out.println("GameController.main");
+        //long startTime = System.currentTimeMillis();
 
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         model.addAttribute("user", user);
@@ -88,7 +88,7 @@ public class GameController {
             return "redirect:/game/addNewFamily";
         }
         Family family = user.getCurrentFamily();
-        logger.debug(user.getUserName() + " Current family: " + family.getFamilyName() + ", level: " + family.getLevel());
+        //logger.debug(user.getUserName() + " Current family: " + family.getFamilyName() + ", level: " + family.getLevel());
         model.addAttribute("family", family);
 
         List<Character> fathers;
@@ -178,12 +178,10 @@ public class GameController {
         }
         model.addAttribute("itemMap", itemMap);
 
-
         model.addAttribute("familyLog", familyLogService.getLevelFamilyLog(family));
 
-        long endTime = System.currentTimeMillis();
-
-        System.out.println("That took " + (endTime - startTime) + " milliseconds");
+        //long endTime = System.currentTimeMillis();
+        //System.out.println("That took " + (endTime - startTime) + " milliseconds");
         return "game";
     }
 
@@ -275,7 +273,10 @@ public class GameController {
                         familyRepository.save(family);
 
                         redirectAttributes.addFlashAttribute("mess", "Персонаж " + character.getName() + " повысил свое образование. Потрачено: " + Career.IMPROVE_COST);
-                        logger.info(user.getUserName() + " improve the education!");
+                        logger.info(user.getUserName() + " improve the education for character " + character.getName());
+                        if (character.getFamily() != family) {
+                            return "redirect:/game#char" + character.getSpouse().getFather().getId();
+                        }
                         return "redirect:/game#char" + character.getFather().getId();
                     } else {
                         logger.error(user.getUserName() + " hasn't enough money to improve education");
@@ -296,45 +297,66 @@ public class GameController {
     @RequestMapping(value = "/game/turn", method = RequestMethod.POST)
     public String turn(ModelMap model, RedirectAttributes redirectAttributes) {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
-        logger.info(user.getUserName() + " makes a turn!");
-
-        StringBuilder sb = new StringBuilder();
-
         Family family = user.getCurrentFamily();
 
-        // profession
-        ResourcesUtils resourcesUtils = new ResourcesUtils();
-        resourcesUtils.saveInitValues(family);
-
-        // расчет надбавки за качество дома
-        float houseQualitySalaryCoeff = houseService.countHouseQualitySalaryCoeff(family.getHouseQuality());
-        logger.debug(family.familyNameAndUserName() + " houseQualitySalaryCoeff = " + houseQualitySalaryCoeff);
-
-
-        List<Character> workers = characterRepository.findByFamilyAndLevel(family, family.getLevel());
-        for (Character worker : workers) {
-            if (worker.getSex().equals("male")) {
-                genProfession(worker, family, houseQualitySalaryCoeff, user, sb);
-                if (worker.hasSpouse()) {
-                    genProfession(worker.getSpouse(), family, houseQualitySalaryCoeff, user, sb);
-                }
-            } else {
-                if (!worker.isFiancee() && !worker.hasSpouse()) {
-                    genProfession(worker, family, houseQualitySalaryCoeff, user, sb);
-                }
-            }
-        }
-
-        // children
-        List<Character> characters = characterRepository.findByFamilyAndLevelAndSexAndSpouseIsNotNull(family, family.getLevel(), "male");
-        if (characters.isEmpty()) {
+        // check that we have pairs to continue dynasty
+        List<Character> levelFathers = characterRepository.findByFamilyAndLevelAndSexAndSpouseIsNotNull(family, family.getLevel(), "male");
+        if (levelFathers.isEmpty()) {
             redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("turn.noCouplesToContinueTheDinasty", null, loc()));
             return "redirect:/game";
         }
 
-        int newLevel = family.getLevel() + 1;
+        logger.info(user.getUserName() + " makes a turn!");
 
-        //  расчет плодовитости
+        StringBuilder turnLog = new StringBuilder();
+        StringBuilder turnAchievements = new StringBuilder();
+
+        // save end-turn money, craft points and resources:
+        FamilyLog previousTurnLog = familyLogService.saveEndTurn(family);
+
+
+        // WORKERS: obtain money and resources by workers
+        List<Character> charactersOnLevel = characterRepository.findByFamilyAndLevel(family, family.getLevel());
+        workersProcessing(user, family, charactersOnLevel, turnLog, turnAchievements);
+
+        // CHILDREN:
+        childrenProcessing(user, family, levelFathers, turnLog, turnAchievements);
+
+        family.setLevel(family.getLevel() + 1);
+        family.setCraftPoint(family.getCraftPoint() + Const.CRAFT_POINTS_FOR_LEVEL);
+        family.setPairsNum(0);
+        family.setFianceeNum(0);
+        familyRepository.save(family);
+
+        StringBuilder turnIncome = new StringBuilder();
+        turnIncome.append("<strong>Всего получено за ход:</strong> <br>");
+        turnIncome.append(" Деньги: ").append(family.getMoney() - previousTurnLog.getMoney()).append("<br>");
+        turnIncome.append(" Ресурсы: ").append(ResUtils.differenceToString(previousTurnLog, family.getFamilyResources())).append("<br>");
+        turnIncome.append(" Крафт баллы: ").append(family.getCraftPoint() - previousTurnLog.getCraftpoint()).append("<br>");
+
+        turnLog.append(turnIncome);
+
+        familyLogService.createNewLevelFamilyLog(family, turnLog.toString());
+
+        // deleting image
+        for (Character levelChar : charactersOnLevel) {
+            if ((levelChar.getSex().equals("male") && !levelChar.hasSpouse()) || (levelChar.getSex().equals("female") && !levelChar.isFiancee() && !levelChar.hasSpouse())) {
+                levelChar.setView(null);
+                characterRepository.save(levelChar);
+            }
+        }
+
+        if (!turnAchievements.toString().equals("")) {
+            turnIncome.append(" <strong>Достижения:</strong> <br>").append(turnAchievements);
+        }
+
+        String flashAttribute = turnIncome.toString();
+        redirectAttributes.addFlashAttribute("mess", flashAttribute);
+        return "redirect:/game";
+    }
+
+    public void childrenProcessing(User user, Family family, List<Character> levelFathers, StringBuilder turnLog, StringBuilder turnAchievements) {
+        //  fertility calculation
         float houseQualityFertilitySub = houseService.countHouseQualityFertilitySub(family.getHouseQuality());
         logger.debug(family.familyNameAndUserName() + " houseQualityFertilitySub = " + houseQualityFertilitySub);
 
@@ -355,7 +377,7 @@ public class GameController {
                 0.90f - houseQualityFertilitySub,
                 1.00f};
 
-        for (Character character : characters) {
+        for (Character character : levelFathers) {
             boolean firstTurn = character.isBuffedBy(Buff.SIX_CHILDREN);
 
             double fatherFeaturePercent = 0.5; // whose feature is inherited, father or mother
@@ -396,8 +418,8 @@ public class GameController {
             }
 
             logger.info(user.getUserName() + "'s character " + character.getName() + " marries " + wife.getName() + " and they have " + childAmount + " children");
-            sb.append(messageSource.getMessage("turn.marriage", new Object[]{character.getName(), wife.getName(), childAmount}, loc()));
-            sb.append("<br>");
+            turnLog.append(messageSource.getMessage("turn.marriage", new Object[]{character.getName(), wife.getName(), childAmount}, loc()));
+            turnLog.append("<br>");
 
             for (int childSeqNum = 0; childSeqNum < childAmount; childSeqNum++) {
                 Character child = new Character();
@@ -407,7 +429,7 @@ public class GameController {
                 child.setName(characterService.getNameForNewChild(child));
                 child.setFather(character);
                 child.setFamily(family);
-                child.setLevel(newLevel);
+                child.setLevel(family.getLevel() + 1);
 
                 // features
                 child.setBody(Math.random() < fatherFeaturePercent ? character.getBody() : wife.getBody());
@@ -423,7 +445,7 @@ public class GameController {
                 child.setNose(Math.random() < fatherFeaturePercent ? character.getNose() : wife.getNose());
                 child.setSkinColor(Math.random() < fatherFeaturePercent ? character.getSkinColor() : wife.getSkinColor());
 
-                sb.append(child.getName());
+                turnLog.append(child.getName());
 
                 // apply genetic modification if needed
                 String feature = "";
@@ -481,7 +503,7 @@ public class GameController {
                         default:
                             feature = "Error: " + featureToModify;
                     }
-                    sb.append(messageSource.getMessage("turn.genModObtained", new Object[]{feature}, loc()));
+                    turnLog.append(messageSource.getMessage("turn.genModObtained", new Object[]{feature}, loc()));
                 }
                 // hairstyle after set hair type
                 child.setHairStyle(app.getRandomHairStyle(child.getSex(), child.getHairType()));
@@ -493,7 +515,8 @@ public class GameController {
                 child.setRace(raceService.defineRace(child));
                 Achievement achievement = achievementService.checkAchievement(AchievementType.newborn, user, child);
                 if (achievement != null) {
-                    sb.append(messageSource.getMessage("turn.achievement", new Object[]{achievement.getName()}, loc()));
+                    turnLog.append(messageSource.getMessage("turn.achievement", new Object[]{achievement.getName()}, loc()));
+                    turnAchievements.append(child.getName()).append(": ").append(achievement.getName()).append("<br>");
                 }
 
                 // vocation and skills
@@ -503,35 +526,73 @@ public class GameController {
                 logger.info("   child: " + child.getName() + ", genModFeature = " + feature + ", race: " + child.getRace().getName());
                 characterRepository.save(child);
 
-                sb.append("<br>");
+                turnLog.append("<br>");
             }
-            sb.append("<br>");
+            turnLog.append("<br>");
 
         }
-        family.setLevel(newLevel);
-        family.setCraftPoint(family.getCraftPoint() + 1);
-        family.setPairsNum(0);
-        family.setFianceeNum(0);
-        familyRepository.save(family);
+    }
 
-        sb.append("Всего получено: <br>");
-        String resourceDifference = resourcesUtils.getDifference(family);
-        sb.append(resourceDifference);
-
-        familyLogService.createNewLevelFamilyLog(family, sb.toString());
-
-        // deleting image
-        List<Character> levelChars = characterRepository.findByFamilyAndLevel(family, newLevel - 1);
-        for (Character levelChar : levelChars) {
-            if ((levelChar.getSex().equals("male") && !levelChar.hasSpouse()) || (levelChar.getSex().equals("female") && !levelChar.isFiancee() && !levelChar.hasSpouse())) {
-
-                levelChar.setView(null);
-                characterRepository.save(levelChar);
+    public void workersProcessing(User user, Family family, List<Character> charactersOnLevel, StringBuilder turnLog, StringBuilder turnAchievements) {
+        // workers: sons, their wifes and non-fiancee single daughters
+        List<Character> workers = new ArrayList<>();
+        for (Character character : charactersOnLevel) {
+            if (character.getSex().equals("male")) {
+                workers.add(character);
+                if (character.hasSpouse()) {
+                    workers.add(character.getSpouse());
+                }
+            } else {
+                if (!character.isFiancee() && !character.hasSpouse()) {
+                    workers.add(character);
+                }
             }
         }
 
-        redirectAttributes.addFlashAttribute("mess", "Всего получено: " + resourceDifference);
-        return "redirect:/game";
+        // salary coeff for house quality
+        float houseQualitySalaryCoeff = houseService.countHouseQualitySalaryCoeff(family.getHouseQuality());
+        logger.debug(family.familyNameAndUserName() + " houseQualitySalaryCoeff = " + houseQualitySalaryCoeff);
+
+        // processing
+        for (Character worker : workers) {
+            // money and resources from career:
+            careerService.generateProfession(worker);
+
+            Career career = worker.getCareer();
+            int salary = career.getResultSalary();
+
+            int inc = 0;
+            if (worker.isBuffedBy(Buff.SALARY_INC)) {
+                inc = (int) (0.5 * salary);
+            }
+
+            int houseInc = (int) (houseQualitySalaryCoeff * salary);
+
+            family.setMoney(family.getMoney() + salary + inc + houseInc);
+            family.getFamilyResources().addResFromVocation(career);
+
+            turnLog.append(worker.getName() + " приобретает профессию " + career.getProfession().getName() + " (" + career.getProfession().getLevel() + ") и зарабатывает " + salary + " р. " +
+                    (inc == 0 ? "" : "Премия: " + inc + " р. ") +
+                    (houseInc == 0 ? "" : "Надбавка за дом: " + houseInc + " р. "));
+
+            turnLog.append("А призвание приносит ресурсы: " + career.getVocation().resString(career.getProfession().getLevel()) + ". ");
+
+            // achievement career 10 level
+            Achievement achievement = achievementService.checkAchievement(AchievementType.vocation10level, user, worker);
+            if (achievement != null) {
+                turnLog.append(messageSource.getMessage("turn.achievement", new Object[]{achievement.getName()}, loc()));
+                turnAchievements.append(worker.getName()).append(": ").append(achievement.getName()).append("<br>");
+            }
+
+            //resources from race
+            Race race = worker.getRace();
+            Long raceId = race.getId();
+            if (raceId != Race.RACE_HUMAN && raceId != Race.RACE_GM_HUMAN) {
+                family.getFamilyResources().addResFromRace(race);
+                turnLog.append("Раса приносит ресурсы: " + ResUtils.getResString(race) + ". ");
+            }
+            turnLog.append("<br>");
+        }
     }
 
     public String getSexForNewChild(boolean firstTurn, double sonOrDaughterPercent, int sequenceNumberOFChild) {
@@ -548,36 +609,6 @@ public class GameController {
         return sex;
     }
 
-    public void genProfession(Character worker, Family family, double houseQualitySalaryCoeff, User user, StringBuilder sb) {
-        int inc = 0;
-        careerService.generateProfession(worker);
-        int salary = worker.getCareer().getResultSalary();
-        if (worker.isBuffedBy(Buff.SALARY_INC)) {
-            inc = (int) (0.5 * salary);
-        }
-        int houseInc = (int) (houseQualitySalaryCoeff * salary);
-        family.setMoney(family.getMoney() + salary + inc + houseInc);
-        sb.append(worker.getName() + " приобретает профессию " + worker.getCareer().getProfession().getName() + " (" + worker.getCareer().getProfession().getLevel() + ") и зарабатывает " + salary + " р. " +
-                (inc == 0 ? "" : "Премия: " + inc + " р. ") +
-                (houseInc == 0 ? "" : "Надбавка за дом: " + houseInc + " р. "));
-
-        family.getFamilyResources().addResFromVocation(worker.getCareer());
-        sb.append("А призвание приносит ресурсы: " + worker.getCareer().getVocation().resString(worker.getCareer().getProfession().getLevel()) + ". ");
-
-        Achievement achievement = achievementService.checkAchievement(AchievementType.vocation10level, user, worker);
-        if (achievement != null) {
-            sb.append("Получено достижение: " + achievement.getName() + "!");
-        }
-
-        //resources from race
-        Race race = worker.getRace();
-        Long raceId = race.getId();
-        if (raceId != Race.RACE_HUMAN && raceId != Race.RACE_GM_HUMAN) {
-            family.getFamilyResources().addResFromRace(race);
-            sb.append("Раса приносит ресурсы: " + race.resString(1) + ". ");
-        }
-        sb.append("<br>");
-    }
 
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public String logout(HttpServletRequest request, HttpServletResponse response) {

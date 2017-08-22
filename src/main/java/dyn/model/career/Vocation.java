@@ -1,7 +1,7 @@
 package dyn.model.career;
 
+import dyn.utils.ResUtils;
 import dyn.utils.ResourcesHolder;
-import dyn.utils.ResourcesUtils;
 
 import javax.persistence.*;
 import java.util.List;
@@ -118,7 +118,7 @@ public class Vocation implements ResourcesHolder {
 
     public String resString(int coeff) {
 
-        return ResourcesUtils.getResString(this, coeff);
+        return ResUtils.getResString(this, coeff);
     }
 
     public List<Profession> getProfessionList() {

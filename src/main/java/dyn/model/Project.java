@@ -1,8 +1,8 @@
 package dyn.model;
 
 import dyn.service.Const;
+import dyn.utils.ResUtils;
 import dyn.utils.ResourcesHolder;
-import dyn.utils.ResourcesUtils;
 import org.springframework.util.Base64Utils;
 
 import javax.persistence.*;
@@ -184,11 +184,11 @@ public class Project implements ResourcesHolder {
     }
 
     public String resString() {
-        return ResourcesUtils.getResString(this);
+        return ResUtils.getResString(this);
     }
 
     public String resDestroyString() {
-        return ResourcesUtils.getResString(this, Const.DESTROY_ITEM_COEFF);
+        return ResUtils.getResString(this, Const.DESTROY_ITEM_COEFF);
     }
 
     @Override

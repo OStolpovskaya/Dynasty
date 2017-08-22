@@ -4,6 +4,7 @@ import dyn.model.Character;
 import dyn.model.Family;
 import dyn.model.FamilyLog;
 import dyn.repository.FamilyLogRepository;
+import dyn.utils.ResUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,18 +27,38 @@ public class FamilyLogService {
 
         FamilyLog familyLog = new FamilyLog(family);
         familyLog.addText("История вашей династии началась! Основатели: " + family.getFamilyName() + " " + founder.getName() + " и " + foundress.getName());
-        familyLogRepository.save(familyLog);
 
+        familyLog.setMoney(family.getMoney());
+        familyLog.setCraftpoint(family.getCraftPoint());
+        ResUtils.copyResources(family.getFamilyResources(), familyLog);
+
+        familyLogRepository.save(familyLog);
         return familyLog;
     }
 
     public FamilyLog createNewLevelFamilyLog(Family family, String mess) {
         FamilyLog familyLog = new FamilyLog(family);
         familyLog.addText("Новый уровень: " + family.getLevel() + "!<br>" + mess);
+
+        familyLog.setMoney(family.getMoney());
+        familyLog.setCraftpoint(family.getCraftPoint());
+        ResUtils.copyResources(family.getFamilyResources(), familyLog);
+
         familyLogRepository.save(familyLog);
         return familyLog;
     }
 
+    public FamilyLog saveEndTurn(Family family) {
+        FamilyLog familyLog = familyLogRepository.findByFamilyAndLevel(family, family.getLevel());
+
+        familyLog.setMoney(family.getMoney());
+        familyLog.setCraftpoint(family.getCraftPoint());
+        ResUtils.copyResources(family.getFamilyResources(), familyLog);
+
+        familyLogRepository.save(familyLog);
+
+        return familyLog;
+    }
     public FamilyLog getLevelFamilyLog(Family family) {
         FamilyLog familyLog = familyLogRepository.findByFamilyAndLevel(family, family.getLevel());
         return familyLog;

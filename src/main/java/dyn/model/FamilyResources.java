@@ -3,8 +3,8 @@ package dyn.model;
 import dyn.model.career.Career;
 import dyn.model.career.Vocation;
 import dyn.service.Const;
+import dyn.utils.ResUtils;
 import dyn.utils.ResourcesHolder;
-import dyn.utils.ResourcesUtils;
 
 import javax.persistence.*;
 
@@ -204,7 +204,7 @@ public class FamilyResources implements ResourcesHolder {
     }
 
     public String resString() {
-        return ResourcesUtils.getResString(this);
+        return ResUtils.getResString(this);
     }
 
     public void addWood(int num) {

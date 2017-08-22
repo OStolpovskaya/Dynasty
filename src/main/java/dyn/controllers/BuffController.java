@@ -168,7 +168,7 @@ public class BuffController {
 
             familyLogService.addToLog(family, mess);
             redirectAttributes.addFlashAttribute("mess", mess);
-            logger.info(family.familyNameAndId() + " apply item of project: '" + item.getProject());
+            logger.info(family.familyNameAndId() + " apply item of project: '" + item.getProject().getName());
             return "redirect:/game/storage";
         }
         logger.error(family.familyNameAndId() + "want to apply nonexisting item: " + itemId);
@@ -229,7 +229,7 @@ public class BuffController {
 
                     familyLogService.addToLog(family, mess);
                     redirectAttributes.addFlashAttribute("mess", mess);
-                    logger.info(family.familyNameAndId() + " apply item of project: '" + item.getProject());
+                    logger.info(family.familyNameAndId() + " apply item of project: '" + item.getProject().getName());
                     return "redirect:/game#char" + character.getFather().getId();
                 } else {
                     logger.error(family.familyNameAndId() + "want to apply item to not right character: " + character.getMainDetails());
@@ -287,7 +287,7 @@ public class BuffController {
 
                     if (!character.getBuffs().contains(buff) && !character.getBuffs().contains(buff.getContradictory())) {
                         character.getBuffs().add(buff);
-                        mess = "Персонажу добавлен бафф: " + buff.getTitle();
+                        mess = "Персонажу " + character.getName() + " добавлен бафф: " + messageSource.getMessage(buff.getTitle(), null, loc());
                     } else {
                         logger.error(family.familyNameAndId() + "want to apply buff, but character already has this buff or has contradictory buff: " + buff.getId());
                         redirectAttributes.addFlashAttribute("mess", "Персонаж уже имеет этот или противоположный ему бафф");
@@ -299,7 +299,7 @@ public class BuffController {
 
                     familyLogService.addToLog(family, mess);
                     redirectAttributes.addFlashAttribute("mess", mess);
-                    logger.info(family.familyNameAndId() + " apply item of project: '" + item.getProject());
+                    logger.info(family.familyNameAndId() + " apply item of project: '" + item.getProject().getName());
                     return "redirect:/game#char" + character.getFather().getId();
                 } else {
                     logger.error(family.familyNameAndId() + "want to apply item to not right character: " + character.getMainDetails());
@@ -433,7 +433,7 @@ public class BuffController {
 
                     familyLogService.addToLog(family, mess);
                     redirectAttributes.addFlashAttribute("mess", mess);
-                    logger.info(family.familyNameAndId() + " apply item of project: '" + item.getProject());
+                    logger.info(family.familyNameAndId() + " apply item of project: '" + item.getProject().getName());
                     return "redirect:/game#char" + character.getId();
                 } else {
                     logger.error(family.familyNameAndId() + "want to apply item to not right character: " + character.getMainDetails() + ". Условия: " + levelCheck + "," + familyCheck + "," + hasChildren);
@@ -478,7 +478,7 @@ public class BuffController {
 
             familyLogService.addToLog(family, mess);
             redirectAttributes.addFlashAttribute("mess", mess);
-            logger.info(family.familyNameAndId() + " apply item of project: '" + item.getProject());
+            logger.info(family.familyNameAndId() + " apply item of project: '" + item.getProject().getName());
             return "redirect:/game";
         }
         logger.error(family.familyNameAndId() + "want to apply nonexisting item: " + itemId);
@@ -582,7 +582,7 @@ public class BuffController {
 
                     familyLogService.addToLog(family, mess);
                     redirectAttributes.addFlashAttribute("mess", mess);
-                    logger.info(family.familyNameAndId() + " apply item of project: '" + item.getProject());
+                    logger.info(family.familyNameAndId() + " apply item of project: '" + item.getProject().getName());
                     return "redirect:/game#char" + character.getFather().getId();
                 } else {
                     logger.error(family.familyNameAndId() + "want to apply item to not right character: " + character.getMainDetails());

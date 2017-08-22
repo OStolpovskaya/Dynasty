@@ -36,7 +36,7 @@ public class CraftService {
     }
 
     public void newFamily(Family family) {
-        family.setCraftPoint(3);
+        family.setCraftPoint(Const.CRAFT_POINTS_START);
 
         // дарим новой семье плиту Скоровар
         giveGift(family, Const.PROJECT_SKOROVAR);

@@ -216,7 +216,7 @@
                         <div style="position: relative; "
                              data-toggle="tooltip" th:title="${'Образование: '+career.getEducation().getName()+(@careerService.mayImproveEducation(career)==true?'. Можно повысить!':'')}">
                             <span class="glyphicon glyphicon-education" style="position: absolute; top: -15px; left: 3px;"></span>
-                            <span th:if="${career.getEducation().getId() == 2}" class="glyphicon glyphicon-education" style="position: absolute; top: -5px; left: 3px;"></span>
+                            <span th:if="${career.getEducation().getId() >= 2}" class="glyphicon glyphicon-education" style="position: absolute; top: -5px; left: 3px;"></span>
                             <span th:if="${career.getEducation().getId() == 3}" class="glyphicon glyphicon-education" style="position: absolute; top: 5px; left: 3px;"></span>
                             <span th:if="${@careerService.mayImproveEducation(career)}" class="glyphicon glyphicon-upload" style="position: absolute; top: 4px; color: orange; left: 3px;"></span>
                         </div>
