@@ -4,11 +4,14 @@ import dyn.model.*;
 import dyn.model.Character;
 import dyn.repository.AchievementRepository;
 import dyn.repository.FamilyRepository;
+import dyn.repository.UserAchievementsRepository;
 import dyn.repository.UserRepository;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * Created by OM on 23.03.2017.
@@ -19,6 +22,9 @@ public class AchievementService {
 
     @Autowired
     AchievementRepository achievementRepository;
+
+    @Autowired
+    UserAchievementsRepository userAchievementsRepository;
 
     @Autowired
     UserRepository userRepository;
@@ -51,5 +57,10 @@ public class AchievementService {
             return achievement;
         }
         return null;
+    }
+
+    public List<UserAchievements> getAchievementsOfUser(User user) {
+        return userAchievementsRepository.findByUser(user);
+
     }
 }

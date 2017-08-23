@@ -202,7 +202,7 @@ public class GameController {
         Family family = user.getCurrentFamily();
         model.addAttribute("family", family);
 
-        Set<Achievement> achievements = user.getAchievements();
+        List<UserAchievements> achievements = achievementService.getAchievementsOfUser(user);
         model.addAttribute("achievements", achievements);
 
         return "/game/awarded";

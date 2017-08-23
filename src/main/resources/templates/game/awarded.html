@@ -25,10 +25,10 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="achievement : ${achievements}">
-                <!--/*@thymesVar id="achievement" type="dyn.model.Achievement"*/-->
-                <td th:text="${achievement.getName()}">name</td>
-                <td>-</td>
+            <tr th:each="userAchievement : ${achievements}">
+                <!--/*@thymesVar id="achievement" type="dyn.model.UserAchievement"*/-->
+                <td th:text="${userAchievement.getAchievement().getName()}">name</td>
+                <td th:text="${userAchievement.getDate()}">date</td>
             </tr>
             </tbody>
         </table>
