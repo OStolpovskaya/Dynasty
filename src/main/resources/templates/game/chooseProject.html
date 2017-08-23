@@ -57,6 +57,16 @@
                         <th:block th:text="${familyProject.getProject().getName()+' от '+familyProject.getProject().getAuthor().getFamilyName()+' ('+familyProject.getProject().resString()+') Произведено '+familyProject.getCount()+' раз'}"></th:block>
                     </label>
                 </div>
+                <th:block th:if="${not #lists.isEmpty(buffItemQualityList)}">
+                    <h5 style="color: midnightblue;">Применить баффы:</h5>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="applyBuffItemQuality" value="true"/>
+                            <th:block th:text="${buffItemQualityList.get(0).getProject().getName()+'('+#lists.size(buffItemQualityList)+' шт.)'}"></th:block>
+                        </label>
+                    </div>
+                </th:block>
+
                 <button id="makeItemButton" type="submit" class="btn btn-default btn-md center-block" th:disabled="${true}">Изготовить предмет</button>
             </form>
         </th:block>

@@ -74,7 +74,7 @@ public class CraftService {
         return projectRepository.findOne(projectId);
     }
 
-    public Item createItem(Project project, Family family) {
+    public Item createItem(Project project, Family family, boolean applyBuffItemQuality) {
         FamilyProject familyProject = familyProjectRepository.findByFamilyAndProject(family, project);
 
         Item item = new Item();
@@ -86,19 +86,21 @@ public class CraftService {
         item.setCost(0);
 
         int quality = 0;
-        if (project.getAuthor().getId() != 1L) {
+        if (project.getAuthor().getId() != 1L) { // project is developed by player
             quality += 1;
         }
-        if (familyProject.getCount() >= 5) {
+        if (familyProject.getCount() >= Const.ITEM_QUALITY_1) { // number of items, made of this project
             quality += 1;
         }
-        if (familyProject.getCount() >= 25) {
+        if (familyProject.getCount() >= Const.ITEM_QUALITY_2) { // number of items, made of this project
             quality += 1;
         }
-        if (familyProject.getCount() >= 50) {
+        if (familyProject.getCount() >= Const.ITEM_QUALITY_3) { // number of items, made of this project
             quality += 1;
         }
-        // todo: Добавить бафф повышенное качество???
+        if (applyBuffItemQuality) { // buff
+            quality += 1;
+        }
 
         item.setQuality(quality);
         itemRepository.save(item);

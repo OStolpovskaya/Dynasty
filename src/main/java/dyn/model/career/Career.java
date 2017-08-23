@@ -12,7 +12,7 @@ public class Career {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vocation")
     private Vocation vocation;
 
@@ -21,16 +21,16 @@ public class Career {
     private int strength;
     private int creativity;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "education")
     private Education education;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "profession")
     private Profession profession;
 
     // ======================================
-    @OneToOne(mappedBy = "career")
+    @OneToOne(mappedBy = "career", fetch = FetchType.LAZY)
     private Character character;
 
     // ======================================

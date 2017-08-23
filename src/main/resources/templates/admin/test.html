@@ -2,30 +2,18 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>Achievements</title>
+    <title>Тест</title>
     <link th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}" rel="stylesheet"></link>
     <link th:href="@{/css/common.css}" rel="stylesheet"></link>
 </head>
 <body>
 <div th:replace="fragments/navigation :: nav-for-admin"></div>
 <div class="container">
-    <h3>Achievements</h3>
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="achievement : ${achievementList}">
-            <td th:text="${achievement.getId()}">1</td>
-            <td th:text="#{${achievement.getName()}}">name</td>
-        </tr>
-        </tbody>
-    </table>
+    <h3>Тест</h3>
+
 </div>
 <script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
+
 </body>
 </html>

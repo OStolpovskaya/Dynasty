@@ -51,6 +51,7 @@ public class Const {
     public static final Long PROJECT_BODY_PART_CHANGE = 112L;
     public static final Long PROJECT_VOCATION_CHANGE = 113L;
     public static final Long PROJECT_SALARY_INC = 114L;
+    public static final Long PROJECT_ITEM_QUALITY = 315L;
 
 
     public static final int EDUCATION_IMPROVE_COST = 350;
@@ -104,4 +105,8 @@ public class Const {
     public static final int CRAFT_POINTS_FOR_LEVEL = 1;
     public static final int CRAFT_POINTS_FOR_ACHIEVEMENT = 2;
     public static final int CRAFT_POINTS_FOR_NEW_HOUSE = 10;
+
+    public static final int ITEM_QUALITY_1 = 5;
+    public static final int ITEM_QUALITY_2 = 25;
+    public static final int ITEM_QUALITY_3 = 50;
 }

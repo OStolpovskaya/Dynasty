@@ -251,4 +251,8 @@ public class HouseService {
         }
         roomThingRepository.delete(roomThingId);
     }
+
+    public List<Item> getBuffsInStorageByProject(Family family, Long projectId) {
+        return itemRepository.findByFamilyAndPlaceAndProjectId(family, ItemPlace.storage, projectId);
+    }
 }

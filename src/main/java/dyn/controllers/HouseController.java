@@ -105,7 +105,6 @@ public class HouseController {
         model.addAttribute("itemsInStorage", houseService.getItemsInStorage(family));
 
         model.addAttribute("serviceAndBuffsInStorage", houseService.getBuffsInStorage(family));
-        model.addAttribute("levelCharactersAndTheirWifes", characterService.getLevelCharactersAndSonsWifes(family));
 
         model.addAttribute("itemsInStore", houseService.getItemsInStore(family));
 

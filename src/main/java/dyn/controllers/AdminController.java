@@ -723,4 +723,10 @@ public class AdminController {
         return (UserDetails) auth.getPrincipal();
     }
 
+    @RequestMapping("/admin/test")
+    public String test(ModelMap model, RedirectAttributes redirectAttributes) {
+        System.out.println("=== TEST ===");
+
+        return "admin/test";
+    }
 }

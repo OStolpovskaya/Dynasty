@@ -33,17 +33,17 @@ public class Character {
 
     private String sex;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "father", nullable = true)
     private Character father;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "spouse", nullable = true)
     private Character spouse;
 
     private int level;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "race")
     private Race race;
 
@@ -52,55 +52,55 @@ public class Character {
     private Career career;
 
     // ============ APPEARANCE ============
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "body")
     private Body body;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ears")
     private Ears ears;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "eyebrows")
     private Eyebrows eyebrows;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "eye_color")
     private EyeColor eyeColor;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "eyes")
     private Eyes eyes;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hair_color")
     private HairColor hairColor;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hairstyle")
     private HairStyle hairStyle;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hair_type")
     private HairType hairType;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "head")
     private Head head;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "height")
     private Height height;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mouth")
     private Mouth mouth;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "nose")
     private Nose nose;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "skin_color")
     private SkinColor skinColor;
 
@@ -113,7 +113,7 @@ public class Character {
     @OneToMany(mappedBy = "father", fetch = FetchType.LAZY)
     private java.util.List<Character> children;
 
-    @OneToOne(mappedBy = "character")
+    @OneToOne(mappedBy = "character", fetch = FetchType.LAZY)
     private Fiancee fiancee;
 
     // ============ Buffs ============

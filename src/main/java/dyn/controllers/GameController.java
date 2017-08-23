@@ -75,7 +75,7 @@ public class GameController {
 
     @RequestMapping("/game")
     public String main(ModelMap model, RedirectAttributes redirectAttributes) {
-        //System.out.println("GameController.main");
+        System.out.println("***GameController.main***");
         //long startTime = System.currentTimeMillis();
 
         User user = userRepository.findByUserName(getAuthUser().getUsername());
@@ -162,7 +162,7 @@ public class GameController {
         model.addAttribute("buffsResources", buffsResources);
 
 
-        Map<Thing, Map<Project, List<Item>>> itemMap = new HashMap<>();
+       /* Map<Thing, Map<Project, List<Item>>> itemMap = new HashMap<>();
         for (Item item : buffs) {
 
             Thing thing = item.getProject().getThing();
@@ -176,7 +176,7 @@ public class GameController {
             }
             projectMap.get(project).add(item);
         }
-        model.addAttribute("itemMap", itemMap);
+        model.addAttribute("itemMap", itemMap);*/
 
         model.addAttribute("familyLog", familyLogService.getLevelFamilyLog(family));
 

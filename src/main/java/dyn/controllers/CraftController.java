@@ -127,6 +127,10 @@ public class CraftController {
                 model.addAttribute("familyProjects", familyCraftProjects);
                 model.addAttribute("projects", projectsToBuy);
                 model.addAttribute("thing", thing);
+
+                List<Item> buffItemQualityList = houseService.getBuffsInStorageByProject(family, Const.PROJECT_ITEM_QUALITY);
+                model.addAttribute("buffItemQualityList", buffItemQualityList);
+
                 return "game/chooseProject";
             } else {
                 logger.error(family.familyNameAndId() + " doesn't know the thing to buy projects for:" + thing.getName());
@@ -324,7 +328,8 @@ public class CraftController {
 
     @RequestMapping(value = "/game/makeItem", method = RequestMethod.POST)
     public String makeItem(ModelMap model, RedirectAttributes redirectAttributes,
-                           @RequestParam(value = "projectId") Long projectId) {
+                           @RequestParam(value = "projectId") Long projectId,
+                           @RequestParam(value = "applyBuffItemQuality", defaultValue = "false") boolean applyBuffItemQuality) {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         Family family = user.getCurrentFamily();
 
@@ -337,7 +342,20 @@ public class CraftController {
                     enoughMoney = family.getMoney() >= project.getCost();
                 }
                 if (family.hasResourcesForProject(project) && enoughMoney) {
-                    Item item = craftService.createItem(project, family);
+                    Item buffItemQuality = null;
+                    if (applyBuffItemQuality) {
+                        List<Item> buffItemQualityList = houseService.getBuffsInStorageByProject(family, Const.PROJECT_ITEM_QUALITY);
+                        if (!buffItemQualityList.isEmpty()) {
+                            buffItemQuality = buffItemQualityList.get(0);
+                        } else {
+                            logger.error(family.familyNameAndId() + " doesn't have buffs item quality in storage, but want to apply it");
+                            redirectAttributes.addFlashAttribute("mess", "У вас нет баффов, увеличивающих качество предмета при изготовлении '" + project.getName() + "'");
+                            return "redirect:/game/chooseProject?thingId=" + project.getThing().getId();
+                        }
+                    }
+
+
+                    Item item = craftService.createItem(project, family, applyBuffItemQuality);
                     family.getItems().add(item);
                     family.getFamilyResources().makingProject(project);
                     if (projectIsProductionOfBuilding) {
@@ -347,10 +365,15 @@ public class CraftController {
 
 
                     logger.info(family.familyNameAndId() + " makes the item:" + item.getFullName());
-                    String mess = "Ваша семья изготавливает предмет " + item.getFullName() + ". Израсходовано: " + project.resString();
+                    String mess = "Ваша семья изготавливает предмет " + item.getFullName() + ". Израсходовано: " + project.resString() + ". ";
 
                     if (projectIsProductionOfBuilding) {
-                        mess = "Ваша семья изготавливает " + project.getThing().getName() + " " + project.getName() + ". Израсходовано: " + project.getCost() + (project.resString() != "" ? ", " + project.resString() : "");
+                        mess = "Ваша семья изготавливает " + project.getThing().getName() + " " + project.getName() + ". Израсходовано: " + project.getCost() + (project.resString() != "" ? ", " + project.resString() : "") + ". ";
+                    }
+
+                    if (buffItemQuality != null) {
+                        mess += "Вы использовали бафф " + buffItemQuality.getProject().getName() + ". ";
+                        houseService.deleteItem(buffItemQuality);
                     }
 
                     familyLogService.addToLog(family, mess);
