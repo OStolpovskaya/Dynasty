@@ -16,7 +16,7 @@ public class Thing {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "craft_branch_id")
     private CraftBranch craftBranch;
     private int cost;

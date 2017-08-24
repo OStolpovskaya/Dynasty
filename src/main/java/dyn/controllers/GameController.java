@@ -75,7 +75,7 @@ public class GameController {
 
     @RequestMapping("/game")
     public String main(ModelMap model, RedirectAttributes redirectAttributes) {
-        System.out.println("***GameController.main***");
+        //System.out.println("***GameController.main***");
         //long startTime = System.currentTimeMillis();
 
         User user = userRepository.findByUserName(getAuthUser().getUsername());
@@ -91,19 +91,28 @@ public class GameController {
         //logger.debug(user.getUserName() + " Current family: " + family.getFamilyName() + ", level: " + family.getLevel());
         model.addAttribute("family", family);
 
+        //System.out.println("GET FATHERS");
         List<Character> fathers;
         if (family.getLevel() > 0) {
             fathers = characterRepository.findByFamilyAndLevelAndSexAndSpouseIsNotNull(family, family.getLevel() - 1, "male");
         } else {
             fathers = characterRepository.findByFamilyAndLevel(family, family.getLevel());
         }
-
+        //System.out.println("GET CHILDREN");
         Map<Character, List<Character>> fathersMap = new LinkedHashMap<>();
         for (Character father : fathers) {
-            fathersMap.put(father, father.getChildren());
+            //System.out.println("FATHER "+father.getName());
+            List<Character> children = father.getChildren();
+            for (Character child : children) {
+                //System.out.println("CHILD MAYIMPROVEEDUCATION");
+                Career career = child.getCareer();
+                career.mayImproveEducation = careerService.mayImproveEducation(career);
+            }
+            fathersMap.put(father, children);
         }
         model.addAttribute("fathers", fathersMap);
 
+        //System.out.println("BUFFS");
         List<Item> buffs = houseService.getBuffsInStorage(family);
         model.addAttribute("buffs", buffs);
 
@@ -114,6 +123,7 @@ public class GameController {
         Map<Project, List<Item>> buffsFamily = new LinkedHashMap<>();
         Map<Project, List<Item>> buffsForChildrenChange = new LinkedHashMap<>();
 
+        //System.out.println("BUFFS PARSING");
         for (Item item : buffs) {
             Project project = item.getProject();
             Thing thing = project.getThing();
@@ -177,9 +187,9 @@ public class GameController {
             projectMap.get(project).add(item);
         }
         model.addAttribute("itemMap", itemMap);*/
-
+        //System.out.println("FAMILY LOG");
         model.addAttribute("familyLog", familyLogService.getLevelFamilyLog(family));
-
+        //System.out.println("END");
         //long endTime = System.currentTimeMillis();
         //System.out.println("That took " + (endTime - startTime) + " milliseconds");
         return "game";

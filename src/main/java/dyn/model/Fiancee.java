@@ -8,7 +8,7 @@ public class Fiancee {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "character_id")
     private Character character;
 

@@ -9,8 +9,15 @@
 <body>
 <div th:replace="fragments/navigation :: nav-for-admin"></div>
 <div class="container">
-    <h3>Тест</h3>
-
+    <h3>Тест1</h3>
+    <!--/*@thymesVar id="character" type="dyn.model.Character"*/-->
+    <th:block th:replace="fragments/char :: char-panel (character=${character})"></th:block>
+    <h3>Тест2</h3>
+    <th:block th:each="father : ${fathers}">
+        <div style="display: inline-block;">
+            <th:block th:replace="fragments/char :: char-panel (character=${father})"></th:block>
+        </div>
+    </th:block>
 </div>
 <script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>

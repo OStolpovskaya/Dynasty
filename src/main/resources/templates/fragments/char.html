@@ -96,7 +96,7 @@
 
 <th:block th:fragment="li-for-improve-education (character)">
     <!--/*@thymesVar id="character" type="dyn.model.Character"*/-->
-    <li th:if="${@careerService.mayImproveEducation(character.getCareer())}">
+    <li th:if="${character.getCareer().mayImproveEducation}">
         <form th:action="@{/game/improveEducation}" method="post" style="margin-left: 10px;">
             <input type="hidden" name="character" th:value="${character.getId()}"/>
             <button type="submit" class="btn btn-primary btn-xs" th:disabled="${character.getFamily().getMoney() lt @const.EDUCATION_IMPROVE_COST}"><span class="glyphicon glyphicon-ok"></span></button>
@@ -201,7 +201,7 @@
             </th:block>
         </div>
         <!--CAREER-->
-        <button type="button" th:with="career = ${character.getCareer()}" class="btn btn-xs btn-primary" style="width: 199px; height: 58px; border-top-left-radius: 0; border-top-right-radius: 0">
+        <div align="center" style="width: 199px; height: 58px; border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; background-color: #2b669a" th:with="career = ${character.getCareer()}">
             <table>
                 <tr>
                     <td width="35px">
@@ -212,20 +212,20 @@
                             </img>
                         </a>
                     </td>
-                    <td width="19px">
+                    <td width="20px">
                         <div style="position: relative; "
-                             data-toggle="tooltip" th:title="${'Образование: '+career.getEducation().getName()+(@careerService.mayImproveEducation(career)==true?'. Можно повысить!':'')}">
-                            <span class="glyphicon glyphicon-education" style="position: absolute; top: -15px; left: 3px;"></span>
-                            <span th:if="${career.getEducation().getId() >= 2}" class="glyphicon glyphicon-education" style="position: absolute; top: -5px; left: 3px;"></span>
-                            <span th:if="${career.getEducation().getId() == 3}" class="glyphicon glyphicon-education" style="position: absolute; top: 5px; left: 3px;"></span>
-                            <span th:if="${@careerService.mayImproveEducation(career)}" class="glyphicon glyphicon-upload" style="position: absolute; top: 4px; color: orange; left: 3px;"></span>
+                             data-toggle="tooltip" th:title="${'Образование: '+career.getEducation().getName()}">
+                            <span class="glyphicon glyphicon-education" style="position: absolute; top: -15px; left: 2px;"></span>
+                            <span th:if="${career.getEducation().getId() >= 2}" class="glyphicon glyphicon-education" style="position: absolute; top: -5px; left: 2px;"></span>
+                            <span th:if="${career.getEducation().getId() == 3}" class="glyphicon glyphicon-education" style="position: absolute; top: 5px; left: 2px;"></span>
+                            <span th:if="${career.mayImproveEducation}" class="glyphicon glyphicon-upload" style="position: absolute; top: 4px; color: orange; left: 2px;"></span>
                         </div>
                     </td>
                     <td>
-                        <span th:text="${career.getIntelligence()}" class="badge" data-toggle="tooltip" title="Интеллект" style="width: 31px;"></span>&nbsp;
-                        <span th:text="${career.getCharisma()}" class="badge" data-toggle="tooltip" title="Харизма" style="width: 31px;">5</span><br/>
-                        <span th:text="${career.getStrength()}" class="badge" data-toggle="tooltip" title="Сила" style="width: 31px;">100</span>&nbsp;
-                        <span th:text="${career.getCreativity()}" class="badge" data-toggle="tooltip" title="Творчество" style="width: 31px;">5</span>
+                        <span th:text="${career.getIntelligence()}" class="badge" data-toggle="tooltip" title="Интеллект" style="width: 31px; background-color: white; color: black;"></span>&nbsp;
+                        <span th:text="${career.getCharisma()}" class="badge" data-toggle="tooltip" title="Харизма" style="width: 31px; background-color: white; color: black;">5</span><br/>
+                        <span th:text="${career.getStrength()}" class="badge" data-toggle="tooltip" title="Сила" style="width: 31px; background-color: white; color: black;">100</span>&nbsp;
+                        <span th:text="${career.getCreativity()}" class="badge" data-toggle="tooltip" title="Творчество" style="width: 31px; background-color: white; color: black;">5</span>
                     </td>
                     <td style="padding-left: 4px; padding-top: 2px;">
                         <th:block th:if="${character.getSpouse() != null}">
@@ -250,14 +250,13 @@
 
             <th:block th:if="${career.getProfession()!=null}">
                         <span th:text="${career.getProfession().getName()+'(' + career.getProfession().getLevel() + ')'}"
-                              data-toggle="tooltip" th:alt-title="Профессия">
+                              data-toggle="tooltip" th:alt-title="Профессия" style="font-size: 10px; color: white;">
                         </span>
             </th:block>
             <th:block th:unless="${career.getProfession()!=null}">
                 &nbsp;
             </th:block>
-
-        </button>
+        </div>
     </div>
 
 

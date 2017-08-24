@@ -724,9 +724,26 @@ public class AdminController {
     }
 
     @RequestMapping("/admin/test")
-    public String test(ModelMap model, RedirectAttributes redirectAttributes) {
+    public String test(ModelMap model, RedirectAttributes redirectAttributes,
+                       @RequestParam(name = "id", defaultValue = "2488") Long characterId) {
         System.out.println("=== TEST ===");
 
+        System.out.println("GET CHARACTER");
+        Character character = characterRepository.findOne(characterId);
+        Career career = character.getCareer();
+        career.mayImproveEducation = careerService.mayImproveEducation(career);
+        model.addAttribute("character", character);
+
+        System.out.println("GET FATHERS");
+        Family family = familyRepository.findOne(37L);
+        List<Character> fathers;
+        if (family.getLevel() > 0) {
+            fathers = characterRepository.findByFamilyAndLevelAndSexAndSpouseIsNotNull(family, family.getLevel() - 1, "male");
+        } else {
+            fathers = characterRepository.findByFamilyAndLevel(family, family.getLevel());
+        }
+        model.addAttribute("fathers", fathers);
+        System.out.println("END");
         return "admin/test";
     }
 }

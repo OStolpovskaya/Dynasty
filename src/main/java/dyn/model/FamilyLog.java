@@ -47,7 +47,7 @@ public class FamilyLog implements ResourcesHolder {
         this.id = id;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     public Family getFamily() {
         return family;
     }

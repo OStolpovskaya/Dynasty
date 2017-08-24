@@ -14,7 +14,7 @@
     <h3>
         Призвание:
         <th:block th:text="${vocation.getName()}"></th:block>
-        <img th:src="@{'/graphics/vocation/vocations_'+${vocation.getId()}+'.png' }" height="35px" width="35px" style="background-color: #337ab7;">
+        <img th:src="@{'/graphics/vocation/vocations_'+${vocation.getId()}+'.png' }" height="35px" width="35px" style="border-radius:4px; background-color: #337ab7;">
         </img>
     </h3>
     <p>Ресурсы, которые призвание приносит персонажу. Количество ресурсов умножается на уровень его професии. </p>

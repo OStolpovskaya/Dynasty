@@ -1,38 +1,30 @@
 package dyn.model.career;
 
-import dyn.model.Character;
-
 import javax.persistence.*;
 
 @Entity
 @Table(name = "character_career")
 public class Career {
     public static final int IMPROVE_COST = 350;
+    // ======================================
+    @Transient
+    public boolean mayImproveEducation = false;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "vocation")
     private Vocation vocation;
-
     private int intelligence;
     private int charisma;
     private int strength;
     private int creativity;
-
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "education")
     private Education education;
-
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "profession")
     private Profession profession;
-
-    // ======================================
-    @OneToOne(mappedBy = "career", fetch = FetchType.LAZY)
-    private Character character;
-
     // ======================================
 
     public long getId() {
@@ -43,18 +35,9 @@ public class Career {
         this.id = id;
     }
 
-    public Character getCharacter() {
-        return character;
-    }
-
-    public void setCharacter(Character character) {
-        this.character = character;
-    }
-
     public Vocation getVocation() {
         return vocation;
     }
-
     public void setVocation(Vocation vocation) {
         this.vocation = vocation;
     }
@@ -62,7 +45,6 @@ public class Career {
     public int getIntelligence() {
         return intelligence;
     }
-
     public void setIntelligence(int intelligence) {
         this.intelligence = intelligence;
     }
@@ -70,7 +52,6 @@ public class Career {
     public int getCharisma() {
         return charisma;
     }
-
     public void setCharisma(int charisma) {
         this.charisma = charisma;
     }
@@ -78,7 +59,6 @@ public class Career {
     public int getStrength() {
         return strength;
     }
-
     public void setStrength(int strength) {
         this.strength = strength;
     }
@@ -86,7 +66,6 @@ public class Career {
     public int getCreativity() {
         return creativity;
     }
-
     public void setCreativity(int creativity) {
         this.creativity = creativity;
     }
@@ -94,7 +73,6 @@ public class Career {
     public Education getEducation() {
         return education;
     }
-
     public void setEducation(Education education) {
         this.education = education;
     }
@@ -102,7 +80,6 @@ public class Career {
     public Profession getProfession() {
         return profession;
     }
-
     public void setProfession(Profession profession) {
         this.profession = profession;
     }
@@ -141,6 +118,5 @@ public class Career {
     public void addToCreativity(int num) {
         creativity += num;
     }
-
 
 }

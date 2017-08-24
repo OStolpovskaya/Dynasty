@@ -12,13 +12,13 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Project project;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Family family;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Family author;
 
     private int quality;
