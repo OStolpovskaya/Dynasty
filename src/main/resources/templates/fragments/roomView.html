@@ -98,7 +98,7 @@
                                  'top: ' + roomThing.getY()+'px;'}"
                      data-toggle="modal" data-target="#roomThing"
                      th:onclick="'javascript:roomViewPassDataToHouse(' + ${roomThingWithItems.getStringForModal()}+');'">
-                    <div th:if="${curItem == null}" th:text="${roomThing.getThing().getName()}"
+                    <div th:if="${curItem == null}" th:text="${roomThing.getThing().getName()}" align="center"
                          style="border: dotted 2px forestgreen; border-radius: 10px; color: #000000; display: table-cell; vertical-align: middle; font-size: 8px;">
                         Нет вещи
                     </div>

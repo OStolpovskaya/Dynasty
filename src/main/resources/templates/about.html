@@ -2,13 +2,32 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>About</title>
+    <title>О разработке</title>
     <link href="webjars/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"></link>
+    <link th:href="@{/css/common.css}" rel="stylesheet"></link>
 </head>
 <body>
 <div th:replace="fragments/navigation :: nav-for-index"></div>
 <div class="container">
-    <p>Всем привет!</p>
+    <h3>Версия</h3>
+    <p>
+    <ul>
+        <li><strong>1.0</strong> Бета-версия. Основные функции.</li>
+    </ul>
+
+    </p>
+    <h3>Планы на будущее</h3>
+    <p>
+    <ul>
+        <li>релиз</li>
+        <li>питомцы</li>
+        <li>общие мегапроекты для строительства</li>
+    </ul>
+    </p>
+    <h3>Ресурсы</h3>
+    <a href='http://www.freepik.com'><img th:src="@{'/graphics/freepik.PNG' }"/></a>
+    <a href='http://all-free-download.com/'>all-free-download.com</a>
+    <a href='http://ru.fotolia.com/'><img th:src="@{'/graphics/fotolia.png' }"/></a>
 </div>
 <script src="webjars/jquery/1.9.1/jquery.min.js"></script>
 <script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>

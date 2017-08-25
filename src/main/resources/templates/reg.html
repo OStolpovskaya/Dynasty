@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>Registration</title>
+    <title>Регистрация</title>
     <link href="webjars/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"></link>
     <link href="css/common.css" rel="stylesheet"></link>
 </head>
@@ -12,16 +12,16 @@
     <form class="form-horizontal" th:action="@{/reg}" th:object="${regUser}" method="POST">
         <fieldset>
             <div id="legend">
-                <legend class="">Register</legend>
+                <legend class="">Регистрация</legend>
             </div>
             <div class="control-group">
                 <!-- Username -->
-                <label class="control-label" for="username">Username</label>
+                <label class="control-label" for="username">Имя пользователя (будет видно всем игрокам)</label>
                 <div class="controls">
                     <p class="has-error" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></p>
                     <input type="text" id="userName" name="userName" th:field="*{userName}" placeholder=""
                            class="input-xlarge"></input>
-                    <p class="help-block">Username can contain any letters or numbers, without spaces</p>
+                    <p class="help-block">Имя пользователя может содержать любые символы, количеством от 6 до 45</p>
                 </div>
             </div>
 
@@ -32,37 +32,37 @@
                     <p class="has-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
                     <input type="text" id="email" name="email" th:field="*{email}" placeholder=""
                            class="input-xlarge"></input>
-                    <p class="help-block">Please provide your E-mail</p>
+                    <p class="help-block">E-mail нужен только для восстановления пароля, хранится в зашифрованном виде и не может быть использован для рассылки</p>
                 </div>
             </div>
 
             <div class="control-group">
                 <!-- Password-->
-                <label class="control-label" for="password">Password</label>
+                <label class="control-label" for="password">Пароль</label>
                 <div class="controls">
                     <p class="errorMessage" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
                     <input type="password" id="password" name="password" th:field="*{password}" placeholder=""
                            class="input-xlarge"></input>
-                    <p class="help-block">Password should be at least 4 characters</p>
+                    <p class="help-block">Пароль должен состоять минимум из 6 символов</p>
                 </div>
             </div>
 
             <div class="control-group">
                 <!-- Password -->
-                <label class="control-label" for="passwordConfirm">Password (Confirm)</label>
+                <label class="control-label" for="passwordConfirm">Пароль (подтверждение)</label>
                 <div class="controls">
                     <p class="errorMessage" th:if="${#fields.hasErrors('passwordConfirm')}"
                        th:errors="*{passwordConfirm}"></p>
                     <input type="password" id="passwordConfirm" name="passwordConfirm" placeholder=""
                            class="input-xlarge"></input>
-                    <p class="help-block">Please confirm password</p>
+                    <p class="help-block">Повторите пароль для исключения ошибок</p>
                 </div>
             </div>
 
             <div class="control-group">
                 <!-- Button -->
                 <div class="controls">
-                    <button class="btn btn-success">Register</button>
+                    <button class="btn btn-success">Готово!</button>
                 </div>
             </div>
         </fieldset>

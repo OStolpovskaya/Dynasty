@@ -21,7 +21,7 @@ public class User implements Serializable {
     @Column(name = "userid")
     private Long userId;
 
-    @Size(min = 6, message = "{username.size}")
+    @Size(min = 6, max = 45, message = "{username.size}")
     @Column(name = "username")
     private String userName;
 

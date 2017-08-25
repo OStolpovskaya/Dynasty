@@ -2,24 +2,24 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>Index</title>
+    <title>Династия</title>
     <link href="webjars/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"></link>
 </head>
 <body>
 <div th:fragment="nav-for-index">
     <nav role="navigation" class="navbar navbar-default navbar-fixed-top">
         <div>
-            <a href="/" class="navbar-brand">Dynasty</a>
+            <a href="/" class="navbar-brand"><img th:src="@{'/graphics/logo_dyn.png' }" height="20"/></a>
         </div>
         <div>
             <ul class="nav navbar-nav">
-                <li th:classappend="${#httpServletRequest.getRequestURI() == '/login' ? 'active':''}"><a href="/login" id="navGameLink">Game</a></li>
-                <li th:classappend="${#httpServletRequest.getRequestURI() == '/reg' ? 'active':''}"><a href="/reg">Registration</a></li>
-                <li th:classappend="${#httpServletRequest.getRequestURI() == '/about' ? 'active':''}"><a href="/about">About</a></li>
+                <li th:classappend="${#httpServletRequest.getRequestURI() == '/login' ? 'active':''}"><a href="/login" id="navGameLink">Игра</a></li>
+                <li th:classappend="${#httpServletRequest.getRequestURI() == '/reg' ? 'active':''}"><a href="/reg">Регистрация</a></li>
+                <li th:classappend="${#httpServletRequest.getRequestURI() == '/about' ? 'active':''}"><a href="/about">О разработке</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="?language=en">en</a></li>
-                <li><a href="?language=ru">ru</a></li>
+                <li><a href="/admin">Admin</a></li>
+                <li><a href="/moder">Moder</a></li>
             </ul>
         </div>
         <!--<div class="alert alert-warning" th:if="${mess!=null}" th:utext="${mess}"></div>-->
@@ -55,7 +55,7 @@
 <div th:fragment="nav-for-game">
     <nav role="navigation" class="navbar navbar-default navbar-fixed-top">
         <div>
-            <a href="/" class="navbar-brand">Dynasty</a>
+            <a href="/" class="navbar-brand"><img th:src="@{'/graphics/logo_dyn.png' }" height="20"/></a>
         </div>
         <div>
             <ul class="nav navbar-nav">
@@ -152,7 +152,7 @@
 <div th:fragment="nav-for-admin">
     <nav role="navigation" class="navbar navbar-default navbar-fixed-top">
         <div>
-            <a href="/" class="navbar-brand">Dynasty</a>
+            <a href="/" class="navbar-brand"><img th:src="@{'/graphics/logo_dyn.png' }" height="20"/></a>
         </div>
         <div>
             <ul class="nav navbar-nav">
@@ -180,7 +180,7 @@
 <div th:fragment="nav-for-moder">
     <nav role="navigation" class="navbar navbar-default navbar-fixed-top">
         <div>
-            <a href="/" class="navbar-brand">Dynasty</a>
+            <a href="/" class="navbar-brand">Династия</a>
         </div>
         <div>
             <ul class="nav navbar-nav">
