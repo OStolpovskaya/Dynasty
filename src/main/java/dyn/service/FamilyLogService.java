@@ -70,6 +70,7 @@ public class FamilyLogService {
     }
 
     public void addToLog(Family family, String text) {
+        // todo: ограничение на длину текста
         FamilyLog familyLog = familyLogRepository.findByFamilyAndLevel(family, family.getLevel());
         familyLog.addText(text);
         familyLogRepository.save(familyLog);

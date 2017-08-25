@@ -4,12 +4,15 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>Login</title>
     <link href="webjars/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"></link>
+    <link th:href="@{/css/common.css}" rel="stylesheet"></link>
 </head>
 <body>
 <div th:replace="fragments/navigation :: nav-for-index"></div>
 <div class="container">
 
     <div class="col-md-3 col-md-offset-3">
+        <h3>Авторизация:</h3>
+        <p>Если у вас еще нет аккаунта, нажмите на ссылку под формой для регистрации</p>
         <form th:action="@{/login}" method="post" class="form-horizontal">
             <div class="form-group">
                 <input type="text" name="username" th:object="${username}" class="form-control" placeholder="Username"
@@ -25,7 +28,7 @@
 
             </div>
             <div class="form-group">
-                <h4 class="text-center"><a href="/reg">Create an account</a></h4>
+                <h4 class="text-center"><a href="/reg">Создать новый аккаунт</a></h4>
             </div>
         </form>
 
@@ -44,7 +47,6 @@
         </form>-->
     </div>
 </div>
-<script src="webjars/jquery/1.9.1/jquery.min.js"></script>
-<script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<th:block th:replace="fragments/scripts :: webjars"></th:block>
 </body>
 </html>

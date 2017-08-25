@@ -367,25 +367,6 @@ public class GameController {
 
     public void childrenProcessing(User user, Family family, List<Character> levelFathers, StringBuilder turnLog, StringBuilder turnAchievements) {
         //  fertility calculation
-        float houseQualityFertilitySub = houseService.countHouseQualityFertilitySub(family.getHouseQuality());
-        logger.debug(family.familyNameAndUserName() + " houseQualityFertilitySub = " + houseQualityFertilitySub);
-
-        float[] standartFertility = new float[]{
-                0.20f - houseQualityFertilitySub,
-                0.60f - houseQualityFertilitySub,
-                0.85f - houseQualityFertilitySub,
-                0.93f - houseQualityFertilitySub,
-                0.97f - houseQualityFertilitySub,
-                0.99f - houseQualityFertilitySub,
-                1.00f};
-        float[] buffedFertility = new float[]{
-                ((0.01f - houseQualityFertilitySub) < 0 ? 0 : (0.01f - houseQualityFertilitySub)),
-                0.15f - houseQualityFertilitySub,
-                0.30f - houseQualityFertilitySub,
-                0.50f - houseQualityFertilitySub,
-                0.75f - houseQualityFertilitySub,
-                0.90f - houseQualityFertilitySub,
-                1.00f};
 
         for (Character character : levelFathers) {
             boolean firstTurn = character.isBuffedBy(Buff.SIX_CHILDREN);
@@ -412,16 +393,18 @@ public class GameController {
             }
 
             Character wife = character.getSpouse();
+
+            int houseQualityInt = (int) Math.floor(family.getHouseQuality());
+
             int childAmount;
             if (firstTurn) {
                 childAmount = 6;
             } else {
                 if (character.isBuffedBy(Buff.FERTILITY)) {
-                    childAmount = getAmountOfChildren(buffedFertility);
+                    childAmount = getAmountOfChildren(Const.FERTILITY_BUFFED[houseQualityInt]);
                 } else {
-                    childAmount = getAmountOfChildren(standartFertility);
+                    childAmount = getAmountOfChildren(Const.FERTILITY_USUAL[houseQualityInt]);
                 }
-
             }
             if (character.isBuffedBy(Buff.ONE_MORE_CHILD)) {
                 childAmount += 1;
@@ -633,7 +616,6 @@ public class GameController {
 
     private int getAmountOfChildren(float[] percentage) {
         double random = Math.random();
-        System.out.println("getAmountOfChildren: " + Arrays.toString(percentage) + ", random=" + random);
         if (0 <= random && random < percentage[0]) {
             return 1;
         } else if (percentage[0] <= random && random < percentage[1]) {
@@ -649,7 +631,6 @@ public class GameController {
         } else if (percentage[5] <= random && random < percentage[6]) {
             return 7;
         }
-
         return 1;
     }
 

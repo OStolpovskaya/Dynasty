@@ -56,7 +56,7 @@ public class RoomThingWithItems {
         List<String> availableItemNames = new ArrayList<>();
         for (Item availableItem : availableItems) {
             availableItemIds.add(availableItem.getId().toString());
-            availableItemNames.add("'" + availableItem.getProject().getName() + "'");
+            availableItemNames.add("'" + availableItem.getProject().getName() + "(" + availableItem.getQuality() + ")" + "'");
         }
         sb.append("[").append(String.join(",", availableItemNames)).append("],");
         sb.append("[").append(String.join(",", availableItemIds)).append("]");

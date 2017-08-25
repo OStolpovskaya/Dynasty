@@ -28,17 +28,22 @@
                     Среднее значение качества предметов в доме: <strong th:text="${family.getHouseQuality()}"></strong>
                 <div class="my_tooltip">&nbsp;<span class="glyphicon glyphicon-question-sign" style="color: black;"></span>
                     <span class="my_tooltiptext">
-                    Чем выше показатель, тем больше плодовитость и выше заработная плата: <br/>
-                    1 +2% к плодовитости и +10% надбавка к зп<br/>
-                    2 +4% к плодовитости и +20% надбавка к зп<br/>
-                    3 +6% к плодовитости и +30% надбавка к зп<br/>
-                    4 +8% к плодовитости и +40% надбавка к зп<br/>
-                    5 +10% к плодовитости и +50% надбавка к зп
+                        Вероятность рождения 1,2 и т.д. детей и надбавка к зп в зависимости от показателя среднего качества предметов в доме:
+                        <table class="table table-sm">
+                                <thead>
+                                <tr><th>Показатель</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>Надбавка к ЗП</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr>	<td>0</td>	<td>10%</td>	<td>40%</td>	<td>40%</td>	<td>10%</td>	<td>0%</td>	<td>0%</td>	<td>0%</td>	<td>0%</td>	</tr>
+                                    <tr>	<td>1</td>	<td>0%</td>	<td>20%</td>	<td>50%</td>	<td>25%</td>	<td>5%</td>	<td>0%</td>	<td>0%</td>	<td>10%</td>	</tr>
+                                    <tr>	<td>2</td>	<td>0%</td>	<td>5%</td>	<td>25%</td>	<td>50%</td>	<td>15%</td>	<td>5%</td>	<td>0%</td>	<td>20%</td>	</tr>
+                                    <tr>	<td>3</td>	<td>0%</td>	<td>0%</td>	<td>10%</td>	<td>30%</td>	<td>50%</td>	<td>10%</td>	<td>0%</td>	<td>30%</td>	</tr>
+                                    <tr>	<td>4</td>	<td>0%</td>	<td>0%</td>	<td>0%</td>	<td>10%</td>	<td>30%</td>	<td>50%</td>	<td>10%</td>	<td>40%</td>	</tr>
+                                    <tr>	<td>5</td>	<td>0%</td>	<td>0%</td>	<td>0%</td>	<td>0%</td>	<td>20%</td>	<td>30%</td>	<td>50%</td>	<td>50%</td>	</tr>
+                                </tbody>
+                            </table>
                 </span>
                 </div>
-                <br/>
-                Прибавка к плодовитости: <strong th:text="${@houseService.countHouseQualityFertilitySub(family.getHouseQuality())*100 + ' %'}"></strong><br/>
-                Коэффициент надбавки к зарплате: <strong th:text="${@houseService.countHouseQualitySalaryCoeff(family.getHouseQuality())*100 + ' %'}"></strong>
                 </p>
                 <ul class="list-inline">
                     <!--/*@thymesVar id="room" type="dyn.model.Room"*/-->

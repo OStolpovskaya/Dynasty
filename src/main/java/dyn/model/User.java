@@ -46,7 +46,7 @@ public class User implements Serializable {
 
     @ManyToMany
     @JoinTable(name = "user_achievements",
-            joinColumns = {@JoinColumn(name = "user_id")},
+            joinColumns = {@JoinColumn(name = "user_userid")},
             inverseJoinColumns = {@JoinColumn(name = "achievement_id")})
     private Set<Achievement> achievements = new HashSet<Achievement>();
 

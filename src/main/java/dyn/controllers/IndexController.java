@@ -17,6 +17,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
@@ -50,8 +51,17 @@ public class IndexController implements ErrorController {
     }
 
     @RequestMapping(value = PATH)
-    public String error(ModelMap model, HttpServletRequest request) {
-        model.addAttribute("reqAttr", getErrorAttributes(request, false));
+    public String error(ModelMap model, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+        Map<String, Object> errorAttributes = getErrorAttributes(request, false);
+        System.out.println("ERROR HANDLING");
+        for (String key : errorAttributes.keySet()) {
+            System.out.println("key = " + key + ": value = " + errorAttributes.get(key));
+        }
+        model.addAttribute("reqAttr", errorAttributes);
+        if (errorAttributes.get("error").equals("Forbidden")) {
+            redirectAttributes.addFlashAttribute("mess", "Необходима авторизация!");
+            return "redirect:/login";
+        }
         return "errorHandling";
     }
 

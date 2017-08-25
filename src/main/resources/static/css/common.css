@@ -240,8 +240,8 @@ a.anchor {
     visibility: hidden;
     width: 450px;
     font-size: 12px;
-    background-color: #000000;
-    color: #ffffff;
+    background-color: #fff;
+    color: #000;
     text-align: left;
     border-radius: 6px;
     padding: 5px;

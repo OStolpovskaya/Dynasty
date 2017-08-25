@@ -7,7 +7,7 @@
 </head>
 <body>
 <div th:fragment="nav-for-index">
-    <nav role="navigation" class="navbar navbar-default">
+    <nav role="navigation" class="navbar navbar-default navbar-fixed-top">
         <div>
             <a href="/" class="navbar-brand">Dynasty</a>
         </div>
@@ -22,8 +22,35 @@
                 <li><a href="?language=ru">ru</a></li>
             </ul>
         </div>
-        <div class="alert alert-warning" th:if="${mess!=null}" th:utext="${mess}"></div>
+        <!--<div class="alert alert-warning" th:if="${mess!=null}" th:utext="${mess}"></div>-->
     </nav>
+    <th:block th:if="${mess!=null}">
+        <script th:inline="javascript">
+
+            /*<![CDATA[*/
+
+            var message = /*[[${mess}]]*/ 'User Name';
+            window.onload = function () {
+                $.notify({
+                    title: '',
+                    icon: 'glyphicon glyphicon-star',
+                    message: message
+                }, {
+                    type: 'warning',
+                    placement: {
+                        from: "top",
+                        align: "center"
+                    },
+                    offset: 55,
+                    spacing: 10,
+                    z_index: 1031,
+                    delay: 5000
+                });
+            };
+
+            /*]]>*/
+        </script>
+    </th:block>
 </div>
 <div th:fragment="nav-for-game">
     <nav role="navigation" class="navbar navbar-default navbar-fixed-top">

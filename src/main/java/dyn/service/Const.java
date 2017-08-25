@@ -109,4 +109,24 @@ public class Const {
     public static final int ITEM_QUALITY_1 = 5;
     public static final int ITEM_QUALITY_2 = 25;
     public static final int ITEM_QUALITY_3 = 50;
+
+    public static final float[][] FERTILITY_USUAL = new float[][]{
+            {0.1f, 0.5f, 0.9f, 1f, 0f, 0f, 0},
+            {0f, 0.2f, 0.7f, 0.95f, 1f, 0f, 0},
+            {0f, 0.05f, 0.3f, 0.8f, 0.95f, 1f, 0},
+            {0f, 0f, 0.1f, 0.4f, 0.9f, 1f, 0},
+            {0f, 0f, 0f, 0.1f, 0.4f, 0.9f, 1},
+            {0f, 0f, 0f, 0f, 0.2f, 0.5f, 1}};
+
+    public static final float[][] FERTILITY_BUFFED = new float[][]{
+            {0f, 0f, 0.05f, 0.55f, 0.85f, 0.95f, 1f},
+            {0f, 0f, 0f, 0.15f, 0.65f, 0.9f, 1f},
+            {0f, 0f, 0f, 0.05f, 0.3f, 0.8f, 1f},
+            {0f, 0f, 0f, 0f, 0.15f, 0.5f, 1f},
+            {0f, 0f, 0f, 0f, 0f, 0.35f, 1f},
+            {0f, 0f, 0f, 0f, 0f, 0.05f, 1f}};
+
+
+
+
 }

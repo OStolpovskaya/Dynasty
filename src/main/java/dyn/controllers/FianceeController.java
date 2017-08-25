@@ -201,7 +201,7 @@ public class FianceeController {
             familyRepository.save(family);
 
             familyLogService.addToLog(family, "Вы опубликовали анкету невесты " + character.getName() + ". Стоимость выкупа: " + cost + " р.");
-            redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("becomeFiancee.characterBecomeFiancee", null, loc()));
+            redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("becomeFiancee.characterBecomeFiancee", new Object[]{character.getName()}, loc()));
             logger.info(user.getUserName() + "'s character " + character.getName() + " become fiancee");
             return "redirect:/game#char" + character.getFather().getId();
         }
