@@ -64,6 +64,10 @@
             <th:block th:with="craftBranch = ${parentThing.getCraftBranch()}">
                 <a th:name="${'craftBranch'+craftBranch.getId()}" class="anchor"></a>
                 <h3 th:text="${#strings.capitalize(craftBranch.getName())}"></h3>
+                <p>Стоимость всех вещей:
+                    <th:block th:text="${@craftService.getSumCostOfthingsInCarftBranch(craftBranch.getId())}"></th:block>
+                    баллов
+                </p>
                 <div class="tree">
                     <ul>
                         <li>

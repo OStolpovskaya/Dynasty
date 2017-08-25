@@ -6,8 +6,8 @@ package dyn.controllers;
 
 
 import dyn.form.RaceAppearanceForm;
-import dyn.model.Character;
 import dyn.model.*;
+import dyn.model.Character;
 import dyn.model.career.Career;
 import dyn.repository.*;
 import dyn.service.*;
@@ -95,7 +95,16 @@ public class AdminController {
     @RequestMapping("/admin/achievements")
     public String achievements(ModelMap model) {
 
-        model.addAttribute("achievementList", achievementRepository.findAll());
+        List<Achievement> achievements = achievementRepository.findAllByOrderByTypeAscForWhatAsc();
+        for (Achievement achievement : achievements) {
+            if (achievement.getType().equals(AchievementType.newborn)) {
+                achievement.forWhatString = raceRepository.findOne(achievement.getForWhat()).getName();
+            }
+            if (achievement.getType().equals(AchievementType.vocation10level)) {
+                achievement.forWhatString = careerService.getVocation(achievement.getForWhat()).getName();
+            }
+        }
+        model.addAttribute("achievementList", achievements);
         return "admin/achievements";
     }
 

@@ -8,15 +8,14 @@ import javax.persistence.*;
 @Entity
 @Table(name = "achievement")
 public class Achievement {
+    @Transient
+    public String forWhatString;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
     private String name;
-
     @Enumerated(EnumType.STRING)
     private AchievementType type;
-
     private long forWhat;
 
     public Long getId() {

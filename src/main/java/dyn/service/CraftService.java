@@ -230,4 +230,8 @@ public class CraftService {
         }
         return false;
     }
+
+    public int getSumCostOfthingsInCarftBranch(Long craftBranchId) {
+        return thingRepository.sumCostOfThingsOfCraftBranchId(craftBranchId);
+    }
 }

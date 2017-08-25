@@ -2,25 +2,30 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>Achievements</title>
+    <title>Достижения</title>
     <link th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}" rel="stylesheet"></link>
     <link th:href="@{/css/common.css}" rel="stylesheet"></link>
 </head>
 <body>
 <div th:replace="fragments/navigation :: nav-for-admin"></div>
 <div class="container">
-    <h3>Achievements</h3>
+    <h3>Достижения</h3>
     <table class="table table-striped">
         <thead>
         <tr>
             <th>ID</th>
             <th>Name</th>
+            <th>Type</th>
+            <th>For what</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="achievement : ${achievementList}">
+            <!--/*@thymesVar id="achievement" type="dyn.model.Achievement"*/-->
             <td th:text="${achievement.getId()}">1</td>
-            <td th:text="#{${achievement.getName()}}">name</td>
+            <td th:text="${achievement.getName()}">name</td>
+            <td th:text="${achievement.getType()}">name</td>
+            <td th:text="${achievement.forWhatString}">name</td>
         </tr>
         </tbody>
     </table>

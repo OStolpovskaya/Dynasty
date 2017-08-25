@@ -23,4 +23,7 @@ public interface ThingRepository extends CrudRepository<Thing, Long> {
     List<Thing> findByCraftBranchIdLessThanEqualOrderByName(Long craftBranchId);
 
     List<Thing> findAllByOrderByName();
+
+    @Query(value = "SELECT sum(cost) as summa FROM thing where craft_branch_id=:id", nativeQuery = true)
+    int sumCostOfThingsOfCraftBranchId(@Param("id") Long craftBranchId);
 }
