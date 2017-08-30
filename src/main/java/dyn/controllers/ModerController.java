@@ -5,11 +5,9 @@ package dyn.controllers;
  */
 
 
-import dyn.model.Family;
-import dyn.model.Project;
-import dyn.model.ProjectStatus;
-import dyn.model.User;
+import dyn.model.*;
 import dyn.repository.FamilyRepository;
+import dyn.repository.FeedbackRepository;
 import dyn.repository.UserRepository;
 import dyn.service.CraftService;
 import org.apache.log4j.LogManager;
@@ -31,6 +29,8 @@ public class ModerController {
     @Autowired
     CraftService craftService;
     @Autowired
+    FeedbackRepository feedbackRepository;
+    @Autowired
     private UserRepository userRepository;
     @Autowired
     private FamilyRepository familyRepository;
@@ -46,6 +46,14 @@ public class ModerController {
         model.addAttribute("reworkProjects", craftService.getProjectsByStatus(ProjectStatus.rework));
         model.addAttribute("correctedProjects", craftService.getProjectsByStatus(ProjectStatus.corrected));
         return "moder/projects";
+    }
+
+    @RequestMapping("/moder/feedbacks")
+    public String feedbacks(ModelMap model) {
+        model.addAttribute("bugs", feedbackRepository.findByTypeOrderByStatusAscDateDesc(FeedbackType.bug));
+        model.addAttribute("complaints", feedbackRepository.findByTypeOrderByStatusAscDateDesc(FeedbackType.complaint));
+        model.addAttribute("suggestions", feedbackRepository.findByTypeOrderByStatusAscDateDesc(FeedbackType.suggestion));
+        return "moder/feedbacks";
     }
 
     @RequestMapping(value = "/moder/setProjectApproved", method = RequestMethod.POST)

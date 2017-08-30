@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Фидбеки</title>
+    <link th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}" rel="stylesheet"></link>
+    <link th:href="@{/css/common.css}" rel="stylesheet"></link>
+</head>
+<body>
+<div th:replace="fragments/navigation :: nav-for-moder"></div>
+<div class="container">
+    <ul class="list-inline">
+        <li><a href="#bugs">Баги</a></li>
+        <li><a href="#complaints">Жалобы</a></li>
+        <li><a href="#suggestions">Предложения</a></li>
+    </ul>
+
+    <h3 id="bugs">Баги:</h3>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Статус</th>
+            <th>Дата</th>
+            <th>Игрок</th>
+            <th>Текст</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="bug : ${bugs}">
+            <!--/*@thymesVar id="bug" type="dyn.model.Feedback"*/-->
+            <td class="col-md-1" th:text="${bug.getId()}"></td>
+            <td class="col-md-1" th:text="${bug.getStatus()}"></td>
+            <td class="col-md-2" th:text="${bug.getDate()}"></td>
+            <td class="col-md-2" th:text="${bug.getUser().getUserName()}"></td>
+            <td class="col-md-6" th:text="${bug.getText()}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h3 id="complaints">Жалобы:</h3>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Статус</th>
+            <th>Дата</th>
+            <th>Игрок</th>
+            <th>Текст</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="complaint : ${complaints}">
+            <!--/*@thymesVar id="complaint" type="dyn.model.Feedback"*/-->
+            <td class="col-md-1" th:text="${complaint.getId()}"></td>
+            <td class="col-md-1" th:text="${complaint.getStatus()}"></td>
+            <td class="col-md-2" th:text="${complaint.getDate()}"></td>
+            <td class="col-md-2" th:text="${complaint.getUser().getUserName()}"></td>
+            <td class="col-md-6" th:text="${complaint.getText()}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h3 id="suggestions">Предложения:</h3>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Статус</th>
+            <th>Дата</th>
+            <th>Игрок</th>
+            <th>Текст</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="suggestion : ${suggestions}">
+            <!--/*@thymesVar id="complaint" type="dyn.model.Feedback"*/-->
+            <td class="col-md-1" th:text="${suggestion.getId()}"></td>
+            <td class="col-md-1" th:text="${suggestion.getStatus()}"></td>
+            <td class="col-md-2" th:text="${suggestion.getDate()}"></td>
+            <td class="col-md-2" th:text="${suggestion.getUser().getUserName()}"></td>
+            <td class="col-md-6" th:text="${suggestion.getText()}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+<th:block th:replace="fragments/scripts :: webjars"></th:block>
+</body>
+</html>
