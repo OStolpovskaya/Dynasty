@@ -76,49 +76,40 @@
                     <li th:classappend="${#httpServletRequest.getRequestURI().contains('/game/buildings') ? 'active':''}"><a href="/game/buildings">Бизнес</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="/logout" name="logouta">Logout</a></li>
+                    <li><a href="/logout" name="logouta">Выход</a></li>
                 </ul>
             </div>
         </div>
     </nav>
-
-    <div class="bottominfo" align="center">
-        <div class="btn-group dropup">
-            <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <th:block th:text="${'Деньги: ' + family.getMoney()+' д. '}"></th:block>
-                <span class="glyphicon glyphicon-triangle-top"></span>
-            </button>
-            <div class="dropdown-menu" style="padding: 10px; width: 250px;">
-                Продукты:
-                <th:block th:text="${family.getFamilyResources().getFood()}"></th:block>
-                <br/>
-                Дерево:
-                <th:block th:text="${family.getFamilyResources().getWood()}"></th:block>
-                <br/>
-                Металл:
-                <th:block th:text="${family.getFamilyResources().getMetall()}"></th:block>
-                <br/>
-                Пластик, резина:
-                <th:block th:text="${family.getFamilyResources().getPlastic()}"></th:block>
-                <br/>
-                Микроэлетроника:
-                <th:block th:text="${family.getFamilyResources().getMicroelectronics()}"></th:block>
-                <br/>
-                Ткань, кожа, бумага:
-                <th:block th:text="${family.getFamilyResources().getCloth()}"></th:block>
-                <br/>
-                Камень, стекло, керамика:
-                <th:block th:text="${family.getFamilyResources().getStone()}"></th:block>
-                <br/>
-                Химия, краски:
-                <th:block th:text="${family.getFamilyResources().getChemical()}"></th:block>
-                <br/>
-                <li class="divider"></li>
-                Крафт баллы:
-                <th:block th:text="${family.getCraftPoint()}"></th:block>
+    <nav class="navbar navbar-default navbar-fixed-bottom">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">
+                    <th:block th:text="${'Деньги: ' + family.getMoney()+' д. '}"></th:block>
+                </a>
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbarBottom">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbarBottom">
+                <ul class="nav navbar-nav">
+                    <li><a href="#">Продукты: <span class="badge"><th:block th:text="${family.getFamilyResources().getFood()}"></th:block></span></a></li>
+                    <li><a href="#">Дерево: <span class="badge"><th:block th:text="${family.getFamilyResources().getWood()}"></th:block></span></a></li>
+                    <li><a href="#">Металл: <span class="badge"><th:block th:text="${family.getFamilyResources().getMetall()}"></th:block></span></a></li>
+                    <li><a href="#">Пластик, резина: <span class="badge"><th:block th:text="${family.getFamilyResources().getPlastic()}"></th:block></span></a></li>
+                    <li><a href="#">Микроэлетроника: <span class="badge"><th:block th:text="${family.getFamilyResources().getMicroelectronics()}"></th:block></span></a></li>
+                    <li><a href="#">Ткань, кожа, бумага: <span class="badge"><th:block th:text="${family.getFamilyResources().getCloth()}"></th:block></span></a></li>
+                    <li><a href="#">Камень, стекло, керамика: <span class="badge"><th:block th:text="${family.getFamilyResources().getStone()}"></th:block></span></a></li>
+                    <li><a href="#">Химия, краски: <span class="badge"><th:block th:text="${family.getFamilyResources().getChemical()}"></th:block></span></a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#">Крафт баллы: <span class="badge"><th:block th:text="${family.getCraftPoint()}"></th:block></span></a></li>
+                </ul>
             </div>
         </div>
-    </div>
+    </nav>
 
     <th:block th:if="${mess!=null}">
         <script th:inline="javascript">
