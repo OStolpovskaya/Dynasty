@@ -287,3 +287,12 @@ a.anchor {
 }
 
 /* dropdowns */
+
+.bottominfo {
+    position: fixed;
+    z-index: 100;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #e7e7e7;
+}
