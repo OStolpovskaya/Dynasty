@@ -171,6 +171,8 @@ public class GameController {
         model.addAttribute("buffsFamily", buffsFamily);
         model.addAttribute("buffsResources", buffsResources);
 
+        model.addAttribute("bridesNum", family.getHouse().getFianceeNum() - family.getFianceeNum());
+        model.addAttribute("pairsNum", family.getHouse().getPairsNum() - family.getPairsNum());
 
        /* Map<Thing, Map<Project, List<Item>>> itemMap = new HashMap<>();
         for (Item item : buffs) {

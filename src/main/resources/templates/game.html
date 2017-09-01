@@ -12,6 +12,7 @@
 <div class="container" style="width: 1900px;">
     <!--/*@thymesVar id="user" type="dyn.model.User"*/-->
     <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
+
     <th:block th:if="${family.getLevel() == 0}">
         <div class="alert alert-success">
             В начале игры у вас есть два случайно сгенерированных персонажа. Каждый из них имеет свои черты лица, рост, призвание, навыки и т.д. (наведите мышкой на персонажа для получения информации). <br/>
@@ -37,7 +38,9 @@
     </th:block>
     <th:block th:if="${family.getLevel() == 1}">
         <div class="alert alert-success">
-            Основатели приобрели профессию и заработали немного деньжат! А еще их призвания принесли вам ресурсы, из которых можно что-нибудь смастерить. Родились дети, все они довольно милые, да? <br/>
+            Основатели приобрели профессию и заработали немного деньжат! А еще их призвания принесли вам ресурсы, из которых можно что-нибудь смастерить. Родились дети, все они довольно милые, да? Подробное описание событий вы можете посмотреть,
+            кликнув на кнопке Лог.
+            <br/>
             Первым делом вам необходимо поместить анкеты ваших дочерей в базу невест! Нажмите кнопку под портретом дочери. Стоимость выкупа назначается вами в зависимости от
             характеристик персонажа. Следует сделать выкуп больше, если дочь имеет ГМ черты. Выкуп зачисляется на ваш счет, когда кто-нибудь из игроков выберет вашу невесту.<br/>
             Теперь необходимо выбрать невест для сыновей. Нажмите кнопку под портретом сына. <br/>
@@ -47,33 +50,53 @@
         </div>
     </th:block>
 
-    <ul class="list-inline">
-        <!--/*@thymesVar id="room" type="dyn.model.Room"*/-->
-        <li>
-            Можно создать пар: <span th:text="${family.getHouse().getPairsNum() - family.getPairsNum()}"></span>;
-        </li>
-        <li>
-            Можно запостить анкет невест: <span th:text="${family.getHouse().getFianceeNum() - family.getFianceeNum()}"></span>;
-        </li>
-        <li>
-            <button data-toggle="collapse" data-target="#family-log" class="btn">
-                Лог <span class="glyphicon glyphicon-menu-down"></span>
+    <div style="background-color: #2b669a; border-radius: 4px; position: fixed; top: 55px; left: 5px; padding: 5px;">
+        <div th:alt-title="${'Можно запостить анкет невест: ' + bridesNum}">
+            <img th:src="@{'/graphics/family_status_bride.png' }" height="35px" width="35px"></img>
+            <span class="badge" style="background-color: white; color: black;"><th:block th:text="${bridesNum}"></th:block></span>
+        </div>
+        <div th:alt-title="${'Можно создать пар: ' + pairsNum}">
+            <img th:src="@{'/graphics/family_status_married.png' }" height="35px" width="35px"></img>
+            <span class="badge" style="background-color: white; color: black;"><th:block th:text="${pairsNum}"></th:block></span>
+        </div>
+        <th:block th:if="${#maps.size(buffsFamily) gt 0}">
+            <hr/>
+            <th:block th:each="mapEntry : ${buffsFamily}" th:with="project = ${mapEntry.getKey()}, items = ${mapEntry.getValue()}">
+                <th:block th:if="${project.getId() eq @const.PROJECT_PAIR_ONE_MORE}">
+                    <form th:action="@{/game/applyItemFamily}" method="post" class="form-inline">
+                        <img th:src="@{'/graphics/family_buffs_one_more_pair.png' }" height="35px" width="35px" th:alt-title="${'Бафф: +1 пара на ход'}"></img>
+                        <span class="badge" style="background-color: white; color: black;"><th:block th:text="${#lists.size(items)}"></th:block></span>
+                        <input type="hidden" name="itemId" th:value="${items.get(0).getId()}"/>
+                        <button type="submit" class="btn btn-success btn-xs" th:alt-title="'Применить'"><span class="glyphicon glyphicon-share-alt"></span></button>
+                    </form>
+                </th:block>
+                <th:block th:if="${project.getId() eq @const.PROJECT_BRIDE_ONE_MORE}">
+                    <form th:action="@{/game/applyItemFamily}" method="post" class="form-inline">
+                        <input type="hidden" name="itemId" th:value="${items.get(0).getId()}"/>
+                        <img th:src="@{'/graphics/family_buffs_one_more_bride.png' }" height="35px" width="35px" th:alt-title="${'Бафф: +1 невеста на ход'}"></img>
+                        <span class="badge" style="background-color: white; color: black;"><th:block th:text="${#lists.size(items)}"></th:block></span>
+                        <button type="submit" class="btn btn-success btn-xs" th:alt-title="'Применить'"><span class="glyphicon glyphicon-share-alt"></span></button>
+                    </form>
+                </th:block>
+            </th:block>
+        </th:block>
+        <hr/>
+        <form th:action="@{/game/turn}" method="post">
+            <button class="btn btn-warning center-block" type="submit" name="turn"
+                    th:alt-title="#{game.turn}" style="margin-bottom: 10px; margin-top: 10px; width: 40px; height: 40px; border-radius: 20px;">
+                <span class="glyphicon glyphicon-play-circle"></span>
             </button>
-        </li>
-        <li th:if="${#maps.size(buffsFamily) gt 0}">
-            <label>Семейные баффы:</label>
-        </li>
-        <li th:each="mapEntry : ${buffsFamily}" th:with="project = ${mapEntry.getKey()}, items = ${mapEntry.getValue()}">
-            <form th:action="@{/game/applyItemFamily}" method="post" style="margin-left: 10px; ">
-                <input type="hidden" name="itemId" th:value="${items.get(0).getId()}"/>
-                <button type="submit" th:text="${project.getName() + ' (' + #lists.size(items) + ' шт.)'}" class="btn btn-primary" style="width: 200px;"></button>
-            </form>
-        </li>
-    </ul>
+        </form>
+    </div>
 
+    <div align="center" style="margin-bottom: 5px;">
+        <button data-toggle="collapse" data-target="#family-log" class="btn btn-info">
+            Лог <span class="glyphicon glyphicon-menu-down"></span>
+        </button>
+    </div>
     <div id="family-log" class="collapse">
         <!--/*@thymesVar id="familyLog" type="dyn.model.FamilyLog"*/-->
-        <pre class="pre-scrollable" style="height: 150px; max-height: 150px;" th:utext="${familyLog?.getText()}"></pre>
+        <pre class="pre-scrollable" style="height: 150px; max-height: 150px; margin-left: 100px; margin-right: 100px;" th:utext="${familyLog?.getText()}"></pre>
     </div>
 
     <th:block th:each="mapEntry : ${fathers}" th:with="father = ${mapEntry.getKey()}, childList = ${mapEntry.getValue()}">
@@ -206,27 +229,9 @@
         </div>
         <hr style="height: 1px; size: 2px; color: black;border-width: 4px;" size="2px"/>
     </th:block>
-    <form th:action="@{/game/turn}" method="post">
-        <button class="btn btn-lg btn-primary center-block" type="submit" name="turn" th:text="#{game.turn}" style="margin-bottom: 10px; margin-top: 10px;">Turn!</button>
-    </form>
+
 </div>
 
 <th:block th:replace="fragments/scripts :: webjars"></th:block>
-
-<!--
-<script>
-    $(document).ready(function () {
-        $('[data-toggle="tooltip"]').tooltip({
-            container: 'body'
-        });
-    });
-</script>
--->
-
-<script>
-    $('.dropdown-menu').find('form').click(function (e) {
-        e.stopPropagation();
-    });
-</script>
 </body>
 </html>
