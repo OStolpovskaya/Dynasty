@@ -18,9 +18,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class ModerController {
@@ -70,10 +72,10 @@ public class ModerController {
             author.getCraftProjects().add(project);
             familyRepository.save(author);
 
-            logger.info(user.getUserName() + " set status approved for project: " + project);
+            logger.info("Moderator " + user.getUserName() + " set status approved for project: " + project);
             return "redirect:/moder/projects";
         }
-        logger.error(user.getUserName() + " want to set status approved for non-existing project id=" + projectId);
+        logger.error("Moderator " + user.getUserName() + " want to set status approved for non-existing project id=" + projectId);
         return "redirect:/moder/projects";
     }
 
@@ -89,13 +91,33 @@ public class ModerController {
             project.setStatusMessage(reason);
             craftService.saveProject(project);
 
-            logger.info(user.getUserName() + " set status rework for project: " + project);
+            logger.info("Moderator " + user.getUserName() + " set status rework for project: " + project);
             return "redirect:/moder/projects";
         }
-        logger.error(user.getUserName() + " want to set status rework for non-existing project id=" + projectId);
+        logger.error("Moderator " + user.getUserName() + " want to set status rework for non-existing project id=" + projectId);
         return "redirect:/moder/projects";
     }
 
+    // /moder/changeFeedbackStatus
+    @PostMapping("/moder/changeFeedbackStatus")
+    public String changeFeedbackStatus(ModelMap model,
+                                       @RequestParam(value = "feedbackId") Long feedbackId,
+                                       @RequestParam(value = "feedbackStatus") FeedbackStatus feedbackStatus,
+                                       RedirectAttributes redirectAttributes) {
+        User user = userRepository.findByUserName(getAuthUser().getUsername());
+        Feedback feedback = feedbackRepository.findOne(feedbackId);
+        if (feedback != null) {
+            feedback.setStatus(feedbackStatus);
+            feedbackRepository.save(feedback);
+            logger.info("Moderator " + user.getUserName() + " set status for feedback: " + feedbackId);
+            redirectAttributes.addFlashAttribute("mess", "Статус заявки обновлен: " + feedbackStatus);
+
+        } else {
+            logger.error("Moderator " + user.getUserName() + " want to set status for non-existing feedback id=" + feedbackId);
+            redirectAttributes.addFlashAttribute("mess", "Неверный id: " + feedbackId);
+        }
+        return "redirect:/moder/feedbacks";
+    }
 
     private UserDetails getAuthUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
