@@ -100,7 +100,7 @@
         <form th:action="@{/game/improveEducation}" method="post" style="margin-left: 10px;">
             <input type="hidden" name="character" th:value="${character.getId()}"/>
             <button type="submit" class="btn btn-primary btn-xs" th:disabled="${character.getFamily().getMoney() lt @const.EDUCATION_IMPROVE_COST}"><span class="glyphicon glyphicon-ok"></span></button>
-            <span th:text="${'Повысить образование (' + @const.EDUCATION_IMPROVE_COST + ' р.)'}" style="padding-left: 5px;"></span>
+            <span th:text="${'Повысить образование (' + @const.EDUCATION_IMPROVE_COST + ' д.)'}" style="padding-left: 5px;"></span>
         </form>
     </li>
 </th:block>
@@ -235,7 +235,7 @@
                         </th:block>
                         <th:block th:if="${character.isFiancee()}">
                             <img th:src="@{'/graphics/family_status_bride.png' }" height="35px" width="35px"
-                                 data-toggle="tooltip" th:alt-title="${'Семейное положение: в базе невест за ' + character.getFiancee().getCost() + ' р.'}">
+                                 data-toggle="tooltip" th:alt-title="${'Семейное положение: в базе невест за ' + character.getFiancee().getCost() + ' д.'}">
                             </img>
                         </th:block>
                     </td>

@@ -566,9 +566,9 @@ public class GameController {
             family.setMoney(family.getMoney() + salary + inc + houseInc);
             family.getFamilyResources().addResFromVocation(career);
 
-            turnLog.append(worker.getName() + " приобретает профессию " + career.getProfession().getName() + " (" + career.getProfession().getLevel() + ") и зарабатывает " + salary + " р. " +
-                    (inc == 0 ? "" : "Премия: " + inc + " р. ") +
-                    (houseInc == 0 ? "" : "Надбавка за дом: " + houseInc + " р. "));
+            turnLog.append(worker.getName() + " приобретает профессию " + career.getProfession().getName() + " (" + career.getProfession().getLevel() + ") и зарабатывает " + salary + " д. " +
+                    (inc == 0 ? "" : "Премия: " + inc + " д. ") +
+                    (houseInc == 0 ? "" : "Надбавка за дом: " + houseInc + " д. "));
 
             turnLog.append("А призвание приносит ресурсы: " + career.getVocation().resString(career.getProfession().getLevel()) + ". ");
 

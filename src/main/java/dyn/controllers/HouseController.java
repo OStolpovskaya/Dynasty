@@ -194,7 +194,7 @@ public class HouseController {
                     returnTo = "buildings#building" + roomThing.getHouse().getId();
                     break;
                 case store:
-                    String mess = "Предмет удален из базы продаж и перенесен на склад: " + item.getFullName() + ". Стоимость: " + item.getCost() + " р.";
+                    String mess = "Предмет удален из базы продаж и перенесен на склад: " + item.getFullName() + ". Стоимость: " + item.getCost() + " д.";
                     item.setCost(0);
                     logger.debug(family.familyNameAndId() + "put item " + item.getProject().getName() + "(" + item.getId() + ") back from store to storage");
                     familyLogService.addToLog(family, mess);
@@ -297,7 +297,7 @@ public class HouseController {
                     item.setCost(cost);
                     houseService.saveItem(item);
                     logger.info(family.familyNameAndId() + " put item to store: " + item.getProject().getName() + "(" + item.getId() + ")");
-                    String mess = "Вещь выставлена на продажу: " + item.getFullName() + ". Стоимость: " + cost + " р.";
+                    String mess = "Вещь выставлена на продажу: " + item.getFullName() + ". Стоимость: " + cost + " д.";
                     familyLogService.addToLog(family, mess);
                     redirectAttributes.addFlashAttribute("mess", mess);
                     return "redirect:/game/storage";
@@ -401,9 +401,9 @@ public class HouseController {
                         familyRepository.save(seller);
                         familyRepository.save(family);
 
-                        familyLogService.addToLog(seller, "Семья " + family.getFamilyName() + " приобрела ваш предмет " + item.getFullName() + ". Получено: " + item.getCost() + " р.");
+                        familyLogService.addToLog(seller, "Семья " + family.getFamilyName() + " приобрела ваш предмет " + item.getFullName() + ". Получено: " + item.getCost() + " д.");
 
-                        String mess = "Вы купили предмет " + item.getFullName() + ". Потрачено: " + item.getCost() + " р.";
+                        String mess = "Вы купили предмет " + item.getFullName() + ". Потрачено: " + item.getCost() + " д.";
                         familyLogService.addToLog(family, mess);
 
                         item.setFamily(family);
@@ -459,7 +459,7 @@ public class HouseController {
                     familyRepository.save(family);
 
                     logger.info(family.familyNameAndId() + "buy house: " + nextHouse.getName());
-                    String mess = "Вы купили новый дом " + nextHouse.getName() + ". Потрачено " + nextHouse.getCost() + " р.";
+                    String mess = "Вы купили новый дом " + nextHouse.getName() + ". Потрачено " + nextHouse.getCost() + " д.";
                     familyLogService.addToLog(family, mess);
                     redirectAttributes.addFlashAttribute("mess", mess);
                     return "redirect:/game/house";

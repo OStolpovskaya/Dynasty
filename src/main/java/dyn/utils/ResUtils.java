@@ -70,21 +70,6 @@ public class ResUtils {
         return sb.toString();
     }
 
-   /* public String getDifference(Family family) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(" Деньги: ").append(family.getMoney() - initValues.get("Money")).append(" р. <br>");
-        sb.append(" Продукты: ").append(family.getFamilyResources().getFood() - initValues.get("Food")).append(", ");
-        sb.append(" Дерево: ").append(family.getFamilyResources().getWood() - initValues.get("Wood")).append(", ");
-        sb.append(" Металл: ").append(family.getFamilyResources().getMetall() - initValues.get("Metall")).append(", ");
-        sb.append(" Пластик, резина: ").append(family.getFamilyResources().getPlastic() - initValues.get("Plastic")).append(", ");
-        sb.append(" Микроэлектроника: ").append(family.getFamilyResources().getMicroelectronics() - initValues.get("Microelectronics")).append(", ");
-        sb.append(" Ткань, кожа, бумага: ").append(family.getFamilyResources().getCloth() - initValues.get("Cloth")).append(", ");
-        sb.append(" Камень, стекло, керамика: ").append(family.getFamilyResources().getStone() - initValues.get("Stone")).append(", ");
-        sb.append(" Химия, краски: ").append(family.getFamilyResources().getChemical() - initValues.get("Chemical")).append("<br>");
-        sb.append(" Крафт баллы: ").append(family.getCraftPoint() - initValues.get("CraftPoints")).append("<br>");
-        return sb.toString();
-    }*/
-
     public void saveInitValues(Family family) {
         FamilyResources familyResources = family.getFamilyResources();
         initValues = new HashMap<>();

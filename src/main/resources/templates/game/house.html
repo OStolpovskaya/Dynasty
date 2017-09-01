@@ -54,7 +54,7 @@
                         <div class="form-group">
                             <label th:text="${#strings.capitalize(nextHouse.getName())}">Название следующего дома</label>
                             <button type="submit" th:disabled="${family.getMoney() lt nextHouse.getCost() or not houseIsFull}" class="btn btn-default"
-                                    th:text="${'Купить: ' + nextHouse.getCost() + ' р.'}">Купить
+                                    th:text="${'Купить: ' + nextHouse.getCost() + ' д.'}">Купить
                             </button>
                             <br/>
                             <span th:if="${not houseIsFull}" style="color:dimgrey">Вы сможете купить новый дом, когда все доступные вещи будут установлены.</span>

@@ -38,7 +38,7 @@
                         <form th:action="@{/game/makeProduction}" method="post">
                             <span>Здание производит: </span>
                             <label th:text="${production.getFullName()}"></label><br/>
-                            <span th:text="${'Стоимость и ресурсы: ' + production.getCost() + ' р.'+ (production.resString()!=''?', '+production.resString():'')}"></span><br/>
+                            <span th:text="${'Стоимость и ресурсы: ' + production.getCost() + ' д.'+ (production.resString()!=''?', '+production.resString():'')}"></span><br/>
                             <input type="hidden" name="projectId" th:value="${production.getId()}"/>
                             <button id="makeItemButton" type="submit" class="btn btn-sm btn-success " th:disabled="${not family.hasResourcesForProject(production)}">Изготовить предмет</button>
                         </form>

@@ -152,8 +152,8 @@ public class FianceeController {
                 wifeFamily.setMoney(wifeFamily.getMoney() + fiancee.getCost());
                 familyRepository.save(wifeFamily);
 
-                familyLogService.addToLog(family, "Вы выкупили невесту " + wife.getName() + " из семьи " + wife.getFamily().getFamilyName() + " для своего персонажа " + character.getName() + ". Потрачено: " + fiancee.getCost() + " р.");
-                familyLogService.addToLog(wifeFamily, "Семья " + family.getFamilyName() + " выкупила одну из ваших невест: " + wife.getName() + " (уровень: " + wife.getLevel() + "). Получено: " + fiancee.getCost() + " р.");
+                familyLogService.addToLog(family, "Вы выкупили невесту " + wife.getName() + " из семьи " + wife.getFamily().getFamilyName() + " для своего персонажа " + character.getName() + ". Потрачено: " + fiancee.getCost() + " д.");
+                familyLogService.addToLog(wifeFamily, "Семья " + family.getFamilyName() + " выкупила одну из ваших невест: " + wife.getName() + " (уровень: " + wife.getLevel() + "). Получено: " + fiancee.getCost() + " д.");
                 logger.info(user.getUserName() + " has chosen fiancee " + wife.getName());
                 redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("chooseFiancee.success", new Object[]{character.getName(), wife.getName(), fiancee.getCost()}, loc()));
                 return "redirect:/game#char" + character.getFather().getId();
@@ -200,7 +200,7 @@ public class FianceeController {
             family.setFianceeNum(family.getFianceeNum() + 1);
             familyRepository.save(family);
 
-            familyLogService.addToLog(family, "Вы опубликовали анкету невесты " + character.getName() + ". Стоимость выкупа: " + cost + " р.");
+            familyLogService.addToLog(family, "Вы опубликовали анкету невесты " + character.getName() + ". Стоимость выкупа: " + cost + " д.");
             redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("becomeFiancee.characterBecomeFiancee", new Object[]{character.getName()}, loc()));
             logger.info(user.getUserName() + "'s character " + character.getName() + " become fiancee");
             return "redirect:/game#char" + character.getFather().getId();

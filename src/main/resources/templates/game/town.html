@@ -44,7 +44,7 @@
                 <th:block th:if="${not #lists.contains(familyBuildingList,building)}">
                     <form th:action="@{/game/buyBuilding}" method="post" class="form-inline">
                         <input type="hidden" name="buildingId" th:value="${building.getId()}"/>
-                        <button type="submit" class="btn btn-info" th:text="${'Купить: ' + building.getCost() + ' р.'}" th:disabled="${family.getMoney() lt building.getCost()}">Купить</button>
+                        <button type="submit" class="btn btn-info" th:text="${'Купить: ' + building.getCost() + ' д.'}" th:disabled="${family.getMoney() lt building.getCost()}">Купить</button>
                     </form>
                 </th:block>
             </td>

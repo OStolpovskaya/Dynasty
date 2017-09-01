@@ -162,9 +162,9 @@ public class CraftController {
                         Family author = project.getAuthor();
                         author.setMoney(author.getMoney() + project.getCost());
                         familyRepository.save(author);
-                        familyLogService.addToLog(author, "Семья " + family.getFamilyName() + " приобрела ваш проект " + project.getName() + ". Получено: " + project.getCost() + " р.");
+                        familyLogService.addToLog(author, "Семья " + family.getFamilyName() + " приобрела ваш проект " + project.getName() + ". Получено: " + project.getCost() + " д.");
 
-                        String mess = "Ваша семья приобрела проект '" + project.getName() + "' предмета '" + thing.getName() + "'. Потрачено: " + project.getCost() + " р.";
+                        String mess = "Ваша семья приобрела проект '" + project.getName() + "' предмета '" + thing.getName() + "'. Потрачено: " + project.getCost() + " д.";
                         familyLogService.addToLog(family, mess);
                         redirectAttributes.addFlashAttribute("mess", mess + " Время производить!");
                         logger.info(family.familyNameAndId() + " buy project: '" + project.getName() + "' for thing " + thing.getName());

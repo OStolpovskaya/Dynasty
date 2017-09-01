@@ -70,7 +70,7 @@ public class TownController {
                     familyRepository.save(family);
 
                     logger.info(family.familyNameAndId() + "buy building: " + building.getName());
-                    String mess = "Вы купили здание '" + building.getName() + "'. Потрачено: " + building.getCost() + " р.";
+                    String mess = "Вы купили здание '" + building.getName() + "'. Потрачено: " + building.getCost() + " д.";
                     familyLogService.addToLog(family, mess);
                     redirectAttributes.addFlashAttribute("mess", mess);
                     return "redirect:/game/town";

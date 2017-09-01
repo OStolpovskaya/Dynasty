@@ -88,7 +88,7 @@
                         <input type="radio" name="projectId" th:value="${project.getId()}" th:required="required" onclick="enableBuyProjectButton()" th:disabled="${family.getMoney() lt project.getCost()}"
                                style="position: inherit;"/>
                         <th:block th:replace="fragments/custom :: project-view (project=${project})"></th:block>
-                        <th:block th:text="${project.getName()+' от '+project.getAuthor().getFamilyName()+' ('+project.getCost() +' р.) ('+project.resString()+')'}"></th:block>
+                        <th:block th:text="${project.getName()+' от '+project.getAuthor().getFamilyName()+' ('+project.getCost() +' д.) ('+project.resString()+')'}"></th:block>
                     </label>
                 </div>
                 <button id="buyProjectButton" type="submit" class="btn btn-default btn-md center-block" th:disabled="${true}">Приобрести проект</button>

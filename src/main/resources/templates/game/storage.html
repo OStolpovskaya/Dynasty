@@ -161,7 +161,7 @@
                         <td>
                             <a th:href="${'/game/userview?userId='+item.getAuthor().getUser().getUserid()}" th:text="${item.getAuthor().familyNameAndUserName()}"></a>
                         </td>
-                        <td th:text="${item.getCost()+' р.'}"></td>
+                        <td th:text="${item.getCost()+' д.'}"></td>
                         <td>
                             <form th:action="@{/game/unsetItem}" method="post" class="form-inline">
                                 <input type="hidden" name="itemId" th:value="${item.getId()}"/>
