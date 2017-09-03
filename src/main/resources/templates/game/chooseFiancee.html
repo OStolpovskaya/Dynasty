@@ -11,8 +11,11 @@
 <div class="container">
     <th:block th:if="${family.getLevel() == 1}">
         <div class="alert alert-success">
-            Вы можете выбрать любую из представленных невест, если, конечно, у вас есть деньги... Базу невест можно отфильтровать по расе, по призванию. <br/>
-
+            Вы можете выбрать невесту, если, конечно, у вас есть деньги... Базу невест можно отфильтровать по расе, по призванию. <br/>
+            Невозможна женитьба на сестре или двоюродной сестре (которая имеет такую же фамилию, как и у матери жениха).<br/>
+            Человек или ГМ-человек не может жениться на представителях других рас, например, на эльфийке. Зато чистокровный эльф может выбрать себе в жены человека или ГМ-человека. Такая вот несправедливость... Также браки невозможны и между
+            представителями разных рас (между Орком и Эльфом, например)<br/>
+            Кнопка подтверждения находится внизу страницы.
         </div>
     </th:block>
     <!--/*@thymesVar id="character" type="dyn.model.Character"*/-->
@@ -59,12 +62,14 @@
                     $("#makeFianceeButton").attr("disabled", false);
                 }
             </script>
-            <div th:each="fiancee : ${fianceeList}" style="display: inline-block;">
+            <div th:each="fiancee : ${fianceeList}" style="display: inline-block;" th:with="bride = ${fiancee.getCharacter()}">
                 <!--/*@thymesVar id="fiancee" type="dyn.model.Fiancee"*/-->
-                <input style="display: inline-block;" type="radio" name="fiancee" th:value="${fiancee.getId()}" onclick="enableChooseButton()" th:disabled="${character.getFamily().getMoney() lt fiancee.getCost()}"/>
+                <!--/*@thymesVar id="bride" type="dyn.model.Character"*/-->
+                <input style="display: inline-block;" type="radio" name="fiancee" th:value="${fiancee.getId()}" onclick="enableChooseButton()"
+                       th:disabled="${fiancee.isDisabled}" th:alt-title="${fiancee.disableReason}"/>
                 <div class="char-view-div">
                     <div th:replace="fragments/char :: char-panel (character=${fiancee.getCharacter()})"></div>
-                    <label th:text="#{cost(${fiancee.getCost()})}">Cost</label>
+                    <label th:text="#{cost(${fiancee.getCost()})}" th:styleappend="${fiancee.isDisabled?'color: grey;':''}">Cost</label>
                 </div>
             </div>
             <p>

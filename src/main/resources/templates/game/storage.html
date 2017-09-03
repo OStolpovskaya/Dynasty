@@ -11,6 +11,14 @@
 <div class="container" style="min-width: 1140px;">
     <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
     <!--/*@thymesVar id="item" type="dyn.model.Item"*/-->
+    <th:block th:if="${family.getLevel() == 0}">
+        <div class="alert alert-success">
+            Это ваш склад. Здесь хранятся все принадлежащие вам вещи. <br/>
+            Есть также склад баффов и услуг. <br/>
+            Любую вещь или бафф вы можете продать, выставив стоимость и нажав оранжевую кнопку. А нажав кнопку Маркет, вы сможете купить вещь такого типа (ее на маркете разместил другой игрок).<br/>
+            В последнем разделе вы можете видеть, какие из ваших товаров и по какой цене выставлены сейчас на продажу<br/>
+        </div>
+    </th:block>
     <div class="well">
         <h3>Склад:</h3>
         <th:block th:if="${not #lists.isEmpty(itemsInStorage)}">

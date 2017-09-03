@@ -14,6 +14,8 @@ import java.util.List;
 public class Race implements ResourcesHolder {
     public static final long RACE_HUMAN = 1;
     public static final long RACE_GM_HUMAN = 2;
+    public static final long RACE_HIGH = 6;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

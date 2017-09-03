@@ -12,6 +12,7 @@ import dyn.model.career.Career;
 import dyn.model.career.Career_;
 import dyn.repository.*;
 import dyn.service.FamilyLogService;
+import dyn.service.RaceService;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,9 @@ public class FianceeController {
     AdminController adminController;
     @Autowired
     FamilyLogService familyLogService;
+    @Autowired
+    RaceService raceService;
+
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -83,7 +87,7 @@ public class FianceeController {
             List<Predicate> predicates = new ArrayList<>();
 
             predicates.add(cb.equal(fianceeCharacter.get(Character_.level), family.getLevel()));
-            predicates.add(cb.notEqual(fianceeCharacter.get(Character_.family), family));
+            //predicates.add(cb.notEqual(fianceeCharacter.get(Character_.family), family));
 
             if (!fianceeFilter.isEmpty()) {
                 if (fianceeFilter.getRace() != null) {
@@ -98,6 +102,30 @@ public class FianceeController {
 
             TypedQuery<Fiancee> q = em.createQuery(cq);
             List<Fiancee> fianceeList = q.getResultList();
+            /*брак запрещен
+            c сестрой
+            с двоюродной сестрой
+            с высшей расой, если ты человек или гм-человек
+            с высшей расой, если ты сам из высших рас, но другой
+            */
+            for (Fiancee fiancee : fianceeList) {
+                if (fiancee.getCharacter().getFamily().getId() == character.getFamily().getId()) {
+                    fiancee.isDisabled = true;
+                    fiancee.disableReason = messageSource.getMessage("fiancee.isSister", null, loc());
+                } else if (fiancee.getCharacter().getFamily().getId() == character.getFather().getSpouse().getFamily().getId()) {
+                    fiancee.isDisabled = true;
+                    fiancee.disableReason = messageSource.getMessage("fiancee.isCousin", null, loc());
+                } else if ((character.getRace().getId() == Race.RACE_HUMAN || character.getRace().getId() == Race.RACE_GM_HUMAN) && fiancee.getCharacter().getRace().getId() >= Race.RACE_HIGH) {
+                    fiancee.isDisabled = true;
+                    fiancee.disableReason = messageSource.getMessage("fiancee.raceMismatchForFiancee", null, loc());
+                } else if (character.getRace().getId() >= Race.RACE_HIGH && fiancee.getCharacter().getRace().getId() >= Race.RACE_HIGH && character.getRace().getId() != fiancee.getCharacter().getRace().getId()) {
+                    fiancee.isDisabled = true;
+                    fiancee.disableReason = messageSource.getMessage("fiancee.raceMismatchForCharacter", null, loc());
+                } else if (character.getFamily().getMoney() < fiancee.getCost()) {
+                    fiancee.isDisabled = true;
+                    fiancee.disableReason = messageSource.getMessage("fiancee.notEnoughMoney", null, loc());
+                }
+            }
 
             model.addAttribute("family", family);
             model.addAttribute("character", character);

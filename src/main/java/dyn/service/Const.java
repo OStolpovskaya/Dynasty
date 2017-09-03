@@ -127,6 +127,5 @@ public class Const {
             {0f, 0f, 0f, 0f, 0f, 0.05f, 1f}};
 
 
-
-
+    public static final int SKILL_COEFFICIENT = 1;
 }

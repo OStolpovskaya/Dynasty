@@ -22,4 +22,6 @@ public interface BodyRepository extends CrudRepository<Body, Long> {
     public Body getRandomRare();
 
     List<Body> findByType(AppearanceType type);
+
+    List<Body> findAllByOrderByTypeAsc();
 }

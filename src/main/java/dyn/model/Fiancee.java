@@ -4,14 +4,16 @@ import javax.persistence.*;
 
 @Entity
 public class Fiancee {
+    @Transient
+    public boolean isDisabled = false;
+    @Transient
+    public String disableReason = "";
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "character_id")
     private Character character;
-
     private int cost;
 
     public Long getId() {

@@ -188,7 +188,7 @@ public class AppearanceService {
             case RARE:
                 return bodyRepository.findByType(AppearanceType.rare);
             default:
-                return (List<Body>) bodyRepository.findAll();
+                return bodyRepository.findAllByOrderByTypeAsc();
         }
     }
 

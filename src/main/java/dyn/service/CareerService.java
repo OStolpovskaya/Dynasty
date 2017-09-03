@@ -92,12 +92,10 @@ public class CareerService {
 
         childCareer.setEducation(educationRepository.findOne(Education.PRIMARY));
 
-        int incCoefficient = 1;
-
-        childCareer.setIntelligence(getRandomFromMinToMax(fatherCareer.getIntelligence(), motherCareer.getIntelligence()) + incCoefficient);
-        childCareer.setCharisma(getRandomFromMinToMax(fatherCareer.getCharisma(), motherCareer.getCharisma()) + incCoefficient);
-        childCareer.setStrength(getRandomFromMinToMax(fatherCareer.getStrength(), motherCareer.getStrength()) + incCoefficient);
-        childCareer.setCreativity(getRandomFromMinToMax(fatherCareer.getCreativity(), motherCareer.getCreativity()) + incCoefficient);
+        childCareer.setIntelligence(getRandomFromMinToMax(fatherCareer.getIntelligence(), motherCareer.getIntelligence()) + Const.SKILL_COEFFICIENT);
+        childCareer.setCharisma(getRandomFromMinToMax(fatherCareer.getCharisma(), motherCareer.getCharisma()) + Const.SKILL_COEFFICIENT);
+        childCareer.setStrength(getRandomFromMinToMax(fatherCareer.getStrength(), motherCareer.getStrength()) + Const.SKILL_COEFFICIENT);
+        childCareer.setCreativity(getRandomFromMinToMax(fatherCareer.getCreativity(), motherCareer.getCreativity()) + Const.SKILL_COEFFICIENT);
     }
 
     public int getRandomFromMinToMax(int first, int second) {

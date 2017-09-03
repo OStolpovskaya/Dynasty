@@ -52,4 +52,14 @@ public class RaceService {
 
         }
     }
+
+    public boolean isMarriageForbidden(Character character, Character fiancee) {
+        Race characterRace = character.getRace();
+        Race fianceeRace = fiancee.getRace();
+
+        if (characterRace.getId() == Race.RACE_HUMAN || characterRace.getId() == Race.RACE_GM_HUMAN && fianceeRace.getId() >= Race.RACE_HIGH) {
+            return true;
+        }
+        return false;
+    }
 }

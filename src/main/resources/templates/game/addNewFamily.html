@@ -77,18 +77,18 @@
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('family.familyName')}? 'has-error'">
                     <label>Фамилия для вашей новой семьи:</label>
-                    <input class="form-control" type="text" th:field="*{family.familyName}"/>
+                    <input class="form-control" type="text" th:field="*{family.familyName}" placeholder="Ивановы"/>
                     <p th:if="${#fields.hasErrors('family.familyName')}" th:errors="*{family.familyName}">Incorrect</p>
                 </div>
                 <div class="form-group" th:classappend="${#fields.hasErrors('family.maleLastname')}? 'has-error'">
                     <label>Фамилия мужчин:</label>
-                    <input class="form-control" type="text" th:field="*{family.maleLastname}"/>
+                    <input class="form-control" type="text" th:field="*{family.maleLastname}" placeholder="Иванов"/>
                     <p th:if="${#fields.hasErrors('family.maleLastname')}" th:errors="*{family.maleLastname}">
                         Incorrect</p>
                 </div>
                 <div class="form-group" th:classappend="${#fields.hasErrors('family.femaleLastname')}? 'has-error'">
                     <label>Фамилия женщин:</label>
-                    <input class="form-control" type="text" th:field="*{family.femaleLastname}"/>
+                    <input class="form-control" type="text" th:field="*{family.femaleLastname}" placeholder="Иванова"/>
                     <p th:if="${#fields.hasErrors('family.femaleLastname')}" th:errors="*{family.femaleLastname}">
                         Incorrect</p>
                 </div>
@@ -96,7 +96,36 @@
             </form>
         </div>
     </div>
+    <div class="col-md-7" style="text-align: justify;">
+        Все элементы окна персонажа имеют всплывающие подсказки, просто наведите курсор.<br/><br/>
+        <strong>Имена</strong> генерируются случайным образом из базы данных имен. Особого смысла пока не несут. <br/>
+        <strong>Раса</strong> основателей: <em>Человек</em>. В процессе игры вы сможете заменить некоторые черты персонажей на генно-модифицированные (ГМ). Тогда раса изменится на <em>ГМ-человек</em>.
+        При определенных комбинациях обычных и ГМ-черт появляются другие расы, например, Эльфы, Орки и т.п.
+        <div class="my_tooltip"><span class="glyphicon glyphicon-question-sign" style="color: black;"></span>
+            <span class="my_tooltiptext">Эльф имеет следующие особенности (остальные черты любые обычные): <br/>
+                <ul>
+                    <li>Тело: средние плечи или узкие плечи</li>
+                    <li>Уши: высокие и длинные (ГМ-черта)</li>
+                    <li>Голова: овальная или круглая</li>
+                    <li>Рост: сверхвысокий (ГМ-черта)</li>
+                    <li>Нос: заостренный, прямой или вздернутый</li>
+                </ul>
+        </span>
+        </div>
+        <br/><br/>
+        Каждый персонаж имеет набор <strong>черт</strong>: рост, цвет кожи, цвет глаз (полный список во всплывающей подсказке к портрету персонажа). Эти черты передаются потомкам.
+        Шкала слева от портрета отображает рост персонажа. <br/><br/><br/><br/>
+        Под портретом персонажа находится панель <strong>карьеры</strong>.
+        <strong>Призвание</strong> указывает в какой области будет работать персонаж. Передается по наследству от родителей, но есть малая вероятность того, что сгенерируется новое призвание.
+        <strong>Образование</strong> начальное у всех персонажей, повысить до среднего и высшего можно за деньги при достаточных показателях <strong>навыков</strong>: <em>интеллект, харизма, сила и творчество</em>.
+        Навыки наследуются как случайное число между минимальным и максимальным значением навыка родителей плюс
+        <th:block th:text="${@const.SKILL_COEFFICIENT}"></th:block>
+        .
+        Образование открывает возможность получения более высокооплачиваемых <strong>должностей</strong>. Подробнее узнать о должностях, можно кликнув по значку призвания.
+        Призвание (по сути должность, которую получает персонаж за ход) приносит деньги и ресурсы.<br/><br/>
+        <strong>Фамилия</strong> вашей династии будет видна всем игрокам и фигурировать в названии предметов, которые вы будете производить.
 
+    </div>
 </div>
 <th:block th:replace="fragments/scripts :: webjars"></th:block>
 </body>
