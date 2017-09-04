@@ -18,10 +18,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -213,6 +211,28 @@ public class FamilyController {
 
     }
 
+    @RequestMapping(value = "/game/makeFamilyCurrent", method = RequestMethod.POST)
+    public String makeFamilyCurrent(ModelMap model, RedirectAttributes redirectAttributes,
+                                    @RequestParam(value = "familyId") Long familyId) {
+        User user = userRepository.findByUserName(getAuthUser().getUsername());
+        Family family = familyRepository.findOne(familyId);
+        if (family != null) {
+            if (user.getFamilies().contains(family)) {
+                Family currentFamily = user.getCurrentFamily();
+                currentFamily.setCurrent(false);
+                family.setCurrent(true);
+                familyRepository.save(currentFamily);
+                familyRepository.save(family);
+                redirectAttributes.addFlashAttribute("mess", "Теперь ваш текущий выбор семьи: " + family.getFamilyName());
+            } else {
+                redirectAttributes.addFlashAttribute("mess", "Это не ваша семья: " + family.getFamilyName());
+            }
+        } else {
+            redirectAttributes.addFlashAttribute("mess", "Семья с таким id не найдена");
+        }
+
+        return "redirect:/game/families";
+    }
 
     private UserDetails getAuthUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

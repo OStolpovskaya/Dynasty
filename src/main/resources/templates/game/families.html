@@ -71,13 +71,27 @@
             <th>Фамилия</th>
             <th>Уровень</th>
             <th>Текущий выбор</th>
+            <th>Действия</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="family : ${families}">
             <td th:text="${family.getFamilyName()}">name</td>
             <td th:text="${family.getLevel()}">1</td>
-            <td th:text="${family.isCurrent()}">current</td>
+            <td>
+                <th:block th:if="${family.isCurrent()}"><span class="glyphicon glyphicon-ok-sign" style="color: forestgreen"></span>
+                </th:block>
+            </td>
+            <td>
+                <th:block th:if="${family.isCurrent() == false}">
+                    <form th:action="@{/game/makeFamilyCurrent}" class="form-inline" method="post">
+                        <div class="form-group">
+                            <input type="hidden" name="familyId" th:value="${family.getId()}"/>
+                            <button type="submit" class="btn btn-default">Переключиться</button>
+                        </div>
+                    </form>
+                </th:block>
+            </td>
         </tr>
         </tbody>
     </table>
