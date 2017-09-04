@@ -584,7 +584,7 @@ public class GameController {
             Long raceId = race.getId();
             if (raceId != Race.RACE_HUMAN && raceId != Race.RACE_GM_HUMAN) {
                 family.getFamilyResources().addResFromRace(race);
-                turnLog.append("Раса приносит ресурсы: " + ResUtils.getResString(race) + ". ");
+                turnLog.append("Раса приносит ресурсы: " + ResUtils.getResString(race, Const.RACE_RESOURCE_COEFFICIENT) + ". ");
             }
             turnLog.append("<br>");
         }

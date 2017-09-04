@@ -193,14 +193,14 @@ public class FamilyResources implements ResourcesHolder {
     }
 
     public void addResFromRace(Race race) {
-        food += race.getFood();
-        wood += race.getWood();
-        metall += race.getMetall();
-        plastic += race.getPlastic();
-        microelectronics += race.getMicroelectronics();
-        cloth += race.getCloth();
-        stone += race.getStone();
-        chemical += race.getChemical();
+        food += race.getFood() * Const.RACE_RESOURCE_COEFFICIENT;
+        wood += race.getWood() * Const.RACE_RESOURCE_COEFFICIENT;
+        metall += race.getMetall() * Const.RACE_RESOURCE_COEFFICIENT;
+        plastic += race.getPlastic() * Const.RACE_RESOURCE_COEFFICIENT;
+        microelectronics += race.getMicroelectronics() * Const.RACE_RESOURCE_COEFFICIENT;
+        cloth += race.getCloth() * Const.RACE_RESOURCE_COEFFICIENT;
+        stone += race.getStone() * Const.RACE_RESOURCE_COEFFICIENT;
+        chemical += race.getChemical() * Const.RACE_RESOURCE_COEFFICIENT;
     }
 
     public String resString() {

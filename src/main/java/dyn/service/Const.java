@@ -128,4 +128,5 @@ public class Const {
 
 
     public static final int SKILL_COEFFICIENT = 1;
+    public static final int RACE_RESOURCE_COEFFICIENT = 5;
 }
