@@ -108,6 +108,8 @@ public class FianceeController {
             с высшей расой, если ты человек или гм-человек
             с высшей расой, если ты сам из высших рас, но другой
             */
+            List<Fiancee> available = new ArrayList<>();
+            List<Fiancee> disabled = new ArrayList<>();
             for (Fiancee fiancee : fianceeList) {
                 if (fiancee.getCharacter().getFamily().getId() == character.getFamily().getId()) {
                     fiancee.isDisabled = true;
@@ -125,11 +127,18 @@ public class FianceeController {
                     fiancee.isDisabled = true;
                     fiancee.disableReason = messageSource.getMessage("fiancee.notEnoughMoney", null, loc());
                 }
+
+                if (fiancee.isDisabled) {
+                    disabled.add(fiancee);
+                } else {
+                    available.add(fiancee);
+                }
             }
 
             model.addAttribute("family", family);
             model.addAttribute("character", character);
-            model.addAttribute("fianceeList", fianceeList);
+            model.addAttribute("fianceeList", available);
+            model.addAttribute("disabledDianceeList", disabled);
             return "/game/chooseFiancee";
         }
 
