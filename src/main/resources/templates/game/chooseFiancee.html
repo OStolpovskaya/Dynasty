@@ -80,7 +80,9 @@
             </form>
         </th:block>
         <th:block th:if="${#lists.isEmpty(fianceeList)}">
-            <p>В базе анкет пока нет подходящих невест. Попробуйте зайти позднее.</p>
+            <div class="alert alert-danger" style="margin-top: 10px;">
+                В базе анкет пока нет подходящих невест. Попробуйте зайти позднее.
+            </div>
         </th:block>
 
     </div>

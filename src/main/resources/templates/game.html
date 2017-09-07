@@ -41,11 +41,11 @@
     <div style="background-color: #2b669a; border-radius: 4px; position: fixed; top: 55px; left: 5px; padding: 5px;">
         <div th:alt-title="${'Можно запостить анкет невест: ' + bridesNum}">
             <img th:src="@{'/graphics/family_status_bride.png' }" height="35px" width="35px"></img>
-            <span class="badge" style="background-color: white; color: black;"><th:block th:text="${bridesNum}"></th:block></span>
+            <span class="badge" style="background-color: white; color: black;" id="bridesNum"><th:block th:text="${bridesNum}"></th:block></span>
         </div>
         <div th:alt-title="${'Можно создать пар: ' + pairsNum}">
             <img th:src="@{'/graphics/family_status_married.png' }" height="35px" width="35px"></img>
-            <span class="badge" style="background-color: white; color: black;"><th:block th:text="${pairsNum}"></th:block></span>
+            <span class="badge" style="background-color: white; color: black;" id="pairsNum"><th:block th:text="${pairsNum}"></th:block></span>
         </div>
         <th:block th:if="${#maps.size(buffsFamily) gt 0}">
             <hr/>
@@ -79,7 +79,7 @@
 
     <div align="center" style="margin-bottom: 5px;">
         <button data-toggle="collapse" data-target="#family-log" class="btn btn-info">
-            Лог <span class="glyphicon glyphicon-menu-down"></span>
+            Лог уровня <span class="glyphicon glyphicon-menu-down"></span>
         </button>
     </div>
     <div id="family-log" class="collapse">
@@ -128,9 +128,14 @@
                     <!--/*@thymesVar id="child" type="dyn.model.Character"*/-->
                     <div style="display: inline-block;">
                         <th:block th:replace="fragments/char :: char-panel (character=${child})"></th:block>
-                        <div class="btn-group">
+                        <!--<div class="btn-group">
                             <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                                    style="width: 180px; border-top-right-radius: 0; border-top-left-radius: 0; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+                                    style="width: 180px; border-top-right-radius: 0; border-top-left-radius: 0; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;" th:name="${'actionsFor'+child.getId()}">
+                                Действия <span class="caret"></span>
+                            </button>-->
+                        <div class="dropup">
+                            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" th:name="${'actionsFor'+child.getId()}"
+                                    style="width: 180px; border-top-right-radius: 0; border-top-left-radius: 0; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; ">
                                 Действия <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" style="width: 330px; font-size: 12px;">
@@ -141,7 +146,7 @@
                                         <li data-toggle="tooltip" th:title="'Можно создать еще пар: '+${family.getHouse().getPairsNum()-family.getPairsNum()}">
                                             <form th:action="@{/game/chooseFiancee}" method="get" class="form-inline" style="margin-left: 10px;">
                                                 <input type="hidden" name="characterId" th:value="${child.getId()}"/>
-                                                <button type="submit" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-ok"></span></button>
+                                                <button type="submit" class="btn btn-primary btn-xs" name="chooseFianceeButton" th:id="${child.getId()}"><span class="glyphicon glyphicon-ok"></span></button>
                                                 <span style="padding-left: 5px;">Выбрать невесту</span>
                                             </form>
                                         </li>
@@ -168,7 +173,7 @@
                                             <li data-toggle="tooltip" th:title="'Введите стоимость выкупа и нажмите кнопку. Можно опубликовать еще анкет: '+${family.getHouse().getFianceeNum()-family.getFianceeNum()}">
                                                 <form class="form-inline" th:action="@{/game/putUpForFiancee}" method="post" style="margin-left: 10px;">
                                                     <input type="hidden" name="female" th:value="${child.getId()}"/>
-                                                    <button class="btn btn-primary btn-xs" type="submit"><span class="glyphicon glyphicon-ok"></span></button>
+                                                    <button class="btn btn-primary btn-xs" type="submit" name="postFianceeButton" th:id="${child.getId()}"><span class="glyphicon glyphicon-ok"></span></button>
                                                     <span style="padding-left: 5px;">Анкета невесты: </span>
                                                     <input type="text" name="cost" class="form-control input-sm" th:value="${family.getLevel()}*50" style="width: 60px; margin-left: 4px;"/>
                                                 </form>
@@ -221,5 +226,10 @@
 </div>
 
 <th:block th:replace="fragments/scripts :: webjars"></th:block>
+<script>
+    $('.dropdown-menu').find('form').click(function (e) {
+        e.stopPropagation();
+    });
+</script>
 </body>
 </html>

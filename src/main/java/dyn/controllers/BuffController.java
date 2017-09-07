@@ -506,7 +506,7 @@ public class BuffController {
                 if (levelCheck && (sonCheck || wifeOfSonCheck || daughterCheck)) {
                     Long projectId = item.getProject().getId();
                     if (projectId.equals(Const.PROJECT_VOCATION_CHANGE)) {
-                        Vocation vocation = careerService.getVocation(Long.getLong(param));
+                        Vocation vocation = careerService.getVocation(Long.parseLong(param));
                         if (vocation != null) {
                             character.getCareer().setVocation(vocation);
                             characterRepository.save(character);

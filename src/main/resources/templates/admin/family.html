@@ -63,7 +63,46 @@
 
         </tbody>
     </table>
+    <h3>Доход по уровням</h3>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Уровень</th>
+            <th>Баллы</th>
+            <th>Деньги</th>
+
+            <th>food</th>
+            <th>wood</th>
+            <th>metall</th>
+            <th>plastic</th>
+            <th>microel</th>
+            <th>cloth</th>
+            <th>stone</th>
+            <th>chemical</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="familyLog : ${family.getFamilyLogs()}">
+            <!--/*@thymesVar id="familyLog" type="dyn.model.FamilyLog"*/-->
+            <td th:text="${familyLog.getLevel()}">type</td>
+            <td th:text="${familyLog.getCraftpoint()}">type</td>
+            <td th:text="${familyLog.getMoney()}">type</td>
+
+            <td th:text="${familyLog.getFood()}">type</td>
+            <td th:text="${familyLog.getWood()}">type</td>
+            <td th:text="${familyLog.getMetall()}">type</td>
+            <td th:text="${familyLog.getPlastic()}">type</td>
+            <td th:text="${familyLog.getMicroelectronics()}">type</td>
+            <td th:text="${familyLog.getCloth()}">type</td>
+            <td th:text="${familyLog.getStone()}">type</td>
+            <td th:text="${familyLog.getChemical()}">type</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h3>Логи</h3>
     <div class="well" th:each="log : ${family.getFamilyLogs()}">
+        <p th:text="${'Уровень: '+log.getLevel()}"></p>
         <p th:utext="${log.getText()}"></p>
     </div>
 </div>

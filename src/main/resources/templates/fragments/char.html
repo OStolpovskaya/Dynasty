@@ -37,10 +37,12 @@
                         </div>
                     </th:block>
                     <th:block th:if="${project.getId() eq @const.PROJECT_VOCATION_CHANGE}">
-                        <span th:text="${project.getName() + ' (' + #lists.size(items) + ' шт.): '}" style="padding-left: 5px;"></span>
-                        <select class="form-control input-sm" name="param">
-                            <option th:each="vocation : ${@vocationRepository.findAll()}" th:value="${vocation.getId()}" th:text="${vocation.getName()}">Тело</option>
-                        </select>
+                        <div class="form-group">
+                            <span th:text="${project.getName() + ' (' + #lists.size(items) + ' шт.): '}" style="padding-left: 5px;"></span>
+                            <select class="form-control input-sm" name="param" style="width: 120px;">
+                                <option th:each="vocation : ${@vocationRepository.findAll()}" th:value="${vocation.getId()}" th:text="${vocation.getName()}">Тело</option>
+                            </select>
+                        </div>
                     </th:block>
                 </form>
             </li>
