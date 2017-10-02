@@ -65,7 +65,7 @@
                     <span class="icon-bar"></span>
                 </button>
             </div>
-            <div class="collapse navbar-collapse" id="myNavbar" style="min-width: 1600px;">
+            <div class="collapse navbar-collapse" id="myNavbar" style="min-width: 1800px;">
                 <ul class="nav navbar-nav">
                     <li th:classappend="${#httpServletRequest.getRequestURI() == '/game' ? 'active':''}"><a href="/game">Игра</a></li>
                     <li th:classappend="${#httpServletRequest.getRequestURI().contains('/game/families') ? 'active':''}"><a href="/game/families">Семья</a></li>
@@ -96,7 +96,7 @@
                         <span class="icon-bar"></span>
                     </button>
                 </div>
-                <div class="collapse navbar-collapse" id="myNavbarBottom" style="min-width: 1600px;">
+                <div class="collapse navbar-collapse" id="myNavbarBottom" style="min-width: 1800px;">
                     <ul class="nav navbar-nav">
                         <li><a href="#">Продукты: <span class="badge"><th:block th:text="${family.getFamilyResources().getFood()}"></th:block></span></a></li>
                         <li><a href="#">Дерево: <span class="badge"><th:block th:text="${family.getFamilyResources().getWood()}"></th:block></span></a></li>

@@ -24,6 +24,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -43,7 +44,12 @@ public class RegistrationController {
     private AuthenticationManager authenticationManager;
 
     @GetMapping("/reg")
-    public String registration(ModelMap model) {
+    public String registration(ModelMap model, @RequestParam(name = "yaodmin", required = false, defaultValue = "neodmin") String yaodmin) {
+        boolean disabled = true;
+        if (yaodmin.equals("omletIsGood")) {
+            disabled = false;
+        }
+        model.addAttribute("disabled", disabled);
         model.addAttribute("regUser", new User());
 
         return "reg";

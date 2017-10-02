@@ -50,17 +50,19 @@ public class GameControllerTest {
         driver.findElement(By.id(GAME_LINK)).click();
 
         HashMap<String, String[]> players = new HashMap<>();
-        players.put("ForTest7", new String[]{"Куровы", "Куров", "Курова"});
-        players.put("ForTest8", new String[]{"Луровы", "Луров", "Лурова"});
-        /*
-        players.put("YellowSubmarine", new String[]{"Подлодковы", "Подлодков", "Подлодкова"});
-        players.put("Hovard", new String[]{"Верещагины", "Верещагин", "Верещагина"});
-        players.put("OlgaTheFirst", new String[]{"Котовы", "Котов", "Котова"});
-
-        players.put("Octopus", new String[]{"Осьминоговы", "Осьминогов", "Осьминогова"});
-        players.put("Периметр", new String[]{"Кругловы", "Круглов", "Круглова"});
-        players.put("Vladimir", new String[]{"Владимировы", "Владимиров", "Владимирова"});
-        */
+        players.put("ForTest1", new String[]{"Арбузовы", "Арбузов", "Арбузова"});
+        players.put("ForTest2", new String[]{"Барановы", "Баранов", "Баранова"});
+        players.put("ForTest3", new String[]{"Вороновы", "Воронов", "Воронова"});
+        players.put("ForTest4", new String[]{"Гуровы", "Гуров", "Гурова"});
+        players.put("ForTest5", new String[]{"Дуровы", "Дуров", "Дурова"});
+        players.put("ForTest6", new String[]{"Ежовы", "Ежов", "Ежова"});
+        players.put("ForTest7", new String[]{"Жуковы", "Жуков", "Жукова"});
+        players.put("ForTest8", new String[]{"Зубровы", "Зубров", "Зуброва"});
+        players.put("NewChar1", new String[]{"Игнатовы", "Игнатов", "Игнатова"});
+        players.put("NewChar2", new String[]{"Куровы", "Куров", "Курова"});
+        players.put("NewChar3", new String[]{"Леонтьевы", "Леонтьев", "Леонтьева"});
+        players.put("NewChar4", new String[]{"Мухины", "Мухин", "Мухина"});
+        players.put("NewChar5", new String[]{"Носовы", "Носов", "Носова"});
 
         for (String player : players.keySet()) {
             logIn(player);
@@ -70,7 +72,7 @@ public class GameControllerTest {
             logOut(player);
         }
 
-        int levels = 5;
+        int levels = 10;
         for (int level = 0; level < levels; level++) {
             for (String player : players.keySet()) {
                 logIn(player);
