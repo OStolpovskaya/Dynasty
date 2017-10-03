@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Обмен ресурсов</title>
+    <link th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}" rel="stylesheet"></link>
+    <link th:href="@{/css/common.css}" rel="stylesheet"></link>
+</head>
+<body>
+<div th:replace="fragments/navigation :: nav-for-game"></div>
+<div class="container">
+    <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
+    <script>
+        /*<![CDATA[*/
+        function changeText(param, max) {
+            document.getElementById('dropText').innerHTML = param;
+            var c = Math.floor(max / 10) * 10;
+            document.getElementById('count').value = c;
+            document.getElementById('count').setAttribute("max", c);
+            document.getElementById('countText').innerHTML = c;
+            document.getElementById('takeCountText').innerHTML = c / 10;
+        }
+
+        function changeTakeText(param) {
+            document.getElementById('takeText').innerHTML = param;
+        }
+
+        function changeCount() {
+            if (document.getElementById('count').value > document.getElementById('count').getAttribute("max")) {
+                document.getElementById('count').value = document.getElementById('count').getAttribute("max");
+            }
+            if (document.getElementById('count').value < 0) {
+                document.getElementById('count').value = "0";
+            }
+            var c = Math.floor(document.getElementById('count').value / 10) * 10;
+            document.getElementById('count').value = c;
+
+            document.getElementById('countText').innerHTML = c;
+            document.getElementById('takeCountText').innerHTML = Math.floor(document.getElementById('count').value / 10);
+        }
+        /*]]>*/
+    </script>
+    <h3>Обмен ресурсов</h3>
+    <form th:action="@{/game/exchangeResources}" method="post">
+        <div class="col-sm-6">
+            <h4>Отдать ресурсы:</h4>
+            <div class="radio">
+                <label><input type="radio" name="drop" value="food" checked="checked" th:onclick="|changeText('${@const.RES_FOOD_NAME}','${family.getFamilyResources().getFood()}')|"/>
+                    <th:block th:text="${@const.RES_FOOD_NAME + ' ('+family.getFamilyResources().getFood()+')'}"></th:block>
+                </label>
+            </div>
+            <div class="radio">
+                <label><input type="radio" name="drop" value="wood" th:onclick="|changeText('${@const.RES_WOOD_NAME}','${family.getFamilyResources().getWood()}')|"/>
+                    <th:block th:text="${@const.RES_WOOD_NAME + ' ('+family.getFamilyResources().getWood()+')'}"></th:block>
+                </label>
+            </div>
+            <div class="radio">
+                <label><input type="radio" name="drop" value="metall" th:onclick="|changeText('${@const.RES_METALL_NAME}','${family.getFamilyResources().getMetall()}')|"/>
+                    <th:block th:text="${@const.RES_METALL_NAME + ' ('+family.getFamilyResources().getMetall()+')'}"></th:block>
+                </label>
+            </div>
+            <div class="radio">
+                <label><input type="radio" name="drop" value="plastic" th:onclick="|changeText('${@const.RES_PLASTIC_NAME}','${family.getFamilyResources().getPlastic()}')|"/>
+                    <th:block th:text="${@const.RES_PLASTIC_NAME + ' ('+family.getFamilyResources().getPlastic()+')'}"></th:block>
+                </label>
+            </div>
+            <div class="radio">
+                <label><input type="radio" name="drop" value="microelectronics" th:onclick="|changeText('${@const.RES_MICROELECTRONICS_NAME}','${family.getFamilyResources().getMicroelectronics()}')|"/>
+                    <th:block th:text="${@const.RES_MICROELECTRONICS_NAME + ' ('+family.getFamilyResources().getMicroelectronics()+')'}"></th:block>
+                </label>
+            </div>
+            <div class="radio">
+                <label><input type="radio" name="drop" value="cloth" th:onclick="|changeText('${@const.RES_CLOTH_NAME}','${family.getFamilyResources().getCloth()}')|"/>
+                    <th:block th:text="${@const.RES_CLOTH_NAME + ' ('+family.getFamilyResources().getCloth()+')'}"></th:block>
+                </label>
+            </div>
+            <div class="radio">
+                <label><input type="radio" name="drop" value="stone" th:onclick="|changeText('${@const.RES_STONE_NAME}','${family.getFamilyResources().getStone()}')|"/>
+                    <th:block th:text="${@const.RES_STONE_NAME + ' ('+family.getFamilyResources().getStone()+')'}"></th:block>
+                </label>
+            </div>
+            <div class="radio">
+                <label><input type="radio" name="drop" value="chemical" th:onclick="|changeText('${@const.RES_CHEMICAL_NAME}','${family.getFamilyResources().getChemical()}')|"/>
+                    <th:block th:text="${@const.RES_CHEMICAL_NAME + ' ('+family.getFamilyResources().getChemical()+')'}"></th:block>
+                </label>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <h4>Получить ресурсы:</h4>
+            <div class="radio">
+                <label><input type="radio" name="take" value="food" th:onclick="|changeTakeText('${@const.RES_FOOD_NAME}')|"/>
+                    <th:block th:text="${@const.RES_FOOD_NAME}"></th:block>
+                </label>
+            </div>
+            <div class="radio">
+                <label><input type="radio" name="take" value="wood" checked="checked" th:onclick="|changeTakeText('${@const.RES_WOOD_NAME}')|"/>
+                    <th:block th:text="${@const.RES_WOOD_NAME}"></th:block>
+                </label>
+            </div>
+            <div class="radio">
+                <label><input type="radio" name="take" value="metall" th:onclick="|changeTakeText('${@const.RES_METALL_NAME}')|"/>
+                    <th:block th:text="${@const.RES_METALL_NAME}"></th:block>
+                </label>
+            </div>
+            <div class="radio">
+                <label><input type="radio" name="take" value="plastic" th:onclick="|changeTakeText('${@const.RES_PLASTIC_NAME}')|"/>
+                    <th:block th:text="${@const.RES_PLASTIC_NAME}"></th:block>
+                </label>
+            </div>
+            <div class="radio">
+                <label><input type="radio" name="take" value="mocroelectronics" th:onclick="|changeTakeText('${@const.RES_MICROELECTRONICS_NAME}')|"/>
+                    <th:block th:text="${@const.RES_MICROELECTRONICS_NAME}"></th:block>
+                </label>
+            </div>
+            <div class="radio">
+                <label><input type="radio" name="take" value="cloth" th:onclick="|changeTakeText('${@const.RES_CLOTH_NAME}')|"/>
+                    <th:block th:text="${@const.RES_CLOTH_NAME}"></th:block>
+                </label>
+            </div>
+            <div class="radio">
+                <label><input type="radio" name="take" value="stone" th:onclick="|changeTakeText('${@const.RES_STONE_NAME}')|"/>
+                    <th:block th:text="${@const.RES_STONE_NAME}"></th:block>
+                </label>
+            </div>
+            <div class="radio">
+                <label><input type="radio" name="take" value="chemical" th:onclick="|changeTakeText('${@const.RES_CHEMICAL_NAME}')|"/>
+                    <th:block th:text="${@const.RES_CHEMICAL_NAME}"></th:block>
+                </label>
+            </div>
+
+        </div>
+        <div>
+            <h4>Сколько ресурсов отдать:</h4>
+            <input id="count" name="count" type="number" value="10" step="10" min="0" th:max="${family.getFamilyResources().getFood()}" onclick="changeCount()" onkeyup="changeCount()"/>
+        </div>
+        <div class="col-sm-6">
+        </div>
+        <h4>Обмен 10 к 1:</h4>
+        <p>
+            Вы хотите обменять <strong id="countText">10</strong> шт. ресурса <strong id="dropText">Продукты</strong> на <strong id="takeCountText">1</strong> шт. ресурса <strong id="takeText">Дерево</strong>
+        </p>
+        <button type="submit" class="btn btn-info btn-md center-block">Обменять</button>
+    </form>
+</div>
+<th:block th:replace="fragments/scripts :: webjars"></th:block>
+</body>
+</html>

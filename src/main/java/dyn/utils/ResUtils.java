@@ -15,6 +15,30 @@ import java.util.Map;
 public class ResUtils {
     private Map<String, Integer> initValues;
 
+    public static String getName(String res) {
+        switch (res) {
+            case "food":
+                return Const.RES_FOOD_NAME;
+            case "wood":
+                return Const.RES_WOOD_NAME;
+            case "metall":
+                return Const.RES_METALL_NAME;
+            case "plastic":
+                return Const.RES_PLASTIC_NAME;
+            case "microelectronics":
+                return Const.RES_MICROELECTRONICS_NAME;
+            case "cloth":
+                return Const.RES_CLOTH_NAME;
+            case "stone":
+                return Const.RES_STONE_NAME;
+            case "chemical":
+                return Const.RES_CHEMICAL_NAME;
+            default:
+                return "";
+        }
+
+    }
+
     public static void copyResources(ResourcesHolder from, ResourcesHolder to) {
         to.setFood(from.getFood());
         to.setWood(from.getWood());

@@ -68,14 +68,14 @@ public class Const {
     public static final Long BUFF_ONE_MORE_CHILD = 8L;
     public static final Long BUFF_SALARY_INC = 9L;
 
-    public static final String RES_WOOD_NAME = "дерево";
-    public static final String RES_FOOD_NAME = "продукты";
-    public static final String RES_METALL_NAME = "металл";
-    public static final String RES_PLASTIC_NAME = "пластик, резина";
-    public static final String RES_MICROELECTRONICS_NAME = "микроэлектроника";
-    public static final String RES_CLOTH_NAME = "ткань, кожа, бумага";
-    public static final String RES_STONE_NAME = "камень, стекло, керамика";
-    public static final String RES_CHEMICAL_NAME = "химия, краски";
+    public static final String RES_WOOD_NAME = "Дерево";
+    public static final String RES_FOOD_NAME = "Продукты";
+    public static final String RES_METALL_NAME = "Металл";
+    public static final String RES_PLASTIC_NAME = "Пластик, резина";
+    public static final String RES_MICROELECTRONICS_NAME = "Микроэлектроника";
+    public static final String RES_CLOTH_NAME = "Ткань, кожа, бумага";
+    public static final String RES_STONE_NAME = "Камень, стекло, керамика";
+    public static final String RES_CHEMICAL_NAME = "Химия, краски";
 
     public static final int COST_GEN_MOD = 600;
     public static final int COST_FERTILITY = 600;

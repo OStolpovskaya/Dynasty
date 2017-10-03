@@ -147,7 +147,7 @@ public class FamilyResources implements ResourcesHolder {
         chemical -= project.getChemical();
     }
 
-    public boolean addRes(String res, int amount) {
+    public boolean addResByName(String res, int amount) {
         switch (res) {
             case "food":
                 food += amount;
@@ -250,5 +250,60 @@ public class FamilyResources implements ResourcesHolder {
         cloth += Math.ceil(project.getCloth() * Const.DESTROY_ITEM_COEFF);
         stone += Math.ceil(project.getStone() * Const.DESTROY_ITEM_COEFF);
         chemical += Math.ceil(project.getChemical() * Const.DESTROY_ITEM_COEFF);
+    }
+
+    public int getResByName(String dropRes) {
+        switch (dropRes) {
+            case "food":
+                return food;
+            case "wood":
+                return wood;
+            case "metall":
+                return metall;
+            case "plastic":
+                return plastic;
+            case "microelectronics":
+                return microelectronics;
+            case "cloth":
+                return cloth;
+            case "stone":
+                return stone;
+            case "chemical":
+                return chemical;
+            default:
+                return -1;
+        }
+    }
+
+    public boolean removeResByName(String res, int amount) {
+        switch (res) {
+            case "food":
+                food -= amount;
+                break;
+            case "wood":
+                wood -= amount;
+                break;
+            case "metall":
+                metall -= amount;
+                break;
+            case "plastic":
+                plastic -= amount;
+                break;
+            case "microelectronics":
+                microelectronics -= amount;
+                break;
+            case "cloth":
+                cloth -= amount;
+                break;
+            case "stone":
+                stone -= amount;
+                break;
+            case "chemical":
+                chemical -= amount;
+                break;
+            default:
+                return false;
+        }
+        return true;
     }
 }

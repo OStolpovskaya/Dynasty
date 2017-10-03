@@ -455,7 +455,7 @@ public class CraftController {
         Family family = user.getCurrentFamily();
 
         if (family.getMoney() >= FamilyResources.BUYCOST) {
-            if (family.getFamilyResources().addRes(res, 5)) {
+            if (family.getFamilyResources().addResByName(res, 5)) {
                 family.setMoney(family.getMoney() - FamilyResources.BUYCOST);
                 familyRepository.save(family);
                 logger.info(family.familyNameAndId() + " buy res: " + res);
