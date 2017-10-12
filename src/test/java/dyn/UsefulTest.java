@@ -45,4 +45,18 @@ public class UsefulTest {
         System.out.println(Arrays.toString(resources.toArray()));
     }
 
+    //int featureToModify = (int) (1 + Math.random() * 12);
+    @Test
+    public void Test3() {
+        int c = 10000;
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0; i < 12; i++) {
+            list.add(i, 0);
+        }
+        for (int i = 0; i < c; i++) {
+            int featureToModify = (int) (1 + Math.random() * 12);
+            list.set(featureToModify - 1, list.get(featureToModify - 1) + 1);
+        }
+        System.out.println(list.toString());
+    }
 }
