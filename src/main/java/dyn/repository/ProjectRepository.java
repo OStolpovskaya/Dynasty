@@ -20,4 +20,6 @@ public interface ProjectRepository extends CrudRepository<Project, Long> {
     List<Project> findByAuthor(Family author);
 
     List<Project> findAllByStatusOrderByThing(ProjectStatus projectStatus);
+
+    List<Project> findAllByThingCraftBranchIdOrderByCostAscThingIdAsc(Long craftBranchId);
 }

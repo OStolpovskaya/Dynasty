@@ -77,11 +77,6 @@ public class Const {
     public static final String RES_STONE_NAME = "Камень, стекло, керамика";
     public static final String RES_CHEMICAL_NAME = "Химия, краски";
 
-    public static final int COST_GEN_MOD = 600;
-    public static final int COST_FERTILITY = 600;
-    public static final int COST_FATHER_DOMINANT = 400;
-    public static final int COST_MOTHER_DOMINANT = 400;
-    public static final int COST_RES_WOOD = 500;
     public static final int COST_NEW_PROJECT = 10000;
 
     public static final double DESTROY_ITEM_COEFF = 0.5;
@@ -129,4 +124,5 @@ public class Const {
 
     public static final int SKILL_COEFFICIENT = 1;
     public static final int RACE_RESOURCE_COEFFICIENT = 5;
+    public static final int AUTOGEN_PRODUCTION_COST_COEFFICIENT = 5;
 }

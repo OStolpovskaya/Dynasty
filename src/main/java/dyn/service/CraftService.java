@@ -234,4 +234,8 @@ public class CraftService {
     public int getSumCostOfthingsInCarftBranch(Long craftBranchId) {
         return thingRepository.sumCostOfThingsOfCraftBranchId(craftBranchId);
     }
+
+    public List<Project> getProjectsForProduction() {
+        return projectRepository.findAllByThingCraftBranchIdOrderByCostAscThingIdAsc(Const.CRAFTBRANCH_SERVICE_AND_BUFFS);
+    }
 }

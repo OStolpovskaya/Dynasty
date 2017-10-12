@@ -71,11 +71,13 @@ public class FianceeController {
         Character character = characterRepository.findByIdAndFamilyAndLevelAndSexAndSpouseIsNull(characterId, family, family.getLevel(), "male");
         if (character != null) {
 
+            /* // генерация невест, если в базе пусто
             int size = fianceeRepository.findByCharacterFamilyNotAndCharacterLevel(family, family.getLevel()).size();
             if (size == 0) {
                 String fiancees = adminController.genFiancees(family.getLevel(), familyRepository.findOne(1L));
                 logger.info(user.getUserName() + " want to choose fiancee, but there was no fiancees in the database. Generated: " + fiancees);
             }
+            */
 
             CriteriaBuilder cb = em.getCriteriaBuilder();
             CriteriaQuery<Fiancee> cq = cb.createQuery(Fiancee.class);

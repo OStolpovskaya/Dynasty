@@ -150,6 +150,13 @@ public class AdminController {
         return "admin/family";
     }
 
+    @RequestMapping(value = "/admin/info", method = RequestMethod.GET)
+    public String info(ModelMap model, RedirectAttributes redirectAttributes) {
+        List<Project> projects = craftService.getProjectsForProduction();
+        model.addAttribute("production", projects);
+        return "admin/info";
+    }
+
     @RequestMapping(value = "/admin/generateFiancee", method = RequestMethod.POST)
     public String generateFiancees(ModelMap model,
                                    @RequestParam("level") int level,

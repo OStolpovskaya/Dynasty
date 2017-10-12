@@ -349,21 +349,7 @@ public class HouseController {
             int size = items.size();
             if (size == 0) {
                 Family producer = familyRepository.findOne(1L);
-                if (projectId.equals(Const.PROJECT_GEN_MOD)) {
-                    items = craftService.createItemForStore(project, producer, Const.COST_GEN_MOD);
-                }
-                if (projectId.equals(Const.PROJECT_FERTILITY)) {
-                    items = craftService.createItemForStore(project, producer, Const.COST_FERTILITY);
-                }
-                if (projectId.equals(Const.PROJECT_FATHER_DOMINANT)) {
-                    items = craftService.createItemForStore(project, producer, Const.COST_FATHER_DOMINANT);
-                }
-                if (projectId.equals(Const.PROJECT_MOTHER_DOMINANT)) {
-                    items = craftService.createItemForStore(project, producer, Const.COST_MOTHER_DOMINANT);
-                }
-                if (projectId.equals(Const.PROJECT_RES_WOOD)) {
-                    items = craftService.createItemForStore(project, producer, Const.COST_RES_WOOD);
-                }
+                items = craftService.createItemForStore(project, producer, project.getCost() * Const.AUTOGEN_PRODUCTION_COST_COEFFICIENT);
             }
 
 

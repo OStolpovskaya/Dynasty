@@ -9,6 +9,39 @@
 <body>
 <div th:replace="fragments/navigation :: nav-for-admin"></div>
 <div class="container">
+
+    <h3>Здания бизнеса (
+        <th:block th:text="${#lists.size(buildingList)}"></th:block>
+        )
+    </h3>
+    <!--<table class="table table-striped table-condensed">-->
+    <table class="table table-striped table-condensed" style="font-size: 10px;">
+        <thead>
+        <tr>
+            <th>Building</th>
+            <th>Desc</th>
+            <th>Project name</th>
+            <th>Cost</th>
+            <th>Res</th>
+            <th>Thing</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="building : ${buildingList}" th:with="project = ${building.getProduction()}">
+            <!--/*@thymesVar id="building" type="dyn.model.House"*/-->
+            <td><a th:href="${'/admin/buildings#building'+building.getId()}" th:text="${building.getName()+'('+building.getId()+')'}">Home</a></td>
+            <td th:text="${building.getDesc()}">name</td>
+            <td th:text="${project.getName()+'('+project.getId()+')'}">name</td>
+            <td th:text="${project.getCost()}">name</td>
+            <td>
+                <div th:replace="fragments/custom :: resView (resHolder=${project})"></div>
+
+            </td>
+            <td th:text="${building.getProduction().getThing().getName()}">name</td>
+        </tr>
+        </tbody>
+    </table>
+
     <h3>Интерьер зданий города</h3>
     <h3>Ваши здания:</h3>
     <ul class="list-inline">
