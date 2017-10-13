@@ -76,18 +76,19 @@ public class GameControllerTest {
         for (int level = 0; level < levels; level++) {
             for (String player : players.keySet()) {
                 logIn(player);
-                chooseFiancees(player);
+                boolean bridesWasChosen = chooseFiancees(player);
 
-                makeTurn(player);
-                postFiancees(player);
-
+                if (bridesWasChosen == true) {
+                    makeTurn(player);
+                    postFiancees(player);
+                }
                 logOut(player);
             }
         }
 
     }
 
-    private void chooseFiancees(String player) {
+    private boolean chooseFiancees(String player) {
         System.out.println("*** GameControllerTest.chooseFianceesAndTurn: " + player + " ***");
 
         Assert.assertTrue(player + ": not main page", isMainPage(player));
@@ -109,6 +110,9 @@ public class GameControllerTest {
             Assert.assertTrue("'Выберите невесту' not found!", pageBody().contains("Выберите невесту"));
 
             List<WebElement> radioFianceeList = driver.findElements(By.name("fiancee"));
+            if (radioFianceeList.size() == 0) {
+                return false;
+            }
             randIndex = (int) (0 + Math.random() * (radioFianceeList.size() - 1));
 
             WebElement radioFiancee = radioFianceeList.get(randIndex);
@@ -123,7 +127,7 @@ public class GameControllerTest {
 
             chooseFianceeButtonList = driver.findElements(By.name("chooseFianceeButton"));
         }
-
+        return true;
     }
 
     private void scrollTo(WebElement webElement) {

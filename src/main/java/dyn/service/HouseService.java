@@ -255,4 +255,8 @@ public class HouseService {
     public List<Item> getBuffsInStorageByProject(Family family, Long projectId) {
         return itemRepository.findByFamilyAndPlaceAndProjectId(family, ItemPlace.storage, projectId);
     }
+
+    public List<RoomThing> getRoomThingByHouse(House house) {
+        return roomThingRepository.findAllByHouseOrderByRoomAscThingAsc(house);
+    }
 }

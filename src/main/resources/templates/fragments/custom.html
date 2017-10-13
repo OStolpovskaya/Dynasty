@@ -20,7 +20,7 @@
 
 <th:block th:fragment="resView (resHolder)">
     <!--/*@thymesVar id="resHolder" type="dyn.utils.ResourcesHolder"*/-->
-    <ul class="list-inline" style="width: 262px;">
+    <ul class="list-inline" style="width: 272px;">
         <li style="padding: 0px; margin: 0px;"><a href="#"><span class="badge" th:title="${@const.RES_FOOD_NAME}" style="width: 30px; background-color: #d5797c; font-size: 10px;"><th:block th:text="${resHolder.getFood()}"></th:block></span></a></li>
         <li style="padding: 0px; margin: 0px;"><a href="#"><span class="badge" th:title="${@const.RES_WOOD_NAME}" style="width: 30px; background-color: #7ac1a3; font-size: 10px;"><th:block th:text="${resHolder.getWood()}"></th:block></span></a></li>
         <li style="padding: 0px; margin: 0px;"><a href="#"><span class="badge" th:title="${@const.RES_METALL_NAME}" style="width: 30px; background-color: #c7a488; font-size: 10px;"><th:block th:text="${resHolder.getMetall()}"></th:block></span></a>

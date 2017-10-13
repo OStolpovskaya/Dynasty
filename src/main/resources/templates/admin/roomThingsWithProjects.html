@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Дом и его проекты вещей</title>
+    <link th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}" rel="stylesheet"></link>
+    <link th:href="@{/css/common.css}" rel="stylesheet"></link>
+</head>
+<body>
+<div th:replace="fragments/navigation :: nav-for-admin"></div>
+<div class="container" style="width: 1600px;">
+    <h3>Карта вещей в доме с проектами</h3>
+    <ul class="list-inline">
+        <li th:each="houseMenu : ${houseList}"><!--/*@thymesVar id="houseMenu" type="dyn.model.House"*/-->
+            <a th:href="${'/admin/roomThingsWithProjects?houseId='+houseMenu.getId()}" th:text="${houseMenu.getName()}">Home</a>
+        </li>
+    </ul>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Room</th>
+            <th>Name</th>
+            <th>Projects</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="mapEntry : ${roomThingWithProjects}" th:with="roomThing = ${mapEntry.getKey()}, projectList = ${mapEntry.getValue()}">
+            <!--/*@thymesVar id="roomThing" type="dyn.model.RoomThing"*/-->
+            <td th:text="${roomThing.getId()}">1</td>
+            <td th:text="${roomThing.getRoom().getName()}">1</td>
+            <td>
+                <a th:href="${'/admin/projectsForThing?thingId='+roomThing.getThing().getId()}" target="_blank">
+                    <th:block th:text="${roomThing.getThing().getName()}"></th:block>
+                </a>
+            </td>
+            <td>
+                <!--/*@thymesVar id="project" type="dyn.model.Project"*/-->
+                <table class="table table-bordered table-sm">
+                    <tr th:each="project : ${projectList}">
+                        <td class="col-sm-3">
+                            <th:block th:text="${project.getName()}"></th:block>
+                        </td>
+                        <td th:text="${project.getCost()}" class="col-sm-1">name</td>
+                        <td>
+                            <div th:replace="fragments/custom :: resView (resHolder=${project})"></div>
+
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+<script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
+
+</body>
+</html>

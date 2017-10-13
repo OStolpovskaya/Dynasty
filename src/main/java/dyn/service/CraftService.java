@@ -238,4 +238,8 @@ public class CraftService {
     public List<Project> getProjectsForProduction() {
         return projectRepository.findAllByThingCraftBranchIdOrderByCostAscThingIdAsc(Const.CRAFTBRANCH_SERVICE_AND_BUFFS);
     }
+
+    public List<Project> getProjectByThingAndAuthor(Thing thing, long authorId) {
+        return projectRepository.findByThingAndAuthorId(thing, authorId);
+    }
 }

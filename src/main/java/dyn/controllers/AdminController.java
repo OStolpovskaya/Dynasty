@@ -120,13 +120,12 @@ public class AdminController {
 
         List<List<Fiancee>> levelList = new ArrayList<>();
         List<Fiancee> fiancees = fianceeRepository.findAllByOrderByCharacterLevel();
-        int level = 0;
+        int maxLevel = fiancees.get(fiancees.size() - 1).getCharacter().getLevel();
+        for (int i = 0; i < maxLevel; i++) {
+            levelList.add(new ArrayList<>());
+        }
         for (Fiancee fiancee : fiancees) {
-            if (fiancee.getCharacter().getLevel() != level) {
-                levelList.add(new ArrayList<>());
-                level = fiancee.getCharacter().getLevel();
-            }
-            levelList.get(level - 1).add(fiancee);
+            levelList.get(fiancee.getCharacter().getLevel() - 1).add(fiancee);
         }
 
         model.addAttribute("fianceeLevelList", levelList);
@@ -155,6 +154,26 @@ public class AdminController {
         List<Project> projects = craftService.getProjectsForProduction();
         model.addAttribute("production", projects);
         return "admin/info";
+    }
+
+    @RequestMapping(value = "/admin/roomThingsWithProjects", method = RequestMethod.GET)
+    public String roomThingsWithProjects(ModelMap model,
+                                         @RequestParam(value = "houseId", defaultValue = "1") Long houseId,
+                                         RedirectAttributes redirectAttributes) {
+        List<House> houseList = houseService.getHomeList();
+        model.addAttribute("houseList", houseList);
+
+        House house = houseService.getHouse(houseId);
+        if (house == null) {
+            house = houseService.getHouse(1L);
+        }
+        List<RoomThing> roomThingList = houseService.getRoomThingByHouse(house);
+        Map<RoomThing, List<Project>> map = new LinkedHashMap<>();
+        for (RoomThing roomThing : roomThingList) {
+            map.put(roomThing, craftService.getProjectByThingAndAuthor(roomThing.getThing(), 1L));
+        }
+        model.addAttribute("roomThingWithProjects", map);
+        return "admin/roomThingsWithProjects";
     }
 
     @RequestMapping(value = "/admin/generateFiancee", method = RequestMethod.POST)

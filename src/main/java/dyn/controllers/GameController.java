@@ -82,7 +82,7 @@ public class GameController {
         model.addAttribute("user", user);
 
         List<Family> families = user.getFamilies();
-        if (families.size() == 0) {
+        if (families.size() == 0 || (families.size() == 1 && families.get(0).isCurrent() == false)) {
             logger.info(user.getUserName() + " doesn't have any family, redirect to create the first family");
             redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("new.user", null, loc()));
             return "redirect:/game/addNewFamily";
