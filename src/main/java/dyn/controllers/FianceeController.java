@@ -88,8 +88,8 @@ public class FianceeController {
 
             List<Predicate> predicates = new ArrayList<>();
 
-            predicates.add(cb.equal(fianceeCharacter.get(Character_.level), family.getLevel()));
-            //predicates.add(cb.notEqual(fianceeCharacter.get(Character_.family), family));
+            predicates.add(cb.lessThanOrEqualTo(fianceeCharacter.get(Character_.level), family.getLevel()));
+            predicates.add(cb.notEqual(fianceeCharacter.get(Character_.family), family));
 
             if (!fianceeFilter.isEmpty()) {
                 if (fianceeFilter.getRace() != null) {
@@ -100,7 +100,8 @@ public class FianceeController {
                 }
             }
             cq.where(cb.and(predicates.toArray(new Predicate[predicates.size()])));
-            cq.orderBy(cb.asc(fianceeCharacter.get(Character_.race)), cb.asc(fianceeRoot.get(Fiancee_.cost)), cb.asc(fianceeCharacterCareer.get(Career_.vocation)));
+            cq.orderBy(cb.desc(fianceeCharacter.get(Character_.level)), cb.asc(fianceeCharacter.get(Character_.race)),
+                    cb.asc(fianceeRoot.get(Fiancee_.cost)), cb.asc(fianceeCharacterCareer.get(Career_.vocation)));
 
             TypedQuery<Fiancee> q = em.createQuery(cq);
             List<Fiancee> fianceeList = q.getResultList();
@@ -112,11 +113,12 @@ public class FianceeController {
             */
             List<Fiancee> available = new ArrayList<>();
             List<Fiancee> disabled = new ArrayList<>();
+            List<Fiancee> lowerLevel = new ArrayList<>();
             for (Fiancee fiancee : fianceeList) {
-                if (fiancee.getCharacter().getFamily().getId() == character.getFamily().getId()) {
+                if (fiancee.getCharacter().getFamily().getId() == character.getFamily().getId() && fiancee.getCharacter().getLevel() == character.getLevel()) {
                     fiancee.isDisabled = true;
                     fiancee.disableReason = messageSource.getMessage("fiancee.isSister", null, loc());
-                } else if (fiancee.getCharacter().getFamily().getId() == character.getFather().getSpouse().getFamily().getId()) {
+                } else if (fiancee.getCharacter().getFamily().getId() == character.getFather().getSpouse().getFamily().getId() && fiancee.getCharacter().getLevel() == character.getLevel()) {
                     fiancee.isDisabled = true;
                     fiancee.disableReason = messageSource.getMessage("fiancee.isCousin", null, loc());
                 } else if ((character.getRace().getId() == Race.RACE_HUMAN || character.getRace().getId() == Race.RACE_GM_HUMAN) && fiancee.getCharacter().getRace().getId() >= Race.RACE_HIGH) {
@@ -133,14 +135,20 @@ public class FianceeController {
                 if (fiancee.isDisabled) {
                     disabled.add(fiancee);
                 } else {
-                    available.add(fiancee);
+                    if (fiancee.getCharacter().getLevel() < character.getLevel()) {
+                        lowerLevel.add(fiancee);
+                    } else {
+                        available.add(fiancee);
+                    }
+
                 }
             }
 
             model.addAttribute("family", family);
             model.addAttribute("character", character);
             model.addAttribute("fianceeList", available);
-            model.addAttribute("disabledDianceeList", disabled);
+            model.addAttribute("disabledFianceeList", disabled);
+            model.addAttribute("lowerLevel", lowerLevel);
             return "/game/chooseFiancee";
         }
 
