@@ -7,10 +7,10 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "app_skin_color")
-public class SkinColor {
+public class SkinColor implements Appearance {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private long id;
 
     private String name;
 
@@ -21,11 +21,11 @@ public class SkinColor {
 
     private String color;
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 

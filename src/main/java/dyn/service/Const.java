@@ -125,4 +125,8 @@ public class Const {
     public static final int SKILL_COEFFICIENT = 1;
     public static final int RACE_RESOURCE_COEFFICIENT = 5;
     public static final int AUTOGEN_PRODUCTION_COST_COEFFICIENT = 5;
+
+
+    public static final double PERCENTAGE_GEN_MOD = 0.1;
+    public static final double PERCENTAGE_GEN_MOD_BUFFED = 0.45;
 }

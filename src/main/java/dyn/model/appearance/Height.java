@@ -7,10 +7,10 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "app_height")
-public class Height {
+public class Height implements Appearance {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private long id;
 
     private String name;
 
@@ -19,11 +19,11 @@ public class Height {
     @Enumerated(EnumType.STRING)
     private AppearanceType type;
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 

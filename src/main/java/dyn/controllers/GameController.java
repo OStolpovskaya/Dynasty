@@ -7,6 +7,7 @@ package dyn.controllers;
 
 import dyn.model.*;
 import dyn.model.Character;
+import dyn.model.appearance.*;
 import dyn.model.career.Career;
 import dyn.model.career.Vocation;
 import dyn.repository.CharacterRepository;
@@ -389,9 +390,9 @@ public class GameController {
                 sonOrDaughterPercent = 0.2;
             }
 
-            double genModPercent = 0.05; // percentage of genetic modification
+            double genModPercent = Const.PERCENTAGE_GEN_MOD;// 0.05; // percentage of genetic modification
             if (character.isBuffedBy(Buff.GENETIC_MOD)) {
-                genModPercent = 0.40;
+                genModPercent = Const.PERCENTAGE_GEN_MOD_BUFFED;//0.40;
             }
 
             Character wife = character.getSpouse();
@@ -445,59 +446,45 @@ public class GameController {
                 // apply genetic modification if needed
                 String feature = "";
                 if ((firstTurn && childSeqNum == 0) || (!firstTurn && Math.random() < genModPercent)) {
-                    int featureToModify = (int) (1 + Math.random() * 12);
-                    switch (featureToModify) {
-                        case 1:
-                            child.setBody(app.getRandomBody(app.RARE));
-                            feature = messageSource.getMessage("app.body", null, loc()) + ": " + child.getBody().getTitle();
-                            break;
-                        case 2:
-                            child.setEars(app.getRandomEars(app.RARE));
-                            feature = messageSource.getMessage("app.ears", null, loc()) + ": " + child.getEars().getTitle();
-                            break;
-                        case 3:
-                            child.setEyebrows(app.getRandomEyeBrows(app.RARE));
-                            feature = messageSource.getMessage("app.eyebrows", null, loc()) + ": " + child.getEyebrows().getTitle();
-                            break;
-                        case 4:
-                            child.setEyeColor(app.getRandomEyeColor(app.RARE));
-                            feature = messageSource.getMessage("app.eye_color", null, loc()) + ": " + child.getEyeColor().getTitle();
-                            break;
-                        case 5:
-                            child.setEyes(app.getRandomEyes(app.RARE));
-                            feature = messageSource.getMessage("app.eyes", null, loc()) + ": " + child.getEyes().getTitle();
-                            break;
-                        case 6:
-                            child.setHairColor(app.getRandomHairColor(app.RARE));
-                            feature = messageSource.getMessage("app.hair_color", null, loc()) + ": " + child.getHairColor().getTitle();
-                            break;
-                        case 7:
-                            child.setHairType(app.getRandomHairType(app.RARE));
-                            feature = messageSource.getMessage("app.hair_type", null, loc()) + ": " + child.getHairType().getTitle();
-                            break;
-                        case 8:
-                            child.setHead(app.getRandomHead(app.RARE));
-                            feature = messageSource.getMessage("app.head", null, loc()) + ": " + child.getHead().getTitle();
-                            break;
-                        case 9:
-                            child.setHeight(app.getRandomHeight(app.RARE));
-                            feature = messageSource.getMessage("app.height", null, loc()) + ": " + child.getHeight().getTitle();
-                            break;
-                        case 10:
-                            child.setMouth(app.getRandomMouth(app.RARE));
-                            feature = messageSource.getMessage("app.mouth", null, loc()) + ": " + child.getMouth().getTitle();
-                            break;
-                        case 11:
-                            child.setNose(app.getRandomNose(app.RARE));
-                            feature = messageSource.getMessage("app.nose", null, loc()) + ": " + child.getNose().getTitle();
-                            break;
-                        case 12:
-                            child.setSkinColor(app.getRandomSkinColor(app.RARE));
-                            feature = messageSource.getMessage("app.skin_color", null, loc()) + ": " + child.getSkinColor().getTitle();
-                            break;
-                        default:
-                            feature = "Error: " + featureToModify;
+                    Appearance randomFeature = app.getRandomFeature();
+                    if (randomFeature instanceof Body) {
+                        child.setBody((Body) randomFeature);
                     }
+                    if (randomFeature instanceof Ears) {
+                        child.setEars((Ears) randomFeature);
+                    }
+                    if (randomFeature instanceof Eyebrows) {
+                        child.setEyebrows((Eyebrows) randomFeature);
+                    }
+                    if (randomFeature instanceof EyeColor) {
+                        child.setEyeColor((EyeColor) randomFeature);
+                    }
+                    if (randomFeature instanceof Eyes) {
+                        child.setEyes((Eyes) randomFeature);
+                    }
+                    if (randomFeature instanceof HairColor) {
+                        child.setHairColor((HairColor) randomFeature);
+                    }
+                    if (randomFeature instanceof HairType) {
+                        child.setHairType((HairType) randomFeature);
+                    }
+                    if (randomFeature instanceof Head) {
+                        child.setHead((Head) randomFeature);
+                    }
+                    if (randomFeature instanceof Height) {
+                        child.setHeight((Height) randomFeature);
+                    }
+                    if (randomFeature instanceof Mouth) {
+                        child.setMouth((Mouth) randomFeature);
+                    }
+                    if (randomFeature instanceof Nose) {
+                        child.setNose((Nose) randomFeature);
+                    }
+                    if (randomFeature instanceof SkinColor) {
+                        child.setSkinColor((SkinColor) randomFeature);
+                    }
+
+                    feature = messageSource.getMessage(randomFeature.getName().substring(0, randomFeature.getName().lastIndexOf(".")), null, loc()) + ": " + randomFeature.getTitle();
                     turnLog.append(messageSource.getMessage("turn.genModObtained", new Object[]{feature}, loc()));
                 }
                 // hairstyle after set hair type

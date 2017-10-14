@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "app_eyebrows")
-public class Eyebrows {
+public class Eyebrows implements Appearance {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;

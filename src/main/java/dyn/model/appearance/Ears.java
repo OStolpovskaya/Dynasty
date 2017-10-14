@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "app_ears")
-public class Ears extends Appearance {
+public class Ears implements Appearance {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;

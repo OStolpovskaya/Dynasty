@@ -59,4 +59,12 @@ public class UsefulTest {
         }
         System.out.println(list.toString());
     }
+
+    @Test
+    public void Test4() {
+        //app.body.fine_with_butterfly_wings
+        String name = "app.body.fine_with_butterfly_wings";
+        String substring = name.substring(0, name.lastIndexOf("."));
+        System.out.println("substring = " + substring);
+    }
 }

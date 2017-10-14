@@ -335,4 +335,25 @@ public class AppearanceService {
         form.setSkinColorList((ArrayList<SkinColor>) getSkinColorList(ALL));
         return form;
     }
+
+    public Appearance getRandomFeature() {
+        //todo: вынести куда-нить в статик метод, чтобы один раз запрашивать.
+        List<Appearance> appList = new ArrayList<>();
+        appList.addAll(getBodyList(RARE));
+        appList.addAll(getEarsList(RARE));
+        appList.addAll(getEyebrowsList(RARE));
+        appList.addAll(getEyeColorList(RARE));
+        appList.addAll(getEyesList(RARE));
+        appList.addAll(getHairColorList(RARE));
+        appList.addAll(getHairTypeList(RARE));
+        appList.addAll(getHeadList(RARE));
+        appList.addAll(getHeightList(RARE));
+        appList.addAll(getMouthList(RARE));
+        appList.addAll(getNoseList(RARE));
+        appList.addAll(getSkinColorList(RARE));
+
+        int randomFeature = (int) (0 + Math.random() * appList.size());
+
+        return appList.get(randomFeature);
+    }
 }
