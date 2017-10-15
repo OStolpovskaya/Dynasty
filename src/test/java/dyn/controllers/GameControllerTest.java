@@ -110,10 +110,12 @@ public class GameControllerTest {
 
             Assert.assertTrue("'Анкеты невест' not found!", pageBody().contains("Анкеты невест"));
 
-            List<WebElement> radioFianceeList = driver.findElements(By.name("fiancee"));
+            List<WebElement> radioFianceeList = driver.findElements(By.id("fianceeCurrentLevel"));
             if (radioFianceeList.size() == 0) {
-                return false;
-
+                radioFianceeList = driver.findElements(By.id("fianceeLowerLevel"));
+                if (radioFianceeList.size() == 0) {
+                    return false;
+                }
             }
             randIndex = (int) (0 + Math.random() * (radioFianceeList.size() - 1));
 
