@@ -239,7 +239,7 @@ public class GameController {
 
     @RequestMapping("/game/vocation")
     public String vocationView(ModelMap model, RedirectAttributes redirectAttributes,
-                               @RequestParam(value = "vocationId") long vocationId) {
+                               @RequestParam(value = "vocationId", defaultValue = "1") long vocationId) {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         Family family = user.getCurrentFamily();
         model.addAttribute("family", family);

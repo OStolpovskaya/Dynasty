@@ -57,6 +57,10 @@
         </form>
     </div>
     <form th:action="@{/game/makeFiancee}" method="post">
+        <div style="background-color: #2b669a; border-radius: 4px; position: fixed; top: 55px; left: 5px; padding: 15px;">
+            <input type="hidden" name="characterId" th:value="${character.getId()}"/>
+            <button type="submit" id="makeFianceeButton" name="submit" class="btn btn-warning center-block" th:text="#{chooseFiancee.choose}" th:disabled="${true}" align="center">Choose</button>
+        </div>
         <script>
             function enableChooseFianceeButton() {
                 $("#makeFianceeButton").attr("disabled", false);
@@ -67,7 +71,7 @@
             <div th:each="fiancee : ${fianceeList}" style="display: inline-block;" th:with="bride = ${fiancee.getCharacter()}">
                 <!--/*@thymesVar id="fiancee" type="dyn.model.Fiancee"*/-->
                 <!--/*@thymesVar id="bride" type="dyn.model.Character"*/-->
-                <input type="radio" id="fiancee" name="fiancee" th:value="${fiancee.getId()}" onclick="enableChooseFianceeButton()" style="display: inline-block;"/>
+                <input type="radio" name="fiancee" th:value="${fiancee.getId()}" onclick="enableChooseFianceeButton()" style="display: inline-block;"/>
                 <div class="char-view-div">
                     <div th:replace="fragments/char :: char-panel (character=${fiancee.getCharacter()})"></div>
                     <label>
@@ -75,30 +79,19 @@
                     </label>
                 </div>
             </div>
-            <p>
-                <input type="hidden" name="characterId" th:value="${character.getId()}"/>
-                <button type="submit" id="makeFianceeButton" name="submit" class="btn btn-success btn-lg center-block" th:text="#{chooseFiancee.choose}" th:disabled="${true}" align="center">Choose</button>
-            </p>
+
         </th:block>
         <th:block th:if="${#lists.isEmpty(fianceeList)}">
             <div class="alert alert-danger" style="margin-top: 10px;">
                 В базе анкет пока нет невест вашего уровня. Попробуйте зайти позднее или выберите невесту из списка ниже (уровень которых меньше).
             </div>
         </th:block>
-
-    </form>
-    <form th:action="@{/game/makeFiancee}" method="post">
-        <script>
-            function enableChooseLLButton() {
-                $("#makeFianceeLLButton").attr("disabled", false);
-            }
-        </script>
         <h3>Анкеты невест, уровень которых ниже, чем у вашего персонажа:</h3>
         <th:block th:if="${#lists.isEmpty(lowerLevel) == false}">
             <div th:each="fiancee : ${lowerLevel}" style="display: inline-block;" th:with="bride = ${fiancee.getCharacter()}">
                 <!--/*@thymesVar id="fiancee" type="dyn.model.Fiancee"*/-->
                 <!--/*@thymesVar id="bride" type="dyn.model.Character"*/-->
-                <input style="display: inline-block;" type="radio" id="fianceeLL" name="fiancee" th:value="${fiancee.getId()}" onclick="enableChooseLLButton()"/>
+                <input type="radio" name="fiancee" th:value="${fiancee.getId()}" onclick="enableChooseFianceeButton()" style="display: inline-block;"/>
                 <div class="char-view-div" align="center">
                     <div th:replace="fragments/char :: char-panel (character=${fiancee.getCharacter()})"></div>
                     <label>
@@ -109,10 +102,6 @@
                     </label>
                 </div>
             </div>
-            <p>
-                <input type="hidden" name="characterId" th:value="${character.getId()}"/>
-                <button type="submit" id="makeFianceeLLButton" name="submit" class="btn btn-success btn-lg center-block" th:text="#{chooseFiancee.choose}" th:disabled="${true}" align="center">Choose</button>
-            </p>
         </th:block>
         <th:block th:if="${#lists.isEmpty(lowerLevel)}">
             <div class="alert alert-danger" style="margin-top: 10px;">
@@ -120,6 +109,7 @@
             </div>
         </th:block>
     </form>
+
 
     <th:block th:if="${#lists.isEmpty(disabledFianceeList) == false}">
         <h3>Анкеты невест, брак с которыми запрещен:

@@ -110,14 +110,10 @@ public class GameControllerTest {
 
             Assert.assertTrue("'Анкеты невест' not found!", pageBody().contains("Анкеты невест"));
 
-            List<WebElement> radioFianceeList = driver.findElements(By.id("fiancee"));
-            String button = "makeFianceeButton";
+            List<WebElement> radioFianceeList = driver.findElements(By.name("fiancee"));
             if (radioFianceeList.size() == 0) {
-                radioFianceeList = driver.findElements(By.id("fianceeLL"));
-                button = "makeFianceeLLButton";
-                if (radioFianceeList.size() == 0) {
-                    return false;
-                }
+                return false;
+
             }
             randIndex = (int) (0 + Math.random() * (radioFianceeList.size() - 1));
 
@@ -125,7 +121,7 @@ public class GameControllerTest {
             scrollTo(radioFiancee);
             radioFiancee.click();
 
-            WebElement makeFianceeButton = driver.findElement(By.id(button));
+            WebElement makeFianceeButton = driver.findElement(By.id("makeFianceeButton"));
             scrollTo(makeFianceeButton);
             makeFianceeButton.click();
 
