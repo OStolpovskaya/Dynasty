@@ -71,7 +71,7 @@
             <div th:each="fiancee : ${fianceeList}" style="display: inline-block;" th:with="bride = ${fiancee.getCharacter()}">
                 <!--/*@thymesVar id="fiancee" type="dyn.model.Fiancee"*/-->
                 <!--/*@thymesVar id="bride" type="dyn.model.Character"*/-->
-                <input type="radio" name="fiancee" th:value="${fiancee.getId()}" onclick="enableChooseFianceeButton()" style="display: inline-block;"/>
+                <input type="radio" id="fianceeCurrentLevel" name="fiancee" th:value="${fiancee.getId()}" onclick="enableChooseFianceeButton()" style="display: inline-block;"/>
                 <div class="char-view-div">
                     <div th:replace="fragments/char :: char-panel (character=${fiancee.getCharacter()})"></div>
                     <label>
@@ -91,7 +91,7 @@
             <div th:each="fiancee : ${lowerLevel}" style="display: inline-block;" th:with="bride = ${fiancee.getCharacter()}">
                 <!--/*@thymesVar id="fiancee" type="dyn.model.Fiancee"*/-->
                 <!--/*@thymesVar id="bride" type="dyn.model.Character"*/-->
-                <input type="radio" name="fiancee" th:value="${fiancee.getId()}" onclick="enableChooseFianceeButton()" style="display: inline-block;"/>
+                <input type="radio" id="fianceeLowerLevel" name="fiancee" th:value="${fiancee.getId()}" onclick="enableChooseFianceeButton()" style="display: inline-block;"/>
                 <div class="char-view-div" align="center">
                     <div th:replace="fragments/char :: char-panel (character=${fiancee.getCharacter()})"></div>
                     <label>
