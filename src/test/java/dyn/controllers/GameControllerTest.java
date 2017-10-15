@@ -72,9 +72,10 @@ public class GameControllerTest {
             logOut(player);
         }
 
-        int levels = 10;
+        int levels = 15;
         for (int level = 0; level < levels; level++) {
             for (String player : players.keySet()) {
+                System.out.println(" -= player =- " + player);
                 logIn(player);
                 boolean bridesWasChosen = chooseFiancees(player);
 
@@ -107,11 +108,16 @@ public class GameControllerTest {
             scrollTo(chooseFianceeButton);
             chooseFianceeButton.click();
 
-            Assert.assertTrue("'Выберите невесту' not found!", pageBody().contains("Выберите невесту"));
+            Assert.assertTrue("'Анкеты невест' not found!", pageBody().contains("Анкеты невест"));
 
-            List<WebElement> radioFianceeList = driver.findElements(By.name("fiancee"));
+            List<WebElement> radioFianceeList = driver.findElements(By.id("fiancee"));
+            String button = "makeFianceeButton";
             if (radioFianceeList.size() == 0) {
-                return false;
+                radioFianceeList = driver.findElements(By.id("fianceeLL"));
+                button = "makeFianceeLLButton";
+                if (radioFianceeList.size() == 0) {
+                    return false;
+                }
             }
             randIndex = (int) (0 + Math.random() * (radioFianceeList.size() - 1));
 
@@ -119,10 +125,14 @@ public class GameControllerTest {
             scrollTo(radioFiancee);
             radioFiancee.click();
 
-            WebElement makeFianceeButton = driver.findElement(By.id("makeFianceeButton"));
+            WebElement makeFianceeButton = driver.findElement(By.id(button));
             scrollTo(makeFianceeButton);
             makeFianceeButton.click();
 
+            if (isMainPage(player) == false) {
+                System.out.println("ERROR");
+                System.out.println("bbb");
+            }
             Assert.assertTrue(player + ": not main page", isMainPage(player));
 
             chooseFianceeButtonList = driver.findElements(By.name("chooseFianceeButton"));

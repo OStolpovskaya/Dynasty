@@ -119,7 +119,7 @@ public class AdminController {
     public String fianceesView(ModelMap model) {
 
         List<List<Fiancee>> levelList = new ArrayList<>();
-        List<Fiancee> fiancees = fianceeRepository.findAllByOrderByCharacterLevel();
+        List<Fiancee> fiancees = fianceeRepository.findAllByOrderByCharacterLevelAscCharacterRaceAsc();
         int maxLevel = fiancees.get(fiancees.size() - 1).getCharacter().getLevel();
         for (int i = 0; i < maxLevel; i++) {
             levelList.add(new ArrayList<>());
