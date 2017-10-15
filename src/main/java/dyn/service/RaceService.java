@@ -11,6 +11,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Created by OM on 15.03.2017.
  */
@@ -61,5 +63,9 @@ public class RaceService {
             return true;
         }
         return false;
+    }
+
+    public List<Race> getAllRaces() {
+        return raceRepository.findByIdGreaterThanOrderByName(2L);
     }
 }

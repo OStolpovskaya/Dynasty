@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface RaceRepository extends CrudRepository<Race, Long> {
     List<Race> findAllByOrderByName();
+
+    List<Race> findByIdGreaterThanOrderByName(Long id);
 }

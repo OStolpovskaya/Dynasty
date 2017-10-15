@@ -5,6 +5,7 @@ package dyn.controllers;
  */
 
 
+import dyn.form.RaceAppearanceForm;
 import dyn.model.*;
 import dyn.model.Character;
 import dyn.model.appearance.*;
@@ -26,6 +27,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -251,6 +253,30 @@ public class GameController {
         redirectAttributes.addFlashAttribute("mess", "Призвание не найдено");
         logger.error(user.getUserName() + " tried to see non-existing vocation");
         return "redirect:/game";
+    }
+
+    @RequestMapping("/game/races")
+    public String races(ModelMap model, @ModelAttribute("raceAppearanceForm") RaceAppearanceForm form) {
+        User user = userRepository.findByUserName(getAuthUser().getUsername());
+        Family family = user.getCurrentFamily();
+        model.addAttribute("family", family);
+
+        model.addAttribute("raceList", raceService.getAllRaces());
+
+        model.addAttribute("bodyList", app.getBodyList(app.ALL));
+        model.addAttribute("earsList", app.getEarsList(app.ALL));
+        model.addAttribute("eyebrowsList", app.getEyebrowsList(app.ALL));
+        model.addAttribute("eyeColorList", app.getEyeColorList(app.ALL));
+        model.addAttribute("eyesList", app.getEyesList(app.ALL));
+        model.addAttribute("hairColorList", app.getHairColorList(app.ALL));
+        model.addAttribute("hairStyleList", app.getHairStyleList(app.ALL));
+        model.addAttribute("hairTypeList", app.getHairTypeList(app.ALL));
+        model.addAttribute("headList", app.getHeadList(app.ALL));
+        model.addAttribute("heightList", app.getHeightList(app.ALL));
+        model.addAttribute("mouthList", app.getMouthList(app.ALL));
+        model.addAttribute("noseList", app.getNoseList(app.ALL));
+        model.addAttribute("skinColorList", app.getSkinColorList(app.ALL));
+        return "game/races";
     }
 
     @RequestMapping("/game/improveEducation")

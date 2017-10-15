@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Расы</title>
+    <link th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}" rel="stylesheet"></link>
+    <link th:href="@{/css/common.css}" rel="stylesheet"></link>
+</head>
+<body>
+<div th:replace="fragments/navigation :: nav-for-game"></div>
+<div class="container">
+    <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
+    <h3>Расы и их отличительные черты
+        <div class="my_tooltip">&nbsp;<span class="glyphicon glyphicon-question-sign" style="color: black;"></span>
+            <span class="my_tooltiptext">
+                Каждая раса обладает набором отличительных черт, обычных или генно-модифицированных (ГМ) (то есть, генно отличных от человека). Если черты не указаны, например, в столбце Нос пусто, это означает, что черта может быть любой обычной.<br/>
+                Такие расы как Жгучая Африка, Загадочный Восток и Краснолицые не обладают ГМ-чертами. Остальные расы обладают и считаются высшими расами.<br/>
+                Персонаж иной расы, чем Человек, приносит своей семье дополнительно одну единицу ресурса за ход (какой ресурс указано в последнем столбце таблицы).
+            </span>
+        </div>
+    </h3>
+    <table class="table table-striped table-condensed">
+        <thead>
+        <tr>
+            <th>Раса</th>
+            <th th:text="#{app.skin_color}"></th>
+            <th th:text="#{app.height}"></th>
+            <th th:text="#{app.body}"></th>
+            <th th:text="#{app.head}"></th>
+            <th th:text="#{app.ears}"></th>
+            <th th:text="#{app.eyebrows}"></th>
+            <th th:text="#{app.eyes}"></th>
+            <th th:text="#{app.eye_color}"></th>
+            <th th:text="#{app.nose}"></th>
+            <th th:text="#{app.mouth}"></th>
+            <th th:text="#{app.hair_type}"></th>
+            <th th:text="#{app.hair_color}"></th>
+            <th title="Раса персонажа приносит 1 ед. ресурса за ход">Ресурс</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="race : ${raceList}" style="font-size: 10px;">
+            <td><Strong>
+                <th:block th:text="${race.getName()}"></th:block>
+            </Strong></td>
+            <th:block th:object="${race.getSummary()}">
+                <td>
+                    <th:block th:each="skinColor : *{getSkinColorList()}">&bull;&nbsp;<span th:text="${skinColor.getTitle()}" th:styleappend="${skinColor.isRare()?'color: DarkOrchid;':''}"></span><br/></th:block>
+                </td>
+                <td>
+                    <th:block th:each="height : *{getHeightList()}">&bull;&nbsp;<span th:text="${height.getTitle()}" th:styleappend="${height.isRare()?'color: DarkOrchid;':''}"></span><br/></th:block>
+                </td>
+                <td>
+                    <th:block th:each="body : *{getBodyList()}">&bull;&nbsp;<span th:text="${body.getTitle()}" th:styleappend="${body.isRare()?'color: DarkOrchid;':''}"></span><br/></th:block>
+                </td>
+                <td>
+                    <th:block th:each="head : *{getHeadList()}">&bull;&nbsp;<span th:text="${head.getTitle()}" th:styleappend="${head.isRare()?'color: DarkOrchid;':''}"></span><br/></th:block>
+                </td>
+                <td>
+                    <th:block th:each="ears : *{getEarsList()}">&bull;&nbsp;<span th:text="${ears.getTitle()}" th:styleappend="${ears.isRare()?'color: DarkOrchid;':''}"></span><br/></th:block>
+                </td>
+                <td>
+                    <th:block th:each="eyebrows : *{getEyebrowsList()}">&bull;&nbsp;<span th:text="${eyebrows.getTitle()}" th:styleappend="${eyebrows.isRare()?'color: DarkOrchid;':''}"></span><br/></th:block>
+                </td>
+                <td>
+                    <th:block th:each="eyes : *{getEyesList()}">&bull;&nbsp;<span th:text="${eyes.getTitle()}" th:styleappend="${eyes.isRare()?'color: DarkOrchid;':''}"></span><br/></th:block>
+                </td>
+                <td>
+                    <th:block th:each="eyeColor : *{getEyeColorList()}">&bull;&nbsp;<span th:text="${eyeColor.getTitle()}" th:styleappend="${eyeColor.isRare()?'color: DarkOrchid;':''}"></span><br/></th:block>
+                </td>
+                <td>
+                    <th:block th:each="nose : *{getNoseList()}">&bull;&nbsp;<span th:text="${nose.getTitle()}" th:styleappend="${nose.isRare()?'color: DarkOrchid;':''}"></span><br/></th:block>
+                </td>
+                <td>
+                    <th:block th:each="mouth : *{getMouthList()}">&bull;&nbsp;<span th:text="${mouth.getTitle()}" th:styleappend="${mouth.isRare()?'color: DarkOrchid;':''}"></span><br/></th:block>
+                </td>
+                <td>
+                    <th:block th:each="hairType : *{getHairTypeList()}">&bull;&nbsp;<span th:text="${hairType.getTitle()}" th:styleappend="${hairType.isRare()?'color: DarkOrchid;':''}"></span><br/></th:block>
+                </td>
+                <td>
+                    <th:block th:each="hairColor : *{getHairColorList()}">&bull;&nbsp;<span th:text="${hairColor.getTitle()}" th:styleappend="${hairColor.isRare()?'color: DarkOrchid;':''}"></span><br/></th:block>
+                </td>
+                <!--<td><ul><li th:each="skinColor : *{getSkinColorList()}" th:text="${skinColor.getTitle()}" style=""></li></ul></td>
+                <td><ul><li th:each="height : *{getHeightList()}" th:text="${height.getTitle()}"></li></ul></td>
+                <td><ul><li th:each="body : *{getBodyList()}" th:text="${body.getTitle()}"></li></ul></td>
+                <td><ul><li th:each="head : *{getHeadList()}" th:text="${head.getTitle()}"></li></ul></td>
+                <td><ul><li th:each="ears : *{getEarsList()}" th:text="${ears.getTitle()}"></li></ul></td>
+                <td><ul><li th:each="eyebrows : *{getEyebrowsList()}" th:text="${eyebrows.getTitle()}"></li></ul></td>
+                <td><ul><li th:each="eyes : *{getEyesList()}" th:text="${eyes.getTitle()}"></li></ul></td>
+                <td><ul><li th:each="eyeColor : *{getEyeColorList()}" th:text="${eyeColor.getTitle()}"></li></ul></td>
+                <td><ul><li th:each="nose : *{getNoseList()}" th:text="${nose.getTitle()}"></li></ul></td>
+                <td><ul><li th:each="mouth : *{getMouthList()}" th:text="${mouth.getTitle()}"></li></ul></td>
+                <td><ul><li th:each="hairType : *{getHairTypeList()}" th:text="${hairType.getTitle()}"></li></ul></td>
+                <td><ul><li th:each="hairColor : *{getHairColorList()}" th:text="${hairColor.getTitle()}"></li></ul></td>-->
+                <td th:text="${race.resString()}"></td>
+            </th:block>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<th:block th:replace="fragments/scripts :: webjars"></th:block>
+</body>
+</html>

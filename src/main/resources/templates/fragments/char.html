@@ -115,8 +115,9 @@
             <span th:text="${character.getName()}" data-toggle="tooltip" th:alt-title="${character.getFullName()}"></span>
             <br/>
             <p align="center" style="font-size: 10px; margin: 0px;" data-toggle="tooltip" th:alt-title="${'Раса'}">
-                <span th:if="${character.getRace().getId() == 1}" th:text="${character.getRace().getName()}"></span>
-                <span th:unless="${character.getRace().getId() == 1}" th:text="${character.getRace().getName()}" style="color:DarkOrchid"></span>
+                <a href="/game/races" style="text-decoration: none;" th:styleappend="${character.getRace().getId() == 1?'':'color:DarkOrchid'}">
+                    <span th:text="${character.getRace().getName()}"></span>
+                </a>
             </p>
         </div>
         <!--IMAGE-->

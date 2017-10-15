@@ -1,6 +1,7 @@
 package dyn.model;
 
 import dyn.form.RaceAppearanceForm;
+import dyn.utils.ResUtils;
 import dyn.utils.ResourcesHolder;
 
 import javax.persistence.*;
@@ -167,4 +168,7 @@ public class Race implements ResourcesHolder {
         return sb.toString();
     }
 
+    public String resString() {
+        return ResUtils.getResString(this);
+    }
 }
