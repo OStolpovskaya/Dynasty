@@ -398,7 +398,7 @@ public class GameController {
         //  fertility calculation
 
         for (Character character : levelFathers) {
-            boolean firstTurn = character.isBuffedBy(Buff.SIX_CHILDREN);
+            boolean firstTurn = character.isBuffedBy(Buff.SEVEN_CHILDREN);
 
             double fatherFeaturePercent = 0.5; // whose feature is inherited, father or mother
             if (character.isBuffedBy(Buff.DOMINANT_MOTHER)) {
@@ -427,7 +427,7 @@ public class GameController {
 
             int childAmount;
             if (firstTurn) {
-                childAmount = 6;
+                childAmount = 7;
             } else {
                 if (character.isBuffedBy(Buff.FERTILITY)) {
                     childAmount = getAmountOfChildren(Const.FERTILITY_BUFFED[houseQualityInt]);

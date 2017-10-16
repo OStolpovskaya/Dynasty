@@ -188,7 +188,7 @@ public class FamilyController {
 
         founder.setFamily(family);
 
-        Buff buff = buffRepository.findByTitle(Buff.SIX_CHILDREN);
+        Buff buff = buffRepository.findByTitle(Buff.SEVEN_CHILDREN);
         founder.getBuffs().add(buff);
 
         logger.debug(founder.toString());

@@ -59,7 +59,7 @@ public class Const {
     public static final Long PROJECT_SKOROVAR = 4L;
 
     public static final Long BUFF_FERTILITY = 1L;
-    public static final Long BUFF_SIX_CHILDREN = 2L;
+    public static final Long BUFF_SEVEN_CHILDREN = 2L;
     public static final Long BUFF_DOMINANT_FATHER = 3L;
     public static final Long BUFF_DOMINANT_MOTHER = 4L;
     public static final Long BUFF_MANY_SONS = 5L;

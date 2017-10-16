@@ -19,23 +19,24 @@
             </span>
         </div>
     </h3>
-    <table class="table table-striped table-condensed">
+    Нажмите на заголовок столбца для сортировки.
+    <table id="raceTable" class="table table-striped table-condensed">
         <thead>
         <tr>
-            <th>Раса</th>
-            <th th:text="#{app.skin_color}"></th>
-            <th th:text="#{app.height}"></th>
-            <th th:text="#{app.body}"></th>
-            <th th:text="#{app.head}"></th>
-            <th th:text="#{app.ears}"></th>
-            <th th:text="#{app.eyebrows}"></th>
-            <th th:text="#{app.eyes}"></th>
-            <th th:text="#{app.eye_color}"></th>
-            <th th:text="#{app.nose}"></th>
-            <th th:text="#{app.mouth}"></th>
-            <th th:text="#{app.hair_type}"></th>
-            <th th:text="#{app.hair_color}"></th>
-            <th title="Раса персонажа приносит 1 ед. ресурса за ход">Ресурс</th>
+            <th onclick="sortTable(0)">Раса</th>
+            <th onclick="sortTable(1)" th:text="#{app.skin_color}"></th>
+            <th onclick="sortTable(2)" th:text="#{app.height}"></th>
+            <th onclick="sortTable(3)" th:text="#{app.body}"></th>
+            <th onclick="sortTable(4)" th:text="#{app.head}"></th>
+            <th onclick="sortTable(5)" th:text="#{app.ears}"></th>
+            <th onclick="sortTable(6)" th:text="#{app.eyebrows}"></th>
+            <th onclick="sortTable(7)" th:text="#{app.eyes}"></th>
+            <th onclick="sortTable(8)" th:text="#{app.eye_color}"></th>
+            <th onclick="sortTable(9)" th:text="#{app.nose}"></th>
+            <th onclick="sortTable(10)" th:text="#{app.mouth}"></th>
+            <th onclick="sortTable(11)" th:text="#{app.hair_type}"></th>
+            <th onclick="sortTable(12)" th:text="#{app.hair_color}"></th>
+            <th onclick="sortTable(13)" title="Раса персонажа приносит 1 ед. ресурса за ход">Ресурс</th>
         </tr>
         </thead>
 
@@ -99,6 +100,64 @@
         </tbody>
     </table>
 </div>
+<script>
+    //<![CDATA[
+    function sortTable(n) {
+        var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+        table = document.getElementById("raceTable");
+        switching = true;
+        //Set the sorting direction to ascending:
+        dir = "asc";
+        /*Make a loop that will continue until
+         no switching has been done:*/
+        while (switching) {
+            //start by saying: no switching is done:
+            switching = false;
+            rows = table.getElementsByTagName("TR");
+            /*Loop through all table rows (except the
+             first, which contains table headers):*/
+            for (i = 1; i < (rows.length - 1); i++) {
+                //start by saying there should be no switching:
+                shouldSwitch = false;
+                /*Get the two elements you want to compare,
+                 one from current row and one from the next:*/
+                x = rows[i].getElementsByTagName("TD")[n];
+                y = rows[i + 1].getElementsByTagName("TD")[n];
+                /*check if the two rows should switch place,
+                 based on the direction, asc or desc:*/
+                if (dir == "asc") {
+                    if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                        //if so, mark as a switch and break the loop:
+                        shouldSwitch = true;
+                        break;
+                    }
+                } else if (dir == "desc") {
+                    if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                        //if so, mark as a switch and break the loop:
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+            }
+            if (shouldSwitch) {
+                /*If a switch has been marked, make the switch
+                 and mark that a switch has been done:*/
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+                //Each time a switch is done, increase this count by 1:
+                switchcount++;
+            } else {
+                /*If no switching has been done AND the direction is "asc",
+                 set the direction to "desc" and run the while loop again.*/
+                if (switchcount == 0 && dir == "asc") {
+                    dir = "desc";
+                    switching = true;
+                }
+            }
+        }
+    }
+    //]]>
+</script>
 <th:block th:replace="fragments/scripts :: webjars"></th:block>
 </body>
 </html>
