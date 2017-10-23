@@ -101,10 +101,6 @@ public class GameControllerTest {
             int randIndex = (int) (0 + Math.random() * (chooseFianceeButtonList.size() - 1));
             WebElement chooseFianceeButton = chooseFianceeButtonList.get(randIndex);
 
-            WebElement actionsButton = driver.findElement(By.name("actionsFor" + chooseFianceeButton.getAttribute("id")));
-            scrollTo(actionsButton);
-            actionsButton.click();
-
             scrollTo(chooseFianceeButton);
             chooseFianceeButton.click();
 
@@ -182,10 +178,6 @@ public class GameControllerTest {
         while (postFianceeButtonList.size() > 0) {
             int randIndex = (int) (0 + Math.random() * (postFianceeButtonList.size() - 1));
             WebElement postFianceeButton = postFianceeButtonList.get(randIndex);
-            WebElement actionsButton = driver.findElement(By.name("actionsFor" + postFianceeButton.getAttribute("id")));
-            scrollTo(actionsButton);
-            actionsButton.click();
-
             scrollTo(postFianceeButton);
             postFianceeButton.click();
             Assert.assertTrue("'Анкета персонажа добавлена в базу невест' not found!", pageBody().contains("Анкета персонажа добавлена в базу невест"));

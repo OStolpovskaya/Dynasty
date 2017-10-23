@@ -200,13 +200,13 @@
                                     <td>
                                         <div class="dropup">
                                             <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                                                    style="width: 180px; border-top-right-radius: 0; border-top-left-radius: 0; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+                                                    style="width: 180px; border-top-right-radius: 0; border-top-left-radius: 0; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;"
+                                                    th:disabled="${spouse.getSex() == 'female' and
+                                                    (buffsSkillImprovementIsEmpty or buffsForChildrenChangeIsEmpty)}">
                                                 Действия <span class="caret"></span>
                                             </button>
                                             <ul class="dropdown-menu" style="width: 330px; font-size: 12px;">
                                                 <th:block th:if="${spouse.getSex() == 'female'}">
-                                                    <!--Повысить образование-->
-                                                    <th:block th:replace="fragments/char :: li-for-improve-education (character=${spouse})"></th:block>
                                                     <!--Баффы навыков и карьеры-->
                                                     <th:block th:replace="fragments/char :: li-for-buff-improve-skill (character=${spouse}, projectItemsMap = ${buffsSkillImprovement})"></th:block>
                                                     <!--Изменение-->
