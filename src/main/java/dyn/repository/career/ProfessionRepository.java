@@ -12,11 +12,10 @@ import java.util.List;
 public interface ProfessionRepository extends CrudRepository<Profession, Long> {
     public List<Profession> findByVocationAndEducationAndIntelligenceLessThanEqualAndCharismaLessThanEqualAndStrengthLessThanEqualAndCreativityLessThanEqual(Vocation vocation, Education education, int intelligence, int charisma, int strength, int creativity);
 
-    Profession findFirstByVocationAndEducationAndIntelligenceLessThanEqualAndCharismaLessThanEqualAndStrengthLessThanEqualAndCreativityLessThanEqualOrderByLevelDesc(
-            Vocation vocation,
-            Education education,
-            int intelligence,
-            int charisma,
-            int strength,
-            int creativity);
+
+    Profession findFirstByVocationAndIntelligenceLessThanEqualAndCharismaLessThanEqualAndStrengthLessThanEqualAndCreativityLessThanEqualOrderByLevelDesc(Vocation vocation, int intelligence, int charisma, int strength, int creativity);
+
+    List<Profession> findByVocationAndIntelligenceLessThanEqualAndCharismaLessThanEqualAndStrengthLessThanEqualAndCreativityLessThanEqual(Vocation vocation, int intelligence, int charisma, int strength, int creativity);
+
+    Profession findByVocationAndLevel(Vocation vocation, int level);
 }

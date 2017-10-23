@@ -28,6 +28,8 @@ public class FamilyLog implements ResourcesHolder {
     private int chemical;
     private int craftpoint;
 
+    private int income;
+
     public FamilyLog() {
     }
 
@@ -84,6 +86,14 @@ public class FamilyLog implements ResourcesHolder {
 
     public void setMoney(int money) {
         this.money = money;
+    }
+
+    public int getIncome() {
+        return income;
+    }
+
+    public void setIncome(int income) {
+        this.income = income;
     }
 
     @Override

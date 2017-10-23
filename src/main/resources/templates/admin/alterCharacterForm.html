@@ -113,12 +113,6 @@
             <input type="text" name="creativity" th:value="${career.getCreativity()}" class="form-control input-sm" style="width: 60px;"/>
         </div>
         <div class="form-group">
-            <label class="control-label col-sm-2">Образование:</label>
-            <select th:field="${career.education}" class="form-control" style="width:250px;">
-                <option th:each="education : ${educationList}" th:value="${education.getId()}" th:text="${education.getName()}"></option>
-            </select>
-        </div>
-        <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
                 <input type="hidden" name="character_id" th:value="${character.getId()}"/>
                 <button type="submit" class="btn btn-default">Изменить</button>

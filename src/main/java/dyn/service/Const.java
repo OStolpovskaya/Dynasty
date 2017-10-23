@@ -129,4 +129,7 @@ public class Const {
 
     public static final double PERCENTAGE_GEN_MOD = 0.1;
     public static final double PERCENTAGE_GEN_MOD_BUFFED = 0.45;
+    public static final int FIANCEE_COST = 50;
+
+    public static final int SKILL_IMPROVEMENT_COEFFICIENT = 3;
 }

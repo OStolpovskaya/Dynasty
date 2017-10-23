@@ -50,9 +50,8 @@ public class CareerService {
 
     public void generateProfession(Character character) {
         Career career = character.getCareer();
-        Profession profession = professionRepository.findFirstByVocationAndEducationAndIntelligenceLessThanEqualAndCharismaLessThanEqualAndStrengthLessThanEqualAndCreativityLessThanEqualOrderByLevelDesc(
+        Profession profession = professionRepository.findFirstByVocationAndIntelligenceLessThanEqualAndCharismaLessThanEqualAndStrengthLessThanEqualAndCreativityLessThanEqualOrderByLevelDesc(
                 career.getVocation(),
-                career.getEducation(),
                 career.getIntelligence(),
                 career.getCharisma(),
                 career.getStrength(),
@@ -69,15 +68,21 @@ public class CareerService {
         */
     }
 
-    public List<Profession> getAvailableProfessions(Career career) {
-        List<Profession> professions = professionRepository.findByVocationAndEducationAndIntelligenceLessThanEqualAndCharismaLessThanEqualAndStrengthLessThanEqualAndCreativityLessThanEqual(
+    public Profession getAvailableProfession(Character character) {
+        Career career = character.getCareer();
+        Profession profession = professionRepository.findFirstByVocationAndIntelligenceLessThanEqualAndCharismaLessThanEqualAndStrengthLessThanEqualAndCreativityLessThanEqualOrderByLevelDesc(
                 career.getVocation(),
-                career.getEducation(),
                 career.getIntelligence(),
                 career.getCharisma(),
                 career.getStrength(),
                 career.getCreativity());
-        return professions;
+        return profession;
+    }
+
+    public Profession getProfessionOfLevel(Character character, int level) {
+        Career career = character.getCareer();
+        Profession profession = professionRepository.findByVocationAndLevel(career.getVocation(), level);
+        return profession;
     }
 
     public void inheritVocationAndSkills(Career childCareer, Career fatherCareer, Career motherCareer) {
@@ -103,40 +108,6 @@ public class CareerService {
         int max = Math.max(first, second);
         int result = ThreadLocalRandom.current().nextInt(min, max + 1);
         return result;
-    }
-
-    public boolean mayImproveEducation(Career career) {
-        long newEducation;
-        if (career.getEducation().getId() == Education.PRIMARY) {
-            newEducation = Education.SECONDARY;
-        } else if (career.getEducation().getId() == Education.SECONDARY) {
-            newEducation = Education.HIGHER;
-        } else {
-            return false;
-        }
-
-        List<Profession> professions = professionRepository.findByVocationAndEducationAndIntelligenceLessThanEqualAndCharismaLessThanEqualAndStrengthLessThanEqualAndCreativityLessThanEqual(
-                career.getVocation(),
-                educationRepository.findOne(newEducation),
-                career.getIntelligence(),
-                career.getCharisma(),
-                career.getStrength(),
-                career.getCreativity());
-        if (professions.size() > 0) {
-            return true;
-        }
-        return false;
-    }
-
-    public void improveEducation(Career career) {
-        long educationId = Education.PRIMARY;
-        if (career.getEducation().getId() == Education.PRIMARY) {
-            educationId = Education.SECONDARY;
-        } else if (career.getEducation().getId() == Education.SECONDARY) {
-            educationId = Education.HIGHER;
-        }
-
-        career.setEducation(educationRepository.findOne(educationId));
     }
 
     public Vocation getVocation(long vocationId) {

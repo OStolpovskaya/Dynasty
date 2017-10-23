@@ -765,8 +765,6 @@ public class AdminController {
 
         System.out.println("GET CHARACTER");
         Character character = characterRepository.findOne(characterId);
-        Career career = character.getCareer();
-        career.mayImproveEducation = careerService.mayImproveEducation(career);
         model.addAttribute("character", character);
 
         System.out.println("GET FATHERS");

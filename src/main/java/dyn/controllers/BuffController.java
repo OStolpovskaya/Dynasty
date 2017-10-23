@@ -192,20 +192,20 @@ public class BuffController {
                 boolean sonCheck = character.getSex().equals("male") && character.getFamily() == family;
                 boolean wifeOfSonCheck = character.getSex().equals("female") && character.getFamily() != family && character.getSpouse().getFamily() == family;
                 boolean daughterCheck = character.getSex().equals("female") && character.getFamily() == family && character.getSpouse() == null && !character.isFiancee();
-                if (levelCheck && (sonCheck || wifeOfSonCheck || daughterCheck)) {
+                if ((levelCheck && (sonCheck || daughterCheck)) || (wifeOfSonCheck && (character.getSpouse().getLevel() == family.getLevel()))) {
 
                     Long projectId = item.getProject().getId();
                     if (projectId.equals(Const.PROJECT_SKILL_INTELLIGENCE)) {
-                        character.getCareer().addToIntelligence(1);
+                        character.getCareer().addToIntelligence(Const.SKILL_IMPROVEMENT_COEFFICIENT);
                         mess = "Интеллект повышен у персонажа: " + character.getFullName();
                     } else if (projectId.equals(Const.PROJECT_SKILL_CHARISMA)) {
-                        character.getCareer().addToCharisma(1);
+                        character.getCareer().addToCharisma(Const.SKILL_IMPROVEMENT_COEFFICIENT);
                         mess = "Харизма повышена у персонажа: " + character.getFullName();
                     } else if (projectId.equals(Const.PROJECT_SKILL_STRENGTH)) {
-                        character.getCareer().addToStrength(1);
+                        character.getCareer().addToStrength(Const.SKILL_IMPROVEMENT_COEFFICIENT);
                         mess = "Сила повышена у персонажа: " + character.getFullName();
                     } else if (projectId.equals(Const.PROJECT_SKILL_CREATIVITY)) {
-                        character.getCareer().addToCreativity(1);
+                        character.getCareer().addToCreativity(Const.SKILL_IMPROVEMENT_COEFFICIENT);
                         mess = "Творчество повышено у персонажа: " + character.getFullName();
                     } else if (projectId.equals(Const.PROJECT_SALARY_INC)) {
                         Buff buff = buffRepository.findOne(Const.BUFF_SALARY_INC);
@@ -329,16 +329,18 @@ public class BuffController {
         if (item != null) {
             Character character = characterRepository.findOne(characterId);
             if (character != null) {
-                boolean levelCheck = character.getLevel() == family.getLevel() - 1;
+                boolean levelCheck;
                 boolean familyCheck;
                 boolean hasChildren;
 
                 if (character.getSex().equals("male")) {
                     hasChildren = character.getChildren().size() > 0;
                     familyCheck = character.getFamily() == family;
+                    levelCheck = character.getLevel() == family.getLevel() - 1;
                 } else {
                     hasChildren = character.getSpouse().getChildren().size() > 0;
                     familyCheck = character.getSpouse().getFamily() == family;
+                    levelCheck = character.getSpouse().getLevel() == family.getLevel() - 1;
                 }
                 if (levelCheck && familyCheck && hasChildren) {
                     Long projectId = item.getProject().getId();
@@ -503,7 +505,7 @@ public class BuffController {
                 boolean sonCheck = character.getSex().equals("male") && character.getFamily() == family;
                 boolean wifeOfSonCheck = character.getSex().equals("female") && character.getFamily() != family && character.getSpouse().getFamily() == family;
                 boolean daughterCheck = character.getSex().equals("female") && character.getFamily() == family && character.getSpouse() == null && !character.isFiancee();
-                if (levelCheck && (sonCheck || wifeOfSonCheck || daughterCheck)) {
+                if ((levelCheck && (sonCheck || daughterCheck)) || (wifeOfSonCheck && (character.getSpouse().getLevel() == family.getLevel()))) {
                     Long projectId = item.getProject().getId();
                     if (projectId.equals(Const.PROJECT_VOCATION_CHANGE)) {
                         Vocation vocation = careerService.getVocation(Long.parseLong(param));
@@ -569,7 +571,8 @@ public class BuffController {
                                 break;
                         }
                         character.generateView();
-                        raceService.defineRace(character);
+                        Race race = raceService.defineRace(character);
+                        character.setRace(race);
                         characterRepository.save(character);
                         mess = "У персонажа " + character.getName() + " проведена пластическая операция: " + part;
                     } else {

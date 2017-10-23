@@ -7,8 +7,6 @@ import javax.persistence.*;
 public class Career {
     public static final int IMPROVE_COST = 350;
     // ======================================
-    @Transient
-    public boolean mayImproveEducation = false;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;

@@ -499,4 +499,21 @@ public class Character {
                 ", race=" + race.getName() +
                 '}';
     }
+
+    public int getRaceCoefficient() {
+        if (race.getId() == 1L) {
+            return 1;
+        }
+        if (race.getId() == 2L) {
+            return 2;
+        }
+        if (2L < race.getId() && race.getId() < 6L) {
+            return 3;
+        }
+        if (race.getId() > 5L) {
+            return 4;
+        }
+
+        return 1;
+    }
 }

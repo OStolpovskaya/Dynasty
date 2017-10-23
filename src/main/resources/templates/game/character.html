@@ -29,14 +29,11 @@
                 <li th:text="#{${buff.getTitle()}}"></li>
             </th:block>
         </p>
-        <p th:if="${character.getCareer().getProfession() == null}">
-            <th:block th:each="profession : ${@careerService.getAvailableProfessions(character.getCareer())}">
-                <li th:text="${profession.getName()}"></li>
-            </th:block>
-        </p>
-        <p>
-            Повысить уровень образования:
-            <th:block th:text="${@careerService.mayImproveEducation(character.getCareer())}"></th:block>
+        <p th:if="${character.getCareer().getProfession() == null}" th:with="profession = ${@careerService.getAvailableProfession(character)}">
+            Предполагаемая профессия:
+            <!--/*@thymesVar id="profession" type="dyn.model.career.Profession"*/-->
+            <th:block th:text="${profession.getName() +' ('+profession.getLevel()+' ур.)'}"></th:block>
+
         </p>
     </div>
     <div style="float: right" align="center">

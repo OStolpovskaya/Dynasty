@@ -1,7 +1,6 @@
 package dyn.model;
 
 import dyn.service.CareerService;
-import dyn.service.Const;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -28,30 +27,5 @@ public class CharacterWithActions {
     }
 
 
-    public void fillActionsForChild(Character child, List<Item> items) {
-        character = child;
-        Family family = character.getFamily();
-        if (child.getSex().equals("male")) {
-            if (character.getSpouse() == null && family.getPairsNum() < family.getHouse().getPairsNum()) {
-                characterActionsList.add(CharacterActions.chooseFiancee);
-            }
-            /*if (character.getSpouse() != null){
-                characterActionsList.add(БАФФЫ);
-            }*/
-        } else {
-            if (character.getSpouse() == null && character.isFiancee() == false && family.getFianceeNum() < family.getHouse().getFianceeNum()) {
-                characterActionsList.add(CharacterActions.putUpForFiancee);
-            }
-        }
-        if (careerService.mayImproveEducation(character.getCareer())) {
-            characterActionsList.add(CharacterActions.improveEducation);
-        }
 
-        for (Item item : items) {
-            Long thingId = item.getProject().getThing().getId();
-            if (thingId.equals(Const.THING_SKILL_IMPROVEMENT)) {
-                characterActionsList.add(CharacterActions.skillImprovement);
-            }
-        }
-    }
 }

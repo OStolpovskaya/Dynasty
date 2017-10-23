@@ -52,7 +52,6 @@
             <th>Уровень</th>
             <th>Профессия</th>
             <th>Зарплата</th>
-            <th>Образование</th>
             <th>Интеллект</th>
             <th>Харизма</th>
             <th>Сила</th>
@@ -65,7 +64,6 @@
             <td th:text="${profession.getLevel()}">level</td>
             <td th:text="${profession.getName()}">name</td>
             <td th:text="${vocation.getStartSalary() * profession.getLevel()}">salary</td>
-            <td th:text="${profession.getEducation().getName()}">education</td>
             <td th:text="${profession.getIntelligence()}"></td>
             <td th:text="${profession.getCharisma()}"></td>
             <td th:text="${profession.getStrength()}"></td>

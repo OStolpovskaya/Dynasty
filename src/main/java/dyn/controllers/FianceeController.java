@@ -11,6 +11,7 @@ import dyn.model.*;
 import dyn.model.career.Career;
 import dyn.model.career.Career_;
 import dyn.repository.*;
+import dyn.service.Const;
 import dyn.service.FamilyLogService;
 import dyn.service.RaceService;
 import org.apache.log4j.LogManager;
@@ -90,6 +91,7 @@ public class FianceeController {
 
             predicates.add(cb.lessThanOrEqualTo(fianceeCharacter.get(Character_.level), family.getLevel()));
             predicates.add(cb.notEqual(fianceeCharacter.get(Character_.family), family));
+            predicates.add(cb.notEqual(fianceeCharacter.get(Character_.family), character.getFather().getSpouse().getFamily()));
 
             if (!fianceeFilter.isEmpty()) {
                 if (fianceeFilter.getRace() != null) {
@@ -115,13 +117,7 @@ public class FianceeController {
             List<Fiancee> disabled = new ArrayList<>();
             List<Fiancee> lowerLevel = new ArrayList<>();
             for (Fiancee fiancee : fianceeList) {
-                if (fiancee.getCharacter().getFamily().getId() == character.getFamily().getId() && fiancee.getCharacter().getLevel() == character.getLevel()) {
-                    fiancee.isDisabled = true;
-                    fiancee.disableReason = messageSource.getMessage("fiancee.isSister", null, loc());
-                } else if (fiancee.getCharacter().getFamily().getId() == character.getFather().getSpouse().getFamily().getId() && fiancee.getCharacter().getLevel() == character.getLevel()) {
-                    fiancee.isDisabled = true;
-                    fiancee.disableReason = messageSource.getMessage("fiancee.isCousin", null, loc());
-                } else if ((character.getRace().getId() == Race.RACE_HUMAN || character.getRace().getId() == Race.RACE_GM_HUMAN) && fiancee.getCharacter().getRace().getId() >= Race.RACE_HIGH) {
+                if ((character.getRace().getId() == Race.RACE_HUMAN || character.getRace().getId() == Race.RACE_GM_HUMAN) && fiancee.getCharacter().getRace().getId() >= Race.RACE_HIGH) {
                     fiancee.isDisabled = true;
                     fiancee.disableReason = messageSource.getMessage("fiancee.raceMismatchForFiancee", null, loc());
                 } else if (character.getRace().getId() >= Race.RACE_HIGH && fiancee.getCharacter().getRace().getId() >= Race.RACE_HIGH && character.getRace().getId() != fiancee.getCharacter().getRace().getId()) {
@@ -195,12 +191,7 @@ public class FianceeController {
                 family.setPairsNum(family.getPairsNum() + 1);
                 familyRepository.save(family);
 
-                Family wifeFamily = wife.getFamily();
-                wifeFamily.setMoney(wifeFamily.getMoney() + fiancee.getCost());
-                familyRepository.save(wifeFamily);
-
                 familyLogService.addToLog(family, "Вы выкупили невесту " + wife.getName() + " из семьи " + wife.getFamily().getFamilyName() + " для своего персонажа " + character.getName() + ". Потрачено: " + fiancee.getCost() + " д.");
-                familyLogService.addToLog(wifeFamily, "Семья " + family.getFamilyName() + " выкупила одну из ваших невест: " + wife.getName() + " (уровень: " + wife.getLevel() + "). Получено: " + fiancee.getCost() + " д.");
                 logger.info(user.getUserName() + " has chosen fiancee " + wife.getName());
                 redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("chooseFiancee.success", new Object[]{character.getName(), wife.getName(), fiancee.getCost()}, loc()));
                 return "redirect:/game#char" + character.getFather().getId();
@@ -219,7 +210,6 @@ public class FianceeController {
 
     @RequestMapping(value = "/game/putUpForFiancee", method = RequestMethod.POST)
     public String setToFiancee(ModelMap model, RedirectAttributes redirectAttributes,
-                               @RequestParam(value = "cost") int cost,
                                @RequestParam(value = "female") long characterId) {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         Family family = user.getCurrentFamily();
@@ -230,25 +220,23 @@ public class FianceeController {
             return "redirect:/game";
         }
 
-        if (cost < 50 * family.getLevel()) {
-            redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("becomeFiancee.costMustBeGreater", null, loc()));
-            logger.error(user.getUserName() + "'s character " + characterId + " can not become fiancee because small cost");
-            return "redirect:/game";
-        }
-
         Character character = characterRepository.findByIdAndFamilyAndLevelAndSexAndSpouseIsNull(characterId, family, family.getLevel(), "female");
 
         if (character != null && !character.isFiancee()) {
             Fiancee fiancee = new Fiancee();
             fiancee.setCharacter(character);
+
+            int cost = Const.FIANCEE_COST * character.getRaceCoefficient() * family.getLevel();
+
             fiancee.setCost(cost);
             fianceeRepository.save(fiancee);
 
             family.setFianceeNum(family.getFianceeNum() + 1);
+            family.setMoney(family.getMoney() + cost);
             familyRepository.save(family);
 
-            familyLogService.addToLog(family, "Вы опубликовали анкету невесты " + character.getName() + ". Стоимость выкупа: " + cost + " д.");
-            redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("becomeFiancee.characterBecomeFiancee", new Object[]{character.getName()}, loc()));
+            familyLogService.addToLog(family, "Вы опубликовали анкету невесты " + character.getName() + ". Получено: " + cost + " д.");
+            redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("becomeFiancee.characterBecomeFiancee", new Object[]{character.getName(), cost}, loc()));
             logger.info(user.getUserName() + "'s character " + character.getName() + " become fiancee");
             return "redirect:/game#char" + character.getFather().getId();
         }
