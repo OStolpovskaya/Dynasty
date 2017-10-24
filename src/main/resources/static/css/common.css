@@ -297,3 +297,7 @@ a.anchor {
     width: 100%;
     background-color: #e7e7e7;
 }
+
+.sortColumn {
+    cursor: pointer;
+}

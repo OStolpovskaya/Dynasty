@@ -8,6 +8,7 @@ package dyn.controllers;
 import dyn.form.FianceeFilter;
 import dyn.model.Character;
 import dyn.model.*;
+import dyn.model.appearance.*;
 import dyn.model.career.Career;
 import dyn.model.career.Career_;
 import dyn.repository.*;
@@ -87,6 +88,19 @@ public class FianceeController {
             Join<Fiancee, Character> fianceeCharacter = fianceeRoot.join(Fiancee_.character);
             Join<Character, Career> fianceeCharacterCareer = fianceeCharacter.join(Character_.career);
 
+            Join<Character, SkinColor> fianceeCharacterSkinColor = fianceeCharacter.join(Character_.skinColor);
+            Join<Character, Height> fianceeCharacterHeight = fianceeCharacter.join(Character_.height);
+            Join<Character, Body> fianceeCharacterBody = fianceeCharacter.join(Character_.body);
+            Join<Character, Head> fianceeCharacterHead = fianceeCharacter.join(Character_.head);
+            Join<Character, Ears> fianceeCharacterEars = fianceeCharacter.join(Character_.ears);
+            Join<Character, Eyebrows> fianceeCharacterEyebrows = fianceeCharacter.join(Character_.eyebrows);
+            Join<Character, Eyes> fianceeCharacterEyes = fianceeCharacter.join(Character_.eyes);
+            Join<Character, EyeColor> fianceeCharacterEyeColor = fianceeCharacter.join(Character_.eyeColor);
+            Join<Character, Nose> fianceeCharacterNose = fianceeCharacter.join(Character_.nose);
+            Join<Character, Mouth> fianceeCharacterMouth = fianceeCharacter.join(Character_.mouth);
+            Join<Character, HairType> fianceeCharacterHairType = fianceeCharacter.join(Character_.hairType);
+            Join<Character, HairColor> fianceeCharacterHairColor = fianceeCharacter.join(Character_.hairColor);
+
             List<Predicate> predicates = new ArrayList<>();
 
             predicates.add(cb.lessThanOrEqualTo(fianceeCharacter.get(Character_.level), family.getLevel()));
@@ -99,6 +113,45 @@ public class FianceeController {
                 }
                 if (fianceeFilter.getVocation() != null) {
                     predicates.add(cb.equal(fianceeCharacterCareer.get(Career_.vocation), fianceeFilter.getVocation()));
+                }
+                List<String> appearance = fianceeFilter.getAppearance();
+                if (appearance.size() != 0) {
+                    if (appearance.contains("skinColor")) {
+                        predicates.add(cb.equal(fianceeCharacterSkinColor.get(SkinColor_.type), AppearanceType.rare));
+                    }
+                    if (appearance.contains("height")) {
+                        predicates.add(cb.equal(fianceeCharacterHeight.get(Height_.type), AppearanceType.rare));
+                    }
+                    if (appearance.contains("body")) {
+                        predicates.add(cb.equal(fianceeCharacterBody.get(Body_.type), AppearanceType.rare));
+                    }
+                    if (appearance.contains("head")) {
+                        predicates.add(cb.equal(fianceeCharacterHead.get(Head_.type), AppearanceType.rare));
+                    }
+                    if (appearance.contains("ears")) {
+                        predicates.add(cb.equal(fianceeCharacterEars.get(Ears_.type), AppearanceType.rare));
+                    }
+                    if (appearance.contains("eyebrows")) {
+                        predicates.add(cb.equal(fianceeCharacterEyebrows.get(Eyebrows_.type), AppearanceType.rare));
+                    }
+                    if (appearance.contains("eyes")) {
+                        predicates.add(cb.equal(fianceeCharacterEyes.get(Eyes_.type), AppearanceType.rare));
+                    }
+                    if (appearance.contains("eyeColor")) {
+                        predicates.add(cb.equal(fianceeCharacterEyeColor.get(EyeColor_.type), AppearanceType.rare));
+                    }
+                    if (appearance.contains("nose")) {
+                        predicates.add(cb.equal(fianceeCharacterNose.get(Nose_.type), AppearanceType.rare));
+                    }
+                    if (appearance.contains("mouth")) {
+                        predicates.add(cb.equal(fianceeCharacterMouth.get(Mouth_.type), AppearanceType.rare));
+                    }
+                    if (appearance.contains("hairType")) {
+                        predicates.add(cb.equal(fianceeCharacterHairType.get(HairType_.type), AppearanceType.rare));
+                    }
+                    if (appearance.contains("hairColor")) {
+                        predicates.add(cb.equal(fianceeCharacterHairColor.get(HairColor_.type), AppearanceType.rare));
+                    }
                 }
             }
             cq.where(cb.and(predicates.toArray(new Predicate[predicates.size()])));

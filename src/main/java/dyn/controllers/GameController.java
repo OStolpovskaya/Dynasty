@@ -242,6 +242,7 @@ public class GameController {
         Vocation vocation = careerService.getVocation(vocationId);
         if (vocation != null) {
             model.addAttribute("vocation", vocation);
+            model.addAttribute("vocationList", careerService.getVocationList());
             return "/game/vocation";
         }
 

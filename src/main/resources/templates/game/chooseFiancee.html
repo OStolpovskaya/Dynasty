@@ -53,8 +53,24 @@
                     </option>
                 </select>
             </div>
+            <br/>
+            <div class="form-group">
+                <label>ГМ части тела:</label>
+                <input type="checkbox" th:field="*{appearance}" value="skinColor"/><span>Цвет кожи</span>
+                <input type="checkbox" th:field="*{appearance}" value="height"/><span>Рост</span>
+                <input type="checkbox" th:field="*{appearance}" value="body"/><span>Тело</span>
+                <input type="checkbox" th:field="*{appearance}" value="head"/><span>Голова</span>
+                <input type="checkbox" th:field="*{appearance}" value="ears"/><span>Уши</span>
+                <input type="checkbox" th:field="*{appearance}" value="eyebrows"/><span>Брови</span>
+                <input type="checkbox" th:field="*{appearance}" value="eyes"/><span>Глаза</span>
+                <input type="checkbox" th:field="*{appearance}" value="eyeColor"/><span>Цвет глаз</span>
+                <input type="checkbox" th:field="*{appearance}" value="nose"/><span>Нос</span>
+                <input type="checkbox" th:field="*{appearance}" value="mouth"/><span>Рот</span>
+                <input type="checkbox" th:field="*{appearance}" value="hairType"/><span>Тип волос</span>
+                <input type="checkbox" th:field="*{appearance}" value="hairColor"/><span>Цвет волос</span>
+            </div>
             <input type="hidden" name="characterId" th:value="${character.getId()}"/>
-            <button type="submit" class="btn btn-default">Фильтровать</button>
+            <button type="submit" class="btn btn-primary">Фильтровать</button>
         </form>
     </div>
     <form th:action="@{/game/makeFiancee}" method="post">
