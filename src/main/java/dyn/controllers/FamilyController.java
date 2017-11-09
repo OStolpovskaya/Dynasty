@@ -12,6 +12,7 @@ import dyn.service.FamilyLogService;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,6 +27,8 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import static dyn.controllers.GameController.loc;
 
 /**
  * Created by OM on 01.03.2017.
@@ -44,7 +47,8 @@ public class FamilyController {
 
     @Autowired
     FamilyLogService familyLogService;
-
+    @Autowired
+    MessageSource messageSource;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -55,16 +59,16 @@ public class FamilyController {
     private RaceRepository raceRepository;
     @Autowired
     private BuffRepository buffRepository;
-
     @Autowired
     private HouseRepository houseRepository;
 
     @RequestMapping("game/families")
-    public String families(ModelMap model) {
+    public String families(ModelMap model, RedirectAttributes redirectAttributes) {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         List<Family> families = user.getFamilies();
         if (families.size() == 0) {
             logger.debug(user.getUserName() + " doesn't have any family");
+            redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("new.user", null, loc()));
             return "redirect:/game/addNewFamily";
         } else {
             model.addAttribute("families", families);

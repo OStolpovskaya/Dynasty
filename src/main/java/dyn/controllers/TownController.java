@@ -16,6 +16,7 @@ import dyn.service.HouseService;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,6 +27,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import static dyn.controllers.GameController.loc;
+
 @Controller
 public class TownController {
     private static final Logger logger = LogManager.getLogger(TownController.class);
@@ -34,14 +37,23 @@ public class TownController {
     @Autowired
     HouseService houseService;
     @Autowired
+    MessageSource messageSource;
+    @Autowired
     private UserRepository userRepository;
     @Autowired
     private FamilyRepository familyRepository;
 
     @RequestMapping("/game/town")
-    public String townView(ModelMap model) {
+    public String townView(ModelMap model, RedirectAttributes redirectAttributes) {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         Family family = user.getCurrentFamily();
+
+        if (family == null) {
+            logger.debug(user.getUserName() + " doesn't have any family");
+            redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("new.user", null, loc()));
+            return "redirect:/game/addNewFamily";
+        }
+
         model.addAttribute("family", family);
         model.addAttribute("buildingList", houseService.getBuildingList());
         model.addAttribute("familyBuildingList", family.getBuildings());

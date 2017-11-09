@@ -16,6 +16,7 @@ import dyn.service.HouseService;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -37,6 +38,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static dyn.controllers.GameController.loc;
+
 @Controller
 public class CraftController {
     private static final Logger logger = LogManager.getLogger(CraftController.class);
@@ -48,20 +51,24 @@ public class CraftController {
 
     @Autowired
     FamilyLogService familyLogService;
-
+    @Autowired
+    MessageSource messageSource;
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private FamilyRepository familyRepository;
-
     @Autowired
     private CraftBranchRepository craftBranchRepository;
 
     @RequestMapping("/game/craft")
-    public String craft(ModelMap model) {
+    public String craft(ModelMap model, RedirectAttributes redirectAttributes) {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         Family family = user.getCurrentFamily();
+        if (family == null) {
+            logger.debug(user.getUserName() + " doesn't have any family");
+            redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("new.user", null, loc()));
+            return "redirect:/game/addNewFamily";
+        }
         model.addAttribute("family", family);
         model.addAttribute("craftBranchList", craftService.getCraftBranches());
         model.addAttribute("parentThings", craftService.getThingsForTree());

@@ -12,6 +12,7 @@ import dyn.service.*;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,6 +27,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static dyn.controllers.GameController.loc;
+
 @Controller
 public class HouseController {
     private static final Logger logger = LogManager.getLogger(HouseController.class);
@@ -38,6 +41,8 @@ public class HouseController {
     @Autowired
     FamilyLogService familyLogService;
     @Autowired
+    MessageSource messageSource;
+    @Autowired
     private UserRepository userRepository;
     @Autowired
     private FamilyRepository familyRepository;
@@ -45,10 +50,16 @@ public class HouseController {
     @RequestMapping("/game/house")
     public String house(ModelMap model,
                         @RequestParam(value = "family", defaultValue = "0") long familyId,
-                        @RequestParam(value = "room", defaultValue = "kitchen") String roomName) {
+                        @RequestParam(value = "room", defaultValue = "kitchen") String roomName,
+                        RedirectAttributes redirectAttributes) {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
 
         Family family = user.getCurrentFamily();
+        if (family == null) {
+            logger.debug(user.getUserName() + " doesn't have any family");
+            redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("new.user", null, loc()));
+            return "redirect:/game/addNewFamily";
+        }
         model.addAttribute("family", family);
 
         model.addAttribute("roomList", houseService.getRoomsByHouseId(family.getHouse().getId()));
@@ -78,6 +89,11 @@ public class HouseController {
     public String buildings(ModelMap model, RedirectAttributes redirectAttributes) {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         Family family = user.getCurrentFamily();
+        if (family == null) {
+            logger.debug(user.getUserName() + " doesn't have any family");
+            redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("new.user", null, loc()));
+            return "redirect:/game/addNewFamily";
+        }
         model.addAttribute("family", family);
 
 //        List<House> buildingList = family.getBuildings();
@@ -100,6 +116,11 @@ public class HouseController {
     public String storage(ModelMap model, RedirectAttributes redirectAttributes) {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         Family family = user.getCurrentFamily();
+        if (family == null) {
+            logger.debug(user.getUserName() + " doesn't have any family");
+            redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("new.user", null, loc()));
+            return "redirect:/game/addNewFamily";
+        }
         model.addAttribute("family", family);
 
         model.addAttribute("itemsInStorage", houseService.getItemsInStorage(family));
