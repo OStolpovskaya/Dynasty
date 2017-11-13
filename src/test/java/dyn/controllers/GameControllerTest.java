@@ -13,6 +13,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class GameControllerTest {
@@ -43,40 +44,56 @@ public class GameControllerTest {
 
     @Test
     public void startFromNothing() {
-        driver.get("http://localhost:8080/");
+        driver.get("http://192.168.1.38:8080/");
 
         assertDynastyPage();
 
         driver.findElement(By.id(GAME_LINK)).click();
 
-        HashMap<String, String[]> players = new HashMap<>();
-        players.put("ForTest1", new String[]{"Арбузовы", "Арбузов", "Арбузова"});
-        players.put("ForTest2", new String[]{"Барановы", "Баранов", "Баранова"});
-        players.put("ForTest3", new String[]{"Вороновы", "Воронов", "Воронова"});
-        players.put("ForTest4", new String[]{"Гуровы", "Гуров", "Гурова"});
-        players.put("ForTest5", new String[]{"Дуровы", "Дуров", "Дурова"});
-        players.put("ForTest6", new String[]{"Ежовы", "Ежов", "Ежова"});
-        players.put("ForTest7", new String[]{"Жуковы", "Жуков", "Жукова"});
-        players.put("ForTest8", new String[]{"Зубровы", "Зубров", "Зуброва"});
-        players.put("NewChar1", new String[]{"Игнатовы", "Игнатов", "Игнатова"});
-        players.put("NewChar2", new String[]{"Куровы", "Куров", "Курова"});
-        players.put("NewChar3", new String[]{"Леонтьевы", "Леонтьев", "Леонтьева"});
-        players.put("NewChar4", new String[]{"Мухины", "Мухин", "Мухина"});
-        players.put("NewChar5", new String[]{"Носовы", "Носов", "Носова"});
+        HashMap<String, String[]> players = new LinkedHashMap<>();
+        players.put("Arbuzov", new String[]{"Арбузовы", "Арбузов", "Арбузова"});
+        players.put("Baranov", new String[]{"Барановы", "Баранов", "Баранова"});
+        players.put("Voronov", new String[]{"Вороновы", "Воронов", "Воронова"});
+        players.put("Gurova", new String[]{"Гуровы", "Гуров", "Гурова"});
+        players.put("Durova", new String[]{"Дуровы", "Дуров", "Дурова"});
+        players.put("Ezhova", new String[]{"Ежовы", "Ежов", "Ежова"});
+        players.put("Gukova", new String[]{"Жуковы", "Жуков", "Жукова"});
+        players.put("Zubrov", new String[]{"Зубровы", "Зубров", "Зуброва"});
+        players.put("Ignatov", new String[]{"Игнатовы", "Игнатов", "Игнатова"});
+        players.put("Kurova", new String[]{"Куровы", "Куров", "Курова"});
+        players.put("Leontiev", new String[]{"Леонтьевы", "Леонтьев", "Леонтьева"});
+        players.put("Muhina", new String[]{"Мухины", "Мухин", "Мухина"});
+        players.put("Nosova", new String[]{"Носовы", "Носов", "Носова"});
+        players.put("Osipov", new String[]{"Осиповы", "Осипов", "Осипова"});
+        players.put("Prohorov", new String[]{"Прохоровы", "Прохоров", "Прохорова"});
+        players.put("Rogova", new String[]{"Роговы", "Рогов", "Рогова"});
+        players.put("Somova", new String[]{"Сомовы", "Сомов", "Сомова"});
+        players.put("Terehov", new String[]{"Тереховы", "Терехов", "Терехова"});
+        players.put("Uhova", new String[]{"Уховы", "Ухов", "Ухова"});
+        players.put("Fokin", new String[]{"Фокины", "Фокин", "Фокина"});
+        players.put("Hudov", new String[]{"Худовы", "Худов", "Худова"});
+        players.put("Tsarev", new String[]{"Царевы", "Царев", "Царева"});
+        players.put("Chudov", new String[]{"Чудовы", "Чудов", "Чудова"});
+        players.put("Shapkin", new String[]{"Шапкины", "Шапкин", "Шапкина"});
+        players.put("Schukin", new String[]{"Щуковы", "Щуков", "Щукова"});
+        players.put("Ezhova", new String[]{"Эховы", "Эхов", "Эхова"});
+        players.put("Yuriev", new String[]{"Юрьевы", "Юрьев", "Юрьева"});
+        players.put("Yamov", new String[]{"Ямовы", "Ямов", "Ямова"});
 
-        for (String player : players.keySet()) {
+        /*for (String player : players.keySet()) {
             logIn(player);
             addNewFamily(player, players.get(player)[0], players.get(player)[1], players.get(player)[2]);
             makeTurn(player);
             postFiancees(player);
             logOut(player);
-        }
+        }*/
 
-        int levels = 15;
+        int levels = 10;
         for (int level = 0; level < levels; level++) {
             for (String player : players.keySet()) {
                 System.out.println(" -= player =- " + player);
                 logIn(player);
+                postFiancees(player);
                 boolean bridesWasChosen = chooseFiancees(player);
 
                 if (bridesWasChosen == true) {

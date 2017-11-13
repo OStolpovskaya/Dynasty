@@ -4,10 +4,8 @@ package dyn;
  * Created by OM on 17.02.2017.
  */
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
@@ -19,13 +17,10 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 import java.util.Locale;
 
-@SpringBootApplication
-@EnableAutoConfiguration
+
+@Configuration
 public class Application extends WebMvcConfigurerAdapter {
 
-    public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
-    }
 
     @Bean(name = "dataSource")
     public DriverManagerDataSource dataSource() {

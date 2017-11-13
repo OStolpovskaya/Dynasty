@@ -11,7 +11,9 @@
 <div class="container">
 
     <div class="col-md-3 col-md-offset-3">
+        <span th:if="${param.logout}" style="color: darkslategrey;"> You have been logged out. </span>
         <h3>Авторизация:</h3>
+        <span th:if="${param.error}" style="color: palevioletred;">Invalid username or password.</span>
         <form th:action="@{/login}" method="post" class="form-horizontal">
             <div class="form-group">
                 <input type="text" name="username" th:object="${username}" class="form-control" placeholder="Username"
