@@ -70,6 +70,7 @@
         <tr>
             <th>Фамилия</th>
             <th>Уровень</th>
+            <th>Деньги</th>
             <th>Текущий выбор</th>
             <th>Действия</th>
         </tr>
@@ -78,6 +79,7 @@
         <tr th:each="family : ${families}">
             <td th:text="${family.getFamilyName()}">name</td>
             <td th:text="${family.getLevel()}">1</td>
+            <td th:text="${family.getMoney()}">1</td>
             <td>
                 <th:block th:if="${family.isCurrent()}"><span class="glyphicon glyphicon-ok-sign" style="color: forestgreen"></span>
                 </th:block>

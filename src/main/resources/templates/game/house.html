@@ -70,7 +70,7 @@
                 <div class="my_tooltip">Среднее значение качества предметов в доме: <strong th:text="${family.getHouseQuality()}"></strong>&nbsp;<span class="glyphicon glyphicon-question-sign" style="color: black;"></span>
                     <span class="my_tooltiptext">
                         Вероятность рождения 1,2...7 детей и надбавка к зп в зависимости от показателя среднего качества предметов в доме:
-                        <table class="table table-sm">
+                        <table class="table table-sm table-condensed">
                                 <thead>
                                 <tr><th>Показатель</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>Надбавка к ЗП</th></tr>
                                 </thead>
@@ -81,6 +81,20 @@
                                     <tr>	<td>3</td>	<td>0%</td>	<td>0%</td>	<td>10%</td>	<td>30%</td>	<td>50%</td>	<td>10%</td>	<td>0%</td>	<td>30%</td>	</tr>
                                     <tr>	<td>4</td>	<td>0%</td>	<td>0%</td>	<td>0%</td>	<td>10%</td>	<td>30%</td>	<td>50%</td>	<td>10%</td>	<td>40%</td>	</tr>
                                     <tr>	<td>5</td>	<td>0%</td>	<td>0%</td>	<td>0%</td>	<td>0%</td>	<td>20%</td>	<td>30%</td>	<td>50%</td>	<td>50%</td>	</tr>
+                                </tbody>
+                            </table>
+                        При баффе "Плодовитость" вероятность рождения повышается:
+                        <table class="table table-sm table-condensed">
+                                <thead>
+                                <tr><th>Показатель</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr>	<td>1</td>	<td>0%</td>	<td>0%</td>	<td>5%</td>	<td>50%</td>	<td>30%</td>	<td>10%</td>	<td>5%</td>		</tr>
+                                    <tr>	<td>2</td>	<td>0%</td>	<td>0%</td>	<td>0%</td>	<td>15%</td>	<td>50%</td>	<td>25%</td>	<td>10%</td>		</tr>
+                                    <tr>	<td>3</td>	<td>0%</td>	<td>0%</td>	<td>0%</td>	<td>5%</td>	<td>25%</td>	<td>50%</td>	<td>20%</td>		</tr>
+                                    <tr>	<td>4</td>	<td>0%</td>	<td>0%</td>	<td>0%</td>	<td>0%</td>	<td>15%</td>	<td>35%</td>	<td>50%</td>		</tr>
+                                    <tr>	<td>5</td>	<td>0%</td>	<td>0%</td>	<td>0%</td>	<td>0%</td>	<td>0%</td>	<td>35%</td>	<td>65%</td>		</tr>
+                                    <tr>	<td>6</td>	<td>0%</td>	<td>0%</td>	<td>0%</td>	<td>0%</td>	<td>0%</td>	<td>5%</td>	<td>95%</td>		</tr>
                                 </tbody>
                             </table>
                 </span>
