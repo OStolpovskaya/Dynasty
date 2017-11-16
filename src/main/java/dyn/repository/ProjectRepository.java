@@ -17,6 +17,8 @@ public interface ProjectRepository extends CrudRepository<Project, Long> {
 
     List<Project> findByThingAndStatus(Thing thing, ProjectStatus status);
 
+    List<Project> findByThingAndStatusOrderByCostAsc(Thing thing, ProjectStatus status);
+
     List<Project> findByAuthor(Family author);
 
     List<Project> findAllByStatusOrderByThing(ProjectStatus projectStatus);

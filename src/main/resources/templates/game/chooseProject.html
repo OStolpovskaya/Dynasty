@@ -54,7 +54,9 @@
                         <input type="radio" name="projectId" th:value="${familyProject.getProject().getId()}" th:required="required" onclick="enableMakeItemButton()" th:disabled="${not hasResources}"
                                style="position: inherit;" data-toggle="tooltip" th:title="${hasResources?'':'Не хватает ресурсов'}"/>
                         <th:block th:replace="fragments/custom :: project-view (project=${familyProject.getProject()})"></th:block>
-                        <th:block th:text="${familyProject.getProject().getName()+' от '+familyProject.getProject().getAuthor().getFamilyName()+' ('+familyProject.getProject().resString()+') Произведено '+familyProject.getCount()+' раз'}"></th:block>
+                        <th:block th:text="${familyProject.getProject().getName()+' от '+familyProject.getProject().getAuthor().getFamilyName()}"></th:block>
+                        <th:block th:replace="fragments/custom :: resImageView (resHolder=${familyProject.getProject()})"></th:block>
+                        <th:block th:text="${' Произведено '+familyProject.getCount()+' раз'}"></th:block>
                     </label>
                 </div>
                 <th:block th:if="${not #lists.isEmpty(buffItemQualityList)}">
@@ -88,7 +90,10 @@
                         <input type="radio" name="projectId" th:value="${project.getId()}" th:required="required" onclick="enableBuyProjectButton()" th:disabled="${family.getMoney() lt project.getCost()}"
                                style="position: inherit;"/>
                         <th:block th:replace="fragments/custom :: project-view (project=${project})"></th:block>
-                        <th:block th:text="${project.getName()+' от '+project.getAuthor().getFamilyName()+' ('+project.getCost() +' д.) ('+project.resString()+')'}"></th:block>
+                        <th:block th:text="${project.getCost() +' д. - '}"></th:block>
+                        <th:block th:text="${project.getName()+' от '+project.getAuthor().getFamilyName()}"></th:block>
+                        <th:block th:replace="fragments/custom :: resImageView (resHolder=${project})"></th:block>
+
                     </label>
                 </div>
                 <button id="buyProjectButton" type="submit" class="btn btn-warning btn-md center-block" th:disabled="${true}">Приобрести проект</button>

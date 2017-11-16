@@ -6,6 +6,7 @@ package dyn.controllers;
 
 
 import dyn.form.RaceAppearanceForm;
+import dyn.form.ViewFilter;
 import dyn.model.*;
 import dyn.model.Character;
 import dyn.model.appearance.*;
@@ -77,7 +78,8 @@ public class GameController {
     }
 
     @RequestMapping("/game")
-    public String main(ModelMap model, RedirectAttributes redirectAttributes) {
+    public String main(ModelMap model,
+                       @ModelAttribute(value = "viewFilter") ViewFilter viewFilter, RedirectAttributes redirectAttributes) {
         //System.out.println("***GameController.main***");
         //long startTime = System.currentTimeMillis();
 
@@ -102,13 +104,26 @@ public class GameController {
             fathers = characterRepository.findByFamilyAndLevel(family, family.getLevel());
         }
         //System.out.println("GET CHILDREN");
+        int freeDaughters = 0;
+        int freeSons = 0;
         Map<Character, List<Character>> fathersMap = new LinkedHashMap<>();
         for (Character father : fathers) {
             //System.out.println("FATHER "+father.getName());
             List<Character> children = father.getChildren();
             fathersMap.put(father, children);
+
+            for (Character child : children) {
+                if (Objects.equals(child.getSex(), "male") && child.getSpouse() == null) {
+                    freeSons += 1;
+                }
+                if (Objects.equals(child.getSex(), "female") && child.getSpouse() == null && !child.isFiancee()) {
+                    freeDaughters += 1;
+                }
+            }
         }
         model.addAttribute("fathers", fathersMap);
+        model.addAttribute("freeSons", freeSons);
+        model.addAttribute("freeDaughters", freeDaughters);
 
         //System.out.println("BUFFS");
         List<Item> buffs = houseService.getBuffsInStorage(family);

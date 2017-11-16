@@ -301,3 +301,34 @@ a.anchor {
 .sortColumn {
     cursor: pointer;
 }
+
+.resHolderNav {
+    font-size: inherit;
+    border: solid 1px #9d9d9d;
+    border-radius: 9px;
+    padding: 4px;
+    color: #9d9d9d;
+}
+
+.resImageNav {
+    height: 18px;
+}
+
+.resLi {
+    color: #9d9d9d;
+    padding-right: 15px;
+    padding-bottom: 5px;
+    margin-bottom: 2px;
+}
+
+.resHolder {
+    font-size: inherit;
+    border: solid 1px #9d9d9d;
+    border-radius: 9px;
+    padding: 4px;
+    margin-right: 2px;
+}
+
+.resImage {
+    height: 18px;
+}

@@ -39,13 +39,13 @@
     </th:block>
 
     <div style="background-color: #2b669a; border-radius: 4px; position: fixed; top: 55px; left: 5px; padding: 5px;">
-        <div th:alt-title="${'Можно запостить анкет невест: ' + bridesNum}">
+        <div th:alt-title="${'Можно запостить анкет невест: ' + bridesNum + '. Всего свободных дочек: ' + freeDaughters}">
             <img th:src="@{'/graphics/family_status_bride.png' }" height="35px" width="35px"></img>
-            <span class="badge" style="background-color: white; color: black;" id="bridesNum"><th:block th:text="${bridesNum}"></th:block></span>
+            <span class="badge" style="background-color: white; color: black;" id="bridesNum"><th:block th:text="${bridesNum}"></th:block>/<th:block th:text="${freeDaughters}"></th:block></span>
         </div>
-        <div th:alt-title="${'Можно создать пар: ' + pairsNum}">
+        <div th:alt-title="${'Можно создать пар: ' + pairsNum + '. Всего свободных сыновей: ' + freeSons}">
             <img th:src="@{'/graphics/family_status_married.png' }" height="35px" width="35px"></img>
-            <span class="badge" style="background-color: white; color: black;" id="pairsNum"><th:block th:text="${pairsNum}"></th:block></span>
+            <span class="badge" style="background-color: white; color: black;" id="pairsNum"><th:block th:text="${pairsNum}"></th:block>/<th:block th:text="${freeSons}"></th:block></span>
         </div>
         <th:block th:if="${#maps.size(buffsFamily) gt 0}">
             <hr/>

@@ -37,5 +37,42 @@
                 th:text="${resHolder.getChemical()}"></th:block></span></a></li>
     </ul>
 </th:block>
+
+<th:block th:fragment="resImageView (resHolder)">
+    <!--/*@thymesVar id="resHolder" type="dyn.utils.ResourcesHolder"*/-->
+    <span class="resHolder" th:title="#{RES.FOOD}" th:if="${resHolder.getFood()>0}">
+        <img class="resImage" th:src="@{'/graphics/resources/resources_02.png' }"/>
+        <th:block th:text="${resHolder.getFood()}"></th:block>
+    </span>
+    <span class="resHolder" th:title="#{RES.WOOD}" th:if="${resHolder.getWood()>0}">
+        <img class="resImage" th:src="@{'/graphics/resources/resources_03.png' }"/>
+        <th:block th:text="${resHolder.getWood()}"></th:block>
+    </span>
+    <span class="resHolder" th:title="#{RES.METALL}" th:if="${resHolder.getMetall()>0}">
+        <img class="resImage" th:src="@{'/graphics/resources/resources_04.png' }"/>
+        <th:block th:text="${resHolder.getMetall()}"></th:block>
+    </span>
+    <span class="resHolder" th:title="#{RES.PLASTIC}" th:if="${resHolder.getPlastic()>0}">
+        <img class="resImage" th:src="@{'/graphics/resources/resources_05.png' }"/>
+        <th:block th:text="${resHolder.getPlastic()}"></th:block>
+    </span>
+    <span class="resHolder" th:title="#{RES.MICROELECTRONICS}" th:if="${resHolder.getMicroelectronics()>0}">
+        <img class="resImage" th:src="@{'/graphics/resources/resources_06.png' }"/>
+        <th:block th:text="${resHolder.getMicroelectronics()}"></th:block>
+    </span>
+    <span class="resHolder" th:title="#{RES.CLOTH}" th:if="${resHolder.getCloth()>0}">
+        <img class="resImage" th:src="@{'/graphics/resources/resources_07.png' }"/>
+        <th:block th:text="${resHolder.getCloth()}"></th:block>
+    </span>
+    <span class="resHolder" th:title="#{RES.STONE}" th:if="${resHolder.getStone()>0}">
+        <img class="resImage" th:src="@{'/graphics/resources/resources_08.png' }"/>
+        <th:block th:text="${resHolder.getStone()}"></th:block>
+    </span>
+    <span class="resHolder" th:title="#{RES.CHEMICAL}" th:if="${resHolder.getChemical()>0}">
+        <img class="resImage" th:src="@{'/graphics/resources/resources_09.png' }"/>
+        <th:block th:text="${resHolder.getChemical()}"></th:block>
+    </span>
+</th:block>
+
 </body>
 </html>

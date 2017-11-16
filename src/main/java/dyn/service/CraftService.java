@@ -209,7 +209,7 @@ public class CraftService {
     }
 
     public List<Project> getApprovedProjectsByThing(Thing thing) {
-        return projectRepository.findByThingAndStatus(thing, ProjectStatus.approved);
+        return projectRepository.findByThingAndStatusOrderByCostAsc(thing, ProjectStatus.approved);
     }
 
     public List<Project> getAuthorProjects(Family family) {

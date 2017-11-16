@@ -46,41 +46,49 @@
             <h4>Отдать ресурсы:</h4>
             <div class="radio">
                 <label><input type="radio" name="drop" value="food" checked="checked" th:onclick="|changeText('${@const.RES_FOOD_NAME}','${family.getFamilyResources().getFood()}')|"/>
+                    <img class="resImage" th:src="@{'/graphics/resources/resources_02.png' }"/>
                     <th:block th:text="${@const.RES_FOOD_NAME + ' ('+family.getFamilyResources().getFood()+')'}"></th:block>
                 </label>
             </div>
             <div class="radio">
                 <label><input type="radio" name="drop" value="wood" th:onclick="|changeText('${@const.RES_WOOD_NAME}','${family.getFamilyResources().getWood()}')|"/>
+                    <img class="resImage" th:src="@{'/graphics/resources/resources_03.png' }"/>
                     <th:block th:text="${@const.RES_WOOD_NAME + ' ('+family.getFamilyResources().getWood()+')'}"></th:block>
                 </label>
             </div>
             <div class="radio">
                 <label><input type="radio" name="drop" value="metall" th:onclick="|changeText('${@const.RES_METALL_NAME}','${family.getFamilyResources().getMetall()}')|"/>
+                    <img class="resImage" th:src="@{'/graphics/resources/resources_04.png' }"/>
                     <th:block th:text="${@const.RES_METALL_NAME + ' ('+family.getFamilyResources().getMetall()+')'}"></th:block>
                 </label>
             </div>
             <div class="radio">
                 <label><input type="radio" name="drop" value="plastic" th:onclick="|changeText('${@const.RES_PLASTIC_NAME}','${family.getFamilyResources().getPlastic()}')|"/>
+                    <img class="resImage" th:src="@{'/graphics/resources/resources_05.png' }"/>
                     <th:block th:text="${@const.RES_PLASTIC_NAME + ' ('+family.getFamilyResources().getPlastic()+')'}"></th:block>
                 </label>
             </div>
             <div class="radio">
                 <label><input type="radio" name="drop" value="microelectronics" th:onclick="|changeText('${@const.RES_MICROELECTRONICS_NAME}','${family.getFamilyResources().getMicroelectronics()}')|"/>
+                    <img class="resImage" th:src="@{'/graphics/resources/resources_06.png' }"/>
                     <th:block th:text="${@const.RES_MICROELECTRONICS_NAME + ' ('+family.getFamilyResources().getMicroelectronics()+')'}"></th:block>
                 </label>
             </div>
             <div class="radio">
                 <label><input type="radio" name="drop" value="cloth" th:onclick="|changeText('${@const.RES_CLOTH_NAME}','${family.getFamilyResources().getCloth()}')|"/>
+                    <img class="resImage" th:src="@{'/graphics/resources/resources_07.png' }"/>
                     <th:block th:text="${@const.RES_CLOTH_NAME + ' ('+family.getFamilyResources().getCloth()+')'}"></th:block>
                 </label>
             </div>
             <div class="radio">
                 <label><input type="radio" name="drop" value="stone" th:onclick="|changeText('${@const.RES_STONE_NAME}','${family.getFamilyResources().getStone()}')|"/>
+                    <img class="resImage" th:src="@{'/graphics/resources/resources_08.png' }"/>
                     <th:block th:text="${@const.RES_STONE_NAME + ' ('+family.getFamilyResources().getStone()+')'}"></th:block>
                 </label>
             </div>
             <div class="radio">
                 <label><input type="radio" name="drop" value="chemical" th:onclick="|changeText('${@const.RES_CHEMICAL_NAME}','${family.getFamilyResources().getChemical()}')|"/>
+                    <img class="resImage" th:src="@{'/graphics/resources/resources_09.png' }"/>
                     <th:block th:text="${@const.RES_CHEMICAL_NAME + ' ('+family.getFamilyResources().getChemical()+')'}"></th:block>
                 </label>
             </div>
@@ -89,41 +97,49 @@
             <h4>Получить ресурсы:</h4>
             <div class="radio">
                 <label><input type="radio" name="take" value="food" th:onclick="|changeTakeText('${@const.RES_FOOD_NAME}')|"/>
+                    <img class="resImage" th:src="@{'/graphics/resources/resources_02.png' }"/>
                     <th:block th:text="${@const.RES_FOOD_NAME}"></th:block>
                 </label>
             </div>
             <div class="radio">
                 <label><input type="radio" name="take" value="wood" checked="checked" th:onclick="|changeTakeText('${@const.RES_WOOD_NAME}')|"/>
+                    <img class="resImage" th:src="@{'/graphics/resources/resources_03.png' }"/>
                     <th:block th:text="${@const.RES_WOOD_NAME}"></th:block>
                 </label>
             </div>
             <div class="radio">
                 <label><input type="radio" name="take" value="metall" th:onclick="|changeTakeText('${@const.RES_METALL_NAME}')|"/>
+                    <img class="resImage" th:src="@{'/graphics/resources/resources_04.png' }"/>
                     <th:block th:text="${@const.RES_METALL_NAME}"></th:block>
                 </label>
             </div>
             <div class="radio">
                 <label><input type="radio" name="take" value="plastic" th:onclick="|changeTakeText('${@const.RES_PLASTIC_NAME}')|"/>
+                    <img class="resImage" th:src="@{'/graphics/resources/resources_05.png' }"/>
                     <th:block th:text="${@const.RES_PLASTIC_NAME}"></th:block>
                 </label>
             </div>
             <div class="radio">
                 <label><input type="radio" name="take" value="mocroelectronics" th:onclick="|changeTakeText('${@const.RES_MICROELECTRONICS_NAME}')|"/>
+                    <img class="resImage" th:src="@{'/graphics/resources/resources_06.png' }"/>
                     <th:block th:text="${@const.RES_MICROELECTRONICS_NAME}"></th:block>
                 </label>
             </div>
             <div class="radio">
                 <label><input type="radio" name="take" value="cloth" th:onclick="|changeTakeText('${@const.RES_CLOTH_NAME}')|"/>
+                    <img class="resImage" th:src="@{'/graphics/resources/resources_07.png' }"/>
                     <th:block th:text="${@const.RES_CLOTH_NAME}"></th:block>
                 </label>
             </div>
             <div class="radio">
                 <label><input type="radio" name="take" value="stone" th:onclick="|changeTakeText('${@const.RES_STONE_NAME}')|"/>
+                    <img class="resImage" th:src="@{'/graphics/resources/resources_08.png' }"/>
                     <th:block th:text="${@const.RES_STONE_NAME}"></th:block>
                 </label>
             </div>
             <div class="radio">
                 <label><input type="radio" name="take" value="chemical" th:onclick="|changeTakeText('${@const.RES_CHEMICAL_NAME}')|"/>
+                    <img class="resImage" th:src="@{'/graphics/resources/resources_09.png' }"/>
                     <th:block th:text="${@const.RES_CHEMICAL_NAME}"></th:block>
                 </label>
             </div>
