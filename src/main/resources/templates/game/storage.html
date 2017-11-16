@@ -42,7 +42,7 @@
                             <th:block th:replace="fragments/custom :: project-view (project=${item.getProject()})"></th:block>
                         </td>
                         <td th:text="${item.getQuality()}"></td>
-                        <td><a th:href="${'/game/userview?userId='+item.getAuthor().getUser().getUserid()}" th:text="${item.getAuthor().familyNameAndUserName()}"></a></td>
+                        <td><a th:href="${'/game/userview?userId='+item.getAuthor().getUser().getUserid() +'&amp;familyId='+item.getAuthor().getId()}" th:text="${item.getAuthor().familyNameAndUserName()}"></a></td>
                         <td>
                             <form th:action="@{/game/putItemToStore}" method="post" class="form-inline">
                                 <input type="hidden" name="itemId" th:value="${item.getId()}"/>
@@ -114,7 +114,7 @@
                             </ul>
                         </td>
                         <td>
-                            <a th:href="${'/game/userview?userId='+item.getAuthor().getUser().getUserid()}" th:text="${item.getAuthor().familyNameAndUserName()}"></a>
+                            <a th:href="${'/game/userview?userId='+item.getAuthor().getUser().getUserid() +'&amp;familyId='+item.getAuthor().getId()}" th:text="${item.getAuthor().familyNameAndUserName()}"></a>
 
                         </td>
 
@@ -167,7 +167,7 @@
                         </td>
                         <td th:text="${item.getQuality()}"></td>
                         <td>
-                            <a th:href="${'/game/userview?userId='+item.getAuthor().getUser().getUserid()}" th:text="${item.getAuthor().familyNameAndUserName()}"></a>
+                            <a th:href="${'/game/userview?userId='+item.getAuthor().getUser().getUserid() +'&amp;familyId='+item.getAuthor().getId()}" th:text="${item.getAuthor().familyNameAndUserName()}"></a>
                         </td>
                         <td th:text="${item.getCost()+' д.'}"></td>
                         <td>

@@ -614,10 +614,10 @@ public class GameController {
         return 1;
     }
 
-    //game/userview?userId
     @RequestMapping(value = "/game/userview", method = RequestMethod.GET)
     public String userview(ModelMap model, RedirectAttributes redirectAttributes,
-                           @RequestParam(value = "userId") Long userId) {
+                           @RequestParam(value = "userId") Long userId,
+                           @RequestParam(value = "familyId") Long familyId) {
         if (userId.equals(1L)) {
             redirectAttributes.addFlashAttribute("mess", "У разработчиков нет текущей семьи, просмотр не разрешен");
             return "redirect:/game";
@@ -633,14 +633,19 @@ public class GameController {
         }
         model.addAttribute("player", player);
 
-        Family playerCurrentFamily = player.getCurrentFamily();
-        model.addAttribute("playerCurrentFamily", playerCurrentFamily);
+        Family playerFamily = familyRepository.findByIdAndUser(familyId, player);
+        if (playerFamily == null) {
+            playerFamily = player.getCurrentFamily();
+            redirectAttributes.addFlashAttribute("mess", "У этого игрока нет такой семьи. Показываем его текущую семью.");
+        }
+
+        model.addAttribute("playerCurrentFamily", playerFamily);
 
         List<Character> fathers;
-        if (playerCurrentFamily.getLevel() > 0) {
-            fathers = characterRepository.findByFamilyAndLevelAndSexAndSpouseIsNotNull(playerCurrentFamily, playerCurrentFamily.getLevel() - 1, "male");
+        if (playerFamily.getLevel() > 0) {
+            fathers = characterRepository.findByFamilyAndLevelAndSexAndSpouseIsNotNull(playerFamily, playerFamily.getLevel() - 1, "male");
         } else {
-            fathers = characterRepository.findByFamilyAndLevel(playerCurrentFamily, playerCurrentFamily.getLevel());
+            fathers = characterRepository.findByFamilyAndLevel(playerFamily, playerFamily.getLevel());
         }
 
         Map<Character, List<Character>> fathersMap = new LinkedHashMap<>();
@@ -652,17 +657,17 @@ public class GameController {
         Set<Achievement> achievements = player.getAchievements();
         model.addAttribute("achievements", achievements);
 
-        model.addAttribute("roomList", houseService.getRoomsByHouseId(playerCurrentFamily.getHouse().getId()));
+        model.addAttribute("roomList", houseService.getRoomsByHouseId(playerFamily.getHouse().getId()));
 
-        List<RoomView> roomViewList = houseService.getRoomMaps(playerCurrentFamily.getHouse(), playerCurrentFamily);
+        List<RoomView> roomViewList = houseService.getRoomMaps(playerFamily.getHouse(), playerFamily);
         model.addAttribute("roomViewList", roomViewList);
 
-        List<House> buildingList = playerCurrentFamily.getBuildings();
+        List<House> buildingList = playerFamily.getBuildings();
         model.addAttribute("buildingList", buildingList);
 
         Map<House, List<RoomView>> buildingMap = new LinkedHashMap<>();
         for (House house : buildingList) {
-            buildingMap.put(house, houseService.getRoomMaps(house, playerCurrentFamily));
+            buildingMap.put(house, houseService.getRoomMaps(house, playerFamily));
         }
         model.addAttribute("buildingMap", buildingMap);
 

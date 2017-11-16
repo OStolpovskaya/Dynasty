@@ -53,11 +53,12 @@
     </th:block>
 </div>
 <div th:fragment="nav-for-game">
+    <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header">
                 <th:block th:if="${family != null}">
-                    <a class="navbar-brand" th:href="${'/game/userview?userId='+family.getUser().getUserid()}" th:text="${family.familyNameAndUserName()+' Уровень: ' +family.getLevel()}" name="family"></a>
+                    <a class="navbar-brand" th:href="${'/game/userview?userId=' + family.getUser().getUserid() + '&amp;familyId='+ family.getId()}" th:text="${family.familyNameAndUserName()+' Уровень: ' +family.getLevel()}" name="family"></a>
                 </th:block>
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
                     <span class="icon-bar"></span>
