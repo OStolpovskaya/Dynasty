@@ -1,11 +1,9 @@
 package dyn.utils;
 
-import dyn.model.Family;
 import dyn.model.FamilyResources;
 import dyn.service.Const;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -56,14 +54,14 @@ public class ResUtils {
 
     public static String getResString(ResourcesHolder resHolder, int coeff) {
         List<String> resources = new ArrayList<>();
-        if (resHolder.getFood() > 0) resources.add("Продукты: " + resHolder.getFood() * coeff);
-        if (resHolder.getWood() > 0) resources.add("Дерево: " + resHolder.getWood() * coeff);
-        if (resHolder.getMetall() > 0) resources.add("Металл: " + resHolder.getMetall() * coeff);
-        if (resHolder.getPlastic() > 0) resources.add("Пластик, резина: " + resHolder.getPlastic() * coeff);
-        if (resHolder.getMicroelectronics() > 0) resources.add("Микроэлектроника: " + resHolder.getMicroelectronics() * coeff);
-        if (resHolder.getCloth() > 0) resources.add("Ткань, кожа, бумага: " + resHolder.getCloth() * coeff);
-        if (resHolder.getStone() > 0) resources.add("Камень, стекло, керамика: " + resHolder.getStone() * coeff);
-        if (resHolder.getChemical() > 0) resources.add("Химия, краски: " + resHolder.getChemical() * coeff);
+        if (resHolder.getFood() > 0) resources.add("<img class='resImage' title='" + Const.RES_FOOD_NAME + "' src='/graphics/resources/resources_02.png'/> " + resHolder.getFood() * coeff);
+        if (resHolder.getWood() > 0) resources.add("<img class='resImage' title='" + Const.RES_WOOD_NAME + "' src='/graphics/resources/resources_03.png''/> " + resHolder.getWood() * coeff);
+        if (resHolder.getMetall() > 0) resources.add("<img class='resImage' title='" + Const.RES_METALL_NAME + "' src='/graphics/resources/resources_04.png''/> " + resHolder.getMetall() * coeff);
+        if (resHolder.getPlastic() > 0) resources.add("<img class='resImage' title='" + Const.RES_PLASTIC_NAME + "' src='/graphics/resources/resources_05.png''/> " + resHolder.getPlastic() * coeff);
+        if (resHolder.getMicroelectronics() > 0) resources.add("<img class='resImage' title='" + Const.RES_MICROELECTRONICS_NAME + "' src='/graphics/resources/resources_06.png''/> " + resHolder.getMicroelectronics() * coeff);
+        if (resHolder.getCloth() > 0) resources.add("<img class='resImage' title='" + Const.RES_CLOTH_NAME + "' src='/graphics/resources/resources_07.png''/> " + resHolder.getCloth() * coeff);
+        if (resHolder.getStone() > 0) resources.add("<img class='resImage' title='" + Const.RES_STONE_NAME + "' src='/graphics/resources/resources_08.png''/> " + resHolder.getStone() * coeff);
+        if (resHolder.getChemical() > 0) resources.add("<img class='resImage' title='" + Const.RES_CHEMICAL_NAME + "' src='/graphics/resources/resources_09.png''/>" + resHolder.getChemical() * coeff);
         return org.springframework.util.StringUtils.arrayToDelimitedString(resources.toArray(), ", ");
     }
 
@@ -81,31 +79,16 @@ public class ResUtils {
     }
 
     public static String differenceToString(ResourcesHolder previous, ResourcesHolder current) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(" ").append(Const.RES_FOOD_NAME).append(": ").append(current.getFood() - previous.getFood()).append("; ");
-        sb.append(" ").append(Const.RES_WOOD_NAME).append(": ").append(current.getWood() - previous.getWood()).append("; ");
-        sb.append(" ").append(Const.RES_METALL_NAME).append(": ").append(current.getMetall() - previous.getMetall()).append("; ");
-        sb.append(" ").append(Const.RES_PLASTIC_NAME).append(": ").append(current.getPlastic() - previous.getPlastic()).append("; ");
-        sb.append(" ").append(Const.RES_MICROELECTRONICS_NAME).append(": ").append(current.getMicroelectronics() - previous.getMicroelectronics()).append("; ");
-        sb.append(" ").append(Const.RES_CLOTH_NAME).append(": ").append(current.getCloth() - previous.getCloth()).append("; ");
-        sb.append(" ").append(Const.RES_STONE_NAME).append(": ").append(current.getStone() - previous.getStone()).append("; ");
-        sb.append(" ").append(Const.RES_CHEMICAL_NAME).append(": ").append(current.getChemical() - previous.getChemical());
-
-        return sb.toString();
+        ResourcesHolder resHolder = new FamilyResources();
+        resHolder.setFood(current.getFood() - previous.getFood());
+        resHolder.setWood(current.getWood() - previous.getWood());
+        resHolder.setMetall(current.getMetall() - previous.getMetall());
+        resHolder.setPlastic(current.getPlastic() - previous.getPlastic());
+        resHolder.setMicroelectronics(current.getMicroelectronics() - previous.getMicroelectronics());
+        resHolder.setCloth(current.getCloth() - previous.getCloth());
+        resHolder.setStone(current.getStone() - previous.getStone());
+        resHolder.setChemical(current.getChemical() - previous.getChemical());
+        return getResString(resHolder);
     }
 
-    public void saveInitValues(Family family) {
-        FamilyResources familyResources = family.getFamilyResources();
-        initValues = new HashMap<>();
-        initValues.put("Money", family.getMoney());
-        initValues.put("Food", familyResources.getFood());
-        initValues.put("Wood", familyResources.getWood());
-        initValues.put("Metall", familyResources.getMetall());
-        initValues.put("Plastic", familyResources.getPlastic());
-        initValues.put("Microelectronics", familyResources.getMicroelectronics());
-        initValues.put("Cloth", familyResources.getCloth());
-        initValues.put("Stone", familyResources.getStone());
-        initValues.put("Chemical", familyResources.getChemical());
-        initValues.put("CraftPoints", family.getCraftPoint());
-    }
 }

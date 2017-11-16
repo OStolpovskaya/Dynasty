@@ -185,7 +185,7 @@ public class FamilyController {
         family.setMoney(1000);
 
         family.setHouse(houseRepository.findOne(1L));
-        family.setFamilyResources(new FamilyResources());
+        family.setFamilyResources(new FamilyResources("NewFamily"));
 
         logger.info(user.getUserName() + " adds new family:" + family.toString());
         familyRepository.save(family);

@@ -28,6 +28,10 @@ public class FamilyResources implements ResourcesHolder {
     private Family family;
 
     public FamilyResources() {
+
+    }
+
+    public FamilyResources(String newFamily) {
         food = 10;
         wood = 10;
         metall = 10;
