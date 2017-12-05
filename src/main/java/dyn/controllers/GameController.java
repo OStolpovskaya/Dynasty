@@ -406,101 +406,122 @@ public class GameController {
             turnLog.append("<br>");
 
             for (int childSeqNum = 0; childSeqNum < childAmount; childSeqNum++) {
-                Character child = new Character();
-
-                // main properties
-                child.setSex(getSexForNewChild(firstTurn, sonOrDaughterPercent, childSeqNum));
-                child.setName(characterService.getNameForNewChild(child));
-                child.setFather(character);
-                child.setFamily(family);
+                Character child = generateChild(user, family, character, wife, firstTurn, fatherFeaturePercent, sonOrDaughterPercent, genModPercent, childSeqNum, turnLog, turnAchievements);
                 child.setLevel(family.getLevel() + 1);
-
-                // features
-                child.setBody(Math.random() < fatherFeaturePercent ? character.getBody() : wife.getBody());
-                child.setEars(Math.random() < fatherFeaturePercent ? character.getEars() : wife.getEars());
-                child.setEyebrows(Math.random() < fatherFeaturePercent ? character.getEyebrows() : wife.getEyebrows());
-                child.setEyeColor(Math.random() < fatherFeaturePercent ? character.getEyeColor() : wife.getEyeColor());
-                child.setEyes(Math.random() < fatherFeaturePercent ? character.getEyes() : wife.getEyes());
-                child.setHairColor(Math.random() < fatherFeaturePercent ? character.getHairColor() : wife.getHairColor());
-                child.setHairType(Math.random() < fatherFeaturePercent ? character.getHairType() : wife.getHairType());
-                child.setHead(Math.random() < fatherFeaturePercent ? character.getHead() : wife.getHead());
-                child.setHeight(Math.random() < fatherFeaturePercent ? character.getHeight() : wife.getHeight());
-                child.setMouth(Math.random() < fatherFeaturePercent ? character.getMouth() : wife.getMouth());
-                child.setNose(Math.random() < fatherFeaturePercent ? character.getNose() : wife.getNose());
-                child.setSkinColor(Math.random() < fatherFeaturePercent ? character.getSkinColor() : wife.getSkinColor());
-
-                turnLog.append(child.getName());
-
-                // apply genetic modification if needed
-                String feature = "";
-                if ((firstTurn && childSeqNum == 0) || (!firstTurn && Math.random() < genModPercent)) {
-                    Appearance randomFeature = app.getRandomFeature();
-                    if (randomFeature instanceof Body) {
-                        child.setBody((Body) randomFeature);
-                    }
-                    if (randomFeature instanceof Ears) {
-                        child.setEars((Ears) randomFeature);
-                    }
-                    if (randomFeature instanceof Eyebrows) {
-                        child.setEyebrows((Eyebrows) randomFeature);
-                    }
-                    if (randomFeature instanceof EyeColor) {
-                        child.setEyeColor((EyeColor) randomFeature);
-                    }
-                    if (randomFeature instanceof Eyes) {
-                        child.setEyes((Eyes) randomFeature);
-                    }
-                    if (randomFeature instanceof HairColor) {
-                        child.setHairColor((HairColor) randomFeature);
-                    }
-                    if (randomFeature instanceof HairType) {
-                        child.setHairType((HairType) randomFeature);
-                    }
-                    if (randomFeature instanceof Head) {
-                        child.setHead((Head) randomFeature);
-                    }
-                    if (randomFeature instanceof Height) {
-                        child.setHeight((Height) randomFeature);
-                    }
-                    if (randomFeature instanceof Mouth) {
-                        child.setMouth((Mouth) randomFeature);
-                    }
-                    if (randomFeature instanceof Nose) {
-                        child.setNose((Nose) randomFeature);
-                    }
-                    if (randomFeature instanceof SkinColor) {
-                        child.setSkinColor((SkinColor) randomFeature);
-                    }
-
-                    feature = messageSource.getMessage(randomFeature.getName().substring(0, randomFeature.getName().lastIndexOf(".")), null, loc()) + ": " + randomFeature.getTitle();
-                    turnLog.append(messageSource.getMessage("turn.genModObtained", new Object[]{feature}, loc()));
-                }
-                // hairstyle after set hair type
-                child.setHairStyle(app.getRandomHairStyle(child.getSex(), child.getHairType()));
-
-                // picture
-                child.generateView();
-
-                // race and check newborn achievement
-                child.setRace(raceService.defineRace(child));
-                Achievement achievement = achievementService.checkAchievement(AchievementType.newborn, user, child);
-                if (achievement != null) {
-                    turnLog.append(messageSource.getMessage("turn.achievement", new Object[]{achievement.getName()}, loc()));
-                    turnAchievements.append(child.getName()).append(": ").append(achievement.getName()).append("<br>");
-                }
-
-                // vocation and skills
-                child.setCareer(new Career());
-                careerService.inheritVocationAndSkills(child.getCareer(), character.getCareer(), wife.getCareer());
-
-                logger.info("   child: " + child.getName() + ", genModFeature = " + feature + ", race: " + child.getRace().getName());
                 characterRepository.save(child);
-
-                turnLog.append("<br>");
             }
             turnLog.append("<br>");
 
         }
+    }
+
+    public Character generateChild(User user, Family family,
+                                   Character father, Character mother,
+                                   boolean firstTurn, double fatherFeaturePercent, double sonOrDaughterPercent, double genModPercent,
+                                   int childSeqNum,
+                                   StringBuilder log, StringBuilder logAchievements) {
+        Character child = new Character();
+
+        String sex = "female";
+        if (firstTurn) {
+            if (childSeqNum < 3) {
+                sex = "male";
+            }
+        } else {
+            if (Math.random() < sonOrDaughterPercent) {
+                sex = "male";
+            }
+        }
+
+        // main properties
+        child.setSex(sex);
+        child.setName(characterService.getNameForNewChild(child));
+        child.setFather(father);
+        child.setFamily(family);
+
+        // features
+        child.setBody(Math.random() < fatherFeaturePercent ? father.getBody() : mother.getBody());
+        child.setEars(Math.random() < fatherFeaturePercent ? father.getEars() : mother.getEars());
+        child.setEyebrows(Math.random() < fatherFeaturePercent ? father.getEyebrows() : mother.getEyebrows());
+        child.setEyeColor(Math.random() < fatherFeaturePercent ? father.getEyeColor() : mother.getEyeColor());
+        child.setEyes(Math.random() < fatherFeaturePercent ? father.getEyes() : mother.getEyes());
+        child.setHairColor(Math.random() < fatherFeaturePercent ? father.getHairColor() : mother.getHairColor());
+        child.setHairType(Math.random() < fatherFeaturePercent ? father.getHairType() : mother.getHairType());
+        child.setHead(Math.random() < fatherFeaturePercent ? father.getHead() : mother.getHead());
+        child.setHeight(Math.random() < fatherFeaturePercent ? father.getHeight() : mother.getHeight());
+        child.setMouth(Math.random() < fatherFeaturePercent ? father.getMouth() : mother.getMouth());
+        child.setNose(Math.random() < fatherFeaturePercent ? father.getNose() : mother.getNose());
+        child.setSkinColor(Math.random() < fatherFeaturePercent ? father.getSkinColor() : mother.getSkinColor());
+
+        log.append(child.getName());
+
+        // apply genetic modification if needed
+        String feature = "";
+        if ((firstTurn && childSeqNum == 0) || (!firstTurn && Math.random() < genModPercent)) {
+            Appearance randomFeature = app.getRandomFeature();
+            if (randomFeature instanceof Body) {
+                child.setBody((Body) randomFeature);
+            }
+            if (randomFeature instanceof Ears) {
+                child.setEars((Ears) randomFeature);
+            }
+            if (randomFeature instanceof Eyebrows) {
+                child.setEyebrows((Eyebrows) randomFeature);
+            }
+            if (randomFeature instanceof EyeColor) {
+                child.setEyeColor((EyeColor) randomFeature);
+            }
+            if (randomFeature instanceof Eyes) {
+                child.setEyes((Eyes) randomFeature);
+            }
+            if (randomFeature instanceof HairColor) {
+                child.setHairColor((HairColor) randomFeature);
+            }
+            if (randomFeature instanceof HairType) {
+                child.setHairType((HairType) randomFeature);
+            }
+            if (randomFeature instanceof Head) {
+                child.setHead((Head) randomFeature);
+            }
+            if (randomFeature instanceof Height) {
+                child.setHeight((Height) randomFeature);
+            }
+            if (randomFeature instanceof Mouth) {
+                child.setMouth((Mouth) randomFeature);
+            }
+            if (randomFeature instanceof Nose) {
+                child.setNose((Nose) randomFeature);
+            }
+            if (randomFeature instanceof SkinColor) {
+                child.setSkinColor((SkinColor) randomFeature);
+            }
+
+            feature = messageSource.getMessage(randomFeature.getName().substring(0, randomFeature.getName().lastIndexOf(".")), null, loc()) + ": " + randomFeature.getTitle();
+            log.append(messageSource.getMessage("turn.genModObtained", new Object[]{feature}, loc()));
+        }
+        // hairstyle after set hair type
+        child.setHairStyle(app.getRandomHairStyle(child.getSex(), child.getHairType()));
+
+        // picture
+        child.generateView();
+
+        // race and check newborn achievement
+        child.setRace(raceService.defineRace(child));
+        Achievement achievement = achievementService.checkAchievement(AchievementType.newborn, user, child);
+        if (achievement != null) {
+            log.append(messageSource.getMessage("turn.achievement", new Object[]{achievement.getName()}, loc()));
+            logAchievements.append(child.getName()).append(": ").append(achievement.getName()).append("<br>");
+        }
+
+        // vocation and skills
+        child.setCareer(new Career());
+        careerService.inheritVocationAndSkills(child.getCareer(), father.getCareer(), mother.getCareer());
+
+        logger.info("   child: " + child.getName() + ", genModFeature = " + feature + ", race: " + child.getRace().getName());
+        characterRepository.save(child);
+
+        log.append("<br>");
+        return child;
     }
 
     public void workersProcessing(User user, Family family, List<Character> charactersOnLevel, StringBuilder turnLog, StringBuilder turnAchievements) {
@@ -564,21 +585,6 @@ public class GameController {
             turnLog.append("<br>");
         }
     }
-
-    public String getSexForNewChild(boolean firstTurn, double sonOrDaughterPercent, int sequenceNumberOFChild) {
-        String sex = "female";
-        if (firstTurn) {
-            if (sequenceNumberOFChild < 3) {
-                sex = "male";
-            }
-        } else {
-            if (Math.random() < sonOrDaughterPercent) {
-                sex = "male";
-            }
-        }
-        return sex;
-    }
-
 
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public String logout(HttpServletRequest request, HttpServletResponse response) {

@@ -53,6 +53,8 @@ public class BuffController {
     private FamilyRepository familyRepository;
     @Autowired
     private CharacterRepository characterRepository;
+    @Autowired
+    private GameController gameController;
 
     // ============ CHOOSING BUFFS ============
     @RequestMapping(value = "/game/chooseBuffs", params = "characterId", method = RequestMethod.POST)
@@ -277,7 +279,7 @@ public class BuffController {
                         buff = buffRepository.findOne(Const.BUFF_MANY_SONS);
                     } else if (projectId.equals(Const.PROJECT_MORE_DAUGHTERS)) {
                         buff = buffRepository.findOne(Const.BUFF_MANY_DAUGHTERS);
-                    } else if (projectId.equals(Const.PROJECT_ONE_MORE_CHILD)) {
+                    } else if (projectId.equals(Const.PROJECT_ONE_MORE_CHILD)) { // TODO: delete
                         buff = buffRepository.findOne(Const.BUFF_ONE_MORE_CHILD);
                     } else {
                         logger.error(family.familyNameAndId() + "want to apply item of project with no rule: " + projectId);
@@ -332,16 +334,27 @@ public class BuffController {
                 boolean levelCheck;
                 boolean familyCheck;
                 boolean hasChildren;
+                boolean canHaveChild;
 
                 if (character.getSex().equals("male")) {
-                    hasChildren = character.getChildren().size() > 0;
+                    int size = character.getChildren().size();
+                    hasChildren = size > 0;
                     familyCheck = character.getFamily() == family;
                     levelCheck = character.getLevel() == family.getLevel() - 1;
+                    canHaveChild = size < Const.MAX_CHILDREN;
                 } else {
-                    hasChildren = character.getSpouse().getChildren().size() > 0;
+                    int size = character.getSpouse().getChildren().size();
+                    hasChildren = size > 0;
                     familyCheck = character.getSpouse().getFamily() == family;
                     levelCheck = character.getSpouse().getLevel() == family.getLevel() - 1;
+                    canHaveChild = size < Const.MAX_CHILDREN;
                 }
+                if (!canHaveChild) {
+                    logger.error(family.familyNameAndId() + " want to apply parents buff, but reached max children: " + item.getProject().getId());
+                    redirectAttributes.addFlashAttribute("mess", "Персонаж не может иметь больше детей. Максимум: " + Const.MAX_CHILDREN);
+                    return "redirect:/game";
+                }
+
                 if (levelCheck && familyCheck && hasChildren) {
                     Long projectId = item.getProject().getId();
                     if (projectId.equals(Const.PROJECT_CLONE)) {
@@ -425,6 +438,47 @@ public class BuffController {
                         characterRepository.save(adoptedChild);
                         mess = "Вы приняли в семью приемного ребенка: " + adoptedChild.getName();
 
+                    } else if (projectId.equals(Const.PROJECT_ONE_MORE_CHILD)) {
+                        Character father;
+                        Character mother;
+                        if (character.getSex().equals("male")) {
+                            father = character;
+                            mother = character.getSpouse();
+                        } else {
+                            father = character.getSpouse();
+                            mother = character;
+                        }
+                        boolean firstTurn = false;
+
+                        double fatherFeaturePercent = 0.5; // whose feature is inherited, father or mother
+                        if (father.isBuffedBy(Buff.DOMINANT_MOTHER)) {
+                            fatherFeaturePercent = 0.2;
+                        }
+                        if (father.isBuffedBy(Buff.DOMINANT_FATHER)) {
+                            fatherFeaturePercent = 0.8;
+                        }
+
+                        double sonOrDaughterPercent = 0.5; // male or female child
+                        if (father.isBuffedBy(Buff.MANY_SONS)) {
+                            sonOrDaughterPercent = 0.8;
+                        }
+                        if (father.isBuffedBy(Buff.MANY_DAUGHTERS)) {
+                            sonOrDaughterPercent = 0.2;
+                        }
+
+                        double genModPercent = Const.PERCENTAGE_GEN_MOD;// 0.05; // percentage of genetic modification
+                        if (father.isBuffedBy(Buff.GENETIC_MOD)) {
+                            genModPercent = Const.PERCENTAGE_GEN_MOD_BUFFED;//0.40;
+                        }
+
+                        StringBuilder log = new StringBuilder("У вас появился еще один ребенок: ");
+                        StringBuilder logAchievements = new StringBuilder();
+                        Character child = gameController.generateChild(user, family, father, mother, firstTurn, fatherFeaturePercent, sonOrDaughterPercent, genModPercent, 1, log, logAchievements);
+
+                        child.setLevel(family.getLevel());
+                        characterRepository.save(child);
+
+                        mess = log.toString();
                     } else {
                         logger.error(family.familyNameAndId() + "want to apply item of project with no rule: " + projectId);
                         redirectAttributes.addFlashAttribute("mess", "Проект этого предмета еще не описан");
@@ -436,7 +490,7 @@ public class BuffController {
                     familyLogService.addToLog(family, mess);
                     redirectAttributes.addFlashAttribute("mess", mess);
                     logger.info(family.familyNameAndId() + " apply item of project: '" + item.getProject().getName());
-                    return "redirect:/game#char" + character.getId();
+                    return "redirect:/game#char" + (character.getSex() == "male" ? character.getId() : character.getSpouse().getId());
                 } else {
                     logger.error(family.familyNameAndId() + "want to apply item to not right character: " + character.getMainDetails() + ". Условия: " + levelCheck + "," + familyCheck + "," + hasChildren);
                     redirectAttributes.addFlashAttribute("mess", "Условия применения не подходят к выбранному персонажу " + character.getFullName());

@@ -132,4 +132,5 @@ public class Const {
     public static final int FIANCEE_COST = 50;
 
     public static final int SKILL_IMPROVEMENT_COEFFICIENT = 3;
+    public static final int MAX_CHILDREN = 10;
 }
