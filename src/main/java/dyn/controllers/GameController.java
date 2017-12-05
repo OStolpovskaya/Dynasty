@@ -6,7 +6,6 @@ package dyn.controllers;
 
 
 import dyn.form.RaceAppearanceForm;
-import dyn.form.ViewFilter;
 import dyn.model.*;
 import dyn.model.Character;
 import dyn.model.appearance.*;
@@ -78,8 +77,7 @@ public class GameController {
     }
 
     @RequestMapping("/game")
-    public String main(ModelMap model,
-                       @ModelAttribute(value = "viewFilter") ViewFilter viewFilter, RedirectAttributes redirectAttributes) {
+    public String main(ModelMap model, RedirectAttributes redirectAttributes) {
         //System.out.println("***GameController.main***");
         //long startTime = System.currentTimeMillis();
 
@@ -187,22 +185,6 @@ public class GameController {
         model.addAttribute("bridesNum", family.getHouse().getFianceeNum() - family.getFianceeNum());
         model.addAttribute("pairsNum", family.getHouse().getPairsNum() - family.getPairsNum());
 
-       /* Map<Thing, Map<Project, List<Item>>> itemMap = new HashMap<>();
-        for (Item item : buffs) {
-
-            Thing thing = item.getProject().getThing();
-            if (!itemMap.containsKey(thing)) {
-                itemMap.put(thing, new HashMap<>());
-            }
-            Map<Project, List<Item>> projectMap = itemMap.get(thing);
-            Project project = item.getProject();
-            if (!projectMap.containsKey(project)) {
-                projectMap.put(project, new ArrayList<>());
-            }
-            projectMap.get(project).add(item);
-        }
-        model.addAttribute("itemMap", itemMap);*/
-        //System.out.println("FAMILY LOG");
         model.addAttribute("familyLog", familyLogService.getLevelFamilyLog(family));
         //System.out.println("END");
         //long endTime = System.currentTimeMillis();
@@ -219,6 +201,20 @@ public class GameController {
         model.addAttribute("parent", founder);
 
         return "game/vertTree";
+    }
+
+    @RequestMapping("/game/changeView")
+    public String changeView(ModelMap model,
+                             @RequestParam(value = "gameView") GameView gameView,
+                             RedirectAttributes redirectAttributes) {
+        User user = userRepository.findByUserName(getAuthUser().getUsername());
+        Family family = user.getCurrentFamily();
+        family.setGameView(gameView);
+
+        familyRepository.save(family);
+
+        logger.debug(user.getUserName() + " changed game view");
+        return "redirect:/game";
     }
 
     @RequestMapping("/game/achievements")
@@ -327,6 +323,7 @@ public class GameController {
         family.setCraftPoint(family.getCraftPoint() + Const.CRAFT_POINTS_FOR_LEVEL);
         family.setPairsNum(0);
         family.setFianceeNum(0);
+        family.setGameView(GameView.defView);
         familyRepository.save(family);
 
         int income = family.getMoney() - previousTurnLog.getMoney();

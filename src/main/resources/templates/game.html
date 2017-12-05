@@ -6,6 +6,7 @@
     <title>Игра</title>
     <link href="webjars/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"></link>
     <link th:href="@{/css/common.css}" rel="stylesheet"></link>
+    <link th:href="@{/css/gameView.css}" rel="stylesheet"></link>
 </head>
 <body>
 <div th:replace="fragments/navigation :: nav-for-game"></div>
@@ -27,18 +28,46 @@
     <th:block th:if="${family.getLevel() == 1}">
         <div class="alert alert-success" style="margin-left: 100px; margin-right: 100px;">
             Основатели приобрели профессию и заработали немного деньжат! А еще их призвания принесли вам ресурсы, из которых можно что-нибудь смастерить. Родились дети, все они довольно милые, да? Подробное описание событий вы можете посмотреть,
-            кликнув на кнопке Лог.
+            кликнув на кнопке Лог уровня.
             <br/>
             Первым делом вам необходимо поместить анкеты ваших дочерей в базу невест! Нажмите оранжевую кнопку под портретом дочери. Выкуп вы получаете сразу... авансом (одна из основных статей дохода!).<br/>
-            Теперь необходимо выбрать невест для сыновей. Нажмите кнопку под портретом сына. <br/>
-            После выбора невест, вы можете выбрать баффы для пары, которые помогут немного скорректировать случайный выбор. Советуем выбрать бафф "Доминант отца" для старшего сына, чтобы повысить вероятность перехода его ГМ-черты к детям. Не
-            помешает и бафф "Плодовитость", увеличивающий количество детей. К паре можно применить бафф "Генетическая модификация", который увеличивает вероятность появления ГМ-черт. Эти баффы подарены вам для начала игры, потом вам придется
+            Теперь необходимо выбрать невест для сыновей. Нажмите зеленую кнопку под портретом сына. <br/>
+            После выбора невест, вы можете выбрать баффы для пары, которые помогут немного скорректировать случайный выбор. Советуем выбрать бафф "Доминант отца" для старшего сына, чтобы повысить вероятность перехода его ГМ-черты к детям. Нажмите
+            кнопку "Действия" под портретом сына и выберите бафф Доминант отца.<br/> Не
+            помешает и бафф "Плодовитость", увеличивающий количество детей. К паре "обычных" людей можно применить бафф "Генетическая модификация", который увеличивает вероятность появления ГМ-черт. Эти баффы подарены вам для начала игры, потом вам
+            придется
             покупать их на вкладке "Город". Например, бафф "Плодовитость" можно приобрести, посетив парк отдыха.<br/>
-
+            Если все дочери запостили свои анкеты в базу невест, а сыновья выбрали себе невест, то можно продолжить игру! Нажмите кнопку Ход.
+        </div>
+    </th:block>
+    <th:block th:if="${family.getLevel() == 2}">
+        <div class="alert alert-success" style="margin-left: 100px; margin-right: 100px;">
+            Это второе поколение вашей семьи. Игровой процесс тот же самый, выбираем невест для сыновей, зарабатываем деньги, выставляя анкеты своих дочерей в базу невест. Цель - создать представителя другой расы, например, Вампира. Чтобы понять,
+            какие ГМ-черты нужны, нажмите на расу любого персонажа (ссылка под именем персонажа), откроется таблица всех рас и их ГМ-черт.
+            <br/>
+            Если остановились на расе Вампир, то подбирайте невест, например, с красными глазами и бледной кожей. Не забывайте и про навыки невест: например, чем выше Интеллект у сына и его невесты, тем вероятнее, что их дети будут иметь высокий
+            интеллект и добьются лучшей должности в своем призвании. А это значит больше денег и ресурсов для создания мебели и техники для дома. <br/>
+            Развивайте вашу династию, стройте для нее новые дома, мастерите или покупайте лучшую мебель! Предметы для дома, кстати, можно нарисовать самим. Если вы хотите нарисовать свой стул, то на вкладке Крафт нажмите на "стул" и внизу страницы
+            с выбором проекта будет кнопка "Создать проект". Ну, в общем-то и все. Удачи!
         </div>
     </th:block>
 
     <div style="background-color: #2b669a; border-radius: 4px; position: fixed; top: 55px; left: 5px; padding: 5px;">
+        <form th:action="@{/game/changeView}" class="form" method="post" style="display: inline-block;">
+            <input type="hidden" name="gameView" value="defView"/>
+            <button type="submit" class="btn btn-xs btn-round" th:classappend="${family.getGameView().toString() == 'defView'?'btn-success':'btn-primary'}" title="Стандартный вид"><span class="glyphicon glyphicon-tower"></span></button>
+        </form>
+        <form th:action="@{/game/changeView}" class="form" method="post" style="display: inline-block;">
+            <input type="hidden" name="gameView" value="onlyDaughters"/>
+            <button type="submit" class="btn btn-xs btn-round" th:classappend="${family.getGameView().toString() == 'onlyDaughters'?'btn-success':'btn-primary'}"
+                    title="Отобразить только дочерей"><span class="glyphicon glyphicon-heart"></span></button>
+        </form>
+        <form th:action="@{/game/changeView}" class="form" method="post" style="display: inline-block;">
+            <input type="hidden" name="gameView" value="onlySons"/>
+            <button type="submit" class="btn btn-primary btn-xs btn-round" th:classappend="${family.getGameView().toString() == 'onlySons'?'btn-success':'btn-primary'}"
+                    title="Отобразить только сыновей"><span class="glyphicon glyphicon-lock"></span></button>
+        </form>
+        <hr/>
         <div th:alt-title="${'Можно запостить анкет невест: ' + bridesNum + '. Всего свободных дочек: ' + freeDaughters}">
             <img th:src="@{'/graphics/family_status_bride.png' }" height="35px" width="35px"></img>
             <span class="badge" style="background-color: white; color: black;" id="bridesNum"><th:block th:text="${bridesNum}"></th:block>/<th:block th:text="${freeDaughters}"></th:block></span>
@@ -86,15 +115,14 @@
         <!--/*@thymesVar id="familyLog" type="dyn.model.FamilyLog"*/-->
         <pre class="pre-scrollable" style="height: 150px; max-height: 150px; margin-left: 100px; margin-right: 100px;" th:utext="${familyLog?.getText()}"></pre>
     </div>
-
-
+    <div align="center">
     <th:block th:each="mapEntry : ${fathers}" th:with="father = ${mapEntry.getKey()}, mother=${father.getSpouse()}, childList = ${mapEntry.getValue()},
                 buffsForParentsIsEmpty = ${#maps.isEmpty(buffsForParents)}, buffsMarriedIsEmpty = ${#maps.isEmpty(buffsMarried)},
                 buffsSkillImprovementIsEmpty = ${#maps.isEmpty(buffsSkillImprovement)}, buffsForChildrenChangeIsEmpty = ${#maps.isEmpty(buffsForChildrenChange)} ">
         <!--/*@thymesVar id="father" type="dyn.model.Character"*/-->
-        <a th:name="${'char'+father.getId()}" class="anchor"></a>
-        <div align="center">
-            <div class="well" style="display: inline-block; padding: 5px;background-color: #dff0d8; border: solid 1px mediumseagreen">
+        <a th:name="${'char'+father.getId()}" class="anchor" th:styleappend="${family.getGameView().toString() != 'defView'?'display: inline-block;':''}"></a>
+        <div align="center" th:styleappend="${family.getGameView().toString() != 'defView'?'display: inline-block;':''}">
+            <div class="well" th:if="${family.getGameView().toString() == 'defView'}" style="display: inline-block; padding: 5px;background-color: #ccccff; border: solid 1px #b3b3ff;">
                 <div style="display: inline-block;">
                     <th:block th:replace="fragments/char :: char-panel (character=${father})"></th:block>
                     <div class="dropup">
@@ -108,7 +136,7 @@
                         </ul>
                     </div>
                 </div>
-                <div style="display: inline-block;">
+                <div style="display: inline-block; ">
                     <th:block th:replace="fragments/char :: char-panel (character=${mother})"></th:block>
                     <div class="dropup">
                         <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
@@ -121,11 +149,13 @@
                     </div>
                 </div>
             </div>
-            <br/>
+            <br th:if="${family.getGameView().toString() == 'defView'}"/>
             <th:block th:each="child : ${childList}" th:with="spouse = ${child.getSpouse()}, sex = ${child.getSex()},
             mainButton1 = ${sex == 'male' and spouse == null and family.getPairsNum() lt family.getHouse().getPairsNum()},
             mainButton2 = ${sex == 'female' and spouse == null and child.isFiancee() == false and family.getFianceeNum() lt family.getHouse().getFianceeNum()}">
-                <div class="well" style="display: inline-block; padding: 5px;" th:styleappend="${spouse != null?'background-color: #dff0d8; border: solid 1px mediumseagreen':''}">
+                <div class="well" style="display: inline-block; padding: 5px;"
+                     th:styleappend="${spouse != null?'background-color: #dff0d8; border: solid 1px mediumseagreen':''}"
+                     th:if="${family.getGameView().toString() == 'defView'  or (family.getGameView().toString() == 'onlyDaughters' and sex=='female') or (family.getGameView().toString() == 'onlySons' and sex=='male')}">
                     <!--/*@thymesVar id="child" type="dyn.model.Character"*/-->
                     <div style="display: inline-block;">
                         <th:block th:replace="fragments/char :: char-panel (character=${child})"></th:block>
@@ -226,9 +256,9 @@
                 </div>
             </th:block>
         </div>
-        <hr style="height: 1px; size: 2px; color: black;border-width: 4px;" size="2px"/>
+        <hr style="border-style: inset; border-width: 4px;" th:if="${family.getGameView().toString() == 'defView'}"/>
     </th:block>
-
+    </div>
 </div>
 
 <th:block th:replace="fragments/scripts :: webjars"></th:block>

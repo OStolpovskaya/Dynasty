@@ -1,6 +1,7 @@
 package dyn.model;
 
 import dyn.form.RaceAppearanceForm;
+import dyn.service.Const;
 import dyn.utils.ResUtils;
 import dyn.utils.ResourcesHolder;
 
@@ -169,6 +170,6 @@ public class Race implements ResourcesHolder {
     }
 
     public String resString() {
-        return ResUtils.getResString(this);
+        return ResUtils.getResString(this, Const.RACE_RESOURCE_COEFFICIENT);
     }
 }

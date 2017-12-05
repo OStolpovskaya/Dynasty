@@ -24,7 +24,7 @@
             <div class="col-md-6">
                 <h3>
                     <th:block th:text="${'Ваш дом: '+ family.getHouse().getName()}"></th:block>
-                    <div class="my_tooltip">&nbsp;<span class="glyphicon glyphicon-question-sign" style="color: black;"></span>
+                    <div class="my_tooltip">&nbsp;<span class="glyphicon glyphicon-question-sign" style="color: lightslategray;"></span>
                         <span class="my_tooltiptext">
                         Тип дома влияет на количество пар, которые вы можете создать за ход, и на количество анкет невест, которые вы можете запостить за ход:
                         <table class="table table-sm">
@@ -123,7 +123,7 @@
         <ul class="list-inline">
             <!--/*@thymesVar id="room" type="dyn.model.Room"*/-->
             <li>
-                <div class="my_tooltip"><span class="glyphicon glyphicon-question-sign" style="color: black;"></span>
+                <div class="my_tooltip"><span class="glyphicon glyphicon-question-sign" style="color: lightslategray;"></span>
                     <span class="my_tooltiptext">Если установлены все вещи в комнате, то возле названия комнаты появится зеленая галочка. <br/>
                                 Вы можете кликнуть на кнопку "Табличный вид интерьера", чтобы наглядно видеть, какая вещь не установлена.<br/>
                                 Особенное внимание стоит уделить <strong>стенам</strong> (уютный домик). Они на картинке не кликабельны, но присутствуют в табличном виде.

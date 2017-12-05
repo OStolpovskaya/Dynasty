@@ -186,6 +186,7 @@ public class FamilyController {
 
         family.setHouse(houseRepository.findOne(1L));
         family.setFamilyResources(new FamilyResources("NewFamily"));
+        family.setGameView(GameView.defView);
 
         logger.info(user.getUserName() + " adds new family:" + family.toString());
         familyRepository.save(family);

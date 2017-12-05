@@ -32,6 +32,7 @@ public class Family {
     private int pairsNum;
     private int fianceeNum;
 
+    private GameView gameView;
     // ===================================
     private List<Character> characters;
     private FamilyResources familyResources;
@@ -187,6 +188,16 @@ public class Family {
     }
     public void setFianceeNum(int fiancee_num) {
         this.fianceeNum = fiancee_num;
+    }
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "game_view")
+    public GameView getGameView() {
+        return gameView;
+    }
+
+    public void setGameView(GameView gameView) {
+        this.gameView = gameView;
     }
 
     @OneToMany(mappedBy = "family", fetch = FetchType.LAZY)

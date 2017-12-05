@@ -197,12 +197,16 @@
             <table>
                 <tr>
                     <td width="35px">
-                        <a th:href="${'/game/vocation?vocationId=' + career.getVocation().getId()}" style="text-decoration: none;">
-                            <img th:src="@{'/graphics/vocation/vocations_'+${career.getVocation().getId()}+'.png' }" data-toggle="tooltip"
-                                 th:alt-title="#{vocation.name_and_resources(${career.getVocation().getName()}, ${career.getVocation().resString(1)})}"
-                                 height="35px" width="35px">
-                            </img>
-                        </a>
+                        <div class="my_tooltip">
+                            <a th:href="${'/game/vocation?vocationId=' + career.getVocation().getId()}" style="text-decoration: none;">
+                                <img th:src="@{'/graphics/vocation/vocations_'+${career.getVocation().getId()}+'.png' }"
+                                     height="35px" width="35px">
+                                </img>
+                            </a>
+                            <span class="my_tooltiptext">
+                                <th:block th:utext="#{vocation.name_and_resources(${career.getVocation().getName()}, ${career.getVocation().resString(1)})}"></th:block>
+                            </span>
+                        </div>
                     </td>
                     <td>
                         <span th:text="${career.getIntelligence()}" class="badge" data-toggle="tooltip" title="Интеллект" style="width: 31px; background-color: white; color: black;"></span>&nbsp;

@@ -1,0 +1,42 @@
+/* Create two unequal columns that floats next to each other */
+.column {
+    display: inline-block;
+    padding: 10px;
+    background-color: #9acfea;
+    margin-bottom: 5px;
+}
+
+.charpanel {
+    width: 200px;
+    height: 317px;
+    background-color: darkgrey;
+    border: solid 1px black;
+}
+
+.pair {
+    display: inline-block;
+    background-color: darkgreen;
+    padding: 5px;
+    margin: 5px;
+}
+
+.pair .charpanel {
+    display: inline-block;
+    margin: 0px 5px 0px 5px;
+}
+
+.changeViewButton {
+    color: #fff;
+    background-color: #337ab7;
+    border-color: #2e6da4;
+    border-radius: 50%;
+    padding: 20px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    margin: 4px 2px;
+}
+
+.btn-round {
+    border-radius: 50%;
+}

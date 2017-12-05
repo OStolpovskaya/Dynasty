@@ -1,0 +1,1 @@
+ALTER TABLE  `family` ADD  `game_view` ENUM(  'defView',  'onlyDaughters',  'onlySons' ) NOT NULL DEFAULT  'defView'
