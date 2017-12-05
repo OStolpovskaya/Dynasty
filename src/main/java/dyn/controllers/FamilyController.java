@@ -5,10 +5,7 @@ import dyn.model.*;
 import dyn.model.Character;
 import dyn.model.appearance.SkinColor;
 import dyn.repository.*;
-import dyn.service.AppearanceService;
-import dyn.service.CareerService;
-import dyn.service.CraftService;
-import dyn.service.FamilyLogService;
+import dyn.service.*;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,7 +90,14 @@ public class FamilyController {
     }
 
     @GetMapping("game/addNewFamily")
-    public String createNewFamily(ModelMap model, @ModelAttribute("familyForm") FamilyForm familyForm) {
+    public String createNewFamily(ModelMap model, @ModelAttribute("familyForm") FamilyForm familyForm, RedirectAttributes redirectAttributes) {
+        User user = userRepository.findByUserName(getAuthUser().getUsername());
+        List<Family> families = user.getFamilies();
+        if (families.size() >= Const.MAX_FAMILIES) {
+            redirectAttributes.addFlashAttribute("mess", "Вы достигли максимального количества семей: " + Const.MAX_FAMILIES);
+            return "redirect:/game/families";
+        }
+
         Race race = raceRepository.findOne(Race.RACE_HUMAN);
 
         SkinColor skinColor = app.getRandomSkinColor(app.USUAL);
@@ -163,6 +167,11 @@ public class FamilyController {
 
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         List<Family> families = user.getFamilies();
+
+        if (families.size() >= 5) {
+            result.rejectValue("familyName", "familySize.alreadyExists");
+            logger.info(user.getUserName() + " try to create family, but already has 5!");
+        }
 
         for (Family existingFamily : families) {
             if (existingFamily.getFamilyName().equalsIgnoreCase(family.getFamilyName())) {

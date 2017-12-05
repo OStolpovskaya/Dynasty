@@ -97,6 +97,9 @@
         </tr>
         </tbody>
     </table>
+    Вы можете создать
+    <th:block th:text="${@const.MAX_FAMILIES}"></th:block>
+    семей. Удалять семьи нельзя. <br/>
     <a href="/game/addNewFamily" class="btn btn-info" role="button">Создать новую семью!</a>
 </div>
 <th:block th:replace="fragments/scripts :: webjars"></th:block>
