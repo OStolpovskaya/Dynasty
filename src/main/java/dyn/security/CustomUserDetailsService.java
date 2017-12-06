@@ -24,12 +24,12 @@ public class CustomUserDetailsService implements UserDetailsService {
 
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUserName(username);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail(email);
         if (null == user) {
-            throw new UsernameNotFoundException("No user present with username: " + username);
+            throw new UsernameNotFoundException("No user present with email: " + email);
         } else {
-            List<String> userRoles = userRolesRepository.findRoleByUserName(username);
+            List<String> userRoles = userRolesRepository.findRoleByUserName(email);
             return new CustomUserDetails(user, userRoles);
         }
     }
