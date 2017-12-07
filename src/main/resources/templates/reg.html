@@ -8,72 +8,73 @@
 </head>
 <body>
 <div th:replace="fragments/navigation :: nav-for-index"></div>
-<div class="container">
-    <th:block th:if="${disabled == true}">
-        <div class="alert alert-danger" style="margin-top: 10px;">
-            В бета-версии игры регистрация невозможна.
-        </div>
-    </th:block>
-    <th:block th:unless="${disabled == true}">
-        <form class="form-horizontal" th:action="@{/reg}" th:object="${regUser}" method="POST">
-            <fieldset>
-                <div id="legend">
-                    <legend class="">Регистрация</legend>
-                </div>
-                <div class="control-group">
-                    <!-- Username -->
-                    <label class="control-label" for="username">Имя пользователя (будет видно всем игрокам)</label>
-                    <div class="controls">
-                        <p class="has-error" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></p>
-                        <input type="text" id="userName" name="userName" th:field="*{userName}" placeholder=""
-                               class="input-xlarge"></input>
-                        <p class="help-block">Имя пользователя может содержать любые символы, количеством от 6 до 45</p>
-                    </div>
-                </div>
+<div class="container" width="350px">
 
-                <div class="control-group">
-                    <!-- E-mail -->
-                    <label class="control-label" for="email">E-mail</label>
-                    <div class="controls">
-                        <p class="has-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
-                        <input type="text" id="email" name="email" th:field="*{email}" placeholder=""
-                               class="input-xlarge"></input>
-                        <p class="help-block">E-mail нужен только для восстановления пароля</p>
-                    </div>
+    <!--/*@thymesVar id="regUser" type="dyn.model.User"*/-->
+    <form class="form-horizontal" th:action="@{/reg}" th:object="${regUser}" method="POST">
+        <fieldset>
+            <div id="legend">
+                <legend class="">Регистрация</legend>
+            </div>
+            <div class="control-group">
+                <!-- Username -->
+                <label class="control-label" for="username">Имя пользователя в игре (будет видно всем игрокам)</label>
+                <div class="controls">
+                    <p class="has-error" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></p>
+                    <input type="text" id="userName" name="userName" th:field="*{userName}" placeholder=""
+                           class="input-xlarge"></input>
+                    <p class="help-block">Имя пользователя может содержать любые символы, количеством от 6 до 45</p>
                 </div>
+            </div>
 
-                <div class="control-group">
-                    <!-- Password-->
-                    <label class="control-label" for="password">Пароль</label>
-                    <div class="controls">
-                        <p class="errorMessage" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
-                        <input type="password" id="password" name="password" th:field="*{password}" placeholder=""
-                               class="input-xlarge"></input>
-                        <p class="help-block">Пароль должен состоять минимум из 6 символов</p>
-                    </div>
+            <div class="control-group">
+                <!-- E-mail -->
+                <label class="control-label" for="email">E-mail</label>
+                <div class="controls">
+                    <p class="has-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+                    <input type="text" id="email" name="email" th:field="*{email}" placeholder=""
+                           class="input-xlarge"></input>
+                    <p class="help-block">E-mail нужен для входа в игру и восстановления пароля</p>
                 </div>
+            </div>
 
-                <div class="control-group">
-                    <!-- Password -->
-                    <label class="control-label" for="passwordConfirm">Пароль (подтверждение)</label>
-                    <div class="controls">
-                        <p class="errorMessage" th:if="${#fields.hasErrors('passwordConfirm')}"
-                           th:errors="*{passwordConfirm}"></p>
-                        <input type="password" id="passwordConfirm" name="passwordConfirm" placeholder=""
-                               class="input-xlarge"></input>
-                        <p class="help-block">Повторите пароль для исключения ошибок</p>
-                    </div>
+            <div class="control-group">
+                <!-- Password-->
+                <label class="control-label" for="password">Пароль</label>
+                <div class="controls">
+                    <p class="has-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+                    <input type="password" id="password" name="password" th:field="*{password}" placeholder=""
+                           class="input-xlarge"></input>
+                    <p class="help-block">Пароль должен состоять минимум из 6 символов</p>
                 </div>
+            </div>
 
-                <div class="control-group">
-                    <!-- Button -->
-                    <div class="controls">
-                        <button class="btn btn-success">Готово!</button>
-                    </div>
+            <div class="control-group">
+                <!-- Password -->
+                <label class="control-label" for="passwordConfirm">Пароль (подтверждение)</label>
+                <div class="controls">
+                    <p class="has-error" th:if="${#fields.hasErrors('passwordConfirm')}" th:errors="*{passwordConfirm}"></p>
+                    <input type="password" id="passwordConfirm" name="passwordConfirm" placeholder=""
+                           class="input-xlarge"></input>
+                    <p class="help-block">Повторите пароль для исключения ошибок</p>
                 </div>
-            </fieldset>
-        </form>
-    </th:block>
+            </div>
+
+            <div class="control-group">
+                <!-- Checkbox -->
+                <label class="control-label"><span class="glyphicon glyphicon-ok-sign" style="color: green;"></span>
+                    Я принимаю условия Пользовательского соглашения и Положения о конфиденциальности.
+                </label>
+            </div>
+
+            <div class="control-group" style="margin-top: 10px;">
+                <!-- Button -->
+                <div class="controls">
+                    <button class="btn btn-success">Готово!</button>
+                </div>
+            </div>
+        </fieldset>
+    </form>
 
 </div>
 <script src="webjars/jquery/1.9.1/jquery.min.js"></script>

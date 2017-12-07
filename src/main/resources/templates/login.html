@@ -31,21 +31,10 @@
             <div class="form-group">
                 <h4 class="text-center"><a href="/reg">Создать новый аккаунт</a></h4>
             </div>
-        </form>
-
-        <!--<form th:action="@{/login}" method="post" class="form-signin">
-
-            <div class="form-group ${param.error != null ? 'has-error' : ''}">
-
-                <span th:if="${param.error}">Invalid username and password.</span>
-                <span th:if="${param.logout}"> You have been logged out. </span>
-                <input type="text" name="username" th:object="${username}" class="form-control" placeholder="Username"
-                       autofocus="true"/>
-                <input type="password" name="password" th:object="${password}" class="form-control" placeholder="Password"/>
-                <button class="btn btn-lg btn-primary btn-block" type="submit">Log In</button>
-                <h4 class="text-center"><a href="/reg">Create an account</a></h4>
+            <div class="form-group">
+                <h4 class="text-center"><a href="/forgot">Сбросить пароль</a></h4>
             </div>
-        </form>-->
+        </form>
     </div>
 </div>
 <th:block th:replace="fragments/scripts :: webjars"></th:block>

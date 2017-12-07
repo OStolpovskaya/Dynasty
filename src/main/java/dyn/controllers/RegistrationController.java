@@ -24,7 +24,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -44,12 +43,7 @@ public class RegistrationController {
     private AuthenticationManager authenticationManager;
 
     @GetMapping("/reg")
-    public String registration(ModelMap model, @RequestParam(name = "yaodmin", required = false, defaultValue = "neodmin") String yaodmin) {
-        boolean disabled = true;
-        if (yaodmin.equals("omletIsGood")) {
-            disabled = false;
-        }
-        model.addAttribute("disabled", disabled);
+    public String registration(ModelMap model) {
         model.addAttribute("regUser", new User());
 
         return "reg";
@@ -85,8 +79,8 @@ public class RegistrationController {
 
         userRolesRepository.save(userRole);
 
-        logger.info("AUTOLOGIN " + regUser.getUserName() + " " + regUser.getPasswordConfirm());
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(regUser.getUserName(), regUser.getPasswordConfirm());
+        logger.info("AUTOLOGIN " + regUser.getEmail() + " " + regUser.getPasswordConfirm());
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(regUser.getEmail(), regUser.getPasswordConfirm());
 
         // generate session if one doesn't exist
         request.getSession();

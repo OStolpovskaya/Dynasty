@@ -36,10 +36,14 @@ public class User implements Serializable {
 
     @Column(name = "password")
     @NotEmpty(message = "{password.notEmpty}")
+    @Size(min = 6, message = "{password.size}")
     private String password;
 
     @Transient
     private String passwordConfirm;
+
+    @Column(name = "reset_token")
+    private String resetToken;
 
     @OneToMany(mappedBy = "user")
     private List<Family> families;
@@ -110,6 +114,14 @@ public class User implements Serializable {
         this.passwordConfirm = passwordConfirm;
     }
 
+    public String getResetToken() {
+        return resetToken;
+    }
+
+    public void setResetToken(String resetToken) {
+        this.resetToken = resetToken;
+    }
+
     public List<Family> getFamilies() {
         return families;
     }
@@ -129,13 +141,14 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return "User{" +
-                "userId=" + userId +
-                ", userName='" + userName + '\'' +
-                ", email='" + email + '\'' +
-                ", enabled=" + enabled +
-                ", password='" + password + '\'' +
-                ", passwordConfirm='" + passwordConfirm + '\'' +
-                '}';
+        final StringBuilder sb = new StringBuilder("User{");
+        sb.append("userId=").append(userId);
+        sb.append(", userName='").append(userName).append('\'');
+        sb.append(", email='").append(email).append('\'');
+        sb.append(", enabled=").append(enabled);
+        sb.append(", password='").append(password).append('\'');
+        sb.append(", resetToken='").append(resetToken).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
 }
