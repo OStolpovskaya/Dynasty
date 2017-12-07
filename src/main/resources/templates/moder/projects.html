@@ -35,7 +35,7 @@
                 <td th:text="${project.getThing().getName()}"></td>
                 <td th:text="${project.getName()}"></td>
                 <td th:text="${project.getCost()}"></td>
-                <td th:text="${project.resString()}"></td>
+                <td th:utext="${project.resString()}"></td>
                 <td><img th:if="${project.getView() != null}" th:src="${'data:image/png;base64,'+project.getEncodedView()}" style="border: solid 1px green;"/></td>
                 <td>
                     <form th:action="@{/moder/setProjectApproved}" method="post" class="form-inline">
@@ -80,7 +80,7 @@
                 <td th:text="${project.getThing().getName()}"></td>
                 <td th:text="${project.getName()}"></td>
                 <td th:text="${project.getCost()}"></td>
-                <td th:text="${project.resString()}"></td>
+                <td th:utext="${project.resString()}"></td>
                 <td><img th:if="${project.getView() != null}" th:src="${'data:image/png;base64,'+project.getEncodedView()}" style="border: solid 1px green;"/></td>
             </tr>
             </tbody>
@@ -112,7 +112,7 @@
                 <td th:text="${project.getThing().getName()}"></td>
                 <td th:text="${project.getName()}"></td>
                 <td th:text="${project.getCost()}"></td>
-                <td th:text="${project.resString()}"></td>
+                <td th:utext="${project.resString()}"></td>
                 <td><img th:if="${project.getView() != null}" th:src="${'data:image/png;base64,'+project.getEncodedView()}" style="border: solid 1px green;"/></td>
                 <td>
                     <form th:action="@{/moder/setProjectApproved}" method="post" class="form-inline">

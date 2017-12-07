@@ -9,6 +9,7 @@ import java.util.List;
 public class RoomView {
     private Room room;
     private List<RoomThingWithItems> roomThingWithItemsList = new ArrayList<>();
+    private List<RoomThingWithProjects> roomThingWithProjects = new ArrayList<>();
     private boolean full;
 
     private String backgroundUrl;
@@ -27,6 +28,14 @@ public class RoomView {
 
     public void setRoomThingWithItemsList(List<RoomThingWithItems> roomThingWithItemsList) {
         this.roomThingWithItemsList = roomThingWithItemsList;
+    }
+
+    public List<RoomThingWithProjects> getRoomThingWithProjects() {
+        return roomThingWithProjects;
+    }
+
+    public void setRoomThingWithProjects(List<RoomThingWithProjects> roomThingWithProjects) {
+        this.roomThingWithProjects = roomThingWithProjects;
     }
 
     public boolean isFull() {

@@ -108,7 +108,7 @@
                 <td th:text="${project.getThing().getName()}">Mark</td>
                 <td th:text="${project.getName()}">Otto</td>
                 <td th:text="${project.getCost()}">@mdo</td>
-                <td th:text="${project.resString()}">@mdo</td>
+                <td th:utext="${project.resString()}">@mdo</td>
                 <td>
                     <form th:if="${project.getStatus() eq T(dyn.model.ProjectStatus).rework}" th:action="@{/game/editProject}" method="post" class="form-inline">
                         <input type="hidden" name="projectId" th:value="${project.getId()}"/>

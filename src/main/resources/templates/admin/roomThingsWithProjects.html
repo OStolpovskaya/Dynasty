@@ -15,43 +15,88 @@
             <a th:href="${'/admin/roomThingsWithProjects?houseId='+houseMenu.getId()}" th:text="${houseMenu.getName()}">Home</a>
         </li>
     </ul>
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Room</th>
-            <th>Name</th>
-            <th>Projects</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="mapEntry : ${roomThingWithProjects}" th:with="roomThing = ${mapEntry.getKey()}, projectList = ${mapEntry.getValue()}">
-            <!--/*@thymesVar id="roomThing" type="dyn.model.RoomThing"*/-->
-            <td th:text="${roomThing.getId()}">1</td>
-            <td th:text="${roomThing.getRoom().getName()}">1</td>
-            <td>
-                <a th:href="${'/admin/projectsForThing?thingId='+roomThing.getThing().getId()}" target="_blank">
-                    <th:block th:text="${roomThing.getThing().getName()}"></th:block>
-                </a>
-            </td>
-            <td>
-                <!--/*@thymesVar id="project" type="dyn.model.Project"*/-->
-                <table class="table table-bordered table-sm">
-                    <tr th:each="project : ${projectList}">
-                        <td class="col-sm-3">
-                            <th:block th:text="${project.getName()}"></th:block>
-                        </td>
-                        <td th:text="${project.getCost()}" class="col-sm-1">name</td>
-                        <td>
-                            <div th:replace="fragments/custom :: resView (resHolder=${project})"></div>
+    <ul class="list-inline">
+        <li th:each="buildingMenu : ${buildingList}"><!--/*@thymesVar id="buildingMenu" type="dyn.model.House"*/-->
+            <a th:href="${'/admin/roomThingsWithProjects?houseId='+buildingMenu.getId()}" th:text="${buildingMenu.getName()}">Home</a>
+        </li>
+    </ul>
+    <th:block th:each="roomView : ${roomViewList}">
+        <!--/*@thymesVar id="roomView" type="dyn.model.RoomView"*/-->
+        <h3 th:text="${house.getName() + ': ' + roomView.getRoom().getName()}"></h3>
+        <div style="width: 1039px; height: 409px; position: relative; border: solid 2px #333333; border-radius: 3px;"
+             th:styleappend="${'background: url('+ roomView.getBackgroundUrl() +');'}">
+            <th:block th:each="roomThingWithProjects : ${roomView.getRoomThingWithProjects()}" th:with="curProject = ${roomThingWithProjects.getCurrentProject()},roomThing = ${roomThingWithProjects.getRoomThing()}">
+                <!--walls-->
+                <th:block th:if="${roomThing.getLayer() == 0}">
+                    <div th:id="${'img'+roomThing.getId()}" style="display: table; position: absolute; "
+                         th:styleappend="${'width: '+ (1035-roomThing.getX()) +'px;'+
+                                 'height: ' + (roomView.getRoom().getId() == 11 or roomView.getRoom().getId() == 125? '315px;':roomThing.getThing().getHeight()+'px;')+
+                                 'left: ' + roomThing.getX()+'px;'+
+                                 'top: ' + roomThing.getY()+'px;' +
+                                 'background: url(data:image/png;base64,'+curProject.getEncodedView()+') repeat-x'}">
 
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+                    </div>
+                    <div class="my_tooltip" style="display: table; position: absolute; " th:styleappend="${'left: ' + roomThing.getX()+'px;'+'top: ' + (roomThing.getY()-20)+'px;'}">
+                        <span class="glyphicon glyphicon-question-sign" style="color: yellow;"></span>
+                        <span class="my_tooltiptext">
+                                <th:block th:text="${curProject.getFullName() + ' от '+curProject.getAuthor().getFamilyName() }"></th:block><br/>
+                                Список проектов:
+                            <ul>
+                                <th:block th:each="project: ${roomThingWithProjects.getAvailableProjects()}">
+                                <li th:text="${project.getName()}" th:onclick="'changeWall(\'img'+${roomThing.getId()}+ '\',\''+${project.getEncodedView()}+'\');'"></li> <!--"${'changeImg(\'img'+roomThing.getId()+'\', \''+project
+                                .getEncodedView()+'\')'}"-->
+                            </th:block>
+                            </ul>
+
+                            </span>
+                    </div>
+                </th:block>
+                <!--things-->
+                <th:block th:unless="${roomThing.getLayer() == 0}">
+                    <div align="center" style="display: table; position: absolute; "
+                         th:styleappend="${'width: '+ roomThing.getThing().getWidth() +'px;'+
+                                 'height: ' + roomThing.getThing().getHeight()+'px;'+
+                                 'left: ' + roomThing.getX()+'px;'+
+                                 'top: ' + roomThing.getY()+'px;'}">
+                        <img th:id="${'img'+roomThing.getId()}" th:src="${'data:image/png;base64,'+curProject.getEncodedView()}"/>
+
+
+                    </div>
+                    <div class="my_tooltip" style="z-index: 999;display: table; position: absolute; "
+                         th:styleappend="${'left: ' + roomThing.getX()+'px;'+'top: ' + (roomThing.getY()+roomThing.getThing().getHeight()/2)+'px;'}">
+                        <span class="glyphicon glyphicon-question-sign" style="color: yellow;"></span>
+                        <span class="my_tooltiptext" style="z-index: 1000;">
+                            <strong th:text="${roomThing.getThing().getName()}"></strong>
+                            <p>Список проектов:</p>
+                            <table class="table table-hover table-condensed">
+                                <tr th:each="project: ${roomThingWithProjects.getAvailableProjects()}">
+                                <td th:onclick="'changeImg(\'img'+${roomThing.getId()}+ '\',\''+${project.getEncodedView()}+'\');'" style="cursor: pointer;">
+                                    <th:block th:text="${project.getName()}"></th:block>
+                                    <span class="glyphicon glyphicon-flash" th:if="${project.getStatus().toString() == 'newProject'}" style="color: red;"></span>
+                                </td>
+                                <td th:text="${project.getCost()}"></td>
+                                <td th:utext="${project.resString()}"></td>
+                                </tr>
+                            </table>
+
+                            </span>
+                    </div>
+                </th:block>
+            </th:block>
+        </div>
+    </th:block>
+
+    <script>
+        //<![CDATA[
+        function changeImg(roomThingId, projectView) {
+            document.getElementById(roomThingId).setAttribute('src', 'data:image/png;base64,' + projectView);
+        }
+        function changeWall(roomThingId, projectView) {
+            document.getElementById(roomThingId).style.backgroundImage = 'url(data:image/png;base64,' + projectView;
+        }
+        //]]>
+    </script>
+
 
 </div>
 <script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>

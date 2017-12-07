@@ -32,10 +32,7 @@ import javax.validation.Valid;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 public class AdminController {
@@ -61,6 +58,12 @@ public class AdminController {
     HouseService houseService;
     @Autowired
     ThingRepository thingRepository;
+    @Autowired
+    ProjectRepository projectRepository;
+    @Autowired
+    private RoomRepository roomRepository;
+    @Autowired
+    private RoomThingRepository roomThingRepository;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -161,18 +164,55 @@ public class AdminController {
                                          @RequestParam(value = "houseId", defaultValue = "1") Long houseId,
                                          RedirectAttributes redirectAttributes) {
         List<House> houseList = houseService.getHomeList();
+        List<House> buildingList = houseService.getBuildingList();
         model.addAttribute("houseList", houseList);
+        model.addAttribute("buildingList", buildingList);
 
         House house = houseService.getHouse(houseId);
         if (house == null) {
             house = houseService.getHouse(1L);
         }
-        List<RoomThing> roomThingList = houseService.getRoomThingByHouse(house);
-        Map<RoomThing, List<Project>> map = new LinkedHashMap<>();
-        for (RoomThing roomThing : roomThingList) {
-            map.put(roomThing, craftService.getProjectByThingAndAuthor(roomThing.getThing(), 1L));
+        model.addAttribute("house", house);
+        List<RoomView> roomViewList = new ArrayList<>();
+
+        List<Room> roomList;
+        if (house.getType() == HouseType.home) {
+            roomList = roomRepository.findByHouseIdLessThanEqualOrderById(house.getId());
+        } else {
+            roomList = roomRepository.findByHouseIdOrderById(house.getId());
         }
-        model.addAttribute("roomThingWithProjects", map);
+        for (Room room : roomList) {
+            RoomView roomView = new RoomView(room);
+            roomView.setFull(true);
+
+            List<RoomThing> roomThings;
+
+            ItemPlace itemPlace;
+            if (house.getType() == HouseType.home) {
+                roomThings = roomThingRepository.findByHouseIdLessThanEqualAndRoomIdOrderByLayerAsc(house.getId(), room.getId());
+            } else {
+                roomThings = roomThingRepository.findByHouseIdAndRoomIdOrderByLayerAsc(house.getId(), room.getId());
+            }
+            Random random = new Random();
+            for (RoomThing roomThing : roomThings) {
+                RoomThingWithProjects roomThingWithProjects = new RoomThingWithProjects(roomThing);
+
+
+                List<Project> availableProjects = projectRepository.findByThing(roomThing.getThing());
+                int idx = random.nextInt(availableProjects.size());
+                Project currentProject = availableProjects.get(idx);
+
+
+                roomThingWithProjects.setCurrentProject(currentProject);
+                roomThingWithProjects.setAvailableProjects(availableProjects);
+
+                roomView.getRoomThingWithProjects().add(roomThingWithProjects);
+            }
+
+            roomViewList.add(roomView);
+        }
+        model.addAttribute("roomViewList", roomViewList);
+
         return "admin/roomThingsWithProjects";
     }
 
