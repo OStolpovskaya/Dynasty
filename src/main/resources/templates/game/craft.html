@@ -94,8 +94,10 @@
                 <th>Статус</th>
                 <th>Тип вещи</th>
                 <th>Название проекта</th>
-                <th>Стоимость</th>
+                <th>Стоимость, дины</th>
                 <th>Ресурсы</th>
+                <th>Куплен, раз</th>
+                <th>Произведено вещей, шт</th>
                 <th>Действия</th>
             </tr>
             </thead>
@@ -108,6 +110,8 @@
                 <td th:text="${project.getName()}">Otto</td>
                 <td th:text="${project.getCost()}">@mdo</td>
                 <td th:utext="${project.resString()}">@mdo</td>
+                <td th:text="${project.getPurchasedTimes()}"></td>
+                <td th:text="${project.getProducedTimes()}"></td>
                 <td>
                     <form th:if="${project.getStatus() eq T(dyn.model.ProjectStatus).rework}" th:action="@{/game/editProject}" method="post" class="form-inline">
                         <input type="hidden" name="projectId" th:value="${project.getId()}"/>

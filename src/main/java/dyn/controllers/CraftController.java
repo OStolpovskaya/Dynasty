@@ -171,6 +171,9 @@ public class CraftController {
                         familyRepository.save(author);
                         familyLogService.addToLog(author, "Семья " + family.getFamilyName() + " приобрела ваш проект " + project.getName() + ". Получено: " + project.getCost() + " д.");
 
+                        project.incPurchased(1);
+                        craftService.saveProject(project);
+
                         String mess = "Ваша семья приобрела проект '" + project.getName() + "' предмета '" + thing.getName() + "'. Потрачено: " + project.getCost() + " д.";
                         familyLogService.addToLog(family, mess);
                         redirectAttributes.addFlashAttribute("mess", mess + " Время производить!");
@@ -370,6 +373,8 @@ public class CraftController {
                     }
                     familyRepository.save(family);
 
+                    project.incProduced(1);
+                    craftService.saveProject(project);
 
                     logger.info(family.familyNameAndId() + " makes the item:" + item.getFullName());
                     String mess = "Ваша семья изготавливает предмет " + item.getFullName() + ". Израсходовано: " + project.resString() + ". ";

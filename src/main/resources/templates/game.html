@@ -8,7 +8,7 @@
 </head>
 <body>
 <div th:replace="fragments/navigation :: nav-for-game"></div>
-<div class="container" style="width: 1900px;">
+<div class="container" style="min-width: 600px;">
     <!--/*@thymesVar id="user" type="dyn.model.User"*/-->
     <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
 
@@ -54,7 +54,7 @@
         </div>
     </th:block>
 
-    <div style="background-color: #2b669a; border-radius: 4px; position: fixed; top: 55px; left: 5px; padding: 5px;">
+    <div style="background-color: #2b669a; border-radius: 4px; position: fixed; top: 55px; left: 5px; padding: 5px; z-index: 10;">
         <form th:action="@{/game/changeView}" class="form" method="post" style="display: inline-block;">
             <input type="hidden" name="gameView" value="defView"/>
             <button type="submit" class="btn btn-xs btn-round" th:classappend="${family.getGameView().toString() == 'defView'?'btn-success':'btn-primary'}" title="Стандартный вид"><span class="glyphicon glyphicon-tower"></span></button>

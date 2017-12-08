@@ -49,6 +49,12 @@ public class Project implements ResourcesHolder {
     @Column(name = "status_mess")
     private String statusMessage;
 
+    @Column(name = "purchased_times")
+    private int purchasedTimes;
+
+    @Column(name = "produced_times")
+    private int producedTimes;
+
     // =================================================
     @OneToMany(mappedBy = "project")
     private List<Item> items;
@@ -175,6 +181,22 @@ public class Project implements ResourcesHolder {
         this.chemical = chemical;
     }
 
+    public int getPurchasedTimes() {
+        return purchasedTimes;
+    }
+
+    public void setPurchasedTimes(int purchasedTimes) {
+        this.purchasedTimes = purchasedTimes;
+    }
+
+    public int getProducedTimes() {
+        return producedTimes;
+    }
+
+    public void setProducedTimes(int producedTimes) {
+        this.producedTimes = producedTimes;
+    }
+
     public String getStatusMessage() {
         return statusMessage;
     }
@@ -230,5 +252,13 @@ public class Project implements ResourcesHolder {
     public String getFullName() {
 
         return getThing().getName() + " '" + getName() + "'";
+    }
+
+    public void incPurchased(int i) {
+        purchasedTimes += i;
+    }
+
+    public void incProduced(int i) {
+        producedTimes += i;
     }
 }

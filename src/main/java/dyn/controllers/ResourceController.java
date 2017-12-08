@@ -55,18 +55,23 @@ public class ResourceController {
         String takeResName = ResUtils.getName(takeRes);
 
         if (!Objects.equals(dropResName, "") && !Objects.equals(takeResName, "")) {
-            int dropResCount = family.getFamilyResources().getResByName(dropRes);
-            if (10 <= count && count <= dropResCount) {
-                int floorCount = (int) (Math.floor(count / 10) * 10);
-                int newResAmount = floorCount / 10;
-                family.getFamilyResources().removeResByName(dropRes, floorCount);
-                family.getFamilyResources().addResByName(takeRes, newResAmount);
-                familyRepository.save(family);
-                logger.info(family.familyNameAndId() + " exchanges " + floorCount + " of resource " + dropRes + " to " + newResAmount + " of resource " + takeRes);
-                mess = "Вы обменяли " + floorCount + " шт. ресурса " + dropResName + " на " + newResAmount + " шт. ресурса " + takeResName;
+            if (!dropResName.equals(takeResName)) {
+                int dropResCount = family.getFamilyResources().getResByName(dropRes);
+                if (10 <= count && count <= dropResCount) {
+                    int floorCount = (int) (Math.floor(count / 10) * 10);
+                    int newResAmount = floorCount / 10;
+                    family.getFamilyResources().removeResByName(dropRes, floorCount);
+                    family.getFamilyResources().addResByName(takeRes, newResAmount);
+                    familyRepository.save(family);
+                    logger.info(family.familyNameAndId() + " exchanges " + floorCount + " of resource " + dropRes + " to " + newResAmount + " of resource " + takeRes);
+                    mess = "Вы обменяли " + floorCount + " шт. ресурса " + dropResName + " на " + newResAmount + " шт. ресурса " + takeResName;
+                } else {
+                    logger.error(family.familyNameAndId() + " not enough resources to exchange:" + dropRes);
+                    mess = "Выбранного для обмена ресурса должно быть больше 10, но меньше или равно, чем есть у вас";
+                }
             } else {
-                logger.error(family.familyNameAndId() + " not enough resources to exchange:" + dropRes);
-                mess = "Выбранного для обмена ресурса должно быть больше 10, но меньше или равно, чем есть у вас";
+                logger.debug(family.familyNameAndId() + " try to exchange the same resources:" + dropRes);
+                mess = "Невыгодно обменивать один и тот же ресурс.";
             }
         } else {
             logger.error(family.familyNameAndId() + " try to exchange nonexisting resource:" + dropRes);
