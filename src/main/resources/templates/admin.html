@@ -3,8 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>Admin</title>
-    <link href="webjars/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"></link>
-    <link th:href="@{/css/common.css}" rel="stylesheet"></link>
+    <th:block th:replace="fragments/custom :: headLinks"></th:block>
 </head>
 <body>
 <div th:replace="fragments/navigation :: nav-for-admin"></div>

@@ -74,5 +74,18 @@
     </span>
 </th:block>
 
+<th:block th:fragment="headLinks">
+    <link rel="icon" href="/graphics/favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}"></link>
+    <link rel="stylesheet" th:href="@{/css/common.css}"></link>
+
+</th:block>
+
+<th:block th:fragment="footerSite">
+    <div class="footer">
+        <p>Пользовательское соглашение Политика конфиденциальности<br/>
+            © dyngame.ru</p>
+    </div>
+</th:block>
 </body>
 </html>

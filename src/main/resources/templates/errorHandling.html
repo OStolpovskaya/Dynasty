@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>Error</title>
-    <link th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}" rel="stylesheet"></link>
+    <th:block th:replace="fragments/custom :: headLinks"></th:block>
 </head>
 <body>
 <div th:replace="fragments/navigation :: nav-for-index"></div>
@@ -11,7 +11,7 @@
     <h3>Ошибочка вышла</h3>
     <p th:each="attr : ${reqAttr}" th:text="${attr}"></p>
 </div>
-<script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>
-<script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
+<th:block th:replace="fragments/scripts :: webjarsSite"></th:block>
+<th:block th:replace="fragments/custom :: footerSite"></th:block>
 </body>
 </html>

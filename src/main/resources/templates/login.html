@@ -3,16 +3,17 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>Login</title>
-    <link href="webjars/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"></link>
-    <link th:href="@{/css/common.css}" rel="stylesheet"></link>
+    <th:block th:replace="fragments/custom :: headLinks"></th:block>
 </head>
 <body>
 <div th:replace="fragments/navigation :: nav-for-index"></div>
 <div class="container">
-
-    <div class="col-md-3 col-md-offset-3">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
         <span th:if="${param.logout}" style="color: darkslategrey;"> You have been logged out. </span>
-        <h3>Авторизация:</h3>
+        <div id="legend">
+            <legend class="">Авторизация</legend>
+        </div>
         <span th:if="${param.error}" style="color: palevioletred;">Invalid email or password.</span>
         <form th:action="@{/login}" method="post" class="form-horizontal">
             <div class="form-group">
@@ -25,7 +26,7 @@
 
             </div>
             <div class="form-group">
-                <button class="btn btn-lg btn-primary btn-block" type="submit" name="buttonSubmit">Log In</button>
+                <button class="btn btn-primary btn-block" type="submit" name="buttonSubmit">Log In</button>
 
             </div>
             <div class="form-group">
@@ -36,7 +37,9 @@
             </div>
         </form>
     </div>
+    <div class="col-md-4"></div>
 </div>
-<th:block th:replace="fragments/scripts :: webjars"></th:block>
+<th:block th:replace="fragments/scripts :: webjarsSite"></th:block>
+<th:block th:replace="fragments/custom :: footerSite"></th:block>
 </body>
 </html>
