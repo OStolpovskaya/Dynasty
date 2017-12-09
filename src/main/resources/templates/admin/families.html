@@ -10,31 +10,32 @@
 <div th:replace="fragments/navigation :: nav-for-admin"></div>
 <div>
     <h3>Семьи</h3>
-    <table class="table table-striped">
+    <table id="familyTable" class="table table-striped">
         <thead>
         <tr>
-            <th>ID</th>
-            <th>Игрок</th>
-            <th>Фамилия</th>
-            <th>Уровень</th>
-            <th>Активна</th>
-            <th>Дом</th>
-            <th>Баллы</th>
-            <th>Деньги</th>
+            <th onclick="sortTable(0)">ID</th>
+            <th onclick="sortTable(1)">Игрок</th>
+            <th onclick="sortTable(2)">Фамилия</th>
+            <th onclick="sortTable(3)">Дата</th>
+            <th onclick="sortTable(4)">Уровень</th>
+            <th onclick="sortTable(5)">Активна</th>
+            <th onclick="sortTable(6)">Дом</th>
+            <th onclick="sortTable(7)">Баллы</th>
+            <th onclick="sortTable(8)">Деньги</th>
 
-            <th>food</th>
-            <th>wood</th>
-            <th>metall</th>
-            <th>plastic</th>
-            <th>microel</th>
-            <th>cloth</th>
-            <th>stone</th>
-            <th>chemical</th>
+            <th onclick="sortTable(9)">food</th>
+            <th onclick="sortTable(10)">wood</th>
+            <th onclick="sortTable(11)">metall</th>
+            <th onclick="sortTable(12)">plastic</th>
+            <th onclick="sortTable(13)">microel</th>
+            <th onclick="sortTable(14)">cloth</th>
+            <th onclick="sortTable(15)">stone</th>
+            <th onclick="sortTable(16)">chemical</th>
 
-            <th>items</th>
-            <th>projects</th>
-            <th>things</th>
-            <th>achiev</th>
+            <th onclick="sortTable(17)">items</th>
+            <th onclick="sortTable(18)">projects</th>
+            <th onclick="sortTable(19)">things</th>
+            <th onclick="sortTable(20)">achiev</th>
 
             <th>Лог</th>
         </tr>
@@ -45,6 +46,7 @@
             <td th:text="${family.getId()}">id</td>
             <td th:text="${family.getUser().getUserName()}">id</td>
             <td th:text="${family.getFamilyName()}">title</td>
+            <td th:text="${family.getCreationDate()}">title</td>
             <td th:text="${family.getLevel()}">type</td>
             <td th:text="${family.isCurrent()}">type</td>
             <td th:text="${family.getHouse().getName()}">type</td>
@@ -98,6 +100,78 @@
         </table>
     </div>
 </div>
+<script>
+    //<![CDATA[
+    function isInteger(x) {
+        return x % 1 === 0;
+    }
+
+    function sortTable(n) {
+        var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+        table = document.getElementById("familyTable");
+        switching = true;
+        //Set the sorting direction to ascending:
+        dir = "asc";
+        /*Make a loop that will continue until
+         no switching has been done:*/
+        while (switching) {
+            //start by saying: no switching is done:
+            switching = false;
+            rows = table.getElementsByTagName("TR");
+            /*Loop through all table rows (except the
+             first, which contains table headers):*/
+            for (i = 1; i < (rows.length - 1); i++) {
+                //start by saying there should be no switching:
+                shouldSwitch = false;
+                /*Get the two elements you want to compare,
+                 one from current row and one from the next:*/
+                x = rows[i].getElementsByTagName("TD")[n];
+                y = rows[i + 1].getElementsByTagName("TD")[n];
+                x = x.innerHTML;
+                y = y.innerHTML;
+                if (isInteger(x))
+                    x = Number(x);
+                else
+                    x = x.toLowerCase();
+                if (isInteger(y))
+                    y = Number(y);
+                else
+                    y = y.toLowerCase();
+                /*check if the two rows should switch place,
+                 based on the direction, asc or desc:*/
+                if (dir == "asc") {
+                    if (x > y) {
+                        //if so, mark as a switch and break the loop:
+                        shouldSwitch = true;
+                        break;
+                    }
+                } else if (dir == "desc") {
+                    if (x < y) {
+                        //if so, mark as a switch and break the loop:
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+            }
+            if (shouldSwitch) {
+                /*If a switch has been marked, make the switch
+                 and mark that a switch has been done:*/
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+                //Each time a switch is done, increase this count by 1:
+                switchcount++;
+            } else {
+                /*If no switching has been done AND the direction is "asc",
+                 set the direction to "desc" and run the while loop again.*/
+                if (switchcount == 0 && dir == "asc") {
+                    dir = "desc";
+                    switching = true;
+                }
+            }
+        }
+    }
+    //]]>
+</script>
 <script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
 </body>

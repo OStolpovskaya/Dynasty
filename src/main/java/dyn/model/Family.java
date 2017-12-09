@@ -2,10 +2,7 @@ package dyn.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by OM on 19.02.2017.
@@ -33,6 +30,9 @@ public class Family {
     private int fianceeNum;
 
     private GameView gameView;
+
+    @Column(name = "creation_date")
+    private Date creationDate;
     // ===================================
     private List<Character> characters;
     private FamilyResources familyResources;
@@ -198,6 +198,14 @@ public class Family {
 
     public void setGameView(GameView gameView) {
         this.gameView = gameView;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 
     @OneToMany(mappedBy = "family", fetch = FetchType.LAZY)
