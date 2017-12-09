@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -44,6 +45,12 @@ public class User implements Serializable {
 
     @Column(name = "reset_token")
     private String resetToken;
+
+    @Column(name = "creation_date")
+    private Date creationDate;
+
+    @Column(name = "last_login_date")
+    private Date lastLoginDate;
 
     @OneToMany(mappedBy = "user")
     private List<Family> families;
@@ -120,6 +127,22 @@ public class User implements Serializable {
 
     public void setResetToken(String resetToken) {
         this.resetToken = resetToken;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public Date getLastLoginDate() {
+        return lastLoginDate;
+    }
+
+    public void setLastLoginDate(Date lastLoginDate) {
+        this.lastLoginDate = lastLoginDate;
     }
 
     public List<Family> getFamilies() {

@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Date;
 
 
 @Controller
@@ -89,6 +90,9 @@ public class RegistrationController {
         Authentication authenticatedUser = authenticationManager.authenticate(token);
 
         SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
+
+        regUser.setLastLoginDate(new Date());
+        userRepository.save(regUser);
 
         return "redirect:/game";
 
