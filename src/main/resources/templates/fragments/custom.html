@@ -83,8 +83,9 @@
 
 <th:block th:fragment="footerSite">
     <div class="footer">
-        <p>Пользовательское соглашение Политика конфиденциальности<br/>
-            © dyngame.ru</p>
+        <p><a th:href="@{/docs/UserAgreement.pdf}" target="_blank">Пользовательское соглашение</a> <a th:href="@{/docs/Privacy.pdf}" target="_blank">Политика конфиденциальности</a> <a th:href="@{/docs/CopyrightHolder.pdf}" target="_blank">Правообладателям
+        </a><br/>
+            © dyngame.ru 2017</p>
     </div>
 </th:block>
 </body>
