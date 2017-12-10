@@ -2,10 +2,12 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="description" content="Это браузерная пошаговая многопользовательская онлайн игра, в которой вам предстоит создать династию!"/>
     <title>Дом Для Династии</title>
     <th:block th:replace="fragments/custom :: headLinks"></th:block>
 </head>
 <body>
+<th:block th:replace="fragments/scripts :: counters"></th:block>
 <div th:replace="fragments/navigation :: nav-for-index"></div>
 <div class="container">
 
