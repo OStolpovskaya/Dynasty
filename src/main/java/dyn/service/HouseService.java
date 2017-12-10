@@ -94,7 +94,7 @@ public class HouseService {
     }
 
     public List<Item> getItemsInStorage(Family family) {
-        return itemRepository.findByFamilyAndPlaceAndProjectThingCraftBranchIdLessThanEqualOrderByProjectThingAscProjectAscQualityAsc(family, ItemPlace.storage, Const.CRAFTBRANCH_MEAL);
+        return itemRepository.findByFamilyAndPlaceAndProjectThingCraftBranchIdLessThanEqualOrderByProjectThingAscProjectAscQualityAsc(family, ItemPlace.storage, Const.CRAFTBRANCH_MAX);
     }
 
     public List<Item> getBuffsInStorage(Family family) {
