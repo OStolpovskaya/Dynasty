@@ -11,6 +11,7 @@ import dyn.service.EmailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -39,6 +40,9 @@ public class PasswordController {
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Value("${servername}")
+    private String servername;
 
     // Display forgotPassword page
     @RequestMapping(value = "/forgot", method = RequestMethod.GET)
@@ -69,14 +73,14 @@ public class PasswordController {
             userRepository.save(user);
 
             //String appUrl = request.getScheme() + "://" + request.getServerName();
-            String appUrl = "localhost:8080"; // TODO: сделать автоматом для сервера
+            String appUrl = servername;
 
             // Email message
             SimpleMailMessage passwordResetEmail = new SimpleMailMessage();
             passwordResetEmail.setFrom("dyngame@yandex.ru");
             passwordResetEmail.setTo(user.getEmail());
             passwordResetEmail.setSubject("Dyngame.ru: password reset request");
-            passwordResetEmail.setText("Чтобы сбросить пароль на сайте dyngame.ru перейдите по ссылке:\n" + appUrl + "/reset?token=" + user.getResetToken());
+            passwordResetEmail.setText("Чтобы сбросить пароль на сайте dyngame.ru перейдите по ссылке:\nhttp://" + appUrl + "/reset?token=" + user.getResetToken());
 
             emailService.sendEmail(passwordResetEmail);
         }
