@@ -205,12 +205,10 @@ public class FamilyController {
         Buff buff = buffRepository.findByTitle(Buff.SEVEN_CHILDREN);
         founder.getBuffs().add(buff);
 
-        logger.debug(founder.toString());
         characterRepository.save(founder);
 
         foundress.setSpouse(founder);
         foundress.setFamily(familyRepository.findOne(1L));
-        logger.debug(foundress.toString());
         characterRepository.save(foundress);
 
         founder.setSpouse(foundress);

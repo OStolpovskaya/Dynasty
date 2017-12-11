@@ -2,6 +2,8 @@ package dyn.service;
 
 import dyn.model.User;
 import dyn.repository.UserRepository;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
@@ -15,7 +17,7 @@ import java.util.Date;
  */
 @Service
 public class UserService implements ApplicationListener<AuthenticationSuccessEvent> {
-
+    private static final Logger logger = LogManager.getLogger(UserService.class);
     @Autowired
     private UserRepository userRepository;
 
@@ -26,5 +28,6 @@ public class UserService implements ApplicationListener<AuthenticationSuccessEve
         User user = userRepository.findByUserName(userName);
         user.setLastLoginDate(new Date());
         userRepository.save(user);
+        logger.info(user.getUserName() + " LOGGED IN!");
     }
 }

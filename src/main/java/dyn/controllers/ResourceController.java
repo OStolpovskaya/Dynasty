@@ -63,18 +63,18 @@ public class ResourceController {
                     family.getFamilyResources().removeResByName(dropRes, floorCount);
                     family.getFamilyResources().addResByName(takeRes, newResAmount);
                     familyRepository.save(family);
-                    logger.info(family.familyNameAndId() + " exchanges " + floorCount + " of resource " + dropRes + " to " + newResAmount + " of resource " + takeRes);
+                    logger.info(family.familyNameAndUserName() + " exchanges " + floorCount + " of resource " + dropRes + " to " + newResAmount + " of resource " + takeRes);
                     mess = "Вы обменяли " + floorCount + " шт. ресурса " + dropResName + " на " + newResAmount + " шт. ресурса " + takeResName;
                 } else {
-                    logger.error(family.familyNameAndId() + " not enough resources to exchange:" + dropRes);
+                    logger.error(family.familyNameAndUserName() + " not enough resources to exchange:" + dropRes);
                     mess = "Выбранного для обмена ресурса должно быть больше 10, но меньше или равно, чем есть у вас";
                 }
             } else {
-                logger.debug(family.familyNameAndId() + " try to exchange the same resources:" + dropRes);
+                logger.debug(family.familyNameAndUserName() + " try to exchange the same resources:" + dropRes);
                 mess = "Невыгодно обменивать один и тот же ресурс.";
             }
         } else {
-            logger.error(family.familyNameAndId() + " try to exchange nonexisting resource:" + dropRes);
+            logger.error(family.familyNameAndUserName() + " try to exchange nonexisting resource:" + dropRes);
             mess = "Нет такого ресурса.";
         }
 
