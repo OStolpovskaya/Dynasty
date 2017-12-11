@@ -12,15 +12,15 @@
 
         <th:block th:each="mapEntry : ${projectItemsMap}" th:with="project = ${mapEntry.getKey()}, items = ${mapEntry.getValue()}">
             <!--/*@thymesVar id="project" type="dyn.model.Project"*/-->
-            <li style="height: 34px;">
+            <li>
                 <form th:action="@{/game/applyItemChangeSomething}" method="post" class="form-inline" style="margin-left: 10px;">
                     <input type="hidden" name="characterId" th:value="${character.getId()}"/>
                     <input type="hidden" name="itemId" th:value="${items.get(0).getId()}"/>
                     <button type="submit" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-ok"></span></button>
                     <th:block th:if="${project.getId() eq @const.PROJECT_BODY_PART_CHANGE}">
                         <div class="form-group">
-                            <span th:text="${project.getName() + ' (' + #lists.size(items) + ' шт.): '}" style="padding-left: 5px;"></span>
-                            <select class="form-control input-sm" name="param">
+                            <span th:text="${project.getName() + ' (' + #lists.size(items) + ' шт.): '}" style="padding-left: 5px; "></span><br/>
+                            <select class="form-control input-sm" name="param" style="height: 20px; padding: 0px; font-size: 10px;">
                                 <option value="body">Тело</option>
                                 <option value="ears">Уши</option>
                                 <option value="eyebrows">Брови</option>
@@ -38,8 +38,8 @@
                     </th:block>
                     <th:block th:if="${project.getId() eq @const.PROJECT_VOCATION_CHANGE}">
                         <div class="form-group">
-                            <span th:text="${project.getName() + ' (' + #lists.size(items) + ' шт.): '}" style="padding-left: 5px;"></span>
-                            <select class="form-control input-sm" name="param" style="width: 120px;">
+                            <span th:text="${project.getName() + ' (' + #lists.size(items) + ' шт.): '}" style="padding-left: 5px;"></span><br/>
+                            <select class="form-control input-sm" name="param" style="width: 120px;height: 20px; padding: 0px; font-size: 10px;">
                                 <option th:each="vocation : ${@vocationRepository.findAll()}" th:value="${vocation.getId()}" th:text="${vocation.getName()}">Тело</option>
                             </select>
                         </div>

@@ -2,14 +2,14 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1"/>-->
     <title>Игра</title>
     <th:block th:replace="fragments/custom :: headLinks"></th:block>
 </head>
 <body>
 <th:block th:replace="fragments/scripts :: counters"></th:block>
 <div th:replace="fragments/navigation :: nav-for-game"></div>
-<div class="container" style="min-width: 1150px; width: 100%;">
+<div class="container" style="min-width: 1280px; width: 100%;">
     <!--/*@thymesVar id="user" type="dyn.model.User"*/-->
     <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
 
@@ -134,7 +134,7 @@
                             <!--${isAdmin} ? adminclass : userclass-->
                             Действия <span class="caret"></span>
                         </button>
-                        <ul class="dropdown-menu" style="width: 300px; font-size: 12px;">
+                        <ul class="dropdown-menu" style="width: 200px; font-size: 10px;">
                             <th:block th:replace="fragments/char :: li-for-buff-parents (character=${father}, projectItemsMap = ${buffsForParents})"></th:block>
                         </ul>
                     </div>
@@ -146,7 +146,7 @@
                                 style="width: 180px; border-top-right-radius: 0; border-top-left-radius: 0; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;" th:disabled="${buffsForParentsIsEmpty}">
                             Действия <span class="caret"></span>
                         </button>
-                        <ul class="dropdown-menu" style="width: 300px; font-size: 12px;">
+                        <ul class="dropdown-menu" style="width: 200px; font-size: 10px;">
                             <th:block th:replace="fragments/char :: li-for-buff-parents (character=${mother}, projectItemsMap = ${buffsForParents})"></th:block>
                         </ul>
                     </div>
@@ -193,17 +193,18 @@
                                         isCoupledDaughter = ${childSex == 'female' and (childSpouse != null or child.isFiancee() == true)},
                                         isFreeDaughter = ${childSex == 'female' and childSpouse == null and child.isFiancee() == false},
                                         isMarriedSon = ${childSex == 'male' and childSpouse != null},
-                                        isFreeSon = ${childSex == 'male' and childSpouse == null}">
-                                        <button class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown" th:name="${'actionsFor'+child.getId()}"
-                                                style="width: 180px; border-top-right-radius: 0; border-top-left-radius: 0; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; "
-                                                th:styleappend="${(mainButton1 or mainButton2)?'width: 80px;border-bottom-left-radius: 0px; ':''}"
-                                                th:disabled="${isCoupledDaughter or
+                                        isFreeSon = ${childSex == 'male' and childSpouse == null},
+                                        btnActionsDisabled = ${isCoupledDaughter or
                                                     (isFreeDaughter and buffsSkillImprovementIsEmpty and buffsForChildrenChangeIsEmpty) or
                                                     (isMarriedSon and buffsMarriedIsEmpty and buffsSkillImprovementIsEmpty and buffsForChildrenChangeIsEmpty) or
                                                     (isFreeSon and buffsSkillImprovementIsEmpty and buffsForChildrenChangeIsEmpty)}">
+                                        <button class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown" th:name="${'actionsFor'+child.getId()}"
+                                                style="width: 180px; border-top-right-radius: 0; border-top-left-radius: 0; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; "
+                                                th:styleappend="${(mainButton1 or mainButton2)?'width: 80px;border-bottom-left-radius: 0px; ':''}"
+                                                th:disabled="${btnActionsDisabled}">
                                             Действия <span class="caret"></span>
                                         </button>
-                                        <ul class="dropdown-menu" style="width: 330px; font-size: 12px;">
+                                        <ul class="dropdown-menu" style="width: 200px; font-size: 10px; " th:styleappend="${(mainButton1 or mainButton2)?'margin-left: -115px;':'margin-left: -9px;'}">
 
                                             <th:block th:if="${child.getSex() == 'male' or isFreeDaughter}">
                                                 <!--Баффы на женатого сына-->
@@ -218,6 +219,7 @@
                                             </th:block>
 
                                         </ul>
+
                                     </div>
                                 </td>
                             </tr>
@@ -236,7 +238,7 @@
                                                     (buffsSkillImprovementIsEmpty and buffsForChildrenChangeIsEmpty))}">
                                                 Действия <span class="caret"></span>
                                             </button>
-                                            <ul class="dropdown-menu" style="width: 330px; font-size: 12px;">
+                                            <ul class="dropdown-menu" style="width: 200px; font-size: 10px; " th:styleappend="${(mainButton1 or mainButton2)?'margin-left: -115px;':'margin-left: -9px;'}">
                                                 <th:block th:if="${spouse.getSex() == 'female'}">
                                                     <!--Баффы навыков и карьеры-->
                                                     <th:block th:replace="fragments/char :: li-for-buff-improve-skill (character=${spouse}, projectItemsMap = ${buffsSkillImprovement})"></th:block>

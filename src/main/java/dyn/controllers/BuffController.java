@@ -213,7 +213,7 @@ public class BuffController {
                         Buff buff = buffRepository.findOne(Const.BUFF_SALARY_INC);
                         if (!character.getBuffs().contains(buff) && !character.getBuffs().contains(buff.getContradictory())) {
                             character.getBuffs().add(buff);
-                            mess = "Персонажу добавлен бафф: " + buff.getTitle();
+                            mess = "Персонажу добавлен бафф: " + messageSource.getMessage(buff.getTitle(), null, loc());
                             characterRepository.save(character);
                         } else {
                             logger.error(family.familyNameAndId() + "want to apply buff, but character already has this buff or has contradictory buff: " + buff.getId());

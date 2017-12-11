@@ -2,21 +2,19 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="yandex-verification" content="4ff61037c0e948ef"/>
     <meta name="description" content="Это браузерная пошаговая многопользовательская онлайн игра, в которой вам предстоит создать династию!"/>
     <title>Дом Для Династии</title>
     <th:block th:replace="fragments/custom :: headLinks"></th:block>
+    <link rel="stylesheet" th:href="@{/css/lightbox.css}"></link>
 </head>
 <body>
 <th:block th:replace="fragments/scripts :: counters"></th:block>
 <div th:replace="fragments/navigation :: nav-for-index"></div>
-<div class="container">
-
-    <div align="center">
+<div align="center" style="width: 946px; margin-right: auto; margin-left: auto;">
         <img th:src="@{'/graphics/logo.png' }"/>
-    </div>
-    <div>
         <p align="center">
-            Это браузерная пошаговая многопользовательская игра, в которой вам предстоит создать династию! Начав с двух персонажей-людей и комбинируя случайные генетические модификации, вы сможете добиться появления в вашей семье
+            Дом Для Династии - это браузерная пошаговая многопользовательская игра, в которой вам предстоит создать династию! Начав с двух персонажей-людей и комбинируя случайные генетические модификации, вы сможете добиться появления в вашей семье
             представителей других рас: эльфов, орков, гоблинов и т.д. <br/>
             Каждый персонаж имеет призвание, работает и приносит в семью деньги и ресурсы, на которые вы сможете купить или скрафтить вещи для вашего родового поместья: мебель, технику, автомобили. Все предметы в игре можно создавать,
             продавать, покупать и.... рисовать!<br/>
@@ -25,10 +23,60 @@
             <br/>
             Это не коммерческий проект. Игра находится в стадии разработки, поэтому возможны ошибки и лаги. Заранее приносим извинения. <br/>
             Обо всех неполадках просим сообщать через форму обратной связи - спасибо!
+            <br/>
+            <br/>
         </p>
+    <h3 style="text-align:center">Скриншоты</h3>
+
+    <img id="img1" th:src="@{'/graphics/screenshots/Крафт.png' }" onclick="imgView('img1')" alt="Крафт стула" height="124" style="display: inline-block;"/>
+    <img id="img2" th:src="@{'/graphics/screenshots/Кухня.png' }" onclick="imgView('img2')" alt="Кухня в уютном домике" height="124" style="display: inline-block;"/>
+    <img id="img3" th:src="@{'/graphics/screenshots/Семья.png' }" onclick="imgView('img3')" alt="Родословная" height="124" style="display: inline-block;"/>
+    <img id="img4" th:src="@{'/graphics/screenshots/Выбор невесты.png' }" onclick="imgView('img4')" alt="Выбор невесты для одного из персонажей" height="124" style="display: inline-block;"/>
+    <img id="img5" th:src="@{'/graphics/screenshots/Бизнес.png' }" onclick="imgView('img5')" alt="Парк отдыха в городе" height="124" style="display: inline-block;"/>
+    <br/>
+    <h3 style="text-align:center">Отзывы</h3>
+    <p>"моя семья из двух русалок и четырех мутантов живет в хижине, в которой даже сортира нет, зато у меня есть деньги на покупку парка в городе..."</p><br/>
+    <p>"у меня вампир с ушами гоблина, что делать? - пластическая хирургия в городе, заменит уши на обычные - отрезать уши?!"</p><br/>
+    <p>"мне же нужна невеста не абы какая с любыми косыми глазами, а например с глазами кошки..."</p><br/>
+    <p>"вопрос о приемной ребенке. он будет рандомный мутант?"</p><br/>
+    <p>"и вот сижу я с кучей инопланетян, портить жалко их, а денег не хватает ни на невест хороших, ни на бафы для поддержания гена"</p><br/>
+    <p>"а это нормально, что у моей почти-эльфийки-дочери появился бабочк-мужик?"</p><br/>
+    <p>"ну вот. гарпии зашли в тупик. нарожали девок(("</p><br/>
     </div>
 
+
+<!-- The Modal -->
+<div id="myModal" class="modal">
+    <span class="close">&times;</span>
+    <img class="modal-content" id="img01"/>
+    <div id="caption"></div>
 </div>
+
+<script>
+    /*<![CDATA[*/
+    function imgView(imgId) {
+        // Get the modal
+        var modal = document.getElementById('myModal');
+
+        // Get the image and insert it inside the modal - use its "alt" text as a caption
+        var img = document.getElementById(imgId);
+        var modalImg = document.getElementById("img01");
+        var captionText = document.getElementById("caption");
+        modal.style.display = "block";
+        modalImg.src = img.src;
+        captionText.innerHTML = img.alt;
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
+    }
+    /*]]>*/
+</script>
+
 
 <th:block th:replace="fragments/scripts :: webjarsSite"></th:block>
 <th:block th:replace="fragments/custom :: footerSite"></th:block>
