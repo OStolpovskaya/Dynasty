@@ -142,6 +142,17 @@ public class AdminController {
         return "admin/families";
     }
 
+    @RequestMapping("/admin/users")
+    public String usersView(ModelMap model) {
+
+        List<User> userList = userRepository.findAllByOrderByLastLoginDateDesc();
+        for (User user : userList) {
+            Family currentFamily = user.getCurrentFamily();
+        }
+        model.addAttribute("userList", userList);
+        return "admin/users";
+    }
+
     @RequestMapping(value = "/admin/family", method = RequestMethod.GET)
     public String familyView(ModelMap model,
                              @RequestParam("familyId") Long familyId,
