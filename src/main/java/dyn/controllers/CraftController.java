@@ -320,12 +320,12 @@ public class CraftController {
         logger.info(family.familyNameAndUserName() + " saved project " + project.getName());
 
         if (formType.equals("edit")) {
-            redirectAttributes.addFlashAttribute("mess", "Проект отредактирован. Ждите сообщений от модератора.");
-            return "redirect:/game/craft#createdProjects";
-        }
-        redirectAttributes.addFlashAttribute("mess", "Ваша заявка на создание нового проекта зарегистрирована. Ждите сообщений от модератора.");
-        return "redirect:/game/chooseProject?thingId=" + thing.getId();
+            redirectAttributes.addFlashAttribute("mess", "Проект отредактирован. Ждите сообщений от модератора, они появятся в столбце Статус в табличке Авторских проектов.");
 
+        } else {
+            redirectAttributes.addFlashAttribute("mess", "Ваша заявка на создание нового проекта зарегистрирована. Ждите сообщений от модератора, они появятся в столбце Статус в табличке Авторских проектов.");
+        }
+        return "redirect:/game/craft#createdProjects";
     }
 
     @RequestMapping(value = "/game/makeItem", method = RequestMethod.POST)

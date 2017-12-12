@@ -8,7 +8,7 @@
 <body>
 <th:block th:replace="fragments/scripts :: counters"></th:block>
 <div th:replace="fragments/navigation :: nav-for-game"></div>
-<div class="container" style="width: 1800px;">
+<div class="container" style="width: 1600px;">
     <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
     <th:block th:if="${family.getLevel() == 0}">
         <div class="alert alert-success">
@@ -46,13 +46,13 @@
                         <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
                         <th:block th:if="${family.getCraftThings().contains(parentThing)}">
                             <div class="tree_li_a" style="color: #1b6d85; background-color: lightgreen;">
-                                <a th:href="${'/game/chooseProject?thingId='+parentThing.getId()}" th:text="${parentThing.getName()}">Parent</a>
+                                <a th:href="${'/game/chooseProject?thingId='+parentThing.getId()}" th:text="${parentThing.getName()}" th:title="${'Стоимость: '+parentThing.getCost() + ' б.'}">Parent</a>
                                 <a th:href="${'/game/chooseItemToBuy?thingId='+parentThing.getId()}"><span class="glyphicon glyphicon-new-window" style="color: forestgreen; " title="Маркет"></span></a>
                             </div>
                         </th:block>
                         <th:block th:if="${not family.getCraftThings().contains(parentThing)}">
                             <div class="tree_li_a" style="color: #000; background-color: lightsteelblue; border-bottom-right-radius: 0px; border-bottom-left-radius: 0px;">
-                                <th:block th:text="${parentThing.getName()}">Parent</th:block>
+                                <th:block th:text="${parentThing.getName()}" th:title="${'Стоимость: '+parentThing.getCost() + ' б.'}">Parent</th:block>
                                 <a th:href="${'/game/chooseItemToBuy?thingId='+parentThing.getId()}"><span class="glyphicon glyphicon-new-window" style="color: forestgreen; " title="Маркет"></span></a>
                             </div>
                             <form class="form-inline" th:action="@{/game/learnThing}" method="post">
@@ -68,14 +68,14 @@
 
                                     <th:block th:if="${family.getCraftThings().contains(thing)}">
                                         <div class="tree_li_a" style="color: #1b6d85; background-color: lightgreen;">
-                                            <a th:href="${'/game/chooseProject?thingId='+thing.getId()}" th:text="${thing.getName()}">Parent</a>
+                                            <a th:href="${'/game/chooseProject?thingId='+thing.getId()}" th:text="${thing.getName()}" th:title="${'Стоимость: '+thing.getCost() + ' б.'}">Parent</a>
                                             <a th:href="${'/game/chooseItemToBuy?thingId='+thing.getId()}"><span class="glyphicon glyphicon-new-window" style="color: forestgreen; " title="Маркет"></span></a>
                                         </div>
                                     </th:block>
                                     <th:block th:if="${not family.getCraftThings().contains(thing)}">
                                         <th:block th:if="${family.getCraftThings().contains(thing.getParent())}">
                                             <div class="tree_li_a" style="color: #000; background-color: lightsteelblue; border-bottom-right-radius: 0px; border-bottom-left-radius: 0px;">
-                                                <th:block th:text="${thing.getName()}">Parent</th:block>
+                                                <th:block th:text="${thing.getName()}" th:title="${'Стоимость: '+thing.getCost() + ' б.'}">Parent</th:block>
                                                 <a th:href="${'/game/chooseItemToBuy?thingId='+thing.getId()}"><span class="glyphicon glyphicon-new-window" style="color: forestgreen; " title="Маркет"></span></a>
                                             </div>
                                             <form class="form-inline" th:action="@{/game/learnThing}" method="post">
@@ -87,7 +87,7 @@
                                         </th:block>
                                         <th:block th:if="${not family.getCraftThings().contains(thing.getParent())}">
                                             <div class="tree_li_a">
-                                                <th:block th:text="${thing.getName()}">Town hall</th:block>
+                                                <th:div th:text="${thing.getName()}" th:title="${'Стоимость: '+thing.getCost() + ' б.'}">Town hall</th:div>
                                                 <a th:href="${'/game/chooseItemToBuy?thingId='+thing.getId()}"><span class="glyphicon glyphicon-new-window" style="color: forestgreen; " title="Маркет"></span></a>
                                             </div>
                                         </th:block>
@@ -103,42 +103,51 @@
     </th:block>
     <!--authorProjects-->
     <div class="well">
-        <a name="createdProjects" class="anchor"></a>
-        <h3>Авторские проекты</h3>
-        <table class="table table-sm">
-            <thead>
-            <tr>
-                <th>#</th>
-                <th>Статус</th>
-                <th>Тип вещи</th>
-                <th>Название проекта</th>
-                <th>Стоимость, дины</th>
-                <th>Ресурсы</th>
-                <th>Куплен, раз</th>
-                <th>Произведено вещей, шт</th>
-                <th>Действия</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="project : ${authorProjects}">
-                <th scope="row" th:text="${projectStat.count}">1</th>
-                <!--/*@thymesVar id="project" type="dyn.model.Project"*/-->
-                <td th:text="${project.getStatusWithMessage()}">Mark</td>
-                <td th:text="${project.getThing().getName()}">Mark</td>
-                <td th:text="${project.getName()}">Otto</td>
-                <td th:text="${project.getCost()}">@mdo</td>
-                <td th:utext="${project.resString()}">@mdo</td>
-                <td th:text="${project.getPurchasedTimes()}"></td>
-                <td th:text="${project.getProducedTimes()}"></td>
-                <td>
-                    <form th:if="${project.getStatus() eq T(dyn.model.ProjectStatus).rework}" th:action="@{/game/editProject}" method="post" class="form-inline">
-                        <input type="hidden" name="projectId" th:value="${project.getId()}"/>
-                        <button class="btn btn-sm btn-success" type="submit">Редактировать</button>
-                    </form>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+        <div style="width: 1200px;">
+            <a name="createdProjects" class="anchor"></a>
+            <h3>Авторские проекты</h3>
+            <p>Здесь отображены проекты предметов, которые создали вы сами. Создать проект вы можете в окне выбора проектов для производства (клик по любой уже изученной вами вещи).<br/>
+                Статус "Новый" - означает, что модератор еще не проверил проект.<br/>
+                Статус "Принят" - означает, что модератор принял ваш проект. Теперь он появился в списке "Покупка новых проектов" у всех игроков. А у вас этот проект уже доступен для крафта.<br/>
+                Статус "Требует доработки" с указанием в скобках причины отправки на доработку появляется, когда модератор чем-то недоволен... <br/>
+            </p>
+            <table class="table table-sm">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Статус</th>
+                    <th>Действия</th>
+                    <th>Тип вещи</th>
+                    <th>Название проекта</th>
+                    <th>Стоимость, дины</th>
+                    <th>Ресурсы</th>
+                    <th>Куплен, раз</th>
+                    <th>Произведено вещей, шт</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="project : ${authorProjects}">
+                    <th scope="row" th:text="${projectStat.count}">1</th>
+                    <!--/*@thymesVar id="project" type="dyn.model.Project"*/-->
+                    <td th:text="${project.getStatusWithMessage()}">Mark</td>
+                    <td>
+                        <form th:if="${project.getStatus() eq T(dyn.model.ProjectStatus).rework}" th:action="@{/game/editProject}" method="post" class="form-inline">
+                            <input type="hidden" name="projectId" th:value="${project.getId()}"/>
+                            <button class="btn btn-sm btn-success" type="submit">Редактировать</button>
+                        </form>
+                    </td>
+                    <td th:text="${project.getThing().getName()}">Mark</td>
+                    <td th:text="${project.getName()}">Otto</td>
+                    <td th:text="${project.getCost()}">@mdo</td>
+                    <td th:utext="${project.resString()}">@mdo</td>
+                    <td th:text="${project.getPurchasedTimes()}"></td>
+                    <td th:text="${project.getProducedTimes()}"></td>
+
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 <th:block th:replace="fragments/scripts :: webjars"></th:block>
