@@ -103,6 +103,9 @@ public class FianceeController {
 
             List<Predicate> predicates = new ArrayList<>();
 
+            if (family.getLevel() > 5) {
+                predicates.add(cb.greaterThan(fianceeCharacter.get(Character_.level), family.getLevel() - 5));
+            }
             predicates.add(cb.lessThanOrEqualTo(fianceeCharacter.get(Character_.level), family.getLevel()));
             predicates.add(cb.notEqual(fianceeCharacter.get(Character_.family), family));
             predicates.add(cb.notEqual(fianceeCharacter.get(Character_.family), character.getFather().getSpouse().getFamily()));

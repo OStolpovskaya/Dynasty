@@ -249,24 +249,17 @@ public class CraftController {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         Family family = user.getCurrentFamily();
 
-        System.out.println("CraftController.saveProject");
-        System.out.println("model = " + model);
-        System.out.println("project = " + project);
-        System.out.println("formType = " + formType);
-        System.out.println("file.getOriginalFilename() = " + file.getOriginalFilename());
+        logger.info(family.familyNameAndUserName() + " try to save project: " + project);
 
         Thing thing = project.getThing();
         BufferedImage image = null;
         byte[] imageInByte = null;
 
         if (file.isEmpty() || file.getSize() == 0) {
-            System.out.println("file.isEmpty() = " + file.isEmpty());
-            System.out.println("file.getSize() = " + file.getSize());
             logger.error(family.familyNameAndUserName() + " file is empty or has size 0 ");
             result.rejectValue("view", "project.fileSize");
         } else {
             if (!file.getContentType().equalsIgnoreCase("image/png")) {
-                System.out.println("file.getContentType() = " + file.getContentType());
                 logger.error(family.familyNameAndUserName() + " file is not png ");
                 result.rejectValue("view", "project.fileType");
 
@@ -299,8 +292,7 @@ public class CraftController {
         }
 
         if (result.hasErrors()) {
-            System.out.println("result.hasErrors() = " + result.hasErrors());
-            System.out.println(result);
+            logger.error(family.familyNameAndUserName() + " try to save project, but form is returned with errors: " + result);
             model.addAttribute("family", family);
             model.addAttribute("formType", formType);
             return "game/projectForm";

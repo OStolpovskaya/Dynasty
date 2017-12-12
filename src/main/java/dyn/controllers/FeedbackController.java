@@ -52,7 +52,7 @@ public class FeedbackController {
         Family family = user.getCurrentFamily();
 
         if (result.hasErrors()) {
-            System.out.println("ERROR binding result: " + result.getSuppressedFields());
+            logger.error(family.familyNameAndUserName() + " try to add feedback, but form returned with binding errors: " + result.getSuppressedFields());
 
             model.addAttribute("family", family);
 

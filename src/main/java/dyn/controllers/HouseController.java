@@ -246,11 +246,8 @@ public class HouseController {
                 }
             }
         }
-        System.out.println("numThings = " + numThings);
-        System.out.println("sumItemQuality = " + sumItemQuality);
         float buildingQuality = (float) sumItemQuality / numThings;
         buildingQuality = (float) Math.round(buildingQuality * 100) / 100;
-        System.out.println("buildingQuality = " + buildingQuality);
 
         houseService.updateBuildingQuality(family, house, buildingQuality);
     }
@@ -268,11 +265,8 @@ public class HouseController {
                 }
             }
         }
-        System.out.println("numThings = " + numThings);
-        System.out.println("sumItemQuality = " + sumItemQuality);
         float houseQuality = (float) sumItemQuality / numThings;
         houseQuality = (float) Math.round(houseQuality * 100) / 100;
-        System.out.println("houseQuality = " + houseQuality);
         family.setHouseQuality(houseQuality);
         familyRepository.save(family);
     }
