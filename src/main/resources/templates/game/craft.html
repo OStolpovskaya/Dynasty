@@ -45,34 +45,51 @@
                     <li>
                         <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
                         <th:block th:if="${family.getCraftThings().contains(parentThing)}">
-                            <a th:href="${'/game/chooseProject?thingId='+parentThing.getId()}"
-                               th:text="${parentThing.getName()}" data-toggle="tooltip" th:title="${parentThing.getId() + ' ('+parentThing.getCost() + ')'}" style="color: #1b6d85;">Parent</a>
+                            <div class="tree_li_a" style="color: #1b6d85; background-color: lightgreen;">
+                                <a th:href="${'/game/chooseProject?thingId='+parentThing.getId()}" th:text="${parentThing.getName()}">Parent</a>
+                                <a th:href="${'/game/chooseItemToBuy?thingId='+parentThing.getId()}"><span class="glyphicon glyphicon-new-window" style="color: forestgreen; " title="Маркет"></span></a>
+                            </div>
                         </th:block>
                         <th:block th:if="${not family.getCraftThings().contains(parentThing)}">
-                            <a th:text="${parentThing.getName()}" data-toggle="tooltip" th:title="${parentThing.getId() + ' ('+parentThing.getCost() + ')'}" style="color: #2BB67E">Parent</a>
+                            <div class="tree_li_a" style="color: #000; background-color: lightsteelblue; border-bottom-right-radius: 0px; border-bottom-left-radius: 0px;">
+                                <th:block th:text="${parentThing.getName()}">Parent</th:block>
+                                <a th:href="${'/game/chooseItemToBuy?thingId='+parentThing.getId()}"><span class="glyphicon glyphicon-new-window" style="color: forestgreen; " title="Маркет"></span></a>
+                            </div>
                             <form class="form-inline" th:action="@{/game/learnThing}" method="post">
                                 <input type="hidden" name="thingId" th:value="${parentThing.getId()}"/>
-                                <button type="submit" class="btn btn-primary btn-xs" th:disabled="${family.getCraftPoint() lt parentThing.getCost()}" th:text="${'Выучить: '+parentThing.getCost() + ' б.'}">Выучить</button>
+                                <button type="submit" class="btn btn-primary btn-xs" th:disabled="${family.getCraftPoint() lt parentThing.getCost()}" th:text="${'Выучить: '+parentThing.getCost() + ' б.'}"
+                                        style="border-top-right-radius: 0px; border-top-left-radius: 0px;">Выучить
+                                </button>
                             </form>
                         </th:block>
                         <th:block th:fragment="submenu">
                             <ul>
                                 <li th:each="thing : ${parentThing.getChildThings()}">
+
                                     <th:block th:if="${family.getCraftThings().contains(thing)}">
-                                        <a th:href="${'/game/chooseProject?thingId='+thing.getId()}"
-                                           th:text="${thing.getName()}" data-toggle="tooltip" th:title="${thing.getId() + ' ('+thing.getCost() + ')'}" style="color: #1b6d85;">Parent</a>
+                                        <div class="tree_li_a" style="color: #1b6d85; background-color: lightgreen;">
+                                            <a th:href="${'/game/chooseProject?thingId='+thing.getId()}" th:text="${thing.getName()}">Parent</a>
+                                            <a th:href="${'/game/chooseItemToBuy?thingId='+thing.getId()}"><span class="glyphicon glyphicon-new-window" style="color: forestgreen; " title="Маркет"></span></a>
+                                        </div>
                                     </th:block>
                                     <th:block th:if="${not family.getCraftThings().contains(thing)}">
                                         <th:block th:if="${family.getCraftThings().contains(thing.getParent())}">
-                                            <a th:text="${thing.getName()}" data-toggle="tooltip" th:title="${thing.getId()}" style="color: #2BB67E">Parent</a>
+                                            <div class="tree_li_a" style="color: #000; background-color: lightsteelblue; border-bottom-right-radius: 0px; border-bottom-left-radius: 0px;">
+                                                <th:block th:text="${thing.getName()}">Parent</th:block>
+                                                <a th:href="${'/game/chooseItemToBuy?thingId='+thing.getId()}"><span class="glyphicon glyphicon-new-window" style="color: forestgreen; " title="Маркет"></span></a>
+                                            </div>
                                             <form class="form-inline" th:action="@{/game/learnThing}" method="post">
                                                 <input type="hidden" name="thingId" th:value="${thing.getId()}"/>
-                                                <button type="submit" class="btn btn-primary btn-xs" th:disabled="${family.getCraftPoint() lt thing.getCost()}" th:text="${'Выучить: '+thing.getCost() + ' б.'}">Выучить</button>
+                                                <button type="submit" class="btn btn-primary btn-xs" th:disabled="${family.getCraftPoint() lt thing.getCost()}" th:text="${'Выучить: '+thing.getCost() + ' б.'}"
+                                                        style="border-top-right-radius: 0px; border-top-left-radius: 0px;">Выучить
+                                                </button>
                                             </form>
                                         </th:block>
                                         <th:block th:if="${not family.getCraftThings().contains(thing.getParent())}">
-                                            <a th:text="${thing.getName()}" data-toggle="tooltip" th:title="${thing.getId()+ ' ('+thing.getCost() + ')'}">Town hall</a>
-
+                                            <div class="tree_li_a">
+                                                <th:block th:text="${thing.getName()}">Town hall</th:block>
+                                                <a th:href="${'/game/chooseItemToBuy?thingId='+thing.getId()}"><span class="glyphicon glyphicon-new-window" style="color: forestgreen; " title="Маркет"></span></a>
+                                            </div>
                                         </th:block>
                                     </th:block>
                                     <th:block th:if="${#lists.size(thing.getChildThings()) > 0}" th:with="parentThing = ${thing}" th:include="this :: submenu"/>
