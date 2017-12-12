@@ -81,6 +81,7 @@
                     <li th:classappend="${#httpServletRequest.getRequestURI().contains('/game/achievements') ? 'active':''}"><a href="/game/achievements">Достижения</a></li>
                     <li th:classappend="${#httpServletRequest.getRequestURI().contains('/game/town') ? 'active':''}"><a href="/game/town">Город</a></li>
                     <li th:classappend="${#httpServletRequest.getRequestURI().contains('/game/buildings') ? 'active':''}"><a href="/game/buildings">Бизнес</a></li>
+                    <li th:classappend="${#httpServletRequest.getRequestURI().contains('/game/help') ? 'active':''}"><a href="/game/help">Справка</a></li>
                     <li th:classappend="${#httpServletRequest.getRequestURI().contains('/game/feedback') ? 'active':''}"><a href="/game/feedback">Обратная связь</a></li>
                     <li><a href="/logout" name="logouta">Выход</a></li>
                 </ul>

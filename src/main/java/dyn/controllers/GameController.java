@@ -234,6 +234,19 @@ public class GameController {
         return "/game/awarded";
     }
 
+    @RequestMapping("/game/help")
+    public String help(ModelMap model, RedirectAttributes redirectAttributes) {
+        User user = userRepository.findByUserName(getAuthUser().getUsername());
+        Family family = user.getCurrentFamily();
+        if (family == null) {
+            logger.debug(user.getUserName() + " doesn't have any family");
+            redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("new.user", null, loc()));
+            return "redirect:/game/addNewFamily";
+        }
+        model.addAttribute("family", family);
+        return "/game/help";
+    }
+
 
     @RequestMapping("/game/character")
     public String characterView(ModelMap model, RedirectAttributes redirectAttributes,

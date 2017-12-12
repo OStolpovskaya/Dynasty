@@ -11,3 +11,5 @@ UPDATE  `users` SET  `last_login_date` =  `creation_date`;
 ALTER TABLE  `family` ADD  `creation_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
 UPDATE  `family` SET  `creation_date` = NOW( );
 /*====================================================================================================================*/
+UPDATE  `dyn`.`house` SET  `desc` =  'Дети персонажа будут больше похожи на отца, чем на мать.' WHERE  `house`.`id` =31;
+/*остальные!!!*/
