@@ -52,6 +52,7 @@ public class HouseController {
                         @RequestParam(value = "family", defaultValue = "0") long familyId,
                         @RequestParam(value = "room", defaultValue = "kitchen") String roomName,
                         RedirectAttributes redirectAttributes) {
+        long startTime = System.currentTimeMillis();
         User user = userRepository.findByUserName(getAuthUser().getUsername());
 
         Family family = user.getCurrentFamily();
@@ -80,7 +81,8 @@ public class HouseController {
             nextHouse = houseService.getNextHouse(family.getHouse());
         }
         model.addAttribute("nextHouse", nextHouse);
-
+        long endTime = System.currentTimeMillis();
+        logger.debug("@House took " + (endTime - startTime) + " milliseconds");
         return "game/house";
     }
 

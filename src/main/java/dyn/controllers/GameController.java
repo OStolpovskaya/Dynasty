@@ -79,7 +79,7 @@ public class GameController {
     @RequestMapping("/game")
     public String main(ModelMap model, RedirectAttributes redirectAttributes) {
         //System.out.println("***GameController.main***");
-        //long startTime = System.currentTimeMillis();
+        long startTime = System.currentTimeMillis();
 
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         model.addAttribute("user", user);
@@ -187,8 +187,8 @@ public class GameController {
 
         model.addAttribute("familyLog", familyLogService.getLevelFamilyLog(family));
         //System.out.println("END");
-        //long endTime = System.currentTimeMillis();
-        //System.out.println("That took " + (endTime - startTime) + " milliseconds");
+        long endTime = System.currentTimeMillis();
+        logger.debug("@Game took " + (endTime - startTime) + " milliseconds");
         return "game";
     }
 
@@ -213,7 +213,7 @@ public class GameController {
 
         familyRepository.save(family);
 
-        logger.debug(user.getUserName() + " changed game view");
+        logger.debug(family.familyNameAndUserName() + " changed game view");
         return "redirect:/game";
     }
 
@@ -276,7 +276,7 @@ public class GameController {
         }
 
         redirectAttributes.addFlashAttribute("mess", "Призвание не найдено");
-        logger.error(user.getUserName() + " tried to see non-existing vocation");
+        logger.error(family.familyNameAndUserName() + " tried to see non-existing vocation");
         return "redirect:/game";
     }
 
@@ -316,7 +316,7 @@ public class GameController {
             return "redirect:/game";
         }
 
-        logger.info(user.getUserName() + " makes a turn!");
+        logger.info(family.familyNameAndUserName() + " makes a turn!");
 
         StringBuilder turnLog = new StringBuilder();
         StringBuilder turnAchievements = new StringBuilder();
@@ -414,7 +414,7 @@ public class GameController {
                 childAmount += 1;
             }
 
-            logger.info(user.getUserName() + "'s character " + character.getName() + " marries " + wife.getName() + " and they have " + childAmount + " children");
+            logger.info(family.familyNameAndUserName() + "'s character " + character.getName() + " marries " + wife.getName() + " and they have " + childAmount + " children");
             turnLog.append(messageSource.getMessage("turn.marriage", new Object[]{character.getName(), wife.getName(), childAmount}, loc()));
             turnLog.append("<br>");
 

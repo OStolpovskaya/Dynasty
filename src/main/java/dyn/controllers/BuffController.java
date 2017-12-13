@@ -80,7 +80,7 @@ public class BuffController {
         }
 
         redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("game.chooseBuffs.characterCantChooseBuffs", null, loc()));
-        logger.error(user.getUserName() + "'s character " + characterId + " is not belongs to user's current family fiances");
+        logger.error(family.familyNameAndUserName() + "'s character " + characterId + " is not belongs to user's current family fiances");
         return "redirect:/game";
     }
 
@@ -105,23 +105,23 @@ public class BuffController {
                     familyLogService.addToLog(family, "Вы применили бафф " + messageSource.getMessage(buff.getTitle(), null, loc()) + " к персонажу " + character.getName() + ". Потрачено: " + buff.getCost() + " д.");
                     Object[] messageArguments = {character.getName(), messageSource.getMessage(buff.getTitle(), null, loc()), buff.getCost()};
                     redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("game.chooseBuffs.success", messageArguments, loc()));
-                    logger.debug(user.getUserName() + "'s character " + characterId + " now has buff " + buff.getTitle());
+                    logger.debug(family.familyNameAndUserName() + "'s character " + characterId + " now has buff " + buff.getTitle());
                     return "redirect:/game#char" + character.getFather().getId();
                 } else {
                     redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("game.chooseBuffs.notEnoughMoney", null, loc()));
-                    logger.error(user.getUserName() + ": not enough money for buff " + buff.getTitle());
+                    logger.error(family.familyNameAndUserName() + ": not enough money for buff " + buff.getTitle());
                     return "redirect:/game";
                 }
 
             } else {
                 redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("game.chooseBuffs.characterHasThisBuffOrContradictoryToThisBuff", null, loc()));
-                logger.error(user.getUserName() + "'s character " + characterId + " has this buff or contradictory to this buff");
+                logger.error(family.familyNameAndUserName() + "'s character " + characterId + " has this buff or contradictory to this buff");
                 return "redirect:/game";
             }
 
         }
         redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("game.chooseBuffs.characterCantChooseBuffs", null, loc()));
-        logger.error(user.getUserName() + "'s character " + characterId + " is not belongs to user's current family fiances");
+        logger.error(family.familyNameAndUserName() + "'s character " + characterId + " is not belongs to user's current family fiances");
         return "redirect:/game";
     }
 
