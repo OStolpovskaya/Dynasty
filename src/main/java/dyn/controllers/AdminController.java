@@ -121,24 +121,29 @@ public class AdminController {
     @RequestMapping("/admin/fiancees")
     public String fianceesView(ModelMap model) {
 
-        List<List<Fiancee>> levelList = new ArrayList<>();
-        List<Fiancee> fiancees = fianceeRepository.findAllByOrderByCharacterLevelAscCharacterRaceAsc();
-        int maxLevel = fiancees.get(fiancees.size() - 1).getCharacter().getLevel();
-        for (int i = 0; i < maxLevel; i++) {
-            levelList.add(new ArrayList<>());
-        }
-        for (Fiancee fiancee : fiancees) {
-            levelList.get(fiancee.getCharacter().getLevel() - 1).add(fiancee);
-        }
-
-        model.addAttribute("fianceeLevelList", levelList);
+        List<Object[]> list = fianceeRepository.countFianceeByLevel();
+        model.addAttribute("list", list);
         return "admin/fiancees";
     }
 
     @RequestMapping("/admin/families")
     public String familiesView(ModelMap model) {
 
-        model.addAttribute("familyList", familyRepository.findAll());
+        Iterable<Family> families = familyRepository.findAllByOrderByUserLastLoginDateDesc();
+        List<Family> currentFamilies = new ArrayList<>();
+        List<Family> notCurrentFamilies = new ArrayList<>();
+        for (Family family : families) {
+            if (family.isCurrent()) {
+
+                currentFamilies.add(family);
+            } else {
+                notCurrentFamilies.add(family);
+            }
+        }
+        model.addAttribute("curFamilyList", currentFamilies);
+        model.addAttribute("notCurFamilyList", notCurrentFamilies);
+
+
         return "admin/families";
     }
 
@@ -158,8 +163,12 @@ public class AdminController {
                              @RequestParam("familyId") Long familyId,
                              RedirectAttributes redirectAttributes) {
         Family family = familyRepository.findOne(familyId);
-
         model.addAttribute("family", family);
+
+        List<Item> items = craftService.getItemsByFamilyAndPlace(family, ItemPlace.store);
+        Map<Item, Integer> itemsInStoreCMap = craftService.arrangeItems(items);
+        model.addAttribute("itemsInStoreCMap", itemsInStoreCMap);
+
         return "admin/family";
     }
 

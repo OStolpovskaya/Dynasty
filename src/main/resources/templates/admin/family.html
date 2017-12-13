@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>Семьи</title>
@@ -9,7 +9,7 @@
 <body>
 <div th:replace="fragments/navigation :: nav-for-admin"></div>
 <div class="container">
-    <h3>Семьи</h3>
+    <h3>Семья</h3>
     <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
     <table class="table table-striped">
         <thead>
@@ -63,6 +63,34 @@
 
         </tbody>
     </table>
+
+    <h3>Вещи на маркете:</h3>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>thing id</th>
+            <th>thing</th>
+            <th>project id</th>
+            <th>project</th>
+            <th>cost</th>
+            <th>amount</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="mapEntry : ${itemsInStoreCMap}" th:with="item = ${mapEntry.key}, itemAmount = ${mapEntry.value}">
+            <!--/*@thymesVar id="item" type="dyn.model.Item"*/-->
+            <td th:text="${item.getId()}"></td>
+            <td th:text="${item.getProject().getThing().getId()}"></td>
+            <td th:text="${item.getProject().getThing().getName()}"></td>
+            <td th:text="${item.getProject().getId()}"></td>
+            <td th:text="${item.getProject().getName()}"></td>
+            <td th:text="${item.getCost()}"></td>
+            <td th:text="${itemAmount}"></td>
+        </tr>
+        </tbody>
+    </table>
+
     <h3>Доход по уровням</h3>
     <table class="table table-striped">
         <thead>

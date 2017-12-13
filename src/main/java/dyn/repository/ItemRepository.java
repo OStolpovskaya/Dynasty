@@ -12,6 +12,8 @@ public interface ItemRepository extends CrudRepository<Item, Long> {
 
     List<Item> findByFamily(Family family);
 
+    List<Item> findByFamilyOrderByProjectAsc(Family family);
+
     Item findByFamilyAndId(Family family, Long itemId);
 
     Item findByFamilyAndInteriorId(Family family, Long roomInteriorId);
@@ -21,6 +23,8 @@ public interface ItemRepository extends CrudRepository<Item, Long> {
     List<Item> findByPlaceAndProjectThing(ItemPlace place, Thing thing);
 
     List<Item> findByFamilyAndPlaceOrderByProjectThing(Family family, ItemPlace place);
+
+    List<Item> findByFamilyAndPlaceOrderByProject(Family family, ItemPlace place);
 
     List<Item> findByFamilyAndPlaceAndProjectThingCraftBranchIdLessThanEqualOrderByProjectThingAscProjectAscQualityAsc(Family family, ItemPlace place, Long maxCraftBranchIdForUsualThings);
 

@@ -10,22 +10,20 @@
 <div th:replace="fragments/navigation :: nav-for-admin"></div>
 <div class="container">
     <h3>Невесты</h3>
-    <th:block th:each="levelList : ${fianceeLevelList}">
-        <div class="well">
-            <h4 th:text="${'Уровень: ' + levelListStat.count + ', количество: ' + #lists.size(levelList)}"></h4>
-            <th:block th:if="${#lists.size(levelList)>0}">
-            <div th:each="fiancee : ${levelList}" style="display: inline-block">
-                <!--/*@thymesVar id="fiancee" type="dyn.model.Fiancee"*/-->
-                <div class="char-view-div">
-                    <div th:replace="fragments/char :: char-panel (character=${fiancee.getCharacter()})"></div>
-                    <label th:text="#{cost(${fiancee.getCost()})}">Cost</label>
-                </div>
-            </div>
-            </th:block>
 
+    <table class="table table-striped">
+        <thead>
+        <th>уровень</th>
+        <th>количество невест</th>
+        </thead>
+        <tbody>
+        <tr th:each="obj: ${list}">
+            <td th:text="${obj[0]}"></td>
+            <td th:text="${obj[1]}"></td>
+        </tr>
+        </tbody>
+    </table>
 
-        </div>
-    </th:block>
 
 </div>
 <script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>

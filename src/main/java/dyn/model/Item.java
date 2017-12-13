@@ -109,6 +109,7 @@ public class Item {
         sb.append(", project=").append(project.getName());
         sb.append(", family=").append(family.getFamilyName());
         sb.append(", author=").append(author.getFamilyName());
+        sb.append(", quality=").append(quality);
         sb.append(", place=").append(place);
         sb.append(", interiorId=").append(interiorId);
         sb.append(", cost=").append(cost);
@@ -119,5 +120,30 @@ public class Item {
     public String getFullName() {
 
         return getProject().getThing().getName() + " '" + getProject().getName() + "'";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Item item = (Item) o;
+
+        if (quality != item.quality) return false;
+        if (cost != item.cost) return false;
+        if (!project.equals(item.project)) return false;
+        if (!family.equals(item.family)) return false;
+        if (!author.equals(item.author)) return false;
+        if (place != item.place) return false;
+        return interiorId != null ? interiorId.equals(item.interiorId) : item.interiorId == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = project.hashCode();
+        result = 31 * result + family.hashCode();
+        result = 31 * result + author.hashCode();
+        result = 31 * result + quality;
+        return result;
     }
 }

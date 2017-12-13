@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by OM on 30.03.2017.
@@ -241,5 +243,25 @@ public class CraftService {
 
     public List<Project> getProjectByThingAndAuthor(Thing thing, long authorId) {
         return projectRepository.findByThingAndAuthorId(thing, authorId);
+    }
+
+    public List<Item> getItemsByFamilyAndPlace(Family family, ItemPlace itemPlace) {
+        return itemRepository.findByFamilyAndPlaceOrderByProject(family, itemPlace);
+    }
+
+    public List<Item> getItemsByFamily(Family family) {
+        return itemRepository.findByFamilyOrderByProjectAsc(family);
+    }
+
+    public Map<Item, Integer> arrangeItems(List<Item> items) {
+        Map<Item, Integer> counters = new LinkedHashMap<>();
+
+        for (Item item : items) {
+            if (counters.containsKey(item))
+                counters.put(item, counters.get(item) + 1);
+            else
+                counters.put(item, 1);
+        }
+        return counters;
     }
 }

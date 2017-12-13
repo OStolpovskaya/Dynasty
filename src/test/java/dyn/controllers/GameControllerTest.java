@@ -51,44 +51,43 @@ public class GameControllerTest {
         driver.findElement(By.id(GAME_LINK)).click();
 
         HashMap<String, String[]> players = new LinkedHashMap<>();
-        players.put("Arbuzov", new String[]{"Арбузовы", "Арбузов", "Арбузова"});
-        players.put("Baranov", new String[]{"Барановы", "Баранов", "Баранова"});
-        players.put("Voronov", new String[]{"Вороновы", "Воронов", "Воронова"});
-        players.put("Gurova", new String[]{"Гуровы", "Гуров", "Гурова"});
-        players.put("Durova", new String[]{"Дуровы", "Дуров", "Дурова"});
-        players.put("Ezhova", new String[]{"Ежовы", "Ежов", "Ежова"});
-        players.put("Gukova", new String[]{"Жуковы", "Жуков", "Жукова"});
-        players.put("Zubrov", new String[]{"Зубровы", "Зубров", "Зуброва"});
-        players.put("Ignatov", new String[]{"Игнатовы", "Игнатов", "Игнатова"});
-        players.put("Kurova", new String[]{"Куровы", "Куров", "Курова"});
-        players.put("Leontiev", new String[]{"Леонтьевы", "Леонтьев", "Леонтьева"});
-        players.put("Muhina", new String[]{"Мухины", "Мухин", "Мухина"});
-        players.put("Nosova", new String[]{"Носовы", "Носов", "Носова"});
-        players.put("Osipov", new String[]{"Осиповы", "Осипов", "Осипова"});
-        players.put("Prohorov", new String[]{"Прохоровы", "Прохоров", "Прохорова"});
-        players.put("Rogova", new String[]{"Роговы", "Рогов", "Рогова"});
-        players.put("Somova", new String[]{"Сомовы", "Сомов", "Сомова"});
-        players.put("Terehov", new String[]{"Тереховы", "Терехов", "Терехова"});
-        players.put("Uhova", new String[]{"Уховы", "Ухов", "Ухова"});
-        players.put("Fokin", new String[]{"Фокины", "Фокин", "Фокина"});
-        players.put("Hudov", new String[]{"Худовы", "Худов", "Худова"});
-        players.put("Tsarev", new String[]{"Царевы", "Царев", "Царева"});
-        players.put("Chudov", new String[]{"Чудовы", "Чудов", "Чудова"});
-        players.put("Shapkin", new String[]{"Шапкины", "Шапкин", "Шапкина"});
-        players.put("Schukin", new String[]{"Щуковы", "Щуков", "Щукова"});
-        players.put("Ezhova", new String[]{"Эховы", "Эхов", "Эхова"});
-        players.put("Yuriev", new String[]{"Юрьевы", "Юрьев", "Юрьева"});
-        players.put("Yamov", new String[]{"Ямовы", "Ямов", "Ямова"});
+        players.put("Arbuzov@mail.ru", new String[]{"Arbuzov", "Арбузовы", "Арбузов", "Арбузова"});
+        players.put("newchar2@mail.ru", new String[]{"Baranov", "Барановы", "Баранов", "Баранова"});
+        players.put("NewChar3@mail.ru", new String[]{"Voronov", "Вороновы", "Воронов", "Воронова"});
+        players.put("NewChar4@mail.ru", new String[]{"Gurova", "Гуровы", "Гуров", "Гурова"});
+        players.put("NewChar5@mail.ru", new String[]{"Durova", "Дуровы", "Дуров", "Дурова"});
+        players.put("ForTest2@mail.ru", new String[]{"Gukova", "Жуковы", "Жуков", "Жукова"});
+        players.put("ForTest3@mail.ru", new String[]{"Zubrov", "Зубровы", "Зубров", "Зуброва"});
+        players.put("ForTest4@mail.ru", new String[]{"Ignatov", "Игнатовы", "Игнатов", "Игнатова"});
+        players.put("ForTest5@mail.ru", new String[]{"Kurova", "Куровы", "Куров", "Курова"});
+        players.put("ForTest6@mail.ru", new String[]{"Leontiev", "Леонтьевы", "Леонтьев", "Леонтьева"});
+        players.put("ForTest7@mail.ru", new String[]{"Muhina", "Мухины", "Мухин", "Мухина"});
+        players.put("ForTest8@mail.ru", new String[]{"Nosova", "Носовы", "Носов", "Носова"});
+        players.put("ForTest9@mail.ru", new String[]{"Osipov", "Осиповы", "Осипов", "Осипова"});
+        players.put("ForTest10@mail.ru", new String[]{"Prohorov", "Прохоровы", "Прохоров", "Прохорова"});
+        players.put("ForTest11@mail.ru", new String[]{"Rogova", "Роговы", "Рогов", "Рогова"});
+        players.put("ForTest12@mail.ru", new String[]{"Somova", "Сомовы", "Сомов", "Сомова"});
+        players.put("fortest13@mail.ru", new String[]{"Terehov", "Тереховы", "Терехов", "Терехова"});
+        players.put("fortest14@mail.ru", new String[]{"Uhova", "Уховы", "Ухов", "Ухова"});
+        players.put("fortest15@mail.ru", new String[]{"Fokin", "Фокины", "Фокин", "Фокина"});
+        players.put("fortest16@mail.ru", new String[]{"Hudov", "Худовы", "Худов", "Худова"});
+        players.put("fortest17@mail.ru", new String[]{"Tsarev", "Царевы", "Царев", "Царева"});
+        players.put("fortest18@mail.ru", new String[]{"Chudov", "Чудовы", "Чудов", "Чудова"});
+        players.put("fortest19@mail.ru", new String[]{"Shapkin", "Шапкины", "Шапкин", "Шапкина"});
+        players.put("fortest20@mail.ru", new String[]{"Schukin", "Щуковы", "Щуков", "Щукова"});
+        players.put("fortest21@mail.ru", new String[]{"Ezhova", "Эховы", "Эхов", "Эхова"});
+        players.put("fortest22@mail.ru", new String[]{"Yuriev", "Юрьевы", "Юрьев", "Юрьева"});
+        players.put("fortest23@mail.ru", new String[]{"Yamov", "Ямовы", "Ямов", "Ямова"});
 
         /*for (String player : players.keySet()) {
             logIn(player);
-            addNewFamily(player, players.get(player)[0], players.get(player)[1], players.get(player)[2]);
+            addNewFamily(player, players.get(player)[1], players.get(player)[2], players.get(player)[3]);
             makeTurn(player);
             postFiancees(player);
             logOut(player);
         }*/
 
-        int levels = 10;
+        int levels = 15;
         for (int level = 0; level < levels; level++) {
             for (String player : players.keySet()) {
                 System.out.println(" -= player =- " + player);
@@ -109,7 +108,7 @@ public class GameControllerTest {
     private boolean chooseFiancees(String player) {
         System.out.println("*** GameControllerTest.chooseFianceesAndTurn: " + player + " ***");
 
-        Assert.assertTrue(player + ": not main page", isMainPage(player));
+        Assert.assertTrue(player + ": not main page", isMainPage());
 
         List<WebElement> chooseFianceeButtonList = driver.findElements(By.name("chooseFianceeButton"));
         System.out.println("chooseFianceeButtonList.size() = " + chooseFianceeButtonList.size());
@@ -140,11 +139,11 @@ public class GameControllerTest {
             scrollTo(makeFianceeButton);
             makeFianceeButton.click();
 
-            if (isMainPage(player) == false) {
+            if (isMainPage() == false) {
                 System.out.println("ERROR");
                 System.out.println("bbb");
             }
-            Assert.assertTrue(player + ": not main page", isMainPage(player));
+            Assert.assertTrue(player + ": not main page", isMainPage());
 
             chooseFianceeButtonList = driver.findElements(By.name("chooseFianceeButton"));
         }
@@ -180,13 +179,13 @@ public class GameControllerTest {
         scrollTo(addNewFamilyButton);
         addNewFamilyButton.click();
 
-        Assert.assertTrue(player + ": not main page", isMainPage(player));
+        Assert.assertTrue(player + ": not main page", isMainPage());
     }
 
     public void postFiancees(String player) {
         System.out.println("*** GameControllerTest.postFiancees: " + player + " ***");
 
-        Assert.assertTrue(player + ": not main page", isMainPage(player));
+        Assert.assertTrue(player + ": not main page", isMainPage());
 
 
         List<WebElement> postFianceeButtonList = driver.findElements(By.name("postFianceeButton"));
@@ -207,7 +206,7 @@ public class GameControllerTest {
     public void makeTurn(String player) {
         System.out.println("*** GameControllerTest.makeTurn: " + player + " ***");
 
-        Assert.assertTrue(player + ": not main page", isMainPage(player));
+        Assert.assertTrue(player + ": not main page", isMainPage());
 
         WebElement turn = driver.findElement(By.name("turn"));
         scrollTo(turn);
@@ -236,8 +235,7 @@ public class GameControllerTest {
         return driver.findElement(By.tagName("body")).getText();
     }
 
-    public boolean isMainPage(String player) {
-//        return pageBody().contains("(" + player + ")");
+    public boolean isMainPage() {
         return pageBody().contains("Лог уровня");
     }
 
@@ -246,7 +244,7 @@ public class GameControllerTest {
     }
 
     private void assertDynastyPage() {
-        Assert.assertTrue("Not Dynasty page", pageBody().contains("В игре вам предстоит создать династию!"));
+        Assert.assertTrue("Not Dynasty page", pageBody().contains("Дом Для Династии"));
     }
 
     private void assertLoginPage() {
