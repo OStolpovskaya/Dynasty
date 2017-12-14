@@ -44,7 +44,7 @@ public class GameControllerTest {
 
     @Test
     public void startFromNothing() {
-        driver.get("http://192.168.1.38:8080/");
+        driver.get("http://192.168.1.51:8080/");
 
         assertDynastyPage();
 
@@ -87,7 +87,7 @@ public class GameControllerTest {
             logOut(player);
         }*/
 
-        int levels = 15;
+        int levels = 10;
         for (int level = 0; level < levels; level++) {
             for (String player : players.keySet()) {
                 System.out.println(" -= player =- " + player);
