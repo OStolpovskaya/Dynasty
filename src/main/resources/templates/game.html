@@ -15,7 +15,8 @@
 
     <th:block th:if="${family.getLevel() == 0}">
         <div class="alert alert-success" style="margin-left: 100px; margin-right: 100px;">
-            Итак, вы начали игру. Почти все элементы окна имеют всплывающие подсказки, просто наведите курсор. Сверху панель меню, внизу панель с деньгами, ресурсами и крафт-баллами. <br/>
+            Итак, вы начали игру. Почти все элементы окна имеют всплывающие подсказки, просто наведите курсор. Сверху панель меню, внизу панель с деньгами, ресурсами и крафт-баллами.
+            Слева панель хода: отображение семьи, счетчики и главная кнопка Ход. <br/>
             Сейчас на основателе вашей династии висит бафф "
             <th:block th:text="#{buffs.title.sevenChildren}"></th:block>
             " (значок слева от портрета). Это означает, что в первом поколении количество детей и их пол предопределены.
@@ -25,11 +26,12 @@
         </div>
     </th:block>
     <th:block th:if="${family.getLevel() == 1}">
-        <div class="alert alert-success" style="margin-left: 100px; margin-right: 100px;">
+        <div class="alert alert-success" th:inline="text" style="margin-left: 100px; margin-right: 100px;">
             Основатели приобрели профессию и заработали немного деньжат! А еще их призвания принесли вам ресурсы, из которых можно что-нибудь смастерить. Родились дети, все они довольно милые, да? Подробное описание событий вы можете посмотреть,
             кликнув на кнопке Лог уровня.
             <br/>
-            Первым делом вам необходимо поместить анкеты ваших дочерей в базу невест! Нажмите оранжевую кнопку под портретом дочери. Выкуп вы получаете сразу... авансом (одна из основных статей дохода!).<br/>
+            Первым делом вам необходимо поместить анкеты ваших дочерей в базу невест! Нажмите оранжевую кнопку под портретом дочери с указанной суммой в динах. Это стоимость выкупа анкеты, который вы получаете сразу... авансом (одна из основных
+            статей дохода!). Рассчитывается как уровень вашей семьи, помноженный на [[${@const.FIANCEE_COST}]].<br/>
             Теперь необходимо выбрать невест для сыновей. Нажмите зеленую кнопку под портретом сына. <br/>
             После выбора невест, вы можете выбрать баффы для пары, которые помогут немного скорректировать случайный выбор. Советуем выбрать бафф "Доминант отца" для старшего сына, чтобы повысить вероятность перехода его ГМ-черты к детям. Нажмите
             кнопку "Действия" под портретом сына и выберите бафф Доминант отца.<br/> Не
@@ -40,21 +42,37 @@
         </div>
     </th:block>
     <th:block th:if="${family.getLevel() == 2}">
-        <div class="alert alert-success" style="margin-left: 100px; margin-right: 100px;">
-            Это второе поколение вашей семьи. Игровой процесс тот же самый, выбираем невест для сыновей, зарабатываем деньги, выставляя анкеты своих дочерей в базу невест. Цель - создать представителя другой расы, например, Вампира. Чтобы понять,
-            какие ГМ-черты нужны, нажмите на расу любого персонажа (ссылка под именем персонажа), откроется таблица всех рас и их ГМ-черт.
-            <br/>
+        <div class="alert alert-success" th:inline="text" style="margin-left: 100px; margin-right: 100px;">
+            Это второе поколение вашей семьи. Игровой процесс тот же самый, выбираем невест для сыновей, зарабатываем деньги, выставляя анкеты своих дочерей в базу невест. Обратите внимание, стоимость анкеты напрямую зависит от расы дочери.
+            Коэффициент равен 1, если дочь обычный человек, 2 - если дочь обладает ГМ-чертами, 3 - если дочь принадлежит к человеческим расам, 4 - к высшим расам. Так, за чистокровную вампиршу вы получите 4*уровень семьи*[[${@const.FIANCEE_COST}]] д.
+            <br/>Чтобы понять, какие ГМ-черты нужны для получения той или иной расы, нажмите на ссылку расы под именем персонажа, откроется сводная таблица ГМ-черт.
             Если остановились на расе Вампир, то подбирайте невест, например, с красными глазами и бледной кожей. Не забывайте и про навыки невест: например, чем выше Интеллект у сына и его невесты, тем вероятнее, что их дети будут иметь высокий
             интеллект и добьются лучшей должности в своем призвании. А это значит больше денег и ресурсов для создания мебели и техники для дома. <br/>
             Иногда рождаются одни девочки, и продолжить династию нет возможности. Тогда можно купить бафф "Клонировать персонажа" (Генетическая лаборатория на вкладке Город) и клонировать одного из отцов. Или бафф "Приемный ребенок" (Дет.дом) и
             надеяться, что выдадут мальчика. Или бафф "+1 ребенок" (Курорт), и надеяться, опять же, на мальчика. <br/>
-            Если не хватает денег, то можно
+        </div>
+    </th:block>
+    <th:block th:if="${family.getLevel() == 3}">
+        <div class="alert alert-success" style="margin-left: 100px; margin-right: 100px;">
+            Если вдруг не хватает денег, то можно
             продать имеющуюся в доме плиту (плита, в общем-то, никому не нужна, но можно завести вторую семью на вкладке Семья и, развив ее немножко, выкупить эту злосчастную плиту).<br/>
+        </div>
+    </th:block>
+    <th:block th:if="${family.getLevel() == 4}">
+        <div class="alert alert-success" style="margin-left: 100px; margin-right: 100px;">
             Развивайте вашу династию, стройте для нее новые дома, мастерите или покупайте лучшую мебель! Предметы для дома, кстати, можно нарисовать самим. Если вы хотите нарисовать свой стул, то на вкладке Крафт нажмите на "стул" и внизу страницы
-            с выбором проекта будет кнопка "Создать проект". Ну, в общем-то и все. Удачи!
+            с выбором проекта будет кнопка "Создать проект".
+        </div>
+    </th:block>
+    <th:block th:if="${family.getLevel() == 5}">
+        <div class="alert alert-success" th:inline="text" style="margin-left: 100px; margin-right: 100px;">
+            Вы уже опытный игрок! Теперь вы можете сами назначать стоимость анкет ваших дочерей. Под портретом дочерей появилась еще одна оранжевая кнопка, которая откроет меню для ввода стоимости. Минимальная сумма - это уровень вашей семьи,
+            помноженный на [[${@const.FIANCEE_COST}]]. Максимальная - зависит от вас. Если ваша дочь ну почти-почти вампир, не хватает буквально красных глаз, то обидно продавать ее анкету за стоимость непонятных мутантов с произвольным набором
+            ГМ-черт. Поднимите цену и ждите, кто-нибудь обязательно выкупит анкету вашей почти-вампирши, такие невесты очень нужны. Иногда бывает, что просто необходимы "невесты-человеки". А почти-инопланетянка вообще на вес золота...
         </div>
     </th:block>
 
+    <!--Панель хода-->
     <div style="background-color: #2b669a; border-radius: 4px; position: fixed; top: 55px; left: 5px; padding: 5px; z-index: 10;">
         <form th:action="@{/game/changeView}" class="form" method="post" style="display: inline-block;">
             <input type="hidden" name="gameView" value="defView"/>
@@ -71,7 +89,7 @@
                     title="Отобразить только сыновей"><span class="glyphicon glyphicon-lock"></span></button>
         </form>
         <hr/>
-        <div th:alt-title="${'Можно запостить анкет невест: ' + bridesNum + '. Всего свободных дочек: ' + freeDaughters}">
+        <div th:alt-title="${'Можно запостить анкет невест: ' + bridesNum + '. Всего свободных дочерей: ' + freeDaughters}">
             <img th:src="@{'/graphics/family_status_bride.png' }" height="35px" width="35px"></img>
             <span class="badge" style="background-color: white; color: black;" id="bridesNum"><th:block th:text="${bridesNum}"></th:block>/<th:block th:text="${freeDaughters}"></th:block></span>
         </div>
@@ -109,6 +127,7 @@
         </form>
     </div>
 
+    <!--Лог уровня-->
     <div align="center" style="margin-bottom: 5px;">
         <button data-toggle="collapse" data-target="#family-log" class="btn btn-info">
             Лог уровня <span class="glyphicon glyphicon-menu-down"></span>
@@ -118,78 +137,114 @@
         <!--/*@thymesVar id="familyLog" type="dyn.model.FamilyLog"*/-->
         <pre class="pre-scrollable" style="height: 150px; max-height: 150px; margin-left: 100px; margin-right: 100px;" th:utext="${familyLog?.getText()}"></pre>
     </div>
+
+    <!--Семья-->
     <div align="center">
-    <th:block th:each="mapEntry : ${fathers}" th:with="father = ${mapEntry.getKey()}, mother=${father.getSpouse()}, childList = ${mapEntry.getValue()},
+        <th:block th:each="mapEntry : ${fathers}" th:with="father = ${mapEntry.getKey()}, mother=${father.getSpouse()}, childList = ${mapEntry.getValue()},
                 buffsForParentsIsEmpty = ${#maps.isEmpty(buffsForParents)}, buffsMarriedIsEmpty = ${#maps.isEmpty(buffsMarried)},
                 buffsSkillImprovementIsEmpty = ${#maps.isEmpty(buffsSkillImprovement)}, buffsForChildrenChangeIsEmpty = ${#maps.isEmpty(buffsForChildrenChange)} ">
-        <!--/*@thymesVar id="father" type="dyn.model.Character"*/-->
-        <a th:name="${'char'+father.getId()}" class="anchor" th:styleappend="${family.getGameView().toString() != 'defView'?'display: inline-block;':''}"></a>
-        <div align="center" th:styleappend="${family.getGameView().toString() != 'defView'?'display: inline-block;':''}">
-            <div class="well" th:if="${family.getGameView().toString() == 'defView'}" style="display: inline-block; padding: 5px;background-color: #ccccff; border: solid 1px #b3b3ff;">
-                <div style="display: inline-block;">
-                    <th:block th:replace="fragments/char :: char-panel (character=${father})"></th:block>
-                    <div class="dropup">
-                        <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                                style="width: 180px; border-top-right-radius: 0; border-top-left-radius: 0; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;" th:disabled="${buffsForParentsIsEmpty}">
-                            <!--${isAdmin} ? adminclass : userclass-->
-                            Действия <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" style="width: 200px; font-size: 10px;">
-                            <th:block th:replace="fragments/char :: li-for-buff-parents (character=${father}, projectItemsMap = ${buffsForParents})"></th:block>
-                        </ul>
-                    </div>
-                </div>
-                <div style="display: inline-block; ">
-                    <th:block th:replace="fragments/char :: char-panel (character=${mother})"></th:block>
-                    <div class="dropup">
-                        <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                                style="width: 180px; border-top-right-radius: 0; border-top-left-radius: 0; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;" th:disabled="${buffsForParentsIsEmpty}">
-                            Действия <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" style="width: 200px; font-size: 10px;">
-                            <th:block th:replace="fragments/char :: li-for-buff-parents (character=${mother}, projectItemsMap = ${buffsForParents})"></th:block>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <br th:if="${family.getGameView().toString() == 'defView'}"/>
-            <th:block th:each="child : ${childList}" th:with="spouse = ${child.getSpouse()}, sex = ${child.getSex()},
-            mainButton1 = ${sex == 'male' and spouse == null and family.getPairsNum() lt family.getHouse().getPairsNum()},
-            mainButton2 = ${sex == 'female' and spouse == null and child.isFiancee() == false and family.getFianceeNum() lt family.getHouse().getFianceeNum()}">
-                <div class="well" style="display: inline-block; padding: 5px;"
-                     th:styleappend="${spouse != null?'background-color: #dff0d8; border: solid 1px mediumseagreen':''}"
-                     th:if="${family.getGameView().toString() == 'defView'  or (family.getGameView().toString() == 'onlyDaughters' and sex=='female') or (family.getGameView().toString() == 'onlySons' and sex=='male')}">
-                    <!--/*@thymesVar id="child" type="dyn.model.Character"*/-->
+            <!--/*@thymesVar id="father" type="dyn.model.Character"*/-->
+            <a th:name="${'char'+father.getId()}" class="anchor" th:styleappend="${family.getGameView().toString() != 'defView'?'display: inline-block;':''}"></a>
+            <div align="center" th:styleappend="${family.getGameView().toString() != 'defView'?'display: inline-block;':''}">
+
+                <!--Родители-->
+                <div class="well" th:if="${family.getGameView().toString() == 'defView'}" style="display: inline-block; padding: 5px;background-color: #ccccff; border: solid 1px #b3b3ff;">
                     <div style="display: inline-block;">
-                        <th:block th:replace="fragments/char :: char-panel (character=${child})"></th:block>
-                        <table>
-                            <tr>
-                                <td>
-                                    <!-- выбрать невесту -->
-                                    <th:block th:if="${mainButton1}">
-                                        <form th:action="@{/game/chooseFiancee}" method="get" class="form-inline" style="margin-left: 5px;">
-                                            <input type="hidden" name="characterId" th:value="${child.getId()}"/>
-                                            <button class="btn btn-success btn-xs" type="submit" name="chooseFianceeButton" th:id="${child.getId()}"
-                                                    th:title="'Можно создать еще пар: '+${family.getHouse().getPairsNum()-family.getPairsNum()}"
-                                                    style="width: 105px; border-top-right-radius: 0; border-top-left-radius: 0; border-bottom-left-radius: 10px; border-bottom-right-radius: 0px; ">
-                                                Выбрать невесту
-                                            </button>
-                                        </form>
-                                    </th:block>
-                                    <!-- запостить анкету невесты -->
-                                    <th:block th:if="${mainButton2}">
-                                        <form th:action="@{/game/putUpForFiancee}" method="post" class="form-inline" style="margin-left: 5px;">
-                                            <input type="hidden" name="female" th:value="${child.getId()}"/>
-                                            <button class="btn btn-warning btn-xs" type="submit" name="postFianceeButton" th:id="${child.getId()}"
-                                                    th:title="'Опубликовать анкету невесты. Можно опубликовать еще анкет: '+${family.getHouse().getFianceeNum()-family.getFianceeNum()}"
-                                                    style="width: 105px; border-top-right-radius: 0; border-top-left-radius: 0; border-bottom-left-radius: 10px; border-bottom-right-radius: 0px; ">
-                                                <span class="glyphicon glyphicon-cloud-upload"></span>&nbsp;+&nbsp;<th:block th:text="${family.getLevel()*child.getRaceCoefficient()}*50"></th:block>&nbsp;д.
-                                            </button>
-                                        </form>
-                                    </th:block>
-                                </td>
-                                <td>
-                                    <div class="dropup" th:with="childSex = ${child.getSex()}, childSpouse = ${child.getSpouse()},
+                        <th:block th:replace="fragments/char :: char-panel (character=${father})"></th:block>
+                        <div class="dropup">
+                            <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                    style="width: 180px; border-top-right-radius: 0; border-top-left-radius: 0; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;" th:disabled="${buffsForParentsIsEmpty}">
+                                Действия <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" style="width: 200px; font-size: 10px;">
+                                <th:block th:replace="fragments/char :: li-for-buff-parents (character=${father}, projectItemsMap = ${buffsForParents})"></th:block>
+                            </ul>
+                        </div>
+                    </div>
+                    <div style="display: inline-block; ">
+                        <th:block th:replace="fragments/char :: char-panel (character=${mother})"></th:block>
+                        <div class="dropup">
+                            <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                    style="width: 180px; border-top-right-radius: 0; border-top-left-radius: 0; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;" th:disabled="${buffsForParentsIsEmpty}">
+                                Действия <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" style="width: 200px; font-size: 10px;">
+                                <th:block th:replace="fragments/char :: li-for-buff-parents (character=${mother}, projectItemsMap = ${buffsForParents})"></th:block>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <br th:if="${family.getGameView().toString() == 'defView'}"/>
+
+                <!--Дети-->
+                <th:block th:each="child : ${childList}" th:with="spouse = ${child.getSpouse()}, sex = ${child.getSex()},
+                mainButton1 = ${sex == 'male' and spouse == null and family.getPairsNum() lt family.getHouse().getPairsNum()},
+                mainButton2 = ${sex == 'female' and spouse == null and child.isFiancee() == false and family.getFianceeNum() lt family.getHouse().getFianceeNum()}">
+                    <div class="well" style="display: inline-block; padding: 5px;"
+                         th:styleappend="${spouse != null?'background-color: #dff0d8; border: solid 1px mediumseagreen':''}"
+                         th:if="${family.getGameView().toString() == 'defView'  or (family.getGameView().toString() == 'onlyDaughters' and sex=='female') or (family.getGameView().toString() == 'onlySons' and sex=='male')}">
+                        <!--/*@thymesVar id="child" type="dyn.model.Character"*/-->
+                        <div style="display: inline-block;">
+                            <th:block th:replace="fragments/char :: char-panel (character=${child})"></th:block>
+                            <table>
+                                <tr>
+                                    <td>
+                                        <!-- выбрать невесту -->
+                                        <th:block th:if="${mainButton1}">
+                                            <form th:action="@{/game/chooseFiancee}" method="get" class="form-inline" style="margin-left: 5px;">
+                                                <input type="hidden" name="characterId" th:value="${child.getId()}"/>
+                                                <button class="btn btn-success btn-xs" type="submit" name="chooseFianceeButton" th:id="${child.getId()}"
+                                                        th:title="'Можно создать еще пар: '+${family.getHouse().getPairsNum()-family.getPairsNum()}"
+                                                        style="width: 105px; border-top-right-radius: 0; border-top-left-radius: 0; border-bottom-left-radius: 10px; border-bottom-right-radius: 0px; ">
+                                                    Выбрать невесту
+                                                </button>
+                                            </form>
+                                        </th:block>
+                                        <!-- запостить анкету невесты -->
+                                        <th:block th:if="${mainButton2}" th:with="dis = ${child.getLevel() lt 5}">
+                                            <form th:action="@{/game/putUpForFiancee}" method="post" class="form-inline" style="margin-left: 5px; display: inline-block;">
+                                                <input type="hidden" name="female" th:value="${child.getId()}"/>
+                                                <button class="btn btn-warning btn-xs" type="submit" name="postFianceeButton" th:id="${child.getId()}"
+                                                        title="Опубликовать анкету невесты. Выкуп получаете сразу, авансом"
+                                                        style="border-top-right-radius: 0; border-top-left-radius: 0; border-bottom-left-radius: 10px; border-bottom-right-radius: 0px; "
+                                                        th:styleappend="${dis?'width: 105px;':'width: 90px'}">
+                                                    <span class="glyphicon glyphicon-cloud-upload"></span>&nbsp;+&nbsp;<th:block th:text="${family.getLevel()*child.getRaceCoefficient()*@const.FIANCEE_COST}"></th:block>&nbsp;д.
+                                                </button>
+                                            </form>
+                                            <div class="dropup" th:if="${!dis}" style="display: inline-block;">
+                                                <button class="btn btn-warning btn-xs dropdown-toggle" type="button" data-toggle="dropdown"
+                                                        style="width: 20px; border-radius: 0px; margin-left: -4px;"
+                                                        th:title="${'Опубликовать анкету невесты с указанием стоимости и ожиданием выкупа. ' + (dis?'Доступно после пятого уровня.':'')}"
+                                                        th:disabled="${dis}">
+                                                    <span class="glyphicon glyphicon-pencil" style="color: orangered;"></span>
+                                                </button>
+                                                <ul class="dropdown-menu" style="width: 200px; font-size: 10px; margin-left: -100px;">
+                                                    <li style="padding: 10px; text-align: justify;">Назначьте стоимость выкупа и нажмите кнопку. Вы получите деньги, когда какой-нибудь игрок выкупит вашу невесту.
+                                                        <form th:action="@{/game/putUpForFiancee}" method="post" class="form-inline" style="margin-left: 5px; margin-top: 5px;">
+                                                            <input type="hidden" name="female" th:value="${child.getId()}"/>
+                                                            <div class="form-group">
+                                                                <input type="number" name="userCost" class="form-control input-sm"
+                                                                       th:min="${family.getLevel()*@const.FIANCEE_COST}"
+                                                                       th:placeholder="${family.getLevel()*child.getRaceCoefficient()*@const.FIANCEE_COST}" style="width: 120px;"/>
+
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <button class="btn btn-default btn-sm" type="submit"
+                                                                        title="Опубликовать анкету невесты"
+                                                                        style="">
+                                                                    <span class="glyphicon glyphicon-cloud-upload" style="color: forestgreen"></span>
+                                                                </button>
+                                                            </div>
+                                                            <p class="help-block" th:inline="text">Минимум: текущий уровень семьи, помноженный на [[${@const.FIANCEE_COST}]]. Будьте внимательны, вернуть анкету нельзя. Анализируйте рынок</p>
+                                                        </form>
+                                                    </li>
+                                                </ul>
+                                            </div>
+
+                                        </th:block>
+                                    </td>
+                                    <td>
+                                        <div class="dropup" th:with="childSex = ${child.getSex()}, childSpouse = ${child.getSpouse()},
                                         isCoupledDaughter = ${childSex == 'female' and (childSpouse != null or child.isFiancee() == true)},
                                         isFreeDaughter = ${childSex == 'female' and childSpouse == null and child.isFiancee() == false},
                                         isMarriedSon = ${childSex == 'male' and childSpouse != null},
@@ -198,71 +253,71 @@
                                                     (isFreeDaughter and buffsSkillImprovementIsEmpty and buffsForChildrenChangeIsEmpty) or
                                                     (isMarriedSon and buffsMarriedIsEmpty and buffsSkillImprovementIsEmpty and buffsForChildrenChangeIsEmpty) or
                                                     (isFreeSon and buffsSkillImprovementIsEmpty and buffsForChildrenChangeIsEmpty)}">
-                                        <button class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown" th:name="${'actionsFor'+child.getId()}"
-                                                style="width: 180px; border-top-right-radius: 0; border-top-left-radius: 0; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; "
-                                                th:styleappend="${(mainButton1 or mainButton2)?'width: 80px;border-bottom-left-radius: 0px; ':''}"
-                                                th:disabled="${btnActionsDisabled}">
-                                            Действия <span class="caret"></span>
-                                        </button>
-                                        <ul class="dropdown-menu" style="width: 200px; font-size: 10px; " th:styleappend="${(mainButton1 or mainButton2)?'margin-left: -115px;':'margin-left: -9px;'}">
-
-                                            <th:block th:if="${child.getSex() == 'male' or isFreeDaughter}">
-                                                <!--Баффы на женатого сына-->
-                                                <th:block th:if="${isMarriedSon}">
-                                                    <th:block th:replace="fragments/char :: li-for-buff-married (character=${child}, projectItemsMap = ${buffsMarried})"></th:block>
-                                                    <li role="separator" class="divider"></li>
-                                                </th:block>
-                                                <!--Баффы навыков и карьеры-->
-                                                <th:block th:replace="fragments/char :: li-for-buff-improve-skill (character=${child}, projectItemsMap = ${buffsSkillImprovement})"></th:block>
-                                                <!--Изменение-->
-                                                <th:block th:replace="fragments/char :: li-for-buff-change (character=${child}, projectItemsMap = ${buffsForChildrenChange})"></th:block>
-                                            </th:block>
-
-                                        </ul>
-
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                    <th:block th:if="${spouse != null}">
-                        <div style="display: inline-block;">
-                            <th:block th:replace="fragments/char :: char-panel (character=${spouse})"></th:block>
-                            <table>
-                                <tr>
-                                    <td>
-                                        <div class="dropup">
-                                            <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                                                    style="width: 180px; border-top-right-radius: 0; border-top-left-radius: 0; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;"
-                                                    th:disabled="${spouse.getSex() == 'male' or (spouse.getSex() == 'female' and
-                                                    (buffsSkillImprovementIsEmpty and buffsForChildrenChangeIsEmpty))}">
+                                            <button class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown" th:name="${'actionsFor'+child.getId()}"
+                                                    style="width: 180px; border-top-right-radius: 0; border-top-left-radius: 0; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; "
+                                                    th:styleappend="${(mainButton1 or mainButton2)?'width: 80px;border-bottom-left-radius: 0px; ':''}"
+                                                    th:disabled="${btnActionsDisabled}">
                                                 Действия <span class="caret"></span>
                                             </button>
                                             <ul class="dropdown-menu" style="width: 200px; font-size: 10px; " th:styleappend="${(mainButton1 or mainButton2)?'margin-left: -115px;':'margin-left: -9px;'}">
-                                                <th:block th:if="${spouse.getSex() == 'female'}">
+
+                                                <th:block th:if="${child.getSex() == 'male' or isFreeDaughter}">
+                                                    <!--Баффы на женатого сына-->
+                                                    <th:block th:if="${isMarriedSon}">
+                                                        <th:block th:replace="fragments/char :: li-for-buff-married (character=${child}, projectItemsMap = ${buffsMarried})"></th:block>
+                                                        <li role="separator" class="divider"></li>
+                                                    </th:block>
                                                     <!--Баффы навыков и карьеры-->
-                                                    <th:block th:replace="fragments/char :: li-for-buff-improve-skill (character=${spouse}, projectItemsMap = ${buffsSkillImprovement})"></th:block>
+                                                    <th:block th:replace="fragments/char :: li-for-buff-improve-skill (character=${child}, projectItemsMap = ${buffsSkillImprovement})"></th:block>
                                                     <!--Изменение-->
-                                                    <th:block th:replace="fragments/char :: li-for-buff-change (character=${spouse}, projectItemsMap = ${buffsForChildrenChange})"></th:block>
+                                                    <th:block th:replace="fragments/char :: li-for-buff-change (character=${child}, projectItemsMap = ${buffsForChildrenChange})"></th:block>
                                                 </th:block>
-                                                <!--
-                                                <li><a href="#">Another action</a></li>
-                                                <li><a href="#">Something else here</a></li>
-                                                <li role="separator" class="divider"></li>
-                                                <li><a href="#">Separated link</a></li>
-                                                -->
+
                                             </ul>
+
                                         </div>
                                     </td>
                                 </tr>
                             </table>
                         </div>
-                    </th:block>
-                </div>
-            </th:block>
-        </div>
-        <hr style="border-style: inset; border-width: 4px;" th:if="${family.getGameView().toString() == 'defView'}"/>
-    </th:block>
+                        <th:block th:if="${spouse != null}">
+                            <div style="display: inline-block;">
+                                <th:block th:replace="fragments/char :: char-panel (character=${spouse})"></th:block>
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <div class="dropup">
+                                                <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                                        style="width: 180px; border-top-right-radius: 0; border-top-left-radius: 0; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;"
+                                                        th:disabled="${spouse.getSex() == 'male' or (spouse.getSex() == 'female' and
+                                                    (buffsSkillImprovementIsEmpty and buffsForChildrenChangeIsEmpty))}">
+                                                    Действия <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu" style="width: 200px; font-size: 10px; " th:styleappend="${(mainButton1 or mainButton2)?'margin-left: -115px;':'margin-left: -9px;'}">
+                                                    <th:block th:if="${spouse.getSex() == 'female'}">
+                                                        <!--Баффы навыков и карьеры-->
+                                                        <th:block th:replace="fragments/char :: li-for-buff-improve-skill (character=${spouse}, projectItemsMap = ${buffsSkillImprovement})"></th:block>
+                                                        <!--Изменение-->
+                                                        <th:block th:replace="fragments/char :: li-for-buff-change (character=${spouse}, projectItemsMap = ${buffsForChildrenChange})"></th:block>
+                                                    </th:block>
+                                                    <!--
+                                                    <li><a href="#">Another action</a></li>
+                                                    <li><a href="#">Something else here</a></li>
+                                                    <li role="separator" class="divider"></li>
+                                                    <li><a href="#">Separated link</a></li>
+                                                    -->
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </th:block>
+                    </div>
+                </th:block>
+            </div>
+            <hr style="border-style: inset; border-width: 4px;" th:if="${family.getGameView().toString() == 'defView'}"/>
+        </th:block>
     </div>
 </div>
 

@@ -8,7 +8,7 @@
 <body>
 <th:block th:replace="fragments/scripts :: counters"></th:block>
 <div th:replace="fragments/navigation :: nav-for-game"></div>
-<div class="container">
+<div class="container" style="width: 1280px;">
     <th:block th:if="${family.getLevel() == 1}">
         <div class="alert alert-success">
             Вы можете выбрать невесту, если, конечно, у вас есть деньги... Базу невест можно отфильтровать по расе, по призванию и по наличию у них определенной ГМ-черты. <br/>
@@ -30,7 +30,8 @@
         </div>
     </div>
     <div class="well">
-        Из выборки были удалены анкеты невест-родственниц по отцовской и материнской линиям.
+        <p>Из выборки были удалены анкеты невест-родственниц по отцовской и материнской линиям.
+            <span style="color: darkseagreen;">Зеленой</span> рамкой отмечены невесты, стоимость анкет которых игроки назначили вручную (доступно с пятого уровня).</p>
         <!--/*@thymesVar id="fianceeFilter" type="dyn.form.FianceeFilter"*/-->
         <form action="#" th:action="@{/game/chooseFiancee}" th:object="${fianceeFilter}" class="form-inline" method="get">
             <div class="form-group">
@@ -74,7 +75,7 @@
         </form>
     </div>
     <form th:action="@{/game/makeFiancee}" method="post">
-        <div style="background-color: #2b669a; border-radius: 4px; position: fixed; top: 55px; left: 5px; padding: 15px;">
+        <div style="background-color: #2b669a; border-radius: 4px; position: fixed; top: 55px; left: 5px; padding: 15px; z-index: 10;">
             <input type="hidden" name="characterId" th:value="${character.getId()}"/>
             <button type="submit" id="makeFianceeButton" name="submit" class="btn btn-warning center-block" th:text="#{chooseFiancee.choose}" th:disabled="${true}" align="center">Choose</button>
         </div>
@@ -89,7 +90,7 @@
                 <!--/*@thymesVar id="fiancee" type="dyn.model.Fiancee"*/-->
                 <!--/*@thymesVar id="bride" type="dyn.model.Character"*/-->
                 <input type="radio" id="fianceeCurrentLevel" name="fiancee" th:value="${fiancee.getId()}" onclick="enableChooseFianceeButton()" style="display: inline-block;"/>
-                <div class="char-view-div">
+                <div class="char-view-div" style="padding: 3px; border-radius: 4px; " th:styleappend="${fiancee.isSpecialFiancee()?'background-color: darkseagreen;':''}">
                     <div th:replace="fragments/char :: char-panel (character=${fiancee.getCharacter()})"></div>
                     <label>
                         <th:block th:text="#{cost(${fiancee.getCost()})}"></th:block>

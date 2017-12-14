@@ -16,6 +16,9 @@ public class Fiancee {
     private Character character;
     private int cost;
 
+    @Enumerated(EnumType.STRING)
+    private FianceeType type;
+
     public Long getId() {
         return id;
     }
@@ -40,6 +43,14 @@ public class Fiancee {
         this.cost = cost;
     }
 
+    public FianceeType getType() {
+        return type;
+    }
+
+    public void setType(FianceeType type) {
+        this.type = type;
+    }
+
     @Override
     public String toString() {
         return "Fiancee{" +
@@ -47,5 +58,9 @@ public class Fiancee {
                 ", character=" + character +
                 ", cost=" + cost +
                 '}';
+    }
+
+    public boolean isSpecialFiancee() {
+        return type.equals(FianceeType.special);
     }
 }

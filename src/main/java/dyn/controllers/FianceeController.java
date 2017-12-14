@@ -250,9 +250,17 @@ public class FianceeController {
                 family.setPairsNum(family.getPairsNum() + 1);
                 familyRepository.save(family);
 
-                familyLogService.addToLog(family, "Вы выкупили невесту " + wife.getName() + " из семьи " + wife.getFamily().getFamilyName() + " для своего персонажа " + character.getName() + ". Потрачено: " + fiancee.getCost() + " д.");
-                logger.info(user.getUserName() + " has chosen fiancee " + wife.getName());
-                redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("chooseFiancee.success", new Object[]{character.getName(), wife.getName(), fiancee.getCost()}, loc()));
+                if (fiancee.getType().equals(FianceeType.special)) {
+                    Family wifeFamily = wife.getFamily();
+                    wifeFamily.setMoney(wifeFamily.getMoney() + fiancee.getCost());
+                    familyRepository.save(wifeFamily);
+                    familyLogService.addToLog(wifeFamily, "Семья " + family.getFamilyName() + " выкупила одну из ваших невест: " + wife.getName() + " (уровень: " + wife.getLevel() + "). Получено: " + fiancee.getCost() + " д.");
+                }
+                String mess = messageSource.getMessage("chooseFiancee.success", new Object[]{character.getName(), wife.getName(), wife.getFamily().getFamilyName(), fiancee.getCost()}, loc());
+                familyLogService.addToLog(family, mess);
+                logger.info(family.familyNameAndUserName() + mess);
+                redirectAttributes.addFlashAttribute("mess", mess);
+
                 return "redirect:/game#char" + character.getFather().getId();
             } else {
                 logger.error(user.getUserName() + " hasn't enough money to choose fiancee " + wife.getName());
@@ -269,7 +277,8 @@ public class FianceeController {
 
     @RequestMapping(value = "/game/putUpForFiancee", method = RequestMethod.POST)
     public String setToFiancee(ModelMap model, RedirectAttributes redirectAttributes,
-                               @RequestParam(value = "female") long characterId) {
+                               @RequestParam(value = "female") long characterId,
+                               @RequestParam(value = "userCost", required = false) Integer userCost) {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         Family family = user.getCurrentFamily();
 
@@ -285,18 +294,37 @@ public class FianceeController {
             Fiancee fiancee = new Fiancee();
             fiancee.setCharacter(character);
 
-            int cost = Const.FIANCEE_COST * character.getRaceCoefficient() * family.getLevel();
+            int cost;
+            int income;
+            String mess;
+            if (userCost == null) {
+                fiancee.setType(FianceeType.usual);
+                cost = Const.FIANCEE_COST * character.getRaceCoefficient() * family.getLevel();
+                income = cost;
+                mess = messageSource.getMessage("becomeFiancee.characterBecomeFiancee", new Object[]{character.getName(), cost}, loc());
+            } else {
+                if (userCost < 0 || userCost < Const.FIANCEE_COST * family.getLevel()) {
+                    redirectAttributes.addFlashAttribute("mess", "Стоимость анкеты должна быть больше или равна " + Const.FIANCEE_COST * family.getLevel() + " д.");
+                    logger.error(user.getUserName() + " want to put up for fiancee, but user cost too small");
+                    return "redirect:/game#char" + character.getFather().getId();
+                }
+                fiancee.setType(FianceeType.special);
+                cost = userCost;
+                income = 0;
+                mess = messageSource.getMessage("becomeFiancee.characterBecomeFianceeDelayed", new Object[]{character.getName(), cost}, loc());
+            }
 
             fiancee.setCost(cost);
             fianceeRepository.save(fiancee);
 
             family.setFianceeNum(family.getFianceeNum() + 1);
-            family.setMoney(family.getMoney() + cost);
+            family.setMoney(family.getMoney() + income);
             familyRepository.save(family);
 
-            familyLogService.addToLog(family, "Вы опубликовали анкету невесты " + character.getName() + ". Получено: " + cost + " д.");
-            redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("becomeFiancee.characterBecomeFiancee", new Object[]{character.getName(), cost}, loc()));
-            logger.info(user.getUserName() + "'s character " + character.getName() + " become fiancee");
+            familyLogService.addToLog(family, mess);
+            redirectAttributes.addFlashAttribute("mess", mess);
+            logger.info(family.familyNameAndUserName() + mess);
+
             return "redirect:/game#char" + character.getFather().getId();
         }
 

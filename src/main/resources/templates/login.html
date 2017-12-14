@@ -9,48 +9,69 @@
 <th:block th:replace="fragments/scripts :: counters"></th:block>
 <div th:replace="fragments/navigation :: nav-for-index"></div>
 <div class="container">
-    <div class="col-md-4"></div>
-    <div class="col-md-4">
-        <span th:if="${param.logout}" style="color: darkslategrey;"> You have been logged out. </span>
-        <div id="legend">
-            <legend class="">Авторизация</legend>
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <span th:if="${param.logout}" style="color: darkslategrey;"> You have been logged out. </span>
+            <div id="legend">
+                <legend class="">Авторизация</legend>
+            </div>
+            <span th:if="${param.error}" style="color: palevioletred;">Invalid email or password.</span>
+            <form th:action="@{/login}" method="post" class="form-horizontal">
+                <div class="form-group">
+                    <input type="text" name="username" th:object="${username}" class="form-control" placeholder="Email"
+                           autofocus="true"/>
+
+                </div>
+                <div class="form-group">
+                    <input type="password" name="password" th:object="${password}" class="form-control" placeholder="Password"/>
+
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary btn-block" type="submit" name="buttonSubmit">Log In</button>
+
+                </div>
+                <div class="form-group">
+                    <h4 class="text-center"><a href="/reg">Создать новый аккаунт</a></h4>
+                </div>
+                <div class="form-group">
+                    <h4 class="text-center"><a href="/forgot">Сбросить пароль</a></h4>
+                </div>
+            </form>
         </div>
-        <span th:if="${param.error}" style="color: palevioletred;">Invalid email or password.</span>
-        <form th:action="@{/login}" method="post" class="form-horizontal">
-            <div class="form-group">
-                <input type="text" name="username" th:object="${username}" class="form-control" placeholder="Email"
-                       autofocus="true"/>
-
-            </div>
-            <div class="form-group">
-                <input type="password" name="password" th:object="${password}" class="form-control" placeholder="Password"/>
-
-            </div>
-            <div class="form-group">
-                <button class="btn btn-primary btn-block" type="submit" name="buttonSubmit">Log In</button>
-
-            </div>
-            <div class="form-group">
-                <h4 class="text-center"><a href="/reg">Создать новый аккаунт</a></h4>
-            </div>
-            <div class="form-group">
-                <h4 class="text-center"><a href="/forgot">Сбросить пароль</a></h4>
-            </div>
-        </form>
-        <div>
-            <legend class="">Обновления</legend>
-        </div>
-        <ul>
-            <li>улучшена производительность</li>
-            <li>изменен вид крафтового дерева</li>
-            <li>добавлена информация к таблице авторских проектов</li>
-            <li>ограничен минимальный уровень невест для выбора (уровень персонажа минус 4)</li>
-            <li>добавлена справка</li>
-            <li>изменена вероятность случайного ген.мода 8%, добавлен столбец Продукция в таблицу городских зданий</li>
-            <li>обновлен вьюпорт, теперь игра отображается нормально и на смартфонах</li>
-        </ul>
+        <div class="col-md-4"></div>
     </div>
-    <div class="col-md-4"></div>
+
+
+    <h3>Обновления</h3>
+    <table class="table ">
+        <tr class="success">
+            <td>14 декабря 2017</td>
+            <td>добавлена возможность вручную установить стоимость анкеты невесты (с 5 уровня семьи)</td>
+        </tr>
+        <tr>
+            <td>13 декабря 2017</td>
+            <td>улучшена производительность</td>
+        </tr>
+        <tr>
+            <td>12 декабря 2017</td>
+            <td>изменен вид крафтового дерева
+                <br/>добавлена информация к таблице авторских проектов
+                <br/>ограничен минимальный уровень невест для выбора (уровень персонажа минус 4)
+                <br/>добавлена справка
+                <br/>изменена вероятность случайного ген.мода 8%, добавлен столбец Продукция в таблицу городских зданий
+            </td>
+
+        </tr>
+        <tr>
+            <td>11 декабря 2017</td>
+            <td>обновлен вьюпорт, теперь игра отображается нормально и на смартфонах</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
 </div>
 <th:block th:replace="fragments/scripts :: webjarsSite"></th:block>
 <th:block th:replace="fragments/custom :: footerSite"></th:block>

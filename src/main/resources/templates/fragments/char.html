@@ -187,7 +187,7 @@
                         </th:block>
                         <th:block th:if="${character.isFiancee()}">
                             <img th:src="@{'/graphics/family_status_bride.png' }" height="35px" width="35px"
-                                 data-toggle="tooltip" th:alt-title="${'Семейное положение: в базе невест'}">
+                                 data-toggle="tooltip" th:alt-title="${'Семейное положение: в базе невест за ' + character.getFiancee().getCost() + ' р.'}">
                             </img>
                         </th:block>
                     </td>

@@ -19,3 +19,5 @@ ALTER TABLE  `dyn`.`characters` ADD INDEX  `appearance` (  `body` ,  `ears` ,  `
 ALTER TABLE  `dyn`.`characters` ADD INDEX  `race` (  `race` );
 ALTER TABLE  `dyn`.`characters` ADD INDEX  `career` (  `career` );
 ALTER TABLE  `dyn`.`fiancee` ADD INDEX  `character` (  `character_id` );
+/*====================================================================================================================*/
+ALTER TABLE  `fiancee` ADD  `type` ENUM(  'usual',  'special' ) NOT NULL DEFAULT  'usual' AFTER  `cost`;
