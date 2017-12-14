@@ -247,7 +247,7 @@ public class AppearanceService {
         }
     }
 
-    public List<HairStyle> getHairStyleList(String type) {
+    public List<HairStyle> getHairStyleList() {
 
         return (List<HairStyle>) hairStyleRepository.findAll();
 
@@ -355,5 +355,9 @@ public class AppearanceService {
         int randomFeature = (int) (0 + Math.random() * appList.size());
 
         return appList.get(randomFeature);
+    }
+
+    public List<HairStyle> getHairStyleList(String sex) {
+        return (List<HairStyle>) hairStyleRepository.findAllBySexOrderByHairTypeAsc(sex);
     }
 }

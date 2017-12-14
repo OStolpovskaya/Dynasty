@@ -22,6 +22,9 @@
     <div th:replace="fragments/tables :: table-for-appearance (feature='Mouth', list=${mouthList})">...</div>
     <div th:replace="fragments/tables :: table-for-appearance (feature='Nose', list=${noseList})">...</div>
     <div th:replace="fragments/tables :: table-for-appearance-color (feature='Skin color', list=${skinColorList})">...</div>
+    <form th:action="@{/admin/generateImages}" method="post">
+        <button type="submit" class="btn btn-danger">Генерировать картинки</button>
+    </form>
 </div>
 <script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>

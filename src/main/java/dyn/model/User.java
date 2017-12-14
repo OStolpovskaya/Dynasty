@@ -52,10 +52,10 @@ public class User implements Serializable {
     @Column(name = "last_login_date")
     private Date lastLoginDate;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Family> families;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_achievements",
             joinColumns = {@JoinColumn(name = "user_userid")},
             inverseJoinColumns = {@JoinColumn(name = "achievement_id")})

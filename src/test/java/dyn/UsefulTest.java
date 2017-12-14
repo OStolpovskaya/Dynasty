@@ -66,5 +66,7 @@ public class UsefulTest {
         String name = "app.body.fine_with_butterfly_wings";
         String substring = name.substring(0, name.lastIndexOf("."));
         System.out.println("substring = " + substring);
+        substring = name.substring(name.lastIndexOf("."));
+        System.out.println("substring = " + substring);
     }
 }

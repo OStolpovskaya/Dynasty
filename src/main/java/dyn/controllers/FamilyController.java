@@ -124,8 +124,6 @@ public class FamilyController {
         male.setNose(app.getRandomNose(app.USUAL));
         male.setSkinColor(skinColor);
 
-        male.generateView();
-
         Character female = new Character();
         female.setName(characterRepository.getRandomNameFemale());
         female.setSex("female");
@@ -148,8 +146,6 @@ public class FamilyController {
         female.setNose(app.getRandomNose(app.USUAL));
         female.setSkinColor(skinColor);
 
-        female.generateView();
-
         familyForm.setFounder(male);
         familyForm.setFoundress(female);
 
@@ -161,9 +157,6 @@ public class FamilyController {
         Family family = familyForm.getFamily();
         Character founder = familyForm.getFounder();
         Character foundress = familyForm.getFoundress();
-
-        founder.generateView();
-        foundress.generateView();
 
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         List<Family> families = user.getFamilies();

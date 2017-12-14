@@ -389,8 +389,6 @@ public class BuffController {
                         clone.setNose(character.getNose());
                         clone.setSkinColor(character.getSkinColor());
 
-                        clone.generateView();
-
                         clone.setFamily(family);
                         characterRepository.save(clone);
                         mess = "Вы клонировали персонажа " + character.getName() + ". Новый персонаж: " + clone.getName();
@@ -428,8 +426,6 @@ public class BuffController {
                         adoptedChild.setMouth(app.getRandomMouth(app.ALL));
                         adoptedChild.setNose(app.getRandomNose(app.ALL));
                         adoptedChild.setSkinColor(app.getRandomSkinColor(app.ALL));
-
-                        adoptedChild.generateView();
 
                         Race race = raceService.defineRace(adoptedChild);
                         adoptedChild.setRace(race);
@@ -624,7 +620,6 @@ public class BuffController {
                                 part = "цвет кожи";
                                 break;
                         }
-                        character.generateView();
                         Race race = raceService.defineRace(character);
                         character.setRace(race);
                         characterRepository.save(character);

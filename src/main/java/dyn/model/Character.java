@@ -2,16 +2,8 @@ package dyn.model;
 
 import dyn.model.appearance.*;
 import dyn.model.career.Career;
-import org.springframework.util.Base64Utils;
-import org.springframework.util.ResourceUtils;
 
-import javax.imageio.ImageIO;
 import javax.persistence.*;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.awt.image.WritableRaster;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -103,11 +95,6 @@ public class Character {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "skin_color")
     private SkinColor skinColor;
-
-    // ============ VIEW ============
-    @Lob
-    @Column(name = "view", nullable = true)
-    private byte[] view;
 
     // ============ RELATIONS ============
     @OneToMany(mappedBy = "father", fetch = FetchType.LAZY)
@@ -296,19 +283,6 @@ public class Character {
         this.nose = nose;
     }
 
-    public byte[] getView() {
-        return view;
-    }
-
-    public void setView(byte[] view) {
-        this.view = view;
-    }
-
-    public String getEncodedView() {
-        String encodeToString = Base64Utils.encodeToString(view);
-        return encodeToString;
-    }
-
     public java.util.List<Character> getChildren() {
         return children;
     }
@@ -339,7 +313,7 @@ public class Character {
     }
 
     public boolean isFiancee() {
-        if (fiancee == null) {
+        if (sex.equals("male") || fiancee == null) {
             return false;
         }
         return true;
@@ -374,82 +348,6 @@ public class Character {
             }
         }
         return lastname + " " + name;
-    }
-
-    // =============================================================================
-    public void generateView() {
-        try {
-            String folder = sex;
-            // load source images
-            BufferedImage bodyImageSub = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + folder + "/" + getBody().getName() + "_sub.png"));
-            bodyImageSub = colorImage(bodyImageSub, getSkinColor().getColor());
-            BufferedImage bodyImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + folder + "/" + getBody().getName() + ".png"));
-            BufferedImage earsImageSub = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + folder + "/" + getEars().getName() + "_sub.png"));
-            earsImageSub = colorImage(earsImageSub, getSkinColor().getColor());
-            BufferedImage earsImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + folder + "/" + getEars().getName() + ".png"));
-            BufferedImage eyebrowsImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + folder + "/" + getEyebrows().getName() + ".png"));
-            BufferedImage eyeColorImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + folder + "/" + getEyeColor().getName() + ".png"));
-            BufferedImage eyesImageSub = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + folder + "/pupil.png"));
-            BufferedImage eyesImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + folder + "/" + getEyes().getName() + ".png"));
-            BufferedImage hairStyleImageSub = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + folder + "/" + getHairStyle().getName() + "_sub.png"));
-            hairStyleImageSub = colorImage(hairStyleImageSub, getHairColor().getColor());
-            BufferedImage hairStyleImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + folder + "/" + getHairStyle().getName() + ".png"));
-            BufferedImage headImageSub = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + folder + "/" + getHead().getName() + "_sub.png"));
-            headImageSub = colorImage(headImageSub, getSkinColor().getColor());
-            BufferedImage headImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + folder + "/" + getHead().getName() + ".png"));
-            BufferedImage mouthImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + folder + "/" + getMouth().getName() + ".png"));
-            BufferedImage noseImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + folder + "/" + getNose().getName() + ".png"));
-            BufferedImage heightImage = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + folder + "/" + getHeight().getName() + ".png"));
-
-            // create the new image, canvas size is the max. of both image sizes
-            BufferedImage combined = new BufferedImage(200, 200, BufferedImage.TYPE_INT_ARGB);
-
-            // paint images, preserving the alpha channels
-            Graphics g = combined.getGraphics();
-            g.drawImage(bodyImageSub, 0, 0, null);
-            g.drawImage(bodyImage, 0, 0, null);
-            g.drawImage(headImageSub, 0, 0, null);
-            g.drawImage(headImage, 0, 0, null);
-            g.drawImage(eyebrowsImage, 0, 0, null);
-            g.drawImage(eyeColorImage, 0, 0, null);
-            g.drawImage(eyesImageSub, 0, 0, null);
-            g.drawImage(eyesImage, 0, 0, null);
-            g.drawImage(mouthImage, 0, 0, null);
-            g.drawImage(noseImage, 0, 0, null);
-            g.drawImage(hairStyleImageSub, 0, 0, null);
-            g.drawImage(hairStyleImage, 0, 0, null);
-            g.drawImage(earsImageSub, 0, 0, null);
-            g.drawImage(earsImage, 0, 0, null);
-            g.drawImage(heightImage, 0, 0, null);
-
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(combined, "png", baos);
-            baos.flush();
-            byte[] imageInByte = baos.toByteArray();
-            baos.close();
-
-            setView(imageInByte);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private BufferedImage colorImage(BufferedImage image, String colorString) {
-        int width = image.getWidth();
-        int height = image.getHeight();
-        WritableRaster raster = image.getRaster();
-
-        for (int xx = 0; xx < width; xx++) {
-            for (int yy = 0; yy < height; yy++) {
-                int[] pixels = raster.getPixel(xx, yy, (int[]) null);
-                pixels[0] = Integer.valueOf(colorString.substring(0, 2), 16);
-                pixels[1] = Integer.valueOf(colorString.substring(2, 4), 16);
-                pixels[2] = Integer.valueOf(colorString.substring(4, 6), 16);
-                raster.setPixel(xx, yy, pixels);
-            }
-        }
-        return image;
     }
 
     @Override

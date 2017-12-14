@@ -8,6 +8,7 @@ package dyn.controllers;
 import dyn.form.RaceAppearanceForm;
 import dyn.model.*;
 import dyn.model.Character;
+import dyn.model.appearance.*;
 import dyn.model.career.Career;
 import dyn.repository.*;
 import dyn.service.*;
@@ -19,6 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.ResourceUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,7 +32,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.imageio.ImageIO;
 import javax.validation.Valid;
 import java.awt.image.BufferedImage;
+import java.awt.image.WritableRaster;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -85,7 +89,7 @@ public class AdminController {
         model.addAttribute("eyeColorList", app.getEyeColorList(app.ALL));
         model.addAttribute("eyesList", app.getEyesList(app.ALL));
         model.addAttribute("hairColorList", app.getHairColorList(app.ALL));
-        model.addAttribute("hairStyleList", app.getHairStyleList(app.ALL));
+        model.addAttribute("hairStyleList", app.getHairStyleList());
         model.addAttribute("hairTypeList", app.getHairTypeList(app.ALL));
         model.addAttribute("headList", app.getHeadList(app.ALL));
         model.addAttribute("heightList", app.getHeightList(app.ALL));
@@ -273,7 +277,6 @@ public class AdminController {
             female.setLevel(level);
             female.setRace(raceRepository.findOne(Race.RACE_HUMAN));
 
-            female.generateView();
 
             female.setCareer(careerService.generateCareerForFounders());
 
@@ -796,7 +799,6 @@ public class AdminController {
         character.setNose(app.getRandomNose(app.ALL));
         character.setSkinColor(app.getRandomSkinColor(app.ALL));
 
-        character.generateView();
 
         model.addAttribute("character", character);
 
@@ -804,7 +806,6 @@ public class AdminController {
     }
 
     public void updateCharacter(Character character) {
-        character.generateView();
 
         Race race = raceService.defineRace(character);
         character.setRace(race);
@@ -838,5 +839,99 @@ public class AdminController {
         model.addAttribute("fathers", fathers);
         System.out.println("END");
         return "admin/test";
+    }
+
+    @RequestMapping("/admin/generateImages")
+    public String generateImages() {
+        logger.debug("Generating images");
+
+        List<SkinColor> skinColorList = app.getSkinColorList(AppearanceService.ALL);
+        List<Body> bodyList = app.getBodyList(AppearanceService.ALL);
+        List<Ears> earsList = app.getEarsList(AppearanceService.ALL);
+        List<Head> headList = app.getHeadList(AppearanceService.ALL);
+
+        List<HairColor> hairColorList = app.getHairColorList(AppearanceService.ALL);
+
+        try {
+            List<String> sexList = new ArrayList();
+            sexList.add("female");
+            sexList.add("male");
+
+            for (String sex : sexList) {
+                System.out.println("sex = " + sex);
+                List<HairStyle> hairStyleList = app.getHairStyleList(sex);
+                for (Body body : bodyList) {
+                    System.out.println("body = " + body);
+                    BufferedImage bodyImageSub = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + sex + "/" + body.getName() + "_sub.png"));
+                    for (SkinColor skinColor : skinColorList) {
+                        BufferedImage bodyImageSubWithSkinColor = colorImage(bodyImageSub, skinColor.getColor());
+
+                        File outputfile = new File("materials/" + sex + "/" + body.getName() + "_sub_" + skinColor.getNamePart() + ".png");
+                        System.out.println("   outputfile = " + outputfile.getPath());
+                        ImageIO.write(bodyImageSubWithSkinColor, "png", outputfile);
+                    }
+
+                }
+                for (Ears ears : earsList) {
+                    System.out.println("ears = " + ears);
+                    BufferedImage earsImageSub = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + sex + "/" + ears.getName() + "_sub.png"));
+                    for (SkinColor skinColor : skinColorList) {
+                        BufferedImage earsImageSubWithSkinColor = colorImage(earsImageSub, skinColor.getColor());
+
+                        File outputfile = new File("materials/" + sex + "/" + ears.getName() + "_sub_" + skinColor.getNamePart() + ".png");
+                        System.out.println("   outputfile = " + outputfile.getPath());
+                        ImageIO.write(earsImageSubWithSkinColor, "png", outputfile);
+                    }
+
+                }
+                for (Head head : headList) {
+                    System.out.println("head = " + head);
+                    BufferedImage headImageSub = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + sex + "/" + head.getName() + "_sub.png"));
+                    for (SkinColor skinColor : skinColorList) {
+                        BufferedImage headImageSubWithSkinColor = colorImage(headImageSub, skinColor.getColor());
+
+                        File outputfile = new File("materials/" + sex + "/" + head.getName() + "_sub_" + skinColor.getNamePart() + ".png");
+                        System.out.println("   outputfile = " + outputfile.getPath());
+                        ImageIO.write(headImageSubWithSkinColor, "png", outputfile);
+                    }
+
+                }
+                for (HairStyle hairStyle : hairStyleList) {
+                    System.out.println("hairStyle = " + hairStyle);
+                    BufferedImage hairStyleImageSub = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + sex + "/" + hairStyle.getName() + "_sub.png"));
+                    for (HairColor hairColor : hairColorList) {
+                        BufferedImage hairStyleImageSubWithSkinColor = colorImage(hairStyleImageSub, hairColor.getColor());
+
+                        File outputfile = new File("materials/" + sex + "/" + hairStyle.getName() + "_sub_" + hairColor.getNamePart() + ".png");
+                        System.out.println("   outputfile = " + outputfile.getPath());
+                        ImageIO.write(hairStyleImageSubWithSkinColor, "png", outputfile);
+                    }
+
+                }
+            }
+            System.out.println("GENERATED");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return "redirect:/admin/appearance";
+    }
+
+    private BufferedImage colorImage(BufferedImage image, String colorString) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+        WritableRaster raster = image.getRaster();
+
+        for (int xx = 0; xx < width; xx++) {
+            for (int yy = 0; yy < height; yy++) {
+                int[] pixels = raster.getPixel(xx, yy, (int[]) null);
+                pixels[0] = Integer.valueOf(colorString.substring(0, 2), 16);
+                pixels[1] = Integer.valueOf(colorString.substring(2, 4), 16);
+                pixels[2] = Integer.valueOf(colorString.substring(4, 6), 16);
+                raster.setPixel(xx, yy, pixels);
+            }
+        }
+        return image;
     }
 }

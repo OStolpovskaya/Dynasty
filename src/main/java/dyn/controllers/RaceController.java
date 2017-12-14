@@ -47,7 +47,7 @@ public class RaceController {
         model.addAttribute("eyeColorList", app.getEyeColorList(app.ALL));
         model.addAttribute("eyesList", app.getEyesList(app.ALL));
         model.addAttribute("hairColorList", app.getHairColorList(app.ALL));
-        model.addAttribute("hairStyleList", app.getHairStyleList(app.ALL));
+        model.addAttribute("hairStyleList", app.getHairStyleList());
         model.addAttribute("hairTypeList", app.getHairTypeList(app.ALL));
         model.addAttribute("headList", app.getHeadList(app.ALL));
         model.addAttribute("heightList", app.getHeightList(app.ALL));

@@ -51,4 +51,8 @@ public class EyeColor implements Appearance {
     public boolean isRare() {
         return type.equals(AppearanceType.rare);
     }
+
+    public String getNamePart() {
+        return name.substring(name.lastIndexOf(".") + 1);
+    }
 }

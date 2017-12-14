@@ -13,3 +13,9 @@ UPDATE  `family` SET  `creation_date` = NOW( );
 /*====================================================================================================================*/
 UPDATE  `dyn`.`house` SET  `desc` =  'Дети персонажа будут больше похожи на отца, чем на мать.' WHERE  `house`.`id` =31;
 /*остальные!!!*/
+/*====================================================================================================================*/
+ALTER TABLE  `dyn`.`family` ADD INDEX  `user` (  `user_id` );
+ALTER TABLE  `dyn`.`characters` ADD INDEX  `appearance` (  `body` ,  `ears` ,  `eyebrows` ,  `eye_color` ,  `eyes` ,  `hair_color` ,  `hairstyle` ,  `hair_type` ,  `head` , `height` ,  `mouth` ,  `nose` ,  `skin_color` );
+ALTER TABLE  `dyn`.`characters` ADD INDEX  `race` (  `race` );
+ALTER TABLE  `dyn`.`characters` ADD INDEX  `career` (  `career` );
+ALTER TABLE  `dyn`.`fiancee` ADD INDEX  `character` (  `character_id` );

@@ -112,76 +112,41 @@
         <!--IMAGE-->
         <div style="position: relative">
             <a href="/game/character" th:href="${nolink}==null?@{/game/character(characterId=${character.getId()})}:'#'">
-                <th:block th:with="view = ${character.getEncodedView()}">
-                    <!--/*@thymesVar id="getEncodedView" type="dyn.model.Character"*/-->
+                <th:block th:with="p = ${'/graphics/'+character.getSex()+'/'}">
+                    <!--/*@thymesVar id="character" type="dyn.model.Character"*/-->
+                    <div style="position: relative; width: 200px; height: 200px; " th:alt-title="#{tooltip(
+                                       ${character.getFullName()},
+                                       ${character.getSkinColor().getTitle()},
+                                       ${character.getHeight().getTitle()},
+                                       ${character.getBody().getTitle()},
+                                       ${character.getHead().getTitle()},
+                                       ${character.getEars().getTitle()},
+                                       ${character.getEyebrows().getTitle()},
+                                       ${character.getEyes().getTitle()},
+                                       ${character.getEyeColor().getTitle()},
+                                       ${character.getNose().getTitle()},
+                                       ${character.getMouth().getTitle()},
+                                       ${character.getHairType().getTitle()},
+                                       ${character.getHairColor().getTitle()},
+                                       ${character.getHairStyle().getTitle()}
+                                       )}">
+                        <img th:src="${p+character.getBody().getName() + '_sub_'+character.getSkinColor().getNamePart()+'.png'}" style="position: absolute; left: 0px; "/>
+                        <img th:src="${p+character.getBody().getName() + '.png'}" style="position: absolute;left: 0px;"/>
+                        <img th:src="${p+character.getHead().getName() + '_sub_'+character.getSkinColor().getNamePart()+'.png'}" style="position: absolute;left: 0px;"/>
+                        <img th:src="${p+character.getHead().getName() + '.png'}" style="position: absolute;left: 0px;"/>
+                        <img th:src="${p+character.getEyebrows().getName() + '.png'}" style="position: absolute;left: 0px;"/>
+                        <img th:src="${p+character.getEyeColor().getName() + '.png'}" style="position: absolute;left: 0px;"/>
+                        <img th:src="${p+'pupil.png'}" style="position: absolute;left: 0px;"/>
+                        <img th:src="${p+character.getEyes().getName() + '.png'}" style="position: absolute;left: 0px;"/>
+                        <img th:src="${p+character.getMouth().getName() + '.png'}" style="position: absolute;left: 0px;"/>
+                        <img th:src="${p+character.getNose().getName() + '.png'}" style="position: absolute;left: 0px;"/>
+                        <img th:src="${p+character.getHairStyle().getName() + '_sub_'+character.getHairColor().getNamePart()+'.png'}" style="position: absolute;left: 0px;"/>
+                        <img th:src="${p+character.getHairStyle().getName() + '.png'}" style="position: absolute;left: 0px;"/>
+                        <img th:src="${p+character.getEars().getName() + '_sub_'+character.getSkinColor().getNamePart()+'.png'}" style="position: absolute;left: 0px;"/>
+                        <img th:src="${p+character.getEars().getName() + '.png'}" style="position: absolute;left: 0px;"/>
+                        <img th:src="${p+character.getHeight().getName() + '.png'}" style="position: absolute;left: 0px;"/>
 
-                    <!-- with css only:
-                    <div class="my_tooltip">
-                        <img height="200px" width="200px"
-                             th:src="${view != null?'data:image/png;base64,'+character.getEncodedView():(character.getSex() == 'male'?'/graphics/male.png':'/graphics/female.png')}"/>
-                        <span class="my_tooltiptext">
-                            <strong><th:block th:text="${character.getFullName()}"></th:block></strong>
-                            <br/>
-                                <ul class="my_tooltip_list">
-                                    <li th:text="#{app.skin_color} + ': ' + ${character.getSkinColor().getTitle()}"></li>
-                                    <li th:text="#{app.height} + ': ' + ${character.getHeight().getTitle()}"></li>
-                                    <li th:text="#{app.body} + ': ' + ${character.getBody().getTitle()}"></li>
-                                    <li th:text="#{app.head} + ': ' + ${character.getHead().getTitle()}"></li>
-                                    <li th:text="#{app.ears} + ': ' + ${character.getEars().getTitle()}"></li>
-                                    <li th:text="#{app.eyebrows} + ': ' + ${character.getEyebrows().getTitle()}"></li>
-                                    <li th:text="#{app.eyes} + ': ' + ${character.getEyes().getTitle()}"></li>
-                                    <li th:text="#{app.eye_color} + ': ' + ${character.getEyeColor().getTitle()}"></li>
-                                    <li th:text="#{app.nose} + ': ' + ${character.getNose().getTitle()}"></li>
-                                    <li th:text="#{app.mouth} + ': ' + ${character.getMouth().getTitle()}"></li>
-                                    <li th:text="#{app.hair_type} + ': ' + ${character.getHairType().getTitle()}"></li>
-                                    <li th:text="#{app.hair_color} + ': ' + ${character.getHairColor().getTitle()}"></li>
-                                    <li th:text="#{app.hair_style} + ': ' + ${character.getHairStyle().getTitle()}"></li>
-                                </ul>
-                        </span>
                     </div>
-                     -->
-
-                    <img height="200px" width="200px"
-                         th:src="${view != null?'data:image/png;base64,'+character.getEncodedView():(character.getSex() == 'male'?'/graphics/male.png':'/graphics/female.png')}"
-                         th:alt-title="#{tooltip(
-                                       ${character.getFullName()},
-                                       ${character.getSkinColor().getTitle()},
-                                       ${character.getHeight().getTitle()},
-                                       ${character.getBody().getTitle()},
-                                       ${character.getHead().getTitle()},
-                                       ${character.getEars().getTitle()},
-                                       ${character.getEyebrows().getTitle()},
-                                       ${character.getEyes().getTitle()},
-                                       ${character.getEyeColor().getTitle()},
-                                       ${character.getNose().getTitle()},
-                                       ${character.getMouth().getTitle()},
-                                       ${character.getHairType().getTitle()},
-                                       ${character.getHairColor().getTitle()},
-                                       ${character.getHairStyle().getTitle()}
-                                       )}"
-                         data-placement="right"/>
-
-                    <!-- with js:
-                    <img height="200px" width="200px"
-                         th:src="${view != null?'data:image/png;base64,'+character.getEncodedView():(character.getSex() == 'male'?'/graphics/male.png':'/graphics/female.png')}"
-                         data-toggle="tooltip" th:alt-title="#{tooltip(
-                                       ${character.getFullName()},
-                                       ${character.getSkinColor().getTitle()},
-                                       ${character.getHeight().getTitle()},
-                                       ${character.getBody().getTitle()},
-                                       ${character.getHead().getTitle()},
-                                       ${character.getEars().getTitle()},
-                                       ${character.getEyebrows().getTitle()},
-                                       ${character.getEyes().getTitle()},
-                                       ${character.getEyeColor().getTitle()},
-                                       ${character.getNose().getTitle()},
-                                       ${character.getMouth().getTitle()},
-                                       ${character.getHairType().getTitle()},
-                                       ${character.getHairColor().getTitle()},
-                                       ${character.getHairStyle().getTitle()}
-                                       )}"
-                         data-placement="right"/>
-                    -->
                 </th:block>
             </a>
             <th:block th:each="buff : ${character.getBuffs()}" th:with="count=${(buffStat.count-1) * 20}">
@@ -222,7 +187,7 @@
                         </th:block>
                         <th:block th:if="${character.isFiancee()}">
                             <img th:src="@{'/graphics/family_status_bride.png' }" height="35px" width="35px"
-                                 data-toggle="tooltip" th:alt-title="${'Семейное положение: в базе невест за ' + character.getFiancee().getCost() + ' д.'}">
+                                 data-toggle="tooltip" th:alt-title="${'Семейное положение: в базе невест'}">
                             </img>
                         </th:block>
                     </td>

@@ -56,6 +56,8 @@ public class GameController {
 
     @Autowired
     FamilyLogService familyLogService;
+    @Autowired
+    FamilyService familyService;
 
     @Autowired
     HouseService houseService;
@@ -84,13 +86,12 @@ public class GameController {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         model.addAttribute("user", user);
 
-        List<Family> families = user.getFamilies();
-        if (families.size() == 0 || (families.size() == 1 && families.get(0).isCurrent() == false)) {
+        Family family = familyService.getCurrentFamily(user);
+        if (family == null) {
             logger.info(user.getUserName() + " doesn't have any family, redirect to create the first family");
             redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("new.user", null, loc()));
             return "redirect:/game/addNewFamily";
         }
-        Family family = user.getCurrentFamily();
         //logger.debug(user.getUserName() + " Current family: " + family.getFamilyName() + ", level: " + family.getLevel());
         model.addAttribute("family", family);
 
@@ -294,7 +295,7 @@ public class GameController {
         model.addAttribute("eyeColorList", app.getEyeColorList(app.ALL));
         model.addAttribute("eyesList", app.getEyesList(app.ALL));
         model.addAttribute("hairColorList", app.getHairColorList(app.ALL));
-        model.addAttribute("hairStyleList", app.getHairStyleList(app.ALL));
+        model.addAttribute("hairStyleList", app.getHairStyleList());
         model.addAttribute("hairTypeList", app.getHairTypeList(app.ALL));
         model.addAttribute("headList", app.getHeadList(app.ALL));
         model.addAttribute("heightList", app.getHeightList(app.ALL));
@@ -351,14 +352,6 @@ public class GameController {
         turnLog.append(turnIncome);
 
         familyLogService.createNewLevelFamilyLog(family, turnLog.toString());
-
-        // deleting image
-        for (Character levelChar : charactersOnLevel) {
-            if ((levelChar.getSex().equals("male") && !levelChar.hasSpouse()) || (levelChar.getSex().equals("female") && !levelChar.isFiancee() && !levelChar.hasSpouse())) {
-                levelChar.setView(null);
-                characterRepository.save(levelChar);
-            }
-        }
 
         if (!turnAchievements.toString().equals("")) {
             turnIncome.append(" <strong>Достижения:</strong> <br>").append(turnAchievements);
@@ -514,9 +507,6 @@ public class GameController {
         }
         // hairstyle after set hair type
         child.setHairStyle(app.getRandomHairStyle(child.getSex(), child.getHairType()));
-
-        // picture
-        child.generateView();
 
         // race and check newborn achievement
         child.setRace(raceService.defineRace(child));

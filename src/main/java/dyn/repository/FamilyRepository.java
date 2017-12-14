@@ -11,6 +11,7 @@ import java.util.List;
 public interface FamilyRepository extends CrudRepository<Family, Long> {
     public Family findByFamilyName(String familyName);
 
+    Family findByUserAndCurrentIsTrue(User user);
 
     Family findByIdAndUser(Long familyId, User player);
 
