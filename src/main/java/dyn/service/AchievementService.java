@@ -11,7 +11,10 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by OM on 23.03.2017.
@@ -63,5 +66,17 @@ public class AchievementService {
     public List<UserAchievements> getAchievementsOfUser(User user) {
         return userAchievementsRepository.findByUser(user);
 
+    }
+
+    public Map<User, Integer> getAcievementRatingMap() {
+        Map<User, Integer> map = new LinkedHashMap<>();
+        List<Object[]> list = userAchievementsRepository.countAchievements();
+        for (Object[] objects : list) {
+            Integer userId = (Integer) objects[0];
+            BigInteger count = (BigInteger) objects[1];
+            map.put(userRepository.findOne(userId.longValue()), count.intValue());
+
+        }
+        return map;
     }
 }

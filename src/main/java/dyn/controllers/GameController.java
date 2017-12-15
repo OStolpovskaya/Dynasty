@@ -623,7 +623,7 @@ public class GameController {
     @RequestMapping(value = "/game/userview", method = RequestMethod.GET)
     public String userview(ModelMap model, RedirectAttributes redirectAttributes,
                            @RequestParam(value = "userId") Long userId,
-                           @RequestParam(value = "familyId") Long familyId) {
+                           @RequestParam(value = "familyId", required = false) Long familyId) {
         if (userId.equals(1L)) {
             redirectAttributes.addFlashAttribute("mess", "У разработчиков нет текущей семьи, просмотр не разрешен");
             return "redirect:/game";
@@ -639,10 +639,15 @@ public class GameController {
         }
         model.addAttribute("player", player);
 
-        Family playerFamily = familyRepository.findByIdAndUser(familyId, player);
-        if (playerFamily == null) {
+        Family playerFamily;
+        if (familyId == null) {
             playerFamily = player.getCurrentFamily();
-            redirectAttributes.addFlashAttribute("mess", "У этого игрока нет такой семьи. Показываем его текущую семью.");
+        } else {
+            playerFamily = familyRepository.findByIdAndUser(familyId, player);
+            if (playerFamily == null) {
+                playerFamily = player.getCurrentFamily();
+                redirectAttributes.addFlashAttribute("mess", "У этого игрока нет такой семьи. Показываем его текущую семью.");
+            }
         }
 
         model.addAttribute("playerCurrentFamily", playerFamily);

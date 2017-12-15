@@ -11,6 +11,7 @@ import dyn.model.Project;
 import dyn.model.User;
 import dyn.repository.FamilyRepository;
 import dyn.repository.UserRepository;
+import dyn.service.AchievementService;
 import dyn.service.FamilyLogService;
 import dyn.service.HouseService;
 import org.apache.log4j.LogManager;
@@ -27,6 +28,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Map;
+
 import static dyn.controllers.GameController.loc;
 
 @Controller
@@ -42,6 +45,8 @@ public class TownController {
     private UserRepository userRepository;
     @Autowired
     private FamilyRepository familyRepository;
+    @Autowired
+    private AchievementService achService;
 
     @RequestMapping("/game/town")
     public String townView(ModelMap model, RedirectAttributes redirectAttributes) {
@@ -57,6 +62,9 @@ public class TownController {
         model.addAttribute("family", family);
         model.addAttribute("buildingList", houseService.getBuildingList());
         model.addAttribute("familyBuildingList", family.getBuildings());
+
+        Map<User, Integer> acievementRatingMap = achService.getAcievementRatingMap();
+        model.addAttribute("acievementRatingMap", acievementRatingMap);
 
         return "game/town";
     }
@@ -85,7 +93,7 @@ public class TownController {
                     String mess = "Вы купили здание '" + building.getName() + "'. Потрачено: " + building.getCost() + " д.";
                     familyLogService.addToLog(family, mess);
                     redirectAttributes.addFlashAttribute("mess", mess);
-                    return "redirect:/game/town";
+                    return "redirect:/game/buildings";
                 }
                 logger.error(family.userNameAndFamilyName() + " not enough money to buy building: " + building.getName());
                 redirectAttributes.addFlashAttribute("mess", "Недостаточно денег для покупки этого здания " + building.getName());

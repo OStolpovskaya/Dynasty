@@ -47,13 +47,13 @@
                         <th:block th:if="${family.getCraftThings().contains(parentThing)}">
                             <div class="tree_li_a" style="color: #1b6d85; background-color: lightgreen;">
                                 <a th:href="${'/game/chooseProject?thingId='+parentThing.getId()}" th:text="${parentThing.getName()}" th:title="${'Стоимость: '+parentThing.getCost() + ' б.'}">Parent</a>
-                                <a th:href="${'/game/chooseItemToBuy?thingId='+parentThing.getId()}"><span class="glyphicon glyphicon-new-window" style="color: forestgreen; " title="Маркет"></span></a>
+                                <a th:href="${'/game/chooseItemToBuy?thingId='+parentThing.getId()}"><span class="glyphicon glyphicon-shopping-cart" style="color: forestgreen; " title="Маркет"></span></a>
                             </div>
                         </th:block>
                         <th:block th:if="${not family.getCraftThings().contains(parentThing)}">
                             <div class="tree_li_a" style="color: #000; background-color: lightsteelblue; border-bottom-right-radius: 0px; border-bottom-left-radius: 0px;">
                                 <th:block th:text="${parentThing.getName()}" th:title="${'Стоимость: '+parentThing.getCost() + ' б.'}">Parent</th:block>
-                                <a th:href="${'/game/chooseItemToBuy?thingId='+parentThing.getId()}"><span class="glyphicon glyphicon-new-window" style="color: forestgreen; " title="Маркет"></span></a>
+                                <a th:href="${'/game/chooseItemToBuy?thingId='+parentThing.getId()}"><span class="glyphicon glyphicon-shopping-cart" style="color: forestgreen; " title="Маркет"></span></a>
                             </div>
                             <form class="form-inline" th:action="@{/game/learnThing}" method="post">
                                 <input type="hidden" name="thingId" th:value="${parentThing.getId()}"/>
@@ -69,14 +69,14 @@
                                     <th:block th:if="${family.getCraftThings().contains(thing)}">
                                         <div class="tree_li_a" style="color: #1b6d85; background-color: lightgreen;">
                                             <a th:href="${'/game/chooseProject?thingId='+thing.getId()}" th:text="${thing.getName()}" th:title="${'Стоимость: '+thing.getCost() + ' б.'}">Parent</a>
-                                            <a th:href="${'/game/chooseItemToBuy?thingId='+thing.getId()}"><span class="glyphicon glyphicon-new-window" style="color: forestgreen; " title="Маркет"></span></a>
+                                            <a th:href="${'/game/chooseItemToBuy?thingId='+thing.getId()}"><span class="glyphicon glyphicon-shopping-cart" style="color: forestgreen; " title="Маркет"></span></a>
                                         </div>
                                     </th:block>
                                     <th:block th:if="${not family.getCraftThings().contains(thing)}">
                                         <th:block th:if="${family.getCraftThings().contains(thing.getParent())}">
                                             <div class="tree_li_a" style="color: #000; background-color: lightsteelblue; border-bottom-right-radius: 0px; border-bottom-left-radius: 0px;">
                                                 <th:block th:text="${thing.getName()}" th:title="${'Стоимость: '+thing.getCost() + ' б.'}">Parent</th:block>
-                                                <a th:href="${'/game/chooseItemToBuy?thingId='+thing.getId()}"><span class="glyphicon glyphicon-new-window" style="color: forestgreen; " title="Маркет"></span></a>
+                                                <a th:href="${'/game/chooseItemToBuy?thingId='+thing.getId()}"><span class="glyphicon glyphicon-shopping-cart" style="color: forestgreen; " title="Маркет"></span></a>
                                             </div>
                                             <form class="form-inline" th:action="@{/game/learnThing}" method="post">
                                                 <input type="hidden" name="thingId" th:value="${thing.getId()}"/>
@@ -88,7 +88,7 @@
                                         <th:block th:if="${not family.getCraftThings().contains(thing.getParent())}">
                                             <div class="tree_li_a">
                                                 <th:div th:text="${thing.getName()}" th:title="${'Стоимость: '+thing.getCost() + ' б.'}">Town hall</th:div>
-                                                <a th:href="${'/game/chooseItemToBuy?thingId='+thing.getId()}"><span class="glyphicon glyphicon-new-window" style="color: forestgreen; " title="Маркет"></span></a>
+                                                <a th:href="${'/game/chooseItemToBuy?thingId='+thing.getId()}"><span class="glyphicon glyphicon-shopping-cart" style="color: forestgreen; " title="Маркет"></span></a>
                                             </div>
                                         </th:block>
                                     </th:block>

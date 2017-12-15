@@ -21,3 +21,5 @@ ALTER TABLE  `dyn`.`characters` ADD INDEX  `career` (  `career` );
 ALTER TABLE  `dyn`.`fiancee` ADD INDEX  `character` (  `character_id` );
 /*====================================================================================================================*/
 ALTER TABLE  `fiancee` ADD  `type` ENUM(  'usual',  'special' ) NOT NULL DEFAULT  'usual' AFTER  `cost`;
+/*====================================================================================================================*/
+UPDATE house SET  `name` = CONCAT( UCASE( LEFT(  `name` , 1 ) ) , SUBSTRING(  `name` , 2 ) );

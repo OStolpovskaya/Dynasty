@@ -8,7 +8,7 @@
 <body>
 <th:block th:replace="fragments/scripts :: counters"></th:block>
 <div th:replace="fragments/navigation :: nav-for-game"></div>
-<div class="container">
+<div style="width: 1240px; margin-left: auto; margin-right: auto; ">
     <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
     <th:block th:if="${family.getLevel() == 0}">
         <div class="alert alert-success">
@@ -17,43 +17,92 @@
             источником дохода. <br/>
         </div>
     </th:block>
-    <h3>Город</h3>
-    <p>Подробнее в баффах можно прочитать в справке <a href="/game/help#4">здесь</a>.</p>
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>Название</th>
-            <th>Описание</th>
-            <th>Продукция (бафф)</th>
-            <th>Купить продукцию</th>
-            <th>Приобрести здание</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="building : ${buildingList}">
-            <!--/*@thymesVar id="building" type="dyn.model.House"*/-->
-            <td th:text="${building.getName()}">name</td>
-            <td th:text="${building.getDesc()}">desc</td>
-            <td th:text="${building.getProduction().getName()}">desc</td>
-            <td>
-                <th:block th:if="${building.getProduction() ne null}">
-                    <form th:action="@{/game/chooseProductionToBuy}" method="get" class="form-inline">
-                        <input type="hidden" name="projectId" th:value="${building.getProduction().getId()}"/>
-                        <button type="submit" class="btn btn-success">Посетить</button>
-                    </form>
+
+
+    <div style=" width: 670px; font-size: 12px; display: inline-block; vertical-align: top; " align="center">
+        <h3>Город</h3>
+        <p>Подробнее о баффах можно прочитать в справке <a href="/game/help#4">здесь</a>.</p>
+        <div align="center" th:each="building : ${buildingList}" style="display: inline-block; vertical-align: top; border: solid 1px darkseagreen; border-radius: 4px; margin: 3px; padding: 3px;">
+            <div style="width: 150px; height: 165px; " th:title="${building.getDesc()}">
+                <div align="center" style="vertical-align: text-top; height: 30px; "><strong th:text="${building.getName()}"></strong></div>
+                <img th:src="${'/graphics/town/town'+building.getId()+'.png' }" width="100"/>
+                <div style="vertical-align: text-top; height: 35px; " th:text="${building.getProduction().getName()}">desc</div>
+
+            </div>
+            <div>
+                <form th:action="@{/game/chooseProductionToBuy}" method="get" style="display: inline-block;">
+                    <input type="hidden" name="projectId" th:value="${building.getProduction().getId()}"/>
+                    <button type="submit" class="btn btn-success btn-xs" style="width: 70px;">
+                        <span class="glyphicon glyphicon-shopping-cart" title="Маркет"></span>
+                    </button>
+                </form>
+
+            </div>
+        </div>
+
+        <h3>Создание бизнеса</h3>
+        <p>Вы можете приобрести здание для развития бизнеса. Затем вам потребуется установить оборудование и мебель (как в жилом доме). Только потом вы сможете производить баффы и продавать на маркете.</p>
+        <button data-toggle="collapse" th:attr="data-target='#buildings_table'" class="btn btn-default">
+            Раскрыть таблицу зданий для бизнеса <span class="glyphicon glyphicon-menu-down"></span>
+        </button>
+        <div id="buildings_table" class="collapse">
+            <table class="table table-striped table-condensed">
+                <thead>
+                <tr>
+                    <th>Название</th>
+                    <th>Описание</th>
+                    <th>Продукция (бафф)</th>
+                    <th>Приобрести здание</th>
+                </tr>
+                </thead>
+                <tbody>
+                <th:block th:each="building : ${buildingList}">
+                    <!--/*@thymesVar id="building" type="dyn.model.House"*/-->
+                    <tr th:if="${not #lists.contains(familyBuildingList,building)}">
+                        <td th:text="${building.getName()}">name</td>
+                        <td th:text="${building.getDesc()}">desc</td>
+                        <td th:text="${building.getProduction().getName()}">desc</td>
+                        <td>
+                            <form th:action="@{/game/buyBuilding}" method="post" class="form-inline">
+                                <input type="hidden" name="buildingId" th:value="${building.getId()}"/>
+                                <button type="submit" class="btn btn-info" th:text="${'Купить: ' + building.getCost() + ' д.'}" th:disabled="${family.getMoney() lt building.getCost()}">Купить</button>
+                            </form>
+                        </td>
+                    </tr>
                 </th:block>
-            </td>
-            <td>
-                <th:block th:if="${not #lists.contains(familyBuildingList,building)}">
-                    <form th:action="@{/game/buyBuilding}" method="post" class="form-inline">
-                        <input type="hidden" name="buildingId" th:value="${building.getId()}"/>
-                        <button type="submit" class="btn btn-info" th:text="${'Купить: ' + building.getCost() + ' д.'}" th:disabled="${family.getMoney() lt building.getCost()}">Купить</button>
-                    </form>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div style="width: 560px; font-size: 12px; display: inline-block; vertical-align: top; " align="center">
+        <h3>Рейтинг</h3>
+        <p>Здесь отображается рейтинг игроков по полученным достижениям</p>
+        <div style="width: 200px;">
+            <table class="table table-condensed">
+                <th:block th:each="mapEntry, mStat : ${acievementRatingMap}" th:with="user = ${mapEntry.getKey()}, count = ${mapEntry.getValue()}" th:unless="${mStat.count gt 10}">
+                    <tr th:class="${mStat.count==1?'success':''}">
+                        <!--/*@thymesVar id="user" type="dyn.model.User"*/-->
+                        <td>
+                            <th:block th:utext="${user.link()}"></th:block>
+                        </td>
+                        <td>
+                            <th:block th:text="${count}"></th:block>
+                            <div class="my_tooltip"><span class="glyphicon glyphicon-info-sign" style="color: darkgrey;"></span>
+                                <span class="my_tooltiptext" style="width: 300px;">
+                                    <ul>
+                                        <li th:each="achievement : ${user.getAchievements()}" th:text="${achievement.getName()}"></li>
+                                    </ul>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
                 </th:block>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+            </table>
+        </div>
+        <h3>Новости города</h3>
+        <p>В разработке</p>
+    </div>
 </div>
 <th:block th:replace="fragments/scripts :: webjars"></th:block>
 <script>

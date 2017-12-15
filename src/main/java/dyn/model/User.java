@@ -174,4 +174,8 @@ public class User implements Serializable {
         sb.append('}');
         return sb.toString();
     }
+
+    public String link() {
+        return "<a href='/game/userview?userId=" + userId + "'>" + userName + "</a>";
+    }
 }
