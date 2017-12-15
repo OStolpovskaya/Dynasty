@@ -36,10 +36,10 @@
                     </td>
                     <td th:text="${item.getQuality()}"></td>
                     <td>
-                        <a th:href="${'/game/userview?userId='+item.getFamily().getUser().getUserid() +'&amp;familyId='+item.getFamily().getId()}" th:text="${item.getFamily().familyNameAndUserName()}"></a>
+                        <a th:href="${'/game/userview?userId='+item.getFamily().getUser().getUserid() +'&amp;familyId='+item.getFamily().getId()}" th:text="${item.getFamily().userNameAndFamilyName()}"></a>
                     </td>
                     <td>
-                        <a th:href="${'/game/userview?userId='+item.getAuthor().getUser().getUserid() +'&amp;familyId='+item.getAuthor().getId()}" th:text="${item.getAuthor().familyNameAndUserName()}"></a>
+                        <a th:href="${'/game/userview?userId='+item.getAuthor().getUser().getUserid() +'&amp;familyId='+item.getAuthor().getId()}" th:text="${item.getAuthor().userNameAndFamilyName()}"></a>
                     </td>
                     <td th:text="${item.getCost()+' д.'}"></td>
                     <td>

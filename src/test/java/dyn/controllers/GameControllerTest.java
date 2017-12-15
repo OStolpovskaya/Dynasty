@@ -196,7 +196,7 @@ public class GameControllerTest {
             WebElement postFianceeButton = postFianceeButtonList.get(randIndex);
             scrollTo(postFianceeButton);
             postFianceeButton.click();
-            Assert.assertTrue("'Анкета персонажа добавлена в базу невест' not found!", pageBody().contains("Анкета персонажа добавлена в базу невест"));
+            Assert.assertTrue("'добавлена в базу невест!' not found!", pageBody().contains("добавлена в базу невест!"));
 
             postFianceeButtonList = driver.findElements(By.name("postFianceeButton"));
         }

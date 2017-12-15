@@ -81,21 +81,21 @@ public class TownController {
 
                     familyRepository.save(family);
 
-                    logger.info(family.familyNameAndUserName() + "buy building: " + building.getName());
+                    logger.info(family.userNameAndFamilyName() + "buy building: " + building.getName());
                     String mess = "Вы купили здание '" + building.getName() + "'. Потрачено: " + building.getCost() + " д.";
                     familyLogService.addToLog(family, mess);
                     redirectAttributes.addFlashAttribute("mess", mess);
                     return "redirect:/game/town";
                 }
-                logger.error(family.familyNameAndUserName() + " not enough money to buy building: " + building.getName());
+                logger.error(family.userNameAndFamilyName() + " not enough money to buy building: " + building.getName());
                 redirectAttributes.addFlashAttribute("mess", "Недостаточно денег для покупки этого здания " + building.getName());
                 return "redirect:/game/town";
             }
-            logger.error(family.familyNameAndUserName() + "want to buy building, but already has one: " + building.getName());
+            logger.error(family.userNameAndFamilyName() + "want to buy building, but already has one: " + building.getName());
             redirectAttributes.addFlashAttribute("mess", "Вы уже владеете таким зданием");
             return "redirect:/game/town";
         }
-        logger.error(family.familyNameAndUserName() + "want to buy non existing building: " + buildingId);
+        logger.error(family.userNameAndFamilyName() + "want to buy non existing building: " + buildingId);
         redirectAttributes.addFlashAttribute("mess", "Такого здания не существует");
         return "redirect:/game/town";
     }

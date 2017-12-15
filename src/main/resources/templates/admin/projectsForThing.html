@@ -44,7 +44,7 @@
                     <button type="submit" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Сохранить новое название" style="display: inline-block"><span class="glyphicon glyphicon-ok"></span></button>
                 </form>
             </td>
-            <td th:text="${project.getAuthor().familyNameAndUserName()}">type</td>
+            <td th:text="${project.getAuthor().userNameAndFamilyName()}">type</td>
             <td>
                 <th:block th:if="${project.getView()!=null}">
                     <div class="my_dropdown">

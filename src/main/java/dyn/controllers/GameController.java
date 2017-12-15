@@ -214,7 +214,7 @@ public class GameController {
 
         familyRepository.save(family);
 
-        logger.debug(family.familyNameAndUserName() + " changed game view");
+        logger.debug(family.userNameAndFamilyName() + " changed game view");
         return "redirect:/game";
     }
 
@@ -277,7 +277,7 @@ public class GameController {
         }
 
         redirectAttributes.addFlashAttribute("mess", "Призвание не найдено");
-        logger.error(family.familyNameAndUserName() + " tried to see non-existing vocation");
+        logger.error(family.userNameAndFamilyName() + " tried to see non-existing vocation");
         return "redirect:/game";
     }
 
@@ -317,7 +317,7 @@ public class GameController {
             return "redirect:/game";
         }
 
-        logger.info(family.familyNameAndUserName() + " makes a turn!");
+        logger.info(family.userNameAndFamilyName() + " makes a turn!");
 
         StringBuilder turnLog = new StringBuilder();
         StringBuilder turnAchievements = new StringBuilder();
@@ -407,7 +407,7 @@ public class GameController {
                 childAmount += 1;
             }
 
-            logger.info(family.familyNameAndUserName() + "'s character " + character.getName() + " marries " + wife.getName() + " and they have " + childAmount + " children");
+            logger.info(family.userNameAndFamilyName() + "'s character " + character.getName() + " marries " + wife.getName() + " and they have " + childAmount + " children");
             turnLog.append(messageSource.getMessage("turn.marriage", new Object[]{character.getName(), wife.getName(), childAmount}, loc()));
             turnLog.append("<br>");
 
@@ -512,7 +512,7 @@ public class GameController {
         child.setRace(raceService.defineRace(child));
         Achievement achievement = achievementService.checkAchievement(AchievementType.newborn, user, child);
         if (achievement != null) {
-            log.append(messageSource.getMessage("turn.achievement", new Object[]{achievement.getName()}, loc()));
+            log.append(messageSource.getMessage("turn.achievement", new Object[]{achievement.getName(), Const.ACHIEVEMENT_CRAFT_POINTS, Const.ACHIEVEMENT_MONEY}, loc()));
             logAchievements.append(child.getName()).append(": ").append(achievement.getName()).append("<br>");
         }
 
@@ -545,7 +545,7 @@ public class GameController {
 
         // salary coeff for house quality
         float houseQualitySalaryCoeff = houseService.countHouseQualitySalaryCoeff(family.getHouseQuality());
-        logger.debug(family.familyNameAndUserName() + " houseQualitySalaryCoeff = " + houseQualitySalaryCoeff);
+        logger.debug(family.userNameAndFamilyName() + " houseQualitySalaryCoeff = " + houseQualitySalaryCoeff);
 
         // processing
         for (Character worker : workers) {

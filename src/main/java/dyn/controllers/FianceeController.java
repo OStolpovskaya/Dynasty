@@ -254,11 +254,11 @@ public class FianceeController {
                     Family wifeFamily = wife.getFamily();
                     wifeFamily.setMoney(wifeFamily.getMoney() + fiancee.getCost());
                     familyRepository.save(wifeFamily);
-                    familyLogService.addToLog(wifeFamily, "Семья " + family.getFamilyName() + " выкупила одну из ваших невест: " + wife.getName() + " (уровень: " + wife.getLevel() + "). Получено: " + fiancee.getCost() + " д.");
+                    familyLogService.addToLog(wifeFamily, "Семья " + family.link() + " выкупила одну из ваших невест: " + wife.getName() + " (уровень: " + wife.getLevel() + "). Получено: " + fiancee.getCost() + " д.");
                 }
-                String mess = messageSource.getMessage("chooseFiancee.success", new Object[]{character.getName(), wife.getName(), wife.getFamily().getFamilyName(), fiancee.getCost()}, loc());
+                String mess = messageSource.getMessage("chooseFiancee.success", new Object[]{character.getName(), wife.getName(), wife.getFamily().link(), fiancee.getCost()}, loc());
                 familyLogService.addToLog(family, mess);
-                logger.info(family.familyNameAndUserName() + mess);
+                logger.info(family.userNameAndFamilyName() + mess);
                 redirectAttributes.addFlashAttribute("mess", mess);
 
                 return "redirect:/game#char" + character.getFather().getId();
@@ -323,7 +323,7 @@ public class FianceeController {
 
             familyLogService.addToLog(family, mess);
             redirectAttributes.addFlashAttribute("mess", mess);
-            logger.info(family.familyNameAndUserName() + mess);
+            logger.info(family.userNameAndFamilyName() + mess);
 
             return "redirect:/game#char" + character.getFather().getId();
         }

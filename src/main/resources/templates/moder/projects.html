@@ -76,7 +76,7 @@
                 <th scope="row" th:text="${projectStat.count}">1</th>
                 <!--/*@thymesVar id="project" type="dyn.model.Project"*/-->
                 <td th:text="${project.getStatusWithMessage()}"></td>
-                <td th:text="${project.getAuthor().familyNameAndUserName()}"></td>
+                <td th:text="${project.getAuthor().userNameAndFamilyName()}"></td>
                 <td th:text="${project.getThing().getName()}"></td>
                 <td th:text="${project.getName()}"></td>
                 <td th:text="${project.getCost()}"></td>
@@ -108,7 +108,7 @@
                 <th scope="row" th:text="${projectStat.count}">1</th>
                 <!--/*@thymesVar id="project" type="dyn.model.Project"*/-->
                 <td th:text="${project.getStatusWithMessage()}"></td>
-                <td th:text="${project.getAuthor().familyNameAndUserName()}"></td>
+                <td th:text="${project.getAuthor().userNameAndFamilyName()}"></td>
                 <td th:text="${project.getThing().getName()}"></td>
                 <td th:text="${project.getName()}"></td>
                 <td th:text="${project.getCost()}"></td>

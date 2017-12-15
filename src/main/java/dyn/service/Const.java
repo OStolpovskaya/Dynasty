@@ -98,8 +98,10 @@ public class Const {
 
     public static final int CRAFT_POINTS_START = 3;
     public static final int CRAFT_POINTS_FOR_LEVEL = 1;
-    public static final int CRAFT_POINTS_FOR_ACHIEVEMENT = 2;
     public static final int CRAFT_POINTS_FOR_NEW_HOUSE = 10;
+
+    public static final int ACHIEVEMENT_CRAFT_POINTS = 2;
+    public static final int ACHIEVEMENT_MONEY = 5000;
 
     public static final int ITEM_QUALITY_1 = 5;
     public static final int ITEM_QUALITY_2 = 25;

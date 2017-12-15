@@ -80,7 +80,7 @@ public class BuffController {
         }
 
         redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("game.chooseBuffs.characterCantChooseBuffs", null, loc()));
-        logger.error(family.familyNameAndUserName() + "'s character " + characterId + " is not belongs to user's current family fiances");
+        logger.error(family.userNameAndFamilyName() + "'s character " + characterId + " is not belongs to user's current family fiances");
         return "redirect:/game";
     }
 
@@ -105,23 +105,23 @@ public class BuffController {
                     familyLogService.addToLog(family, "Вы применили бафф " + messageSource.getMessage(buff.getTitle(), null, loc()) + " к персонажу " + character.getName() + ". Потрачено: " + buff.getCost() + " д.");
                     Object[] messageArguments = {character.getName(), messageSource.getMessage(buff.getTitle(), null, loc()), buff.getCost()};
                     redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("game.chooseBuffs.success", messageArguments, loc()));
-                    logger.debug(family.familyNameAndUserName() + "'s character " + characterId + " now has buff " + buff.getTitle());
+                    logger.debug(family.userNameAndFamilyName() + "'s character " + characterId + " now has buff " + buff.getTitle());
                     return "redirect:/game#char" + character.getFather().getId();
                 } else {
                     redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("game.chooseBuffs.notEnoughMoney", null, loc()));
-                    logger.error(family.familyNameAndUserName() + ": not enough money for buff " + buff.getTitle());
+                    logger.error(family.userNameAndFamilyName() + ": not enough money for buff " + buff.getTitle());
                     return "redirect:/game";
                 }
 
             } else {
                 redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("game.chooseBuffs.characterHasThisBuffOrContradictoryToThisBuff", null, loc()));
-                logger.error(family.familyNameAndUserName() + "'s character " + characterId + " has this buff or contradictory to this buff");
+                logger.error(family.userNameAndFamilyName() + "'s character " + characterId + " has this buff or contradictory to this buff");
                 return "redirect:/game";
             }
 
         }
         redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("game.chooseBuffs.characterCantChooseBuffs", null, loc()));
-        logger.error(family.familyNameAndUserName() + "'s character " + characterId + " is not belongs to user's current family fiances");
+        logger.error(family.userNameAndFamilyName() + "'s character " + characterId + " is not belongs to user's current family fiances");
         return "redirect:/game";
     }
 
@@ -160,7 +160,7 @@ public class BuffController {
                 family.getFamilyResources().addChemical(10);
                 mess = "Добавлено: " + Const.RES_CHEMICAL_NAME + " (10 шт.)";
             } else {
-                logger.error(family.familyNameAndUserName() + "want to apply item of project with no rule: " + projectId);
+                logger.error(family.userNameAndFamilyName() + "want to apply item of project with no rule: " + projectId);
                 redirectAttributes.addFlashAttribute("mess", "Проект этого предмета еще не описан");
                 return "redirect:/storage";
             }
@@ -170,10 +170,10 @@ public class BuffController {
 
             familyLogService.addToLog(family, mess);
             redirectAttributes.addFlashAttribute("mess", mess);
-            logger.info(family.familyNameAndUserName() + " apply item of project: '" + item.getProject().getName());
+            logger.info(family.userNameAndFamilyName() + " apply item of project: '" + item.getProject().getName());
             return "redirect:/game/storage";
         }
-        logger.error(family.familyNameAndUserName() + "want to apply nonexisting item: " + itemId);
+        logger.error(family.userNameAndFamilyName() + "want to apply nonexisting item: " + itemId);
         redirectAttributes.addFlashAttribute("mess", "Нет такого предмета или он вам не принадлежит");
         return "redirect:/storage";
     }
@@ -216,12 +216,12 @@ public class BuffController {
                             mess = "Персонажу добавлен бафф: " + messageSource.getMessage(buff.getTitle(), null, loc());
                             characterRepository.save(character);
                         } else {
-                            logger.error(family.familyNameAndUserName() + "want to apply buff, but character already has this buff or has contradictory buff: " + buff.getId());
+                            logger.error(family.userNameAndFamilyName() + "want to apply buff, but character already has this buff or has contradictory buff: " + buff.getId());
                             redirectAttributes.addFlashAttribute("mess", "Персонаж уже имеет этот или противоположный ему бафф");
                             return "redirect:/game";
                         }
                     } else {
-                        logger.error(family.familyNameAndUserName() + "want to apply item of project with no rule: " + projectId);
+                        logger.error(family.userNameAndFamilyName() + "want to apply item of project with no rule: " + projectId);
                         redirectAttributes.addFlashAttribute("mess", "Проект этого предмета еще не описан");
                         return "redirect:/game";
                     }
@@ -231,20 +231,20 @@ public class BuffController {
 
                     familyLogService.addToLog(family, mess);
                     redirectAttributes.addFlashAttribute("mess", mess);
-                    logger.info(family.familyNameAndUserName() + " apply item of project: '" + item.getProject().getName());
+                    logger.info(family.userNameAndFamilyName() + " apply item of project: '" + item.getProject().getName());
                     return "redirect:/game#char" + character.getFather().getId();
                 } else {
-                    logger.error(family.familyNameAndUserName() + "want to apply item to not right character: " + character.getMainDetails());
+                    logger.error(family.userNameAndFamilyName() + "want to apply item to not right character: " + character.getMainDetails());
                     redirectAttributes.addFlashAttribute("mess", "Условия применения не подходят к выбранному персонажу " + character.getFullName());
                     return "redirect:/game";
                 }
             } else {
-                logger.error(family.familyNameAndUserName() + "want to apply item to nonexisting character: " + characterId);
+                logger.error(family.userNameAndFamilyName() + "want to apply item to nonexisting character: " + characterId);
                 redirectAttributes.addFlashAttribute("mess", "Нет такого персонажа");
                 return "redirect:/game";
             }
         }
-        logger.error(family.familyNameAndUserName() + "want to apply nonexisting item: " + itemId);
+        logger.error(family.userNameAndFamilyName() + "want to apply nonexisting item: " + itemId);
         redirectAttributes.addFlashAttribute("mess", "Нет такого предмета или он вам не принадлежит");
         return "redirect:/game";
     }
@@ -282,7 +282,7 @@ public class BuffController {
                     } else if (projectId.equals(Const.PROJECT_ONE_MORE_CHILD)) { // TODO: delete
                         buff = buffRepository.findOne(Const.BUFF_ONE_MORE_CHILD);
                     } else {
-                        logger.error(family.familyNameAndUserName() + "want to apply item of project with no rule: " + projectId);
+                        logger.error(family.userNameAndFamilyName() + "want to apply item of project with no rule: " + projectId);
                         redirectAttributes.addFlashAttribute("mess", "Проект этого предмета еще не описан");
                         return "redirect:/game";
                     }
@@ -291,7 +291,7 @@ public class BuffController {
                         character.getBuffs().add(buff);
                         mess = "Персонажу " + character.getName() + " добавлен бафф: " + messageSource.getMessage(buff.getTitle(), null, loc());
                     } else {
-                        logger.error(family.familyNameAndUserName() + "want to apply buff, but character already has this buff or has contradictory buff: " + buff.getId());
+                        logger.error(family.userNameAndFamilyName() + "want to apply buff, but character already has this buff or has contradictory buff: " + buff.getId());
                         redirectAttributes.addFlashAttribute("mess", "Персонаж уже имеет этот или противоположный ему бафф");
                         return "redirect:/game";
                     }
@@ -301,20 +301,20 @@ public class BuffController {
 
                     familyLogService.addToLog(family, mess);
                     redirectAttributes.addFlashAttribute("mess", mess);
-                    logger.info(family.familyNameAndUserName() + " apply item of project: '" + item.getProject().getName());
+                    logger.info(family.userNameAndFamilyName() + " apply item of project: '" + item.getProject().getName());
                     return "redirect:/game#char" + character.getFather().getId();
                 } else {
-                    logger.error(family.familyNameAndUserName() + "want to apply item to not right character: " + character.getMainDetails());
+                    logger.error(family.userNameAndFamilyName() + "want to apply item to not right character: " + character.getMainDetails());
                     redirectAttributes.addFlashAttribute("mess", "Условия применения не подходят к выбранному персонажу " + character.getFullName());
                     return "redirect:/game";
                 }
             } else {
-                logger.error(family.familyNameAndUserName() + "want to apply item to nonexisting character: " + characterId);
+                logger.error(family.userNameAndFamilyName() + "want to apply item to nonexisting character: " + characterId);
                 redirectAttributes.addFlashAttribute("mess", "Нет такого персонажа");
                 return "redirect:/game";
             }
         }
-        logger.error(family.familyNameAndUserName() + "want to apply nonexisting item: " + itemId);
+        logger.error(family.userNameAndFamilyName() + "want to apply nonexisting item: " + itemId);
         redirectAttributes.addFlashAttribute("mess", "Нет такого предмета или он вам не принадлежит");
         return "redirect:/game";
     }
@@ -350,7 +350,7 @@ public class BuffController {
                     canHaveChild = size < Const.MAX_CHILDREN;
                 }
                 if (!canHaveChild) {
-                    logger.error(family.familyNameAndUserName() + " want to apply parents buff, but reached max children: " + item.getProject().getId());
+                    logger.error(family.userNameAndFamilyName() + " want to apply parents buff, but reached max children: " + item.getProject().getId());
                     redirectAttributes.addFlashAttribute("mess", "Персонаж не может иметь больше детей. Максимум: " + Const.MAX_CHILDREN);
                     return "redirect:/game";
                 }
@@ -476,7 +476,7 @@ public class BuffController {
 
                         mess = log.toString();
                     } else {
-                        logger.error(family.familyNameAndUserName() + "want to apply item of project with no rule: " + projectId);
+                        logger.error(family.userNameAndFamilyName() + "want to apply item of project with no rule: " + projectId);
                         redirectAttributes.addFlashAttribute("mess", "Проект этого предмета еще не описан");
                         return "redirect:/game";
                     }
@@ -485,20 +485,20 @@ public class BuffController {
 
                     familyLogService.addToLog(family, mess);
                     redirectAttributes.addFlashAttribute("mess", mess);
-                    logger.info(family.familyNameAndUserName() + " apply item of project: '" + item.getProject().getName());
+                    logger.info(family.userNameAndFamilyName() + " apply item of project: '" + item.getProject().getName());
                     return "redirect:/game#char" + (character.getSex() == "male" ? character.getId() : character.getSpouse().getId());
                 } else {
-                    logger.error(family.familyNameAndUserName() + "want to apply item to not right character: " + character.getMainDetails() + ". Условия: " + levelCheck + "," + familyCheck + "," + hasChildren);
+                    logger.error(family.userNameAndFamilyName() + "want to apply item to not right character: " + character.getMainDetails() + ". Условия: " + levelCheck + "," + familyCheck + "," + hasChildren);
                     redirectAttributes.addFlashAttribute("mess", "Условия применения не подходят к выбранному персонажу " + character.getFullName());
                     return "redirect:/game";
                 }
             } else {
-                logger.error(family.familyNameAndUserName() + "want to apply item to nonexisting character: " + characterId);
+                logger.error(family.userNameAndFamilyName() + "want to apply item to nonexisting character: " + characterId);
                 redirectAttributes.addFlashAttribute("mess", "Нет такого персонажа");
                 return "redirect:/game";
             }
         }
-        logger.error(family.familyNameAndUserName() + "want to apply nonexisting item: " + itemId);
+        logger.error(family.userNameAndFamilyName() + "want to apply nonexisting item: " + itemId);
         redirectAttributes.addFlashAttribute("mess", "Нет такого предмета или он вам не принадлежит");
         return "redirect:/game";
     }
@@ -520,7 +520,7 @@ public class BuffController {
                 family.setFianceeNum(family.getFianceeNum() - 1);
                 mess = "Теперь вы можете опубликовать еще одну анкету невесты";
             } else {
-                logger.error(family.familyNameAndUserName() + "want to apply item of project with no rule: " + projectId);
+                logger.error(family.userNameAndFamilyName() + "want to apply item of project with no rule: " + projectId);
                 redirectAttributes.addFlashAttribute("mess", "Проект этого предмета еще не описан");
                 return "redirect:/game";
             }
@@ -530,10 +530,10 @@ public class BuffController {
 
             familyLogService.addToLog(family, mess);
             redirectAttributes.addFlashAttribute("mess", mess);
-            logger.info(family.familyNameAndUserName() + " apply item of project: '" + item.getProject().getName());
+            logger.info(family.userNameAndFamilyName() + " apply item of project: '" + item.getProject().getName());
             return "redirect:/game";
         }
-        logger.error(family.familyNameAndUserName() + "want to apply nonexisting item: " + itemId);
+        logger.error(family.userNameAndFamilyName() + "want to apply nonexisting item: " + itemId);
         redirectAttributes.addFlashAttribute("mess", "Нет такого предмета или он вам не принадлежит");
         return "redirect:/game";
     }
@@ -564,7 +564,7 @@ public class BuffController {
                             characterRepository.save(character);
                             mess = "Призвание персонажа изменено: " + vocation.getName();
                         } else {
-                            logger.error(family.familyNameAndUserName() + "want to change vocation to nonexisting vocation: " + param);
+                            logger.error(family.userNameAndFamilyName() + "want to change vocation to nonexisting vocation: " + param);
                             redirectAttributes.addFlashAttribute("mess", "Такого призвания нет");
                             return "redirect:/game";
                         }
@@ -597,6 +597,7 @@ public class BuffController {
                                 break;
                             case "hairType":
                                 character.setHairType(app.getRandomHairType(AppearanceService.USUAL));
+                                character.setHairStyle(app.getRandomHairStyle(character.getSex(), character.getHairType()));
                                 part = "тип волос";
                                 break;
                             case "head":
@@ -625,7 +626,7 @@ public class BuffController {
                         characterRepository.save(character);
                         mess = "У персонажа " + character.getName() + " проведена пластическая операция: " + part;
                     } else {
-                        logger.error(family.familyNameAndUserName() + "want to apply item of project with no rule: " + projectId);
+                        logger.error(family.userNameAndFamilyName() + "want to apply item of project with no rule: " + projectId);
                         redirectAttributes.addFlashAttribute("mess", "Проект этого предмета еще не описан");
                         return "redirect:/game";
                     }
@@ -634,20 +635,20 @@ public class BuffController {
 
                     familyLogService.addToLog(family, mess);
                     redirectAttributes.addFlashAttribute("mess", mess);
-                    logger.info(family.familyNameAndUserName() + " apply item of project: '" + item.getProject().getName());
+                    logger.info(family.userNameAndFamilyName() + " apply item of project: '" + item.getProject().getName());
                     return "redirect:/game#char" + character.getFather().getId();
                 } else {
-                    logger.error(family.familyNameAndUserName() + "want to apply item to not right character: " + character.getMainDetails());
+                    logger.error(family.userNameAndFamilyName() + "want to apply item to not right character: " + character.getMainDetails());
                     redirectAttributes.addFlashAttribute("mess", "Условия применения не подходят к выбранному персонажу " + character.getFullName());
                     return "redirect:/game";
                 }
             } else {
-                logger.error(family.familyNameAndUserName() + "want to apply item to nonexisting character: " + characterId);
+                logger.error(family.userNameAndFamilyName() + "want to apply item to nonexisting character: " + characterId);
                 redirectAttributes.addFlashAttribute("mess", "Нет такого персонажа");
                 return "redirect:/game";
             }
         }
-        logger.error(family.familyNameAndUserName() + "want to apply nonexisting item: " + itemId);
+        logger.error(family.userNameAndFamilyName() + "want to apply nonexisting item: " + itemId);
         redirectAttributes.addFlashAttribute("mess", "Нет такого предмета или он вам не принадлежит");
         return "redirect:/game";
     }

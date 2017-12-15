@@ -286,7 +286,15 @@ public class Family {
                 familyResources.getChemical() >= project.getChemical();
     }
 
-    public String familyNameAndUserName() {
+    public String userNameAndFamilyName() {
         return user.getUserName() + " (" + familyName + ") ";
+    }
+
+    public String link() {
+        return "<a href='/game/userview?userId=" + getUser().getUserid() + "&familyId=" + getId() + "'>" + getFamilyName() + "</a>";
+    }
+
+    public void addMoney(int income) {
+        money = money + income;
     }
 }

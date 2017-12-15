@@ -52,7 +52,7 @@ public class FeedbackController {
         Family family = user.getCurrentFamily();
 
         if (result.hasErrors()) {
-            logger.error(family.familyNameAndUserName() + " try to add feedback, but form returned with binding errors: " + result.getSuppressedFields());
+            logger.error(family.userNameAndFamilyName() + " try to add feedback, but form returned with binding errors: " + result.getSuppressedFields());
 
             model.addAttribute("family", family);
 
@@ -66,7 +66,7 @@ public class FeedbackController {
         newFeedback.setStatus(FeedbackStatus.submitted);
         feedbackRepository.save(newFeedback);
 
-        logger.info(family.familyNameAndUserName() + " submitted new feedback '" + newFeedback.getType() + "': " + newFeedback.getId());
+        logger.info(family.userNameAndFamilyName() + " submitted new feedback '" + newFeedback.getType() + "': " + newFeedback.getId());
         redirectAttributes.addFlashAttribute("mess", "Ваша заявка зарегистрирована!");
 
         return "redirect:/game/feedback";

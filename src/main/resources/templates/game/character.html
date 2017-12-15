@@ -18,7 +18,7 @@
     <!--/*@thymesVar id="character" type="dyn.model.Character"*/-->
     <div style="float: left">
         <p th:inline="text">
-            Династия: <a th:href="${'/game/userview?userId='+character.getFamily().getUser().getUserid() +'&amp;familyId='+character.getFamily().getId()}" th:text="${character.getFamily().familyNameAndUserName()}"></a><br/>
+            Династия: <a th:href="${'/game/userview?userId='+character.getFamily().getUser().getUserid() +'&amp;familyId='+character.getFamily().getId()}" th:text="${character.getFamily().userNameAndFamilyName()}"></a><br/>
             Имя: [[${character.getName()}]]<br/>
             Уровень: [[${character.getLevel()}]]<br/>
             Пол: [[${character.getSex()}]]<br/>
