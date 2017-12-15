@@ -110,7 +110,7 @@
                 <!--/*@thymesVar id="fiancee" type="dyn.model.Fiancee"*/-->
                 <!--/*@thymesVar id="bride" type="dyn.model.Character"*/-->
                 <input type="radio" id="fianceeLowerLevel" name="fiancee" th:value="${fiancee.getId()}" onclick="enableChooseFianceeButton()" style="display: inline-block;"/>
-                <div class="char-view-div" align="center">
+                <div class="char-view-div" align="center" style="padding: 3px; border-radius: 4px; " th:styleappend="${fiancee.isSpecialFiancee()?'background-color: darkseagreen;':''}">
                     <div th:replace="fragments/char :: char-panel (character=${fiancee.getCharacter()})"></div>
                     <label>
                         <th:block th:text="#{cost(${fiancee.getCost()})}"></th:block>
@@ -140,7 +140,7 @@
             <div th:each="fiancee : ${disabledFianceeList}" style="display: inline-block;" th:with="bride = ${fiancee.getCharacter()}">
                 <!--/*@thymesVar id="fiancee" type="dyn.model.Fiancee"*/-->
                 <!--/*@thymesVar id="bride" type="dyn.model.Character"*/-->
-                <div class="char-view-div" align="center">
+                <div class="char-view-div" align="center" style="padding: 3px; border-radius: 4px; " th:styleappend="${fiancee.isSpecialFiancee()?'background-color: darkseagreen;':''}">
                     <div th:replace="fragments/char :: char-panel (character=${fiancee.getCharacter()})"></div>
                     <label th:alt-title="${fiancee.disableReason}"><span class="glyphicon glyphicon-question-sign" style="color: dimgrey;"></span></label>
                 </div>
