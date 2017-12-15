@@ -12,12 +12,50 @@
     <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
     <th:block th:if="${family.getLevel() == 0}">
         <div class="alert alert-success">
-            Здесь отображена история вашей семьи. Все поколения, которые появятся в будущем. В самом низу страницы вы можете видеть табличку, где будут показаны все ваши семьи.
-            Вы можете переключаться между ними, когда захотите, или создать новую семью.<br/>
+            Здесь отображены все семьи вашего аккаунта и история выбранной семьи (с родословной и логами уровня). Вы можете переключаться между семьями вашего аккаунта в любое время или создать новую семью.<br/>
             Пожалуйста, перейдите в меню на вкладку Дом.
         </div>
     </th:block>
-    <h3>История семьи:</h3>
+
+    <h3>Ваши семьи</h3>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Фамилия</th>
+            <th>Уровень</th>
+            <th>Деньги</th>
+            <th>Текущий выбор</th>
+            <th>Действия</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="family : ${families}">
+            <td th:text="${family.getFamilyName()}">name</td>
+            <td th:text="${family.getLevel()}">1</td>
+            <td th:text="${family.getMoney()}">1</td>
+            <td>
+                <th:block th:if="${family.isCurrent()}"><span class="glyphicon glyphicon-ok-sign" style="color: forestgreen"></span>
+                </th:block>
+            </td>
+            <td>
+                <th:block th:if="${family.isCurrent() == false}">
+                    <form th:action="@{/game/makeFamilyCurrent}" class="form-inline" method="post">
+                        <div class="form-group">
+                            <input type="hidden" name="familyId" th:value="${family.getId()}"/>
+                            <button type="submit" class="btn btn-default">Переключиться</button>
+                        </div>
+                    </form>
+                </th:block>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    Вы можете создать
+    <th:block th:text="${@const.MAX_FAMILIES}"></th:block>
+    семей. Удалять семьи нельзя. <br/>
+    <a href="/game/addNewFamily" class="btn btn-info" role="button">Создать новую семью!</a>
+
+    <h3>История выбранной семьи:</h3>
     <!--levelFatherChildren-->
     <th:block th:each="fatherChildrenMap : ${levelFatherChildren}" th:with="level = ${fatherChildrenMapStat.count - 1}">
         <a th:name="${'level'+level}" class="anchor"></a>
@@ -64,43 +102,7 @@
             </th:block>
         </div>
     </th:block>
-    <h3>Ваши семьи</h3>
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>Фамилия</th>
-            <th>Уровень</th>
-            <th>Деньги</th>
-            <th>Текущий выбор</th>
-            <th>Действия</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="family : ${families}">
-            <td th:text="${family.getFamilyName()}">name</td>
-            <td th:text="${family.getLevel()}">1</td>
-            <td th:text="${family.getMoney()}">1</td>
-            <td>
-                <th:block th:if="${family.isCurrent()}"><span class="glyphicon glyphicon-ok-sign" style="color: forestgreen"></span>
-                </th:block>
-            </td>
-            <td>
-                <th:block th:if="${family.isCurrent() == false}">
-                    <form th:action="@{/game/makeFamilyCurrent}" class="form-inline" method="post">
-                        <div class="form-group">
-                            <input type="hidden" name="familyId" th:value="${family.getId()}"/>
-                            <button type="submit" class="btn btn-default">Переключиться</button>
-                        </div>
-                    </form>
-                </th:block>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    Вы можете создать
-    <th:block th:text="${@const.MAX_FAMILIES}"></th:block>
-    семей. Удалять семьи нельзя. <br/>
-    <a href="/game/addNewFamily" class="btn btn-info" role="button">Создать новую семью!</a>
+
 </div>
 <th:block th:replace="fragments/scripts :: webjars"></th:block>
 </body>
