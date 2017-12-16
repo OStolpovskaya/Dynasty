@@ -36,22 +36,22 @@
             <td class="col-md-1" th:text="${bug.getUser().getUserName()}"></td>
             <td class="col-md-6" th:text="${bug.getText()}"></td>
             <td class="col-md-2">
-                <form th:action="@{/moder/changeFeedbackStatus}" method="post" style="float: left">
+                <form th:action="@{/admin/changeFeedbackStatus}" method="post" style="float: left">
                     <input type="hidden" name="feedbackId" th:value="${bug.getId()}"/>
                     <input type="hidden" name="feedbackStatus" value="cancelled"/>
                     <button type="submit" class="btn btn-danger btn-xs" title="Отменить"><span class="glyphicon glyphicon-remove-sign"></span></button>
                 </form>
-                <form th:action="@{/moder/changeFeedbackStatus}" method="post" style="float: left">
+                <form th:action="@{/admin/changeFeedbackStatus}" method="post" style="float: left">
                     <input type="hidden" name="feedbackId" th:value="${bug.getId()}"/>
                     <input type="hidden" name="feedbackStatus" value="processed"/>
                     <button type="submit" class="btn btn-primary btn-xs" title="В работе"><span class="glyphicon glyphicon-exclamation-sign"></span></button>
                 </form>
-                <form th:action="@{/moder/changeFeedbackStatus}" method="post" style="float: left">
+                <form th:action="@{/admin/changeFeedbackStatus}" method="post" style="float: left">
                     <input type="hidden" name="feedbackId" th:value="${bug.getId()}"/>
                     <input type="hidden" name="feedbackStatus" value="finished"/>
                     <button type="submit" class="btn btn-success btn-xs" title="Завершено"><span class="glyphicon glyphicon-ok-sign"></span></button>
                 </form>
-                <form th:action="@{/moder/changeFeedbackStatus}" method="post" style="float: left">
+                <form th:action="@{/admin/changeFeedbackStatus}" method="post" style="float: left">
                     <input type="hidden" name="feedbackId" th:value="${bug.getId()}"/>
                     <input type="hidden" name="feedbackStatus" value="submitted"/>
                     <button type="submit" class="btn btn-info btn-xs" title="Добавлено"><span class="glyphicon glyphicon-plus-sign"></span></button>
@@ -82,22 +82,22 @@
             <td class="col-md-1" th:text="${complaint.getUser().getUserName()}"></td>
             <td class="col-md-6" th:text="${complaint.getText()}"></td>
             <td class="col-md-2">
-                <form th:action="@{/moder/changeFeedbackStatus}" method="post" style="float: left">
+                <form th:action="@{/admin/changeFeedbackStatus}" method="post" style="float: left">
                     <input type="hidden" name="feedbackId" th:value="${complaint.getId()}"/>
                     <input type="hidden" name="feedbackStatus" value="cancelled"/>
                     <button type="submit" class="btn btn-danger btn-xs" title="Отменить"><span class="glyphicon glyphicon-remove-sign"></span></button>
                 </form>
-                <form th:action="@{/moder/changeFeedbackStatus}" method="post" style="float: left">
+                <form th:action="@{/admin/changeFeedbackStatus}" method="post" style="float: left">
                     <input type="hidden" name="feedbackId" th:value="${complaint.getId()}"/>
                     <input type="hidden" name="feedbackStatus" value="processed"/>
                     <button type="submit" class="btn btn-primary btn-xs" title="В работе"><span class="glyphicon glyphicon-exclamation-sign"></span></button>
                 </form>
-                <form th:action="@{/moder/changeFeedbackStatus}" method="post" style="float: left">
+                <form th:action="@{/admin/changeFeedbackStatus}" method="post" style="float: left">
                     <input type="hidden" name="feedbackId" th:value="${complaint.getId()}"/>
                     <input type="hidden" name="feedbackStatus" value="finished"/>
                     <button type="submit" class="btn btn-success btn-xs" title="Завершено"><span class="glyphicon glyphicon-ok-sign"></span></button>
                 </form>
-                <form th:action="@{/moder/changeFeedbackStatus}" method="post" style="float: left">
+                <form th:action="@{/admin/changeFeedbackStatus}" method="post" style="float: left">
                     <input type="hidden" name="feedbackId" th:value="${complaint.getId()}"/>
                     <input type="hidden" name="feedbackStatus" value="submitted"/>
                     <button type="submit" class="btn btn-info btn-xs" title="Добавлено"><span class="glyphicon glyphicon-plus-sign"></span></button>
@@ -128,22 +128,22 @@
             <td class="col-md-1" th:text="${suggestion.getUser().getUserName()}"></td>
             <td class="col-md-6" th:text="${suggestion.getText()}"></td>
             <td class="col-md-2">
-                <form th:action="@{/moder/changeFeedbackStatus}" method="post" style="float: left">
+                <form th:action="@{/admin/changeFeedbackStatus}" method="post" style="float: left">
                     <input type="hidden" name="feedbackId" th:value="${suggestion.getId()}"/>
                     <input type="hidden" name="feedbackStatus" value="cancelled"/>
                     <button type="submit" class="btn btn-danger btn-xs" title="Отменить"><span class="glyphicon glyphicon-remove-sign"></span></button>
                 </form>
-                <form th:action="@{/moder/changeFeedbackStatus}" method="post" style="float: left">
+                <form th:action="@{/admin/changeFeedbackStatus}" method="post" style="float: left">
                     <input type="hidden" name="feedbackId" th:value="${suggestion.getId()}"/>
                     <input type="hidden" name="feedbackStatus" value="processed"/>
                     <button type="submit" class="btn btn-primary btn-xs" title="В работе"><span class="glyphicon glyphicon-exclamation-sign"></span></button>
                 </form>
-                <form th:action="@{/moder/changeFeedbackStatus}" method="post" style="float: left">
+                <form th:action="@{/admin/changeFeedbackStatus}" method="post" style="float: left">
                     <input type="hidden" name="feedbackId" th:value="${suggestion.getId()}"/>
                     <input type="hidden" name="feedbackStatus" value="finished"/>
                     <button type="submit" class="btn btn-success btn-xs" title="Завершено"><span class="glyphicon glyphicon-ok-sign"></span></button>
                 </form>
-                <form th:action="@{/moder/changeFeedbackStatus}" method="post" style="float: left">
+                <form th:action="@{/admin/changeFeedbackStatus}" method="post" style="float: left">
                     <input type="hidden" name="feedbackId" th:value="${suggestion.getId()}"/>
                     <input type="hidden" name="feedbackStatus" value="submitted"/>
                     <button type="submit" class="btn btn-info btn-xs" title="Добавлено"><span class="glyphicon glyphicon-plus-sign"></span></button>

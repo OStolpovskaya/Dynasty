@@ -38,13 +38,13 @@
                 <td th:utext="${project.resString()}"></td>
                 <td><img th:if="${project.getView() != null}" th:src="${'data:image/png;base64,'+project.getEncodedView()}" style="border: solid 1px green;"/></td>
                 <td>
-                    <form th:action="@{/moder/setProjectApproved}" method="post" class="form-inline">
+                    <form th:action="@{/admin/setProjectApproved}" method="post" class="form-inline">
                         <input type="hidden" name="projectId" th:value="${project.getId()}"/>
                         <button class="btn btn-sm btn-success" type="submit" style="width: 75px; margin: 2px;">Принять</button>
                     </form>
                 </td>
                 <td>
-                    <form th:action="@{/moder/setProjectRework}" method="post">
+                    <form th:action="@{/admin/setProjectRework}" method="post">
                         <div class="form-group">
                             <textarea name="reason" class="form-control" rows="3" maxlength="100" placeholder="Причина отправки на доработку" style="width: 150px;"/>
                             <input type="hidden" name="projectId" th:value="${project.getId()}"/>
@@ -115,13 +115,13 @@
                 <td th:utext="${project.resString()}"></td>
                 <td><img th:if="${project.getView() != null}" th:src="${'data:image/png;base64,'+project.getEncodedView()}" style="border: solid 1px green;"/></td>
                 <td>
-                    <form th:action="@{/moder/setProjectApproved}" method="post" class="form-inline">
+                    <form th:action="@{/admin/setProjectApproved}" method="post" class="form-inline">
                         <input type="hidden" name="projectId" th:value="${project.getId()}"/>
                         <button class="btn btn-sm btn-success" type="submit" style="width: 75px; margin: 2px;">Принять</button>
                     </form>
                 </td>
                 <td>
-                    <form th:action="@{/moder/setProjectRework}" method="post">
+                    <form th:action="@{/admin/setProjectRework}" method="post">
                         <div class="form-group">
                             <textarea name="reason" class="form-control" rows="3" maxlength="100" placeholder="Причина отправки на доработку" style="width: 150px;"/>
                             <input type="hidden" name="projectId" th:value="${project.getId()}"/>
