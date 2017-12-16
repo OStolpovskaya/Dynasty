@@ -72,6 +72,12 @@ public class TownController {
         model.addAttribute("acievementRatingMap", acievementRatingMap);
 
         List<Family> familyMoneyRating = familyRepository.findTop10ByOrderByMoneyDesc();
+        for (Family familyInRating : familyMoneyRating) {
+            if (familyInRating.getId() == 1L) {
+                familyMoneyRating.remove(familyInRating);
+                break;
+            }
+        }
         model.addAttribute("familyMoneyRating", familyMoneyRating);
 
         Page<TownNews> news = townNewsService.getNews(pageable);
