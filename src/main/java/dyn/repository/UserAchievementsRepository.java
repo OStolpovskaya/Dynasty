@@ -12,6 +12,6 @@ import java.util.List;
 public interface UserAchievementsRepository extends CrudRepository<UserAchievements, Long> {
     List<UserAchievements> findByUser(User user);
 
-    @Query(value = "SELECT user_userid, COUNT( * ) AS count FROM user_achievements GROUP BY user_userid ORDER BY count DESC", nativeQuery = true)
+    @Query(value = "SELECT user_userid, COUNT( * ) AS count FROM user_achievements GROUP BY user_userid ORDER BY count DESC LIMIT 10", nativeQuery = true)
     List<Object[]> countAchievements();
 }

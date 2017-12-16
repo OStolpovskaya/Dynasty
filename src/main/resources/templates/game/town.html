@@ -76,32 +76,91 @@
     </div>
 
     <div style="width: 560px; font-size: 12px; display: inline-block; vertical-align: top; " align="center">
+
+        <h3>Новости города</h3>
+        <div style="width: 500px;">
+            <table class="table table-striped table-condensed" style="margin-bottom: 5px;">
+                <thead>
+                <tr>
+                    <th>Дата</th>
+                    <th>Новость</th>
+                </tr>
+                </thead>
+                <tbody>
+                <th:block th:each="newsItem : ${news}">
+                    <!--/*@thymesVar id="newsItem" type="dyn.model.TownNews"*/-->
+                    <tr>
+                        <td th:text="${newsItem.formattedDate()}" style="width: 24%;">name</td>
+                        <td th:utext="${newsItem.getText()}" style="width: 76%;">desc</td>
+                    </tr>
+                </th:block>
+                </tbody>
+            </table>
+            <div class="row" style="margin: 0px;">
+                <div th:if="${news.totalPages != 1}" class="form-group col-sm-11 pagination-centered">
+                    <ul class="pagination" style="margin: 0px;">
+                        <li th:unless="${news.number == 0}">
+                            <a class="pageLink" th:href="@{/game/town(page=0)}"><span class="glyphicon glyphicon-fast-backward" style="color: #333;"></span></a>
+                        </li>
+                        <li th:unless="${news.number == 0}">
+                            <a class="pageLink" th:href="@{/game/town(page=${news.number - 1})}"><span class="glyphicon glyphicon-chevron-left" style="color: #333;"></span></a>
+                        </li>
+                        <li>
+                            <a th:text="${news.number+'/'+news.totalPages}" style="color: #333;"></a>
+                        </li>
+                        <li th:unless="${news.number + 1 >= news.totalPages}">
+                            <a class="pageLink" th:href="@{/game/town(page=${news.number + 1})}"><span class="glyphicon glyphicon-chevron-right" style="color: #333;"></span></a>
+                        </li>
+                        <li th:unless="${news.number + 1 >= news.totalPages}">
+                            <a class="pageLink" th:href="@{/game/town(page=${news.totalPages})}"><span class="glyphicon glyphicon-fast-forward" style="color: #333;"></span></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
         <h3>Рейтинг</h3>
-        <p>Здесь отображается рейтинг игроков по полученным достижениям</p>
-        <div style="width: 200px;">
-            <table class="table table-condensed">
-                <th:block th:each="mapEntry, mStat : ${acievementRatingMap}" th:with="user = ${mapEntry.getKey()}, count = ${mapEntry.getValue()}" th:unless="${mStat.count gt 10}">
-                    <tr th:class="${mStat.count==1?'success':''}">
-                        <!--/*@thymesVar id="user" type="dyn.model.User"*/-->
-                        <td>
-                            <th:block th:utext="${user.link()}"></th:block>
-                        </td>
-                        <td>
-                            <th:block th:text="${count}"></th:block>
-                            <div class="my_tooltip"><span class="glyphicon glyphicon-info-sign" style="color: darkgrey;"></span>
-                                <span class="my_tooltiptext" style="width: 300px;">
+        <div style="width: 300px;">
+            <div class="w3-bar ">
+                <a onclick="openCity('achiev')" style="cursor: pointer;">Достижения</a>
+                <a onclick="openCity('money')" style="cursor: pointer;">Деньги</a>
+            </div>
+            <div id="achiev" class="rating">
+                <h4>по количеству достижений</h4>
+                <table class="table table-condensed">
+                    <th:block th:each="mapEntry, mStat : ${acievementRatingMap}" th:with="user = ${mapEntry.getKey()}, count = ${mapEntry.getValue()}">
+                        <tr th:class="${mStat.count==1?'success':''}">
+                            <!--/*@thymesVar id="user" type="dyn.model.User"*/-->
+                            <td>
+                                <th:block th:utext="${user.link()}"></th:block>
+                            </td>
+                            <td>
+                                <th:block th:text="${count}"></th:block>
+                                <div class="my_tooltip"><span class="glyphicon glyphicon-info-sign" style="color: darkgrey;"></span>
+                                    <span class="my_tooltiptext" style="width: 300px;">
                                     <ul>
                                         <li th:each="achievement : ${user.getAchievements()}" th:text="${achievement.getName()}"></li>
                                     </ul>
                                 </span>
-                            </div>
-                        </td>
-                    </tr>
-                </th:block>
-            </table>
+                                </div>
+                            </td>
+                        </tr>
+                    </th:block>
+                </table>
+            </div>
+            <div id="money" class="rating" style="display:none">
+                <h4>по количеству динов</h4>
+                <table class="table table-condensed">
+                    <th:block th:each="family,fstat : ${familyMoneyRating}">
+                        <tr th:class="${fstat.count==1?'success':''}">
+                            <!--/*@thymesVar id="user" type="dyn.model.User"*/-->
+                            <td>
+                                <th:block th:utext="${family.link()}"></th:block>
+                            </td>
+                        </tr>
+                    </th:block>
+                </table>
+            </div>
         </div>
-        <h3>Новости города</h3>
-        <p>В разработке</p>
     </div>
 </div>
 <th:block th:replace="fragments/scripts :: webjars"></th:block>
@@ -109,6 +168,18 @@
     $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip();
     });
+</script>
+<script>
+    /*<![CDATA[*/
+    function openCity(cityName) {
+        var i;
+        var x = document.getElementsByClassName("rating");
+        for (i = 0; i < x.length; i++) {
+            x[i].style.display = "none";
+        }
+        document.getElementById(cityName).style.display = "block";
+    }
+    /*]]>*/
 </script>
 </body>
 </html>

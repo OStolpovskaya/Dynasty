@@ -55,7 +55,7 @@ public class CraftService {
 
     }
 
-    private void giveGift(Family family, Long projectId) {
+    public Project giveGift(Family family, Long projectId) {
         Project project = projectRepository.findOne(projectId);
 
         Item item = new Item();
@@ -66,6 +66,7 @@ public class CraftService {
         item.setInteriorId(0L);
         item.setCost(0);
         itemRepository.save(item);
+        return project;
     }
 
     public Thing getThing(Long thingId) {

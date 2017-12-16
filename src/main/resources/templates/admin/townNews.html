@@ -2,33 +2,33 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>Разное</title>
+    <title>Новости города</title>
     <link th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}" rel="stylesheet"></link>
     <link th:href="@{/css/common.css}" rel="stylesheet"></link>
 </head>
 <body>
 <div th:replace="fragments/navigation :: nav-for-admin"></div>
 <div class="container">
-    <h3>Продукция бизнеса (
-        <th:block th:text="${#lists.size(production)}"></th:block>
-        )
+    <h3>Новости
     </h3>
     <table class="table table-striped">
         <thead>
         <tr>
             <th>ID</th>
-            <th>Name</th>
-            <th>Cost</th>
-            <th>Thing</th>
+            <th>Date</th>
+            <th>Family</th>
+            <th>Type</th>
+            <th>Text</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="project : ${production}">
-            <!--/*@thymesVar id="project" type="dyn.model.Project"*/-->
-            <td th:text="${project.getId()}">1</td>
-            <td th:text="${project.getName()}">name</td>
-            <td th:text="${project.getCost()}">name</td>
-            <td th:text="${project.getThing().getName()}">name</td>
+        <tr th:each="news : ${news}">
+            <!--/*@thymesVar id="news" type="dyn.model.TownNews"*/-->
+            <td th:text="${news.getId()}">1</td>
+            <td th:text="${news.getDate()}">1</td>
+            <td th:utext="${news.getFamily().link()}">name</td>
+            <td th:text="${news.getType()}">name</td>
+            <td th:utext="${news.getText()}">name</td>
         </tr>
         </tbody>
     </table>

@@ -58,6 +58,8 @@ public class FamilyController {
     private BuffRepository buffRepository;
     @Autowired
     private HouseRepository houseRepository;
+    @Autowired
+    private TownNewsService townNewsService;
 
     @RequestMapping("game/families")
     public String families(ModelMap model, RedirectAttributes redirectAttributes) {
@@ -211,6 +213,8 @@ public class FamilyController {
 
         craftService.newFamily(family);
         familyRepository.save(family);
+
+        townNewsService.addNewFamilyNews(family);
 
         return "redirect:/game";
 

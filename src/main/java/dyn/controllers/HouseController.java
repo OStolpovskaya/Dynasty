@@ -46,13 +46,15 @@ public class HouseController {
     private UserRepository userRepository;
     @Autowired
     private FamilyRepository familyRepository;
+    @Autowired
+    private TownNewsService townNewsService;
 
     @RequestMapping("/game/house")
     public String house(ModelMap model,
                         @RequestParam(value = "family", defaultValue = "0") long familyId,
                         @RequestParam(value = "room", defaultValue = "kitchen") String roomName,
                         RedirectAttributes redirectAttributes) {
-        long startTime = System.currentTimeMillis();
+//        long startTime = System.currentTimeMillis();
         User user = userRepository.findByUserName(getAuthUser().getUsername());
 
         Family family = user.getCurrentFamily();
@@ -81,8 +83,8 @@ public class HouseController {
             nextHouse = houseService.getNextHouse(family.getHouse());
         }
         model.addAttribute("nextHouse", nextHouse);
-        long endTime = System.currentTimeMillis();
-        logger.debug("@House took " + (endTime - startTime) + " milliseconds");
+//        long endTime = System.currentTimeMillis();
+//        logger.debug("@House took " + (endTime - startTime) + " milliseconds");
         return "game/house";
     }
 
@@ -464,6 +466,7 @@ public class HouseController {
                     logger.info(family.userNameAndFamilyName() + "buy house: " + nextHouse.getName());
                     String mess = "Вы купили новый дом " + nextHouse.getName() + ". Потрачено " + nextHouse.getCost() + " д.";
                     familyLogService.addToLog(family, mess);
+                    townNewsService.addNewHouseNews(family);
                     redirectAttributes.addFlashAttribute("mess", mess);
                     return "redirect:/game/house";
                 }

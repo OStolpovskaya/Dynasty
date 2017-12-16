@@ -74,6 +74,8 @@ public class AdminController {
     private FianceeRepository fianceeRepository;
     @Autowired
     private CharacterRepository characterRepository;
+    @Autowired
+    private TownNewsService townNewsService;
 
     @RequestMapping("/admin")
     public String admin(ModelMap model) {
@@ -176,11 +178,11 @@ public class AdminController {
         return "admin/family";
     }
 
-    @RequestMapping(value = "/admin/info", method = RequestMethod.GET)
+    @RequestMapping(value = "/admin/townNews", method = RequestMethod.GET)
     public String info(ModelMap model, RedirectAttributes redirectAttributes) {
-        List<Project> projects = craftService.getProjectsForProduction();
-        model.addAttribute("production", projects);
-        return "admin/info";
+        List<TownNews> news = townNewsService.getNews();
+        model.addAttribute("news", news);
+        return "admin/townNews";
     }
 
     @RequestMapping(value = "/admin/roomThingsWithProjects", method = RequestMethod.GET)

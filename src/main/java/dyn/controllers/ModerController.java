@@ -10,6 +10,7 @@ import dyn.repository.FamilyRepository;
 import dyn.repository.FeedbackRepository;
 import dyn.repository.UserRepository;
 import dyn.service.CraftService;
+import dyn.service.TownNewsService;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,29 +37,31 @@ public class ModerController {
     private UserRepository userRepository;
     @Autowired
     private FamilyRepository familyRepository;
+    @Autowired
+    private TownNewsService townNewsService;
 
     @RequestMapping("/moder")
     public String admin(ModelMap model) {
         return "moder";
     }
 
-    @RequestMapping("/moder/projects")
+    @RequestMapping("/admin/projects")
     public String projects(ModelMap model) {
         model.addAttribute("newProjects", craftService.getProjectsByStatus(ProjectStatus.newProject));
         model.addAttribute("reworkProjects", craftService.getProjectsByStatus(ProjectStatus.rework));
         model.addAttribute("correctedProjects", craftService.getProjectsByStatus(ProjectStatus.corrected));
-        return "moder/projects";
+        return "admin/projects";
     }
 
-    @RequestMapping("/moder/feedbacks")
+    @RequestMapping("/admin/feedbacks")
     public String feedbacks(ModelMap model) {
         model.addAttribute("bugs", feedbackRepository.findByTypeOrderByStatusAscDateDesc(FeedbackType.bug));
         model.addAttribute("complaints", feedbackRepository.findByTypeOrderByStatusAscDateDesc(FeedbackType.complaint));
         model.addAttribute("suggestions", feedbackRepository.findByTypeOrderByStatusAscDateDesc(FeedbackType.suggestion));
-        return "moder/feedbacks";
+        return "admin/feedbacks";
     }
 
-    @RequestMapping(value = "/moder/setProjectApproved", method = RequestMethod.POST)
+    @RequestMapping(value = "/admin/setProjectApproved", method = RequestMethod.POST)
     public String setNewProjectApproved(ModelMap model,
                                         @RequestParam(value = "projectId") Long projectId) {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
@@ -73,13 +76,14 @@ public class ModerController {
             familyRepository.save(author);
 
             logger.info("Moderator " + user.getUserName() + " set status approved for project: " + project);
-            return "redirect:/moder/projects";
+            townNewsService.addCommonNews(author, "Семья " + author.link() + " создала авторский проект " + project.getName() + " для предмета " + project.getThing().getName());
+            return "redirect:/admin/projects";
         }
         logger.error("Moderator " + user.getUserName() + " want to set status approved for non-existing project id=" + projectId);
-        return "redirect:/moder/projects";
+        return "redirect:/admin/projects";
     }
 
-    @RequestMapping(value = "/moder/setProjectRework", method = RequestMethod.POST)
+    @RequestMapping(value = "/admin/setProjectRework", method = RequestMethod.POST)
     public String setNewProjectRework(ModelMap model,
                                       @RequestParam(value = "projectId") Long projectId,
                                       @RequestParam(value = "reason") String reason) {
@@ -92,14 +96,14 @@ public class ModerController {
             craftService.saveProject(project);
 
             logger.info("Moderator " + user.getUserName() + " set status rework for project: " + project);
-            return "redirect:/moder/projects";
+            return "redirect:/admin/projects";
         }
         logger.error("Moderator " + user.getUserName() + " want to set status rework for non-existing project id=" + projectId);
-        return "redirect:/moder/projects";
+        return "redirect:/admin/projects";
     }
 
-    // /moder/changeFeedbackStatus
-    @PostMapping("/moder/changeFeedbackStatus")
+    // /admin/changeFeedbackStatus
+    @PostMapping("/admin/changeFeedbackStatus")
     public String changeFeedbackStatus(ModelMap model,
                                        @RequestParam(value = "feedbackId") Long feedbackId,
                                        @RequestParam(value = "feedbackStatus") FeedbackStatus feedbackStatus,
@@ -116,7 +120,7 @@ public class ModerController {
             logger.error("Moderator " + user.getUserName() + " want to set status for non-existing feedback id=" + feedbackId);
             redirectAttributes.addFlashAttribute("mess", "Неверный id: " + feedbackId);
         }
-        return "redirect:/moder/feedbacks";
+        return "redirect:/admin/feedbacks";
     }
 
     private UserDetails getAuthUser() {

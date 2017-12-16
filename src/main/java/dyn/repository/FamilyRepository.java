@@ -16,4 +16,6 @@ public interface FamilyRepository extends CrudRepository<Family, Long> {
     Family findByIdAndUser(Long familyId, User player);
 
     List<Family> findAllByOrderByUserLastLoginDateDesc();
+
+    List<Family> findTop10ByOrderByMoneyDesc();
 }

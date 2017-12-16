@@ -67,7 +67,7 @@ public class FianceeController {
     public String chooseFiancee(ModelMap model, RedirectAttributes redirectAttributes,
                                 @RequestParam(value = "characterId") long characterId,
                                 @ModelAttribute(value = "fianceeFilter") FianceeFilter fianceeFilter) {
-        long startTime = System.currentTimeMillis();
+//        long startTime = System.currentTimeMillis();
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         Family family = user.getCurrentFamily();
 
@@ -202,8 +202,8 @@ public class FianceeController {
             model.addAttribute("fianceeList", available);
             model.addAttribute("disabledFianceeList", disabled);
             model.addAttribute("lowerLevel", lowerLevel);
-            long endTime = System.currentTimeMillis();
-            logger.debug("@Choosefiancee took " + (endTime - startTime) + " milliseconds");
+//            long endTime = System.currentTimeMillis();
+//            logger.debug("@Choosefiancee took " + (endTime - startTime) + " milliseconds");
             return "/game/chooseFiancee";
         }
 

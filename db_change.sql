@@ -23,3 +23,15 @@ ALTER TABLE  `dyn`.`fiancee` ADD INDEX  `character` (  `character_id` );
 ALTER TABLE  `fiancee` ADD  `type` ENUM(  'usual',  'special' ) NOT NULL DEFAULT  'usual' AFTER  `cost`;
 /*====================================================================================================================*/
 UPDATE house SET  `name` = CONCAT( UCASE( LEFT(  `name` , 1 ) ) , SUBSTRING(  `name` , 2 ) );
+/*====================================================================================================================*/
+CREATE TABLE IF NOT EXISTS `town_news` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `family_id` int(11) NOT NULL,
+  `text` varchar(700) NOT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `family_id` (`family_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+UPDATE  `dyn`.`thing` SET  `parent` =  '34' WHERE  `thing`.`id` =44;
+UPDATE  `dyn`.`thing` SET  `parent` =  '44' WHERE  `thing`.`id` =75;
+ALTER TABLE  `town_news` ADD  `type` ENUM(  'newHouse',  'newFamily',  'achievement',  'newBuilding',  'common' ) NOT NULL DEFAULT  'common' AFTER  `family_id`

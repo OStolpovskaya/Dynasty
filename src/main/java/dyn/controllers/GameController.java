@@ -50,6 +50,8 @@ public class GameController {
     @Autowired
     CareerService careerService;
     @Autowired
+    CraftService craftService;
+    @Autowired
     AchievementService achievementService;
     @Autowired
     CharacterService characterService;
@@ -68,6 +70,8 @@ public class GameController {
     private FamilyRepository familyRepository;
     @Autowired
     private CharacterRepository characterRepository;
+    @Autowired
+    private TownNewsService townNewsService;
 
     public static Locale loc() {
         return LocaleContextHolder.getLocale();
@@ -80,8 +84,7 @@ public class GameController {
 
     @RequestMapping("/game")
     public String main(ModelMap model, RedirectAttributes redirectAttributes) {
-        //System.out.println("***GameController.main***");
-        long startTime = System.currentTimeMillis();
+//        long startTime = System.currentTimeMillis();
 
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         model.addAttribute("user", user);
@@ -188,8 +191,8 @@ public class GameController {
 
         model.addAttribute("familyLog", familyLogService.getLevelFamilyLog(family));
         //System.out.println("END");
-        long endTime = System.currentTimeMillis();
-        logger.debug("@Game took " + (endTime - startTime) + " milliseconds");
+//        long endTime = System.currentTimeMillis();
+//        logger.debug("@Game took " + (endTime - startTime) + " milliseconds");
         return "game";
     }
 
@@ -317,7 +320,7 @@ public class GameController {
             return "redirect:/game";
         }
 
-        logger.info(family.userNameAndFamilyName() + " makes a turn!");
+        logger.info(family.userNameAndFamilyName() + " makes a TURN: to " + (family.getLevel() + 1) + " level");
 
         StringBuilder turnLog = new StringBuilder();
         StringBuilder turnAchievements = new StringBuilder();
@@ -355,6 +358,18 @@ public class GameController {
 
         if (!turnAchievements.toString().equals("")) {
             turnIncome.append(" <strong>Достижения:</strong> <br>").append(turnAchievements);
+        }
+
+        if (family.getLevel() % Const.GIFT_LEVEL == 0) {
+            int idx = new Random().nextInt(Const.GIFT_PROJECTS.length);
+            Long giftProject = (Const.GIFT_PROJECTS[idx]);
+
+            Project project = craftService.giveGift(family, giftProject);
+            turnIncome.append("<br><strong>Подарок</strong> за каждый пятый уровень: бафф " + project.getName());
+            logger.info(family.userNameAndFamilyName() + "получает подарок " + project.getName());
+        }
+        if (family.getLevel() % 10 == 0) {
+            townNewsService.addCommonNews(family, "Семья " + family.link() + " достигла " + family.getLevel() + " уровня!");
         }
 
         String flashAttribute = turnIncome.toString();
@@ -514,6 +529,7 @@ public class GameController {
         if (achievement != null) {
             log.append(messageSource.getMessage("turn.achievement", new Object[]{achievement.getName(), Const.ACHIEVEMENT_CRAFT_POINTS, Const.ACHIEVEMENT_MONEY}, loc()));
             logAchievements.append(child.getName()).append(": ").append(achievement.getName()).append("<br>");
+            townNewsService.addAchievementNews(family, achievement);
         }
 
         // vocation and skills

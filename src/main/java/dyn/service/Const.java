@@ -136,4 +136,8 @@ public class Const {
     public static final int SKILL_IMPROVEMENT_COEFFICIENT = 3;
     public static final int MAX_CHILDREN = 10;
     public static final int MAX_FAMILIES = 5;
+
+    // ========== GIFT ============================================
+    public static final int GIFT_LEVEL = 5;
+    public static final Long[] GIFT_PROJECTS = {PROJECT_FERTILITY, PROJECT_GEN_MOD, PROJECT_PAIR_ONE_MORE, PROJECT_BRIDE_ONE_MORE};
 }
