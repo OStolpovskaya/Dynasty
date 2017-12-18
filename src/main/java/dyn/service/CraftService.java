@@ -5,6 +5,8 @@ import dyn.repository.*;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,22 +21,23 @@ import java.util.Map;
 public class CraftService {
 
     private static final Logger logger = LogManager.getLogger(CraftService.class);
-    final
-    CraftBranchRepository craftBranchRepository;
+    final CraftBranchRepository craftBranchRepository;
     private final ThingRepository thingRepository;
     private final ProjectRepository projectRepository;
     private final ItemRepository itemRepository;
     private final FamilyRepository familyRepository;
     private final FamilyProjectRepository familyProjectRepository;
+    private final ItemRequestRepository itemRequestRepository;
 
     @Autowired
-    public CraftService(ThingRepository thingRepository, ProjectRepository projectRepository, ItemRepository itemRepository, CraftBranchRepository craftBranchRepository, FamilyRepository familyRepository, FamilyProjectRepository familyProjectRepository) {
+    public CraftService(ThingRepository thingRepository, ProjectRepository projectRepository, ItemRepository itemRepository, CraftBranchRepository craftBranchRepository, FamilyRepository familyRepository, FamilyProjectRepository familyProjectRepository, ItemRequestRepository itemRequestRepository) {
         this.thingRepository = thingRepository;
         this.projectRepository = projectRepository;
         this.itemRepository = itemRepository;
         this.familyRepository = familyRepository;
         this.craftBranchRepository = craftBranchRepository;
         this.familyProjectRepository = familyProjectRepository;
+        this.itemRequestRepository = itemRequestRepository;
     }
 
     public void newFamily(Family family) {
@@ -265,4 +268,26 @@ public class CraftService {
         }
         return counters;
     }
+
+    public List<ItemRequest> getItemRequestsOfFamily(Family family) {
+        return itemRequestRepository.findAllByFamilyOrderByDateDesc(family);
+    }
+
+    public Page<ItemRequest> getItemRequestsOfFamily(Pageable pageable) {
+        return itemRequestRepository.findAllByStatus(pageable, ItemRequestStatus.newRequest);
+    }
+
+    public void saveItemRequest(ItemRequest itemRequest) {
+        itemRequestRepository.save(itemRequest);
+    }
+
+    public ItemRequest getItemRequest(Long id) {
+        return itemRequestRepository.findOne(id);
+    }
+
+    public void deleteItemRequest(ItemRequest itemRequest) {
+        itemRequestRepository.delete(itemRequest);
+    }
+
+
 }

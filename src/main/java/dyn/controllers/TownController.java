@@ -8,13 +8,11 @@ package dyn.controllers;
 import dyn.model.*;
 import dyn.repository.FamilyRepository;
 import dyn.repository.UserRepository;
-import dyn.service.AchievementService;
-import dyn.service.FamilyLogService;
-import dyn.service.HouseService;
-import dyn.service.TownNewsService;
+import dyn.service.*;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -43,6 +41,8 @@ public class TownController {
     @Autowired
     HouseService houseService;
     @Autowired
+    CraftService craftService;
+    @Autowired
     MessageSource messageSource;
     @Autowired
     private UserRepository userRepository;
@@ -54,7 +54,10 @@ public class TownController {
     private TownNewsService townNewsService;
 
     @RequestMapping("/game/town")
-    public String townView(ModelMap model, RedirectAttributes redirectAttributes, @PageableDefault(size = 7, page = 0, direction = Sort.Direction.DESC, sort = {"date"}) Pageable pageable) {
+    public String townView(ModelMap model, RedirectAttributes redirectAttributes,
+                           @PageableDefault(size = 7, page = 0, direction = Sort.Direction.DESC, sort = {"date"}) @Qualifier("townNews") Pageable pageable,
+                           @PageableDefault(size = 7, page = 0, direction = Sort.Direction.DESC, sort = {"date"}) @Qualifier("itemRequests") Pageable itemRequestsPageable
+    ) {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         Family family = user.getCurrentFamily();
 
@@ -82,6 +85,9 @@ public class TownController {
 
         Page<TownNews> news = townNewsService.getNews(pageable);
         model.addAttribute("news", news);
+
+        Page<ItemRequest> itemRequests = craftService.getItemRequestsOfFamily(itemRequestsPageable);
+        model.addAttribute("itemRequests", itemRequests);
 
         return "game/town";
     }

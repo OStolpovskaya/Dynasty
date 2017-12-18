@@ -133,6 +133,8 @@ public class HouseController {
 
         model.addAttribute("itemsInStore", houseService.getItemsInStore(family));
 
+        model.addAttribute("itemRequests", craftService.getItemRequestsOfFamily(family));
+
         return "game/storage";
     }
 
@@ -147,16 +149,11 @@ public class HouseController {
         RoomThing roomThing = houseService.getRoomThingById(roomThingId);
         if (item != null && roomThing != null) {
             Item oldItem = houseService.getItemByFamilyAndRoomThing(family, roomThing);//itemRepository.findByFamilyAndInteriorId(family, roomThing.getId());
-            if (oldItem == null) {
-                logger.debug(family.userNameAndFamilyName() + "has no item with interiorId=" + roomThing.getId());
-            } else {
+            if (oldItem != null) {
                 oldItem.setPlace(ItemPlace.storage);
                 oldItem.setInteriorId(0L);
-                logger.debug(family.userNameAndFamilyName() + "has item with interiorId=" + roomThing.getId() + ". Put to storage and set interiorId to 0");
                 houseService.saveItem(oldItem);
             }
-
-
             String returnTo;
             if (roomThing.getHouse().getType().equals(HouseType.building)) {
                 item.setPlace(ItemPlace.building);
@@ -332,110 +329,6 @@ public class HouseController {
         logger.error(family.userNameAndFamilyName() + " want to put in store non existing item: " + itemId);
         redirectAttributes.addFlashAttribute("mess", "Вещь не найдена");
         return "redirect:/game/storage";
-    }
-
-    @RequestMapping(value = "/game/chooseItemToBuy", method = RequestMethod.GET)
-    public String chooseItemToBuy(ModelMap model, RedirectAttributes redirectAttributes,
-                                  @RequestParam(value = "thingId") Long thingId) {
-        User user = userRepository.findByUserName(getAuthUser().getUsername());
-        Family family = user.getCurrentFamily();
-
-        Thing thing = houseService.getThing(thingId);
-        if (thing != null) {
-            List<Item> items = houseService.getItemsInStoreByThing(thing);
-            model.addAttribute("family", family);
-            model.addAttribute("thing", thing);
-            model.addAttribute("items", items);
-            return "game/chooseItemToBuy";
-        }
-
-
-        logger.error(family.userNameAndFamilyName() + " want to buy items for non existing thing: " + thingId);
-        redirectAttributes.addFlashAttribute("mess", "Предмет не найден");
-        return "redirect:/game/house";
-
-    }
-
-    @RequestMapping(value = "/game/chooseProductionToBuy", method = RequestMethod.GET)
-    public String chooseProductionToBuy(ModelMap model, RedirectAttributes redirectAttributes,
-                                        @RequestParam(value = "projectId") Long projectId) {
-        User user = userRepository.findByUserName(getAuthUser().getUsername());
-        Family family = user.getCurrentFamily();
-
-        Project project = craftService.getProject(projectId);
-        if (project != null) {
-            List<Item> items = houseService.getItemsInStoreByProject(project);
-            int size = items.size();
-            if (size == 0) {
-                Family producer = familyRepository.findOne(1L);
-                items = craftService.createItemForStore(project, producer, project.getCost() * Const.AUTOGEN_PRODUCTION_COST_COEFFICIENT);
-            }
-
-
-            model.addAttribute("family", family);
-            model.addAttribute("thing", project.getThing());
-            model.addAttribute("project", project);
-            model.addAttribute("items", items);
-            return "game/chooseItemToBuy";
-        }
-
-
-        logger.error(family.userNameAndFamilyName() + " want to buy items for non existing project: " + projectId);
-        redirectAttributes.addFlashAttribute("mess", "Предмет не найден");
-        return "redirect:/game/house";
-
-    }
-
-    @RequestMapping(value = "/game/buyItem", method = RequestMethod.POST)
-    public String buyItem(ModelMap model, RedirectAttributes redirectAttributes,
-                          @RequestParam(value = "itemId") Long itemId) {
-        User user = userRepository.findByUserName(getAuthUser().getUsername());
-        Family family = user.getCurrentFamily();
-
-        Item item = houseService.getItem(itemId);
-        if (item != null) {
-            if (!item.getPlace().equals(ItemPlace.store)) {
-                logger.error(family.userNameAndFamilyName() + "want to buy item, but item is not in store: " + item.getId());
-                redirectAttributes.addFlashAttribute("mess", "Вещь больше не продается (кто-то уже выкупил или владелец снял с продажи)");
-            } else {
-                Family seller = item.getFamily();
-                if (seller != family) {
-                    if (family.getMoney() >= item.getCost()) {
-                        seller.setMoney(seller.getMoney() + item.getCost());
-                        family.setMoney(family.getMoney() - item.getCost());
-                        familyRepository.save(seller);
-                        familyRepository.save(family);
-
-                        familyLogService.addToLog(seller, "Семья " + family.link() + " приобрела ваш предмет " + item.getFullName() + ". Получено: " + item.getCost() + " д.");
-
-                        String mess = "Вы купили предмет " + item.getFullName() + ". Потрачено: " + item.getCost() + " д.";
-                        familyLogService.addToLog(family, mess);
-
-                        item.setFamily(family);
-                        item.setPlace(ItemPlace.storage);
-                        item.setCost(0);
-                        houseService.saveItem(item);
-
-                        logger.info(family.userNameAndFamilyName() + "buy item: " + item.getId());
-                        redirectAttributes.addFlashAttribute("mess", mess);
-                    } else {
-                        logger.error(family.userNameAndFamilyName() + "want to buy item, but has not enough money: " + item.getId());
-                        redirectAttributes.addFlashAttribute("mess", "Недостаточно денег для покупки этого предмета");
-                    }
-                } else {
-                    logger.error(family.userNameAndFamilyName() + "want to buy their own item: " + item.getId());
-                    redirectAttributes.addFlashAttribute("mess", "Предмет принадлежит Вашей семье и выставлен вами на продажу.");
-                }
-            }
-            if (craftService.isItemBelongsToBuffAndServices(item)) {
-                return "redirect:/game/chooseProductionToBuy?projectId=" + item.getProject().getId();
-            }
-            return "redirect:/game/chooseItemToBuy?thingId=" + item.getProject().getThing().getId();
-        }
-        logger.error(family.userNameAndFamilyName() + "want to buy non existing item: " + itemId);
-        redirectAttributes.addFlashAttribute("mess", "Предмет не найден");
-        return "redirect:/game";
-
     }
 
     @RequestMapping(value = "/game/buyNewHouse", method = RequestMethod.POST)

@@ -35,3 +35,15 @@ CREATE TABLE IF NOT EXISTS `town_news` (
 UPDATE  `dyn`.`thing` SET  `parent` =  '34' WHERE  `thing`.`id` =44;
 UPDATE  `dyn`.`thing` SET  `parent` =  '44' WHERE  `thing`.`id` =75;
 ALTER TABLE  `town_news` ADD  `type` ENUM(  'newHouse',  'newFamily',  'achievement',  'newBuilding',  'common' ) NOT NULL DEFAULT  'common' AFTER  `family_id`
+/*====================================================================================================================*/
+CREATE TABLE IF NOT EXISTS `item_request` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `status` enum('newRequest','done') NOT NULL DEFAULT 'newRequest',
+  `family_id` int(11) NOT NULL,
+  `thing_id` int(11) NOT NULL,
+  `project_id` int(11) DEFAULT NULL,
+  `min_quality` int(11) NOT NULL,
+  `deposit` int(11) NOT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=11 ;

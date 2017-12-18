@@ -13,7 +13,70 @@
     <!--/*@thymesVar id="thing" type="dyn.model.Thing"*/-->
     <!--/*@thymesVar id="item" type="dyn.model.Item"*/-->
     <h3 th:text="${#strings.toUpperCase(thing.getName())}"></h3>
-    <h4 th:if="${project ne null}" th:text="${#strings.toUpperCase(project.getName())}"></h4>
+
+    <h4></h4>
+    <button data-toggle="collapse" th:attr="data-target='#itemRequestForm'" class="btn btn-primary">Подать заявку на изготовление предмета
+        <span class="glyphicon glyphicon-menu-down" style="color: #333;"></span>
+    </button>
+    <div id="itemRequestForm" class="collapse well">
+        <p>Вы можете подать заявку на изготовление предмета, разместив объявление в городе. Кто-нибудь откликнется и изготовит этот предмет для вас. Предмет появится на вашем складе. </p>
+        <!--/*@thymesVar id="newItemRequest" type="dyn.model.ItemRequest"*/-->
+        <form th:action="@{/game/addItemRequest}" method="post" class="form" th:object="${newItemRequest}">
+            <label>Выберите проект:</label>
+            <input type="hidden" th:field="*{thing}"/>
+            <th:block th:each="approvedProject : ${approvedProjects}">
+                <div class="radio">
+                    <label>
+                        <th:block th:if="${approvedProject == null}">
+                            <input type="radio" name="project" th:value="${approvedProject}" checked="checked"/>Любой проект
+                            <!--<input type="radio" name="project" value="null" checked="checked"/>Любой проект-->
+                        </th:block>
+                        <th:block th:if="${approvedProject != null}">
+                            <input type="radio" th:field="*{project}" th:value="${approvedProject.getId()}"/>
+                            <th:block th:replace="fragments/custom :: project-view (project=${approvedProject})"></th:block>
+                            <th:block th:text="${approvedProject.getName()+' от '+approvedProject.getAuthor().getFamilyName()}"></th:block>
+                            (
+                            <th:block th:text="${approvedProject.getCost() +' д., '}"></th:block>
+                            <th:block th:replace="fragments/custom :: resImageView (resHolder=${approvedProject})"></th:block>
+                            )
+                        </th:block>
+                    </label>
+                </div>
+            </th:block>
+
+            <div class="form-group">
+                <label>Минимальный показатель качества:</label>
+                <input type="number" class="form-control" th:field="*{minQuality}" min="0" max="5" step="1"/>
+                <p class="help-block">Если вам не важно качество предмета, оставьте 0.</p>
+            </div>
+            <div class="form-group">
+                <label>Сколько вы готовы заплатить за предмет:</label>
+                <input type="number" class="form-control" th:field="*{deposit}" min="0" step="100" id="deposit"
+                       th:onkeyup="${'recountItemRequestCost('+family.getMoney()+')'}"
+                       th:onchange="${'recountItemRequestCost('+family.getMoney()+')'}"/>
+                <p class="help-block">Эта сумма переводится с вашего счета на депозит. Затем она будет выплачена игроку, который изготовит для вас предмет. </p>
+            </div>
+            <button id="addItemRequestButton" type="submit" class="btn btn-warning btn-md center-block">Подать заявку: <span id="itemRequestCounter" th:text="*{deposit}"></span> д.</button>
+        </form>
+    </div>
+
+    <script>
+        /*<![CDATA[*/
+        function recountItemRequestCost(money) {
+            var deposit = document.getElementById('deposit').value;
+            var counter = document.getElementById('itemRequestCounter');
+            var button = document.getElementById('addItemRequestButton');
+
+            counter.innerText = deposit;
+            if (money < deposit) {
+                button.setAttribute("disabled", "disabled");
+            } else {
+                button.removeAttribute("disabled");
+            }
+        }
+        /*]]>*/
+    </script>
+
     <th:block th:if="${not #lists.isEmpty(items)}">
         <table class="table table-striped">
             <thead>

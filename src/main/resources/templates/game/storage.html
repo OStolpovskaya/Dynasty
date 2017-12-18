@@ -19,6 +19,60 @@
             В последнем разделе вы можете видеть, какие из ваших товаров и по какой цене выставлены сейчас на продажу<br/>
         </div>
     </th:block>
+
+    <th:block th:unless="${#lists.isEmpty(itemRequests)}">
+        <a name="itemRequests" class="anchor"></a>
+        <div class="well">
+            <h3>Ваши заявки на изготовление предметов:</h3>
+            <table class="table table-sm table-condensed">
+                <thead>
+                <tr>
+                    <th>Дата</th>
+                    <th>Статус</th>
+                    <th>Вещь</th>
+                    <th>Проект</th>
+                    <th>Качество</th>
+                    <th>Депозит</th>
+                    <th>Удалить заявку</th>
+                </tr>
+                </thead>
+                <tbody>
+                <th:block th:each="itemRequest : ${itemRequests}" th:with="satisfied = ${itemRequest.getStatus().equals(T(dyn.model.ItemRequestStatus).done)}">
+                    <!--/*@thymesVar id="itemRequest" type="dyn.model.ItemRequest"*/-->
+                    <tr th:class="${satisfied?'success':''}">
+                        <td>
+                            <th:block th:text="${itemRequest.getDate()}"></th:block>
+                        </td>
+                        <td>
+                            <th:block th:utext="${satisfied?'выполнена':'активна'}"></th:block>
+                        </td>
+                        <td>
+                            <th:block th:text="${itemRequest.getThing().getName()}"></th:block>
+                        </td>
+                        <td>
+                            <th:block th:text="${itemRequest.getProject() == null?'любой':itemRequest.getProject().getName()}"></th:block>
+                        </td>
+                        <td>
+                            <th:block th:text="${itemRequest.getMinQuality() == 0?'любое':'не ниже '+ itemRequest.getMinQuality()}"></th:block>
+                        </td>
+                        <td>
+                            <th:block th:text="${itemRequest.getDeposit()}"></th:block>
+                        </td>
+                        <td>
+                            <form th:action="@{/game/removeItemRequest}" method="post" class="form-inline">
+                                <input type="hidden" name="itemRequestId" th:value="${itemRequest.getId()}"/>
+                                <button type="submit" class="btn btn-sm" th:classappend="${satisfied?'btn-success':'btn-warning'}">
+                                    <th:block th:text="${satisfied?'Спасибо!':'Отменить'}">Удалить</th:block>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                </th:block>
+                </tbody>
+            </table>
+        </div>
+    </th:block>
+
     <div class="well">
         <h3>Склад:</h3>
         <th:block th:if="${not #lists.isEmpty(itemsInStorage)}">

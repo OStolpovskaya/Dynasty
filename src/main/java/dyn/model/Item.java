@@ -122,6 +122,11 @@ public class Item {
         return getProject().getThing().getName() + " '" + getProject().getName() + "'";
     }
 
+    public String link() {
+
+        return getProject().getThing().getName() + " '" + getProject().getName() + "' от " + author.link() + " качеством " + quality;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

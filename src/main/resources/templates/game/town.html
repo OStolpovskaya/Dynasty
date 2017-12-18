@@ -76,6 +76,68 @@
     </div>
 
     <div style="width: 560px; font-size: 12px; display: inline-block; vertical-align: top; " align="center">
+        <th:block th:unless="${itemRequests.totalPages==0}">
+            <h3>Заявки на предметы</h3>
+            <div style="width: 500px;">
+                <table class="table table-striped table-condensed" style="margin-bottom: 5px;">
+                    <thead>
+                    <tr>
+                        <th>Дата</th>
+                        <th>Семья</th>
+                        <th>Предмет</th>
+                        <th>Проект</th>
+                        <th>Качество</th>
+                        <th>Сумма</th>
+                        <th>Предоставить</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <th:block th:each="itemRequest : ${itemRequests}">
+                        <!--/*@thymesVar id="itemRequest" type="dyn.model.ItemRequest"*/-->
+                        <tr>
+                            <td th:text="${itemRequest.formattedDate()}">name</td>
+                            <td th:utext="${itemRequest.getFamily().link()}">desc</td>
+                            <td th:utext="${itemRequest.getThing().link()}">desc</td>
+                            <td th:text="${itemRequest.getProject() == null?'любой':itemRequest.getProject().getName()}">desc</td>
+                            <td th:text="${itemRequest.getMinQuality() == 0?'любая':'не ниже '+itemRequest.getMinQuality()}">desc</td>
+                            <td th:text="${itemRequest.getDeposit()}">name</td>
+                            <td th:with="itemToFulfillItemRequest = ${family.itemToFulfillItemRequest(itemRequest)}">
+                                <form th:action="@{/game/fulfillItemRequest}" method="post" class="form-inline">
+                                    <input type="hidden" name="itemRequestId" th:value="${itemRequest.getId()}"/>
+                                    <button type="submit" class="btn btn-xs btn-warning"
+                                            th:disabled="${itemToFulfillItemRequest==null}"
+                                            th:title="${itemToFulfillItemRequest==null?'На складе нет подходящего под условия заявки предмета.':'Внимание! Будет отдан первый попавшийся под условия заявки предмет!'}">
+                                        Выполнить
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    </th:block>
+                    </tbody>
+                </table>
+                <div class="row" style="margin: 0px;">
+                    <div th:if="${itemRequests.totalPages != 1}" class="form-group col-sm-11 pagination-centered">
+                        <ul class="pagination" style="margin: 0px;">
+                            <li th:unless="${itemRequests.number == 0}">
+                                <a class="pageLink" th:href="@{/game/town(itemRequests_page=0)}"><span class="glyphicon glyphicon-fast-backward" style="color: #333;"></span></a>
+                            </li>
+                            <li th:unless="${itemRequests.number == 0}">
+                                <a class="pageLink" th:href="@{/game/town(itemRequests_page=${itemRequests.number - 1})}"><span class="glyphicon glyphicon-chevron-left" style="color: #333;"></span></a>
+                            </li>
+                            <li>
+                                <a th:text="${itemRequests.number+'/'+itemRequests.totalPages}" style="color: #333;"></a>
+                            </li>
+                            <li th:unless="${itemRequests.number + 1 >= itemRequests.totalPages}">
+                                <a class="pageLink" th:href="@{/game/town(itemRequests_page=${itemRequests.number + 1})}"><span class="glyphicon glyphicon-chevron-right" style="color: #333;"></span></a>
+                            </li>
+                            <li th:unless="${itemRequests.number + 1 >= itemRequests.totalPages}">
+                                <a class="pageLink" th:href="@{/game/town(itemRequests_page=${itemRequests.totalPages})}"><span class="glyphicon glyphicon-fast-forward" style="color: #333;"></span></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </th:block>
 
         <h3>Новости города</h3>
         <div style="width: 500px;">
@@ -100,19 +162,19 @@
                 <div th:if="${news.totalPages != 1}" class="form-group col-sm-11 pagination-centered">
                     <ul class="pagination" style="margin: 0px;">
                         <li th:unless="${news.number == 0}">
-                            <a class="pageLink" th:href="@{/game/town(page=0)}"><span class="glyphicon glyphicon-fast-backward" style="color: #333;"></span></a>
+                            <a class="pageLink" th:href="@{/game/town(townNews_page=0)}"><span class="glyphicon glyphicon-fast-backward" style="color: #333;"></span></a>
                         </li>
                         <li th:unless="${news.number == 0}">
-                            <a class="pageLink" th:href="@{/game/town(page=${news.number - 1})}"><span class="glyphicon glyphicon-chevron-left" style="color: #333;"></span></a>
+                            <a class="pageLink" th:href="@{/game/town(townNews_page=${news.number - 1})}"><span class="glyphicon glyphicon-chevron-left" style="color: #333;"></span></a>
                         </li>
                         <li>
                             <a th:text="${news.number+'/'+news.totalPages}" style="color: #333;"></a>
                         </li>
                         <li th:unless="${news.number + 1 >= news.totalPages}">
-                            <a class="pageLink" th:href="@{/game/town(page=${news.number + 1})}"><span class="glyphicon glyphicon-chevron-right" style="color: #333;"></span></a>
+                            <a class="pageLink" th:href="@{/game/town(townNews_page=${news.number + 1})}"><span class="glyphicon glyphicon-chevron-right" style="color: #333;"></span></a>
                         </li>
                         <li th:unless="${news.number + 1 >= news.totalPages}">
-                            <a class="pageLink" th:href="@{/game/town(page=${news.totalPages})}"><span class="glyphicon glyphicon-fast-forward" style="color: #333;"></span></a>
+                            <a class="pageLink" th:href="@{/game/town(townNews_page=${news.totalPages})}"><span class="glyphicon glyphicon-fast-forward" style="color: #333;"></span></a>
                         </li>
                     </ul>
                 </div>

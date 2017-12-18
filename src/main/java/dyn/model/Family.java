@@ -297,4 +297,27 @@ public class Family {
     public void addMoney(int income) {
         money = money + income;
     }
+
+    public void removeMoney(int cost) {
+        money = money - cost;
+    }
+
+    public Item itemToFulfillItemRequest(ItemRequest itemRequest) {
+        if (itemRequest.getProject() == null) {
+            for (Item item : items) {
+                if (item.getPlace().equals(ItemPlace.storage) && item.getProject().getThing() == itemRequest.getThing() && item.getQuality() >= itemRequest.getMinQuality()) {
+                    return item;
+                }
+            }
+        } else {
+            for (Item item : items) {
+                if (item.getPlace().equals(ItemPlace.storage) && item.getProject().getThing() == itemRequest.getThing() && item.getProject() == itemRequest.getProject() && item.getQuality() >= itemRequest.getMinQuality()) {
+                    return item;
+                }
+            }
+        }
+        return null;
+    }
+
+
 }

@@ -97,4 +97,12 @@ public class Thing {
     public void setParent(Thing parent) {
         this.parent = parent;
     }
+
+    public boolean isKnownByFamily(Family family) {
+        return family.getCraftThings().contains(this);
+    }
+
+    public String link() {
+        return "<a href='/game/chooseProject?thingId=" + id + "'>" + name + "</a>";
+    }
 }

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Магазин баффов</title>
+    <th:block th:replace="fragments/custom :: headLinks"></th:block>
+</head>
+<body>
+<th:block th:replace="fragments/scripts :: counters"></th:block>
+<div th:replace="fragments/navigation :: nav-for-game"></div>
+<div class="container">
+    <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
+    <!--/*@thymesVar id="thing" type="dyn.model.Thing"*/-->
+    <!--/*@thymesVar id="item" type="dyn.model.Item"*/-->
+    <h3 th:text="${#strings.toUpperCase(thing.getName())}"></h3>
+    <h4 th:text="${#strings.toUpperCase(project.getName())}"></h4>
+    <th:block th:if="${not #lists.isEmpty(items)}">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Предмет</th>
+                <th>Вид</th>
+                <th>Качество</th>
+                <th>Продавец</th>
+                <th>Изготовитель</th>
+                <th>Цена</th>
+                <th>Действия</th>
+            </tr>
+            </thead>
+            <tbody>
+            <th:block th:each="item : ${items}">
+                <tr>
+                    <td th:text="${item.getProject().getName()}"></td>
+                    <td>
+                        <th:block th:replace="fragments/custom :: project-view (project=${item.getProject()})"></th:block>
+                    </td>
+                    <td th:text="${item.getQuality()}"></td>
+                    <td>
+                        <a th:href="${'/game/userview?userId='+item.getFamily().getUser().getUserid() +'&amp;familyId='+item.getFamily().getId()}" th:text="${item.getFamily().userNameAndFamilyName()}"></a>
+                    </td>
+                    <td>
+                        <a th:href="${'/game/userview?userId='+item.getAuthor().getUser().getUserid() +'&amp;familyId='+item.getAuthor().getId()}" th:text="${item.getAuthor().userNameAndFamilyName()}"></a>
+                    </td>
+                    <td th:text="${item.getCost()+' д.'}"></td>
+                    <td>
+                        <form th:action="@{/game/buyItem}" method="post">
+                            <input type="hidden" name="itemId" th:value="${item.getId()}"/>
+                            <button type="submit" class="btn btn-info" th:disabled="${family.getMoney() lt item.getCost()}">Купить</button>
+                        </form>
+                    </td>
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
+    </th:block>
+    <th:block th:unless="${not #lists.isEmpty(items)}">
+        <p>Нет вещей на продажу</p>
+    </th:block>
+</div>
+<th:block th:replace="fragments/scripts :: webjars"></th:block>
+</body>
+</html>

@@ -142,7 +142,7 @@ public class CraftController {
             } else {
                 logger.error(family.userNameAndFamilyName() + " doesn't know the thing to buy projects for:" + thing.getName());
                 redirectAttributes.addFlashAttribute("mess", "Ваша семья еще не умеет изготавливать такие предметы: " + thing.getName());
-                return "redirect:/game/craft";
+                return "redirect:/game/craft#craftbranch" + thing.getCraftBranch().getId();
             }
         }
         logger.error(family.userNameAndFamilyName() + " want to buy projects for non-existing thing id=" + thingId);
