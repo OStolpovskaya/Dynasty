@@ -185,6 +185,7 @@
             <div class="w3-bar ">
                 <a onclick="openCity('achiev')" style="cursor: pointer;">Достижения</a>
                 <a onclick="openCity('money')" style="cursor: pointer;">Деньги</a>
+                <a onclick="openCity('level')" style="cursor: pointer;">Уровень</a>
             </div>
             <div id="achiev" class="rating">
                 <h4>по количеству достижений</h4>
@@ -217,6 +218,22 @@
                             <!--/*@thymesVar id="user" type="dyn.model.User"*/-->
                             <td>
                                 <th:block th:utext="${family.link()}"></th:block>
+                            </td>
+                        </tr>
+                    </th:block>
+                </table>
+            </div>
+            <div id="level" class="rating" style="display:none">
+                <h4>по уровню</h4>
+                <table class="table table-condensed">
+                    <th:block th:each="family,fstat : ${familyLevelRating}">
+                        <tr th:class="${fstat.count==1?'success':''}">
+                            <!--/*@thymesVar id="user" type="dyn.model.User"*/-->
+                            <td>
+                                <th:block th:utext="${family.link()}"></th:block>
+                            </td>
+                            <td>
+                                <th:block th:utext="${family.getLevel()}"></th:block>
                             </td>
                         </tr>
                     </th:block>

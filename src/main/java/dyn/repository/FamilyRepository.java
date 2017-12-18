@@ -18,4 +18,6 @@ public interface FamilyRepository extends CrudRepository<Family, Long> {
     List<Family> findAllByOrderByUserLastLoginDateDesc();
 
     List<Family> findTop10ByOrderByMoneyDesc();
+
+    List<Family> findTop10ByOrderByLevelDesc();
 }

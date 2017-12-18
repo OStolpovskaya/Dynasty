@@ -83,6 +83,9 @@ public class TownController {
         }
         model.addAttribute("familyMoneyRating", familyMoneyRating);
 
+        List<Family> familyLevelRating = familyRepository.findTop10ByOrderByLevelDesc();
+        model.addAttribute("familyLevelRating", familyLevelRating);
+
         Page<TownNews> news = townNewsService.getNews(pageable);
         model.addAttribute("news", news);
 
