@@ -861,7 +861,7 @@ public class AdminController {
 
             for (String sex : sexList) {
                 System.out.println("sex = " + sex);
-                List<HairStyle> hairStyleList = app.getHairStyleList(sex);
+                /*List<HairStyle> hairStyleList = app.getHairStyleList(sex);
                 for (Body body : bodyList) {
                     System.out.println("body = " + body);
                     BufferedImage bodyImageSub = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + sex + "/" + body.getName() + "_sub.png"));
@@ -873,7 +873,7 @@ public class AdminController {
                         ImageIO.write(bodyImageSubWithSkinColor, "png", outputfile);
                     }
 
-                }
+                }*/
                 for (Ears ears : earsList) {
                     System.out.println("ears = " + ears);
                     BufferedImage earsImageSub = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + sex + "/" + ears.getName() + "_sub.png"));
@@ -886,7 +886,7 @@ public class AdminController {
                     }
 
                 }
-                for (Head head : headList) {
+                /*for (Head head : headList) {
                     System.out.println("head = " + head);
                     BufferedImage headImageSub = ImageIO.read(ResourceUtils.getFile("classpath:static/graphics/" + sex + "/" + head.getName() + "_sub.png"));
                     for (SkinColor skinColor : skinColorList) {
@@ -909,7 +909,7 @@ public class AdminController {
                         ImageIO.write(hairStyleImageSubWithSkinColor, "png", outputfile);
                     }
 
-                }
+                }*/
             }
             System.out.println("GENERATED");
 
