@@ -9,19 +9,45 @@
 <th:block th:replace="fragments/scripts :: counters"></th:block>
 <div th:replace="fragments/navigation :: nav-for-game"></div>
 <div class="container">
-    <div class="col-md-5">
+    <div style="margin-right: auto; margin-left: auto; width: 480px;">
         <div class="form-area">
             <!--/*@thymesVar id="familyForm" type="dyn.form.FamilyForm"*/-->
             <form class="form-horizontal" th:action="@{/game/addNewFamily}" th:object="${familyForm}" method="POST">
                 <h3>Создание семьи</h3>
-                <p>Так будут выглядеть основатели вашей династии:</p>
-                <div>
+                <p>Так будут выглядеть основатели вашей династии. Все элементы окна персонажа имеют всплывающие подсказки, просто наведите курсор. <br/>
+                    <span class="glyphicon glyphicon-question-sign" style="color: orangered;"></span> - важная информация для новичков.</p>
+                <div style="position: relative;">
                     <div class="char-view-div">
                         <div th:replace="fragments/char :: char-panel (character=*{founder}, nolink=true)"></div>
                     </div>
                     <div class="char-view-div">
                         <div th:replace="fragments/char :: char-panel (character=*{foundress}, nolink=true)"></div>
                     </div>
+                    <div class="my_tooltip" style="position: absolute; top: 5px; "><span class="glyphicon glyphicon-question-sign" style="color: orangered;"></span>
+                        <span class="my_tooltiptext"><strong>Имена</strong> генерируются случайным образом из базы данных имен. Особого смысла пока не несут.</span>
+                    </div>
+                    <div class="my_tooltip" style="position: absolute; top: 23px; "><span class="glyphicon glyphicon-question-sign" style="color: orangered;"></span>
+                        <span class="my_tooltiptext"><strong>Раса</strong> основателей: <em>Человек</em>. Еслки кликнуть - переход на сводную таблицу всех рас.</span>
+                    </div>
+                    <div class="my_tooltip" style="position: absolute; top: 70px; "><span class="glyphicon glyphicon-question-sign" style="color: orangered;"></span>
+                        <span class="my_tooltiptext">Портрет персонажа. Каждый персонаж имеет набор <strong>черт</strong>: рост, цвет кожи, цвет глаз (полный список во всплывающей подсказке к портрету персонажа). Эти черты передаются потомкам.</span>
+                    </div>
+                    <div class="my_tooltip" style="position: absolute; top: 180px; left: -10px;"><span class="glyphicon glyphicon-question-sign" style="color: orangered;"></span>
+                        <span class="my_tooltiptext">Эта шкала отображает рост персонажа.</span>
+                    </div>
+                    <div class="my_tooltip" style="position: absolute; top: 250px; left: -10px;"><span class="glyphicon glyphicon-question-sign" style="color: orangered;"></span>
+                        <span class="my_tooltiptext"><strong>Призвание</strong> указывает, в какой области будет работать персонаж (какие ресурсы получит в конце хода).
+                        Если кликнуть на значок призвания, откроется страничка с подробностями и полным списком призваний.</span>
+                    </div>
+                    <div class="my_tooltip" style="position: absolute; top: 250px; "><span class="glyphicon glyphicon-question-sign" style="color: orangered;"></span>
+                        <span class="my_tooltiptext"><strong>Навыки</strong> - <em>интеллект, харизма, сила и творчество</em> - определяют уровень профессии, которую получит персонаж в конце хода.
+                            От уровня зависит количество ресурсов и заработная плата.</span>
+                    </div>
+                    <div class="my_tooltip" style="position: absolute; top: 280px; "><span class="glyphicon glyphicon-question-sign" style="color: orangered;"></span>
+                        <span class="my_tooltiptext">Предполагаемая профессия, которую получит персонаж в конце хода. Повышение навыков открывает возможность достижения более высокооплачиваемых профессий. Сумма заработной платы указывается в
+                            динах - игровой валюте.</span>
+                    </div>
+
                 </div>
                 <p align="center"><a href="/game/addNewFamily">Сгенерировать заново</a></p>
 
@@ -74,11 +100,11 @@
                 <input type="hidden" th:field="*{foundress.career.strength}"/>
                 <input type="hidden" th:field="*{foundress.career.creativity}"/>
                 <input type="hidden" th:field="*{foundress.career.education}"/>
-
                 <div class="form-group" th:classappend="${#fields.hasErrors('family.familyName')}? 'has-error'">
                     <label>Фамилия для вашей новой семьи:</label>
                     <input class="form-control" type="text" th:field="*{family.familyName}" placeholder="Ивановы"/>
                     <p th:if="${#fields.hasErrors('family.familyName')}" th:errors="*{family.familyName}">Incorrect</p>
+                    <p class="help-block">Фамилия династии будет видна всем игрокам и фигурировать в названии предметов, которые вы будете производить.</p>
                 </div>
                 <div class="form-group" th:classappend="${#fields.hasErrors('family.maleLastname')}? 'has-error'">
                     <label>Фамилия мужчин:</label>
@@ -95,36 +121,6 @@
                 <button type="submit" id="submit" name="addNewFamilyButton" class="btn btn-primary">Создать</button>
             </form>
         </div>
-    </div>
-    <div class="col-md-7" style="text-align: justify;">
-        Все элементы окна персонажа имеют всплывающие подсказки, просто наведите курсор.<br/><br/>
-        <strong>Имена</strong> генерируются случайным образом из базы данных имен. Особого смысла пока не несут. <br/>
-        <strong>Раса</strong> основателей: <em>Человек</em>.
-        <br/><br/><br/>
-        Каждый персонаж имеет набор <strong>черт</strong>: рост, цвет кожи, цвет глаз (полный список во всплывающей подсказке к портрету персонажа). Эти черты передаются потомкам.
-        Шкала слева от портрета отображает рост персонажа. В процессе игры вы сможете заменить некоторые черты персонажей на генно-модифицированные (ГМ). Тогда раса изменится на <em>ГМ-человек</em>.
-        При определенных комбинациях обычных и ГМ-черт появляются другие расы, например, Эльфы, Орки и т.п.
-        <div class="my_tooltip"><span class="glyphicon glyphicon-question-sign" style="color: lightslategray;"></span>
-            <span class="my_tooltiptext">Эльф имеет следующие особенности (остальные черты любые обычные): <br/>
-                <ul>
-                    <li>Тело: средние плечи или узкие плечи</li>
-                    <li>Уши: высокие и длинные (ГМ-черта)</li>
-                    <li>Голова: овальная или круглая</li>
-                    <li>Рост: сверхвысокий (ГМ-черта)</li>
-                    <li>Нос: заостренный, прямой или вздернутый</li>
-                </ul>
-        </span>
-        </div>
-        <br/><br/><br/><br/>
-        Под портретом персонажа находится панель <strong>карьеры</strong>.
-        <strong>Призвание</strong> указывает в какой области будет работать персонаж (какие ресурсы получит в конце хода). Передается по наследству от родителей, но есть малая вероятность того, что сгенерируется новое призвание.
-        <strong>Навыки</strong> - <em>интеллект, харизма, сила и творчество</em> - наследуются как случайное число между минимальным и максимальным значением навыка родителей плюс
-        <th:block th:text="${@const.SKILL_COEFFICIENT}"></th:block>
-        .
-        Повышение навыков открывает возможность достижения более высокооплачиваемых <strong>профессий</strong>. Подробнее узнать о профессиях можно кликнув по значку призвания.
-        <br/><br/>
-        <strong>Фамилия</strong> вашей династии будет видна всем игрокам и фигурировать в названии предметов, которые вы будете производить.
-
     </div>
 </div>
 <th:block th:replace="fragments/scripts :: webjars"></th:block>
