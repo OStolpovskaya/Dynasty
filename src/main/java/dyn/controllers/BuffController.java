@@ -636,6 +636,9 @@ public class BuffController {
                     familyLogService.addToLog(family, mess);
                     redirectAttributes.addFlashAttribute("mess", mess);
                     logger.info(family.userNameAndFamilyName() + " apply item of project: '" + item.getProject().getName());
+                    if (character.getFamily() != family && character.getSpouse() != null && character.getSpouse().getFamily() == family) {
+                        return "redirect:/game#char" + character.getSpouse().getFather().getId();
+                    }
                     return "redirect:/game#char" + character.getFather().getId();
                 } else {
                     logger.error(family.userNameAndFamilyName() + "want to apply item to not right character: " + character.getMainDetails());
