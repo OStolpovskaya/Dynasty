@@ -670,6 +670,9 @@ public class GameController {
         List<Family> playerFamilies = player.getFamilies();
         model.addAttribute("playerFamilies", playerFamilies);
 
+        List<Project> playerProjects = craftService.getAuthorProjects(playerFamily);
+        model.addAttribute("playerProjects", playerProjects);
+
         model.addAttribute("roomList", houseService.getRoomsByHouseId(playerFamily.getHouse().getId()));
 
         List<RoomView> roomViewList = houseService.getRoomMaps(playerFamily.getHouse(), playerFamily);
