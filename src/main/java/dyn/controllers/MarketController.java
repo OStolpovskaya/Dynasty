@@ -243,6 +243,7 @@ public class MarketController {
                 houseService.saveItem(item);
 
                 itemRequest.setStatus(ItemRequestStatus.done);
+                itemRequest.setFulfiller(family);
                 craftService.saveItemRequest(itemRequest);
 
                 familyLogService.addToLog(itemRequestAuthor, "Ваша заявка на изготовление предмета " + itemRequest.desc() + " выполнена семьей " + family.link() + ". Получен предмет: " + item.link());

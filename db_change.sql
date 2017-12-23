@@ -56,3 +56,5 @@ left join family sourceTable on
 set
     targetTable.`family_id`  = sourceTable.id
     where sourceTable.current=true;
+
+ALTER TABLE  `item_request` ADD  `fulfiller_id` INT NULL DEFAULT NULL;

@@ -44,7 +44,7 @@
                             <th:block th:text="${itemRequest.getDate()}"></th:block>
                         </td>
                         <td>
-                            <th:block th:utext="${satisfied?'выполнена':'активна'}"></th:block>
+                            <th:block th:utext="${satisfied?'выполнена семьей '+itemRequest.getFulfiller().link():'активна'}"></th:block>
                         </td>
                         <td>
                             <th:block th:text="${itemRequest.getThing().getName()}"></th:block>

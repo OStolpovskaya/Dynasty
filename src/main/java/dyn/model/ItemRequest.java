@@ -17,6 +17,9 @@ public class ItemRequest {
     @ManyToOne(fetch = FetchType.EAGER)
     private Family family;
 
+    @ManyToOne
+    private Family fulfiller;
+
     @ManyToOne(fetch = FetchType.EAGER)
     private Thing thing;
 
@@ -92,6 +95,14 @@ public class ItemRequest {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public Family getFulfiller() {
+        return fulfiller;
+    }
+
+    public void setFulfiller(Family fulfiller) {
+        this.fulfiller = fulfiller;
     }
 
     public String desc() {
