@@ -36,7 +36,7 @@ public class AchievementService {
     FamilyRepository familyRepository;
 
 
-    public Achievement checkAchievement(AchievementType achievementType, User user, Character character) {
+    public Achievement checkAchievement(AchievementType achievementType, User user, Family family, Character character) {
         Achievement achievement = null;
         switch (achievementType) {
             case newborn:
@@ -48,14 +48,16 @@ public class AchievementService {
                 }
                 break;
         }
-        if (achievement != null && !user.getAchievements().contains(achievement)) {
-            user.getAchievements().add(achievement);
-            userRepository.save(user);
-
-            Family family = user.getCurrentFamily();
+        if (achievement != null && userHasAchievement(user, achievement) == null) {
             family.setCraftPoint(family.getCraftPoint() + Const.ACHIEVEMENT_CRAFT_POINTS);
             family.addMoney(Const.ACHIEVEMENT_MONEY);
             familyRepository.save(family);
+
+            UserAchievements userAchievement = new UserAchievements();
+            userAchievement.setAchievement(achievement);
+            userAchievement.setUser(user);
+            userAchievement.setFamily(family);
+            userAchievementsRepository.save(userAchievement);
 
             logger.info(user.getUserName() + " is awarded! Achievement: " + achievement.getName() + ". Added " + Const.ACHIEVEMENT_CRAFT_POINTS + " craft points and " + Const.ACHIEVEMENT_MONEY + " to family " + family.getFamilyName());
             return achievement;
@@ -63,8 +65,13 @@ public class AchievementService {
         return null;
     }
 
+    private UserAchievements userHasAchievement(User user, Achievement achievement) {
+        UserAchievements userAchievements = userAchievementsRepository.findByUserAndAchievement(user, achievement);
+        return userAchievements;
+    }
+
     public List<UserAchievements> getAchievementsOfUser(User user) {
-        return userAchievementsRepository.findByUser(user);
+        return userAchievementsRepository.findByUserOrderByDate(user);
 
     }
 

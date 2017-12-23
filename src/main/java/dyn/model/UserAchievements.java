@@ -11,11 +11,12 @@ import java.sql.Timestamp;
 public class UserAchievements {
     private Long id;
     private User user;
+    private Family family;
     private Achievement achievement;
     private Timestamp date;
 
     @Id
-    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     public Long getId() {
         return id;
     }
@@ -24,7 +25,7 @@ public class UserAchievements {
         this.id = id;
     }
 
-    @OneToOne
+    @ManyToOne
     public User getUser() {
         return user;
     }
@@ -37,7 +38,6 @@ public class UserAchievements {
     public Achievement getAchievement() {
         return achievement;
     }
-
     public void setAchievement(Achievement achievement) {
         this.achievement = achievement;
     }
@@ -47,10 +47,17 @@ public class UserAchievements {
     public Timestamp getDate() {
         return date;
     }
-
     public void setDate(Timestamp date) {
         this.date = date;
     }
 
+    @ManyToOne
+    @JoinColumn(name = "family_id")
+    public Family getFamily() {
+        return family;
+    }
 
+    public void setFamily(Family family) {
+        this.family = family;
+    }
 }

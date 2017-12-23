@@ -12,7 +12,7 @@
     <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
     <th:block th:if="${family.getLevel() == 0}">
         <div class="alert alert-success">
-            В городе вы можете посетить парк отдыха для увеличения плодовитости одного из ваших персонажей или снять жилье для создания еще одной пары. По сути маркет баффов и услуг.<br/>
+            В городе вы можете посетить Парк отдыха для увеличения плодовитости одного из ваших персонажей или снять жилье в Апартаментах для создания еще одной пары. По сути маркет баффов и услуг.<br/>
             Вы можете приобрести любое из зданий, тогда производство услуг или баффов станет хорошим
             источником дохода. <br/>
         </div>
@@ -201,7 +201,7 @@
                                 <div class="my_tooltip"><span class="glyphicon glyphicon-info-sign" style="color: darkgrey;"></span>
                                     <span class="my_tooltiptext" style="width: 300px;">
                                     <ul>
-                                        <li th:each="achievement : ${user.getAchievements()}" th:text="${achievement.getName()}"></li>
+                                        <li th:each="achievement : ${user.getUserAchievements()}" th:text="${achievement.getAchievement().getName()}"></li>
                                     </ul>
                                 </span>
                                 </div>

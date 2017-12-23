@@ -7,9 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -55,11 +53,8 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Family> families;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_achievements",
-            joinColumns = {@JoinColumn(name = "user_userid")},
-            inverseJoinColumns = {@JoinColumn(name = "achievement_id")})
-    private Set<Achievement> achievements = new HashSet<Achievement>();
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<UserAchievements> userAchievements;
 
     public User() {
 
@@ -149,8 +144,8 @@ public class User implements Serializable {
         return families;
     }
 
-    public Set<Achievement> getAchievements() {
-        return achievements;
+    public List<UserAchievements> getUserAchievements() {
+        return userAchievements;
     }
 
     public Family getCurrentFamily() {

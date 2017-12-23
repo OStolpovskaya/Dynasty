@@ -47,3 +47,12 @@ CREATE TABLE IF NOT EXISTS `item_request` (
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=11 ;
+/*====================================================================================================================*/
+ALTER TABLE  `user_achievements` ADD  `family_id` INT NOT NULL AFTER  `user_userid`;
+update user_achievements targetTable
+
+left join family sourceTable on
+    targetTable.`user_userid`= sourceTable.user_id
+set
+    targetTable.`family_id`  = sourceTable.id
+    where sourceTable.current=true;

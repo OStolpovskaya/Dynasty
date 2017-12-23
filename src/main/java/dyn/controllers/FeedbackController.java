@@ -6,6 +6,7 @@ import dyn.repository.UserRepository;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import static dyn.controllers.GameController.getAuthUser;
+import static dyn.controllers.GameController.loc;
 
 /**
  * Created by OM on 30.08.2017.
@@ -25,6 +27,8 @@ import static dyn.controllers.GameController.getAuthUser;
 @Controller
 public class FeedbackController {
     private static final Logger logger = LogManager.getLogger(FeedbackController.class);
+    @Autowired
+    MessageSource messageSource;
     @Autowired
     FeedbackRepository feedbackRepository;
     @Autowired
@@ -35,6 +39,11 @@ public class FeedbackController {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
 
         Family family = user.getCurrentFamily();
+        if (family == null) {
+            logger.debug(user.getUserName() + " doesn't have any family");
+            redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("new.user", null, loc()));
+            return "redirect:/game/addNewFamily";
+        }
         model.addAttribute("family", family);
 
         model.addAttribute("bugs", feedbackRepository.findByTypeOrderByStatusAscDateDesc(FeedbackType.bug));

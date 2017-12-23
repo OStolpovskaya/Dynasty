@@ -68,7 +68,8 @@
             <td th:text="${family.getItems().size()}">type</td>
             <td th:text="${family.getCraftProjects().size()}">type</td>
             <td th:text="${family.getCraftThings().size()}">type</td>
-            <td><span th:each="achiev : ${family.getUser().getAchievements()}" th:text="${achiev.getId()+'; '}" th:title="${achiev.getName()}"></span></td>
+            <td><span th:each="achiev : ${family.getUser().getUserAchievements()}" th:text="${achiev.getAchievement().getId()+'; '}"
+                      th:title="${achiev.getAchievement().getName() + '('+achiev.getDate()+')'}"></span></td>
 
             <td><a th:href="${'/admin/family?familyId='+family.getId()}">Лог</a></td>
 
@@ -136,7 +137,8 @@
             <td th:text="${family.getItems().size()}">type</td>
             <td th:text="${family.getCraftProjects().size()}">type</td>
             <td th:text="${family.getCraftThings().size()}">type</td>
-            <td><span th:each="achiev : ${family.getUser().getAchievements()}" th:text="${achiev.getId()+'; '}" th:title="${achiev.getName()}"></span></td>
+            <td><span th:each="achiev : ${family.getUser().getUserAchievements()}" th:text="${achiev.getAchievement().getId()+'; '}"
+                      th:title="${achiev.getAchievement().getName() + '('+achiev.getDate()+')'}"></span></td>
 
             <td><a th:href="${'/admin/family?familyId='+family.getId()}">Лог</a></td>
 

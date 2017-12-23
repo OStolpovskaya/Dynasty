@@ -21,13 +21,15 @@
             <thead>
             <tr>
                 <th>Достижение</th>
+                <th>Семья</th>
                 <th>Когда получено</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="userAchievement : ${achievements}">
-                <!--/*@thymesVar id="achievement" type="dyn.model.UserAchievement"*/-->
+                <!--/*@thymesVar id="userAchievement" type="dyn.model.UserAchievement"*/-->
                 <td th:text="${userAchievement.getAchievement().getName()}">name</td>
+                <td th:utext="${userAchievement.getFamily().link()}">name</td>
                 <td th:text="${userAchievement.getDate()}">date</td>
             </tr>
             </tbody>

@@ -8,7 +8,7 @@
 <body>
 <th:block th:replace="fragments/scripts :: counters"></th:block>
 <div th:replace="fragments/navigation :: nav-for-game"></div>
-<div class="container" style="width: 1900px;">
+<div class="container" style="width: 1110px;">
     <!--/*@thymesVar id="player" type="dyn.model.User"*/-->
     <!--/*@thymesVar id="playerCurrentFamily" type="dyn.model.Family"*/-->
     <!--/*@thymesVar id="fathers" type="dyn.model.Map<java.lang.Character, List<dyn.model.Character>>"*/-->
@@ -38,11 +38,64 @@
     <div align="center">
         <ul class="list-inline">
             <!--/*@thymesVar id="room" type="dyn.model.Room"*/-->
-            <li><a href="#curLevelCharacters">Персонажи текущего уровня</a></li>
+            <li><a href="#families">Семьи</a></li>
             <li><a href="#achievs">Достижения</a></li>
+            <li><a href="#curLevelCharacters">Персонажи текущего уровня</a></li>
             <li><a href="#house">Дом</a></li>
             <li><a href="#business">Бизнес</a></li>
         </ul>
+    </div>
+
+    <div class="well" align="center">
+        <a name="families" class="anchor"></a>
+        <h3>Cемьи</h3>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Фамилия</th>
+                <th>Уровень</th>
+                <th>Текущий выбор</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="pFamily : ${playerFamilies}">
+                <td th:utext="${pFamily.link()}">name</td>
+                <td th:text="${pFamily.getLevel()}">1</td>
+                <td>
+                    <th:block th:if="${pFamily.isCurrent()}"><span class="glyphicon glyphicon-ok-sign" style="color: forestgreen"></span>
+                    </th:block>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="well" align="center">
+        <a name="achievs" class="anchor"></a>
+        <h3>Достижения</h3>
+        <th:block th:if="${not #lists.isEmpty(userAchievements)}">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Достижение</th>
+                    <th>Семья</th>
+                    <th>Когда получено</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="userAchievement : ${userAchievements}">
+                    <!--/*@thymesVar id="userAchievement" type="dyn.model.UserAchievements"*/-->
+                    <td th:text="${userAchievement.getAchievement().getName()}">name</td>
+                    <td th:utext="${userAchievement.getFamily().link()}">name</td>
+                    <td th:text="${userAchievement.getDate()}">name</td>
+                    <td>-</td>
+                </tr>
+                </tbody>
+            </table>
+        </th:block>
+        <th:block th:unless="${not #lists.isEmpty(userAchievements)}">
+            <p>Нет достижений</p>
+        </th:block>
     </div>
 
     <div class="well" align="center">
@@ -78,31 +131,6 @@
         </th:block>
 
 
-    </div>
-
-    <div class="well" align="center">
-        <a name="achievs" class="anchor"></a>
-        <h3>Достижения</h3>
-        <th:block th:if="${not #lists.isEmpty(achievements)}">
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th>Достижение</th>
-                    <th>Когда получено</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="achievement : ${achievements}">
-                    <!--/*@thymesVar id="achievement" type="dyn.model.Achievement"*/-->
-                    <td th:text="${achievement.getName()}">name</td>
-                    <td>-</td>
-                </tr>
-                </tbody>
-            </table>
-        </th:block>
-        <th:block th:unless="${not #lists.isEmpty(achievements)}">
-            <p>Нет достижений</p>
-        </th:block>
     </div>
 
 

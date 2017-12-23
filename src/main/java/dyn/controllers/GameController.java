@@ -221,23 +221,6 @@ public class GameController {
         return "redirect:/game";
     }
 
-    @RequestMapping("/game/achievements")
-    public String characterView(ModelMap model, RedirectAttributes redirectAttributes) {
-        User user = userRepository.findByUserName(getAuthUser().getUsername());
-        Family family = user.getCurrentFamily();
-        if (family == null) {
-            logger.debug(user.getUserName() + " doesn't have any family");
-            redirectAttributes.addFlashAttribute("mess", messageSource.getMessage("new.user", null, loc()));
-            return "redirect:/game/addNewFamily";
-        }
-        model.addAttribute("family", family);
-
-        List<UserAchievements> achievements = achievementService.getAchievementsOfUser(user);
-        model.addAttribute("achievements", achievements);
-
-        return "/game/awarded";
-    }
-
     @RequestMapping("/game/help")
     public String help(ModelMap model, RedirectAttributes redirectAttributes) {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
@@ -525,7 +508,7 @@ public class GameController {
 
         // race and check newborn achievement
         child.setRace(raceService.defineRace(child));
-        Achievement achievement = achievementService.checkAchievement(AchievementType.newborn, user, child);
+        Achievement achievement = achievementService.checkAchievement(AchievementType.newborn, user, family, child);
         if (achievement != null) {
             log.append(messageSource.getMessage("turn.achievement", new Object[]{achievement.getName(), Const.ACHIEVEMENT_CRAFT_POINTS, Const.ACHIEVEMENT_MONEY}, loc()));
             logAchievements.append(child.getName()).append(": ").append(achievement.getName()).append("<br>");
@@ -588,7 +571,7 @@ public class GameController {
             turnLog.append("А призвание приносит ресурсы: " + career.getVocation().resString(career.getProfession().getLevel()) + ". ");
 
             // achievement career 10 level
-            Achievement achievement = achievementService.checkAchievement(AchievementType.vocation10level, user, worker);
+            Achievement achievement = achievementService.checkAchievement(AchievementType.vocation10level, user, family, worker);
             if (achievement != null) {
                 turnLog.append(messageSource.getMessage("turn.achievement", new Object[]{achievement.getName()}, loc()));
                 turnAchievements.append(worker.getName()).append(": ").append(achievement.getName()).append("<br>");
@@ -681,8 +664,11 @@ public class GameController {
         }
         model.addAttribute("fathers", fathersMap);
 
-        Set<Achievement> achievements = player.getAchievements();
-        model.addAttribute("achievements", achievements);
+        List<UserAchievements> userAchievements = achievementService.getAchievementsOfUser(user);
+        model.addAttribute("userAchievements", userAchievements);
+
+        List<Family> playerFamilies = player.getFamilies();
+        model.addAttribute("playerFamilies", playerFamilies);
 
         model.addAttribute("roomList", houseService.getRoomsByHouseId(playerFamily.getHouse().getId()));
 
