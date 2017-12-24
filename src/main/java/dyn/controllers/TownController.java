@@ -5,19 +5,17 @@ package dyn.controllers;
  */
 
 
-import dyn.model.*;
+import dyn.model.Family;
+import dyn.model.House;
+import dyn.model.Project;
+import dyn.model.User;
 import dyn.repository.FamilyRepository;
 import dyn.repository.UserRepository;
 import dyn.service.*;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,9 +25,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.List;
-import java.util.Map;
 
 import static dyn.controllers.GameController.loc;
 
@@ -54,10 +49,7 @@ public class TownController {
     private TownNewsService townNewsService;
 
     @RequestMapping("/game/town")
-    public String townView(ModelMap model, RedirectAttributes redirectAttributes,
-                           @PageableDefault(size = 7, page = 0, direction = Sort.Direction.DESC, sort = {"date"}) @Qualifier("townNews") Pageable pageable,
-                           @PageableDefault(size = 7, page = 0, direction = Sort.Direction.DESC, sort = {"date"}) @Qualifier("itemRequests") Pageable itemRequestsPageable
-    ) {
+    public String townView(ModelMap model, RedirectAttributes redirectAttributes) {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         Family family = user.getCurrentFamily();
 
@@ -70,27 +62,6 @@ public class TownController {
         model.addAttribute("family", family);
         model.addAttribute("buildingList", houseService.getBuildingList());
         model.addAttribute("familyBuildingList", family.getBuildings());
-
-        Map<User, Integer> acievementRatingMap = achService.getAcievementRatingMap();
-        model.addAttribute("acievementRatingMap", acievementRatingMap);
-
-        List<Family> familyMoneyRating = familyRepository.findTop10ByOrderByMoneyDesc();
-        for (Family familyInRating : familyMoneyRating) {
-            if (familyInRating.getId() == 1L) {
-                familyMoneyRating.remove(familyInRating);
-                break;
-            }
-        }
-        model.addAttribute("familyMoneyRating", familyMoneyRating);
-
-        List<Family> familyLevelRating = familyRepository.findTop10ByOrderByLevelDesc();
-        model.addAttribute("familyLevelRating", familyLevelRating);
-
-        Page<TownNews> news = townNewsService.getNews(pageable);
-        model.addAttribute("news", news);
-
-        Page<ItemRequest> itemRequests = craftService.getItemRequestsOfFamily(itemRequestsPageable);
-        model.addAttribute("itemRequests", itemRequests);
 
         return "game/town";
     }

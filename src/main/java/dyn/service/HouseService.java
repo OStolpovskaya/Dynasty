@@ -7,9 +7,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.math.BigInteger;
+import java.util.*;
 
 /**
  * Created by OM on 30.03.2017.
@@ -258,5 +257,30 @@ public class HouseService {
 
     public List<RoomThing> getRoomThingByHouse(House house) {
         return roomThingRepository.findAllByHouseOrderByRoomAscThingAsc(house);
+    }
+
+    public Map<String, Integer> getHouseStatistics() {
+
+        Map<String, Integer> map = new LinkedHashMap<>();
+        List<Object[]> list = houseRepository.countHouses();
+        for (Object[] objects : list) {
+            String houseName = (String) objects[0];
+            BigInteger count = (BigInteger) objects[1];
+            map.put(houseName, count.intValue());
+
+        }
+        return map;
+    }
+
+    public Map<String, Integer> getBuildingStatistics() {
+        Map<String, Integer> map = new LinkedHashMap<>();
+        List<Object[]> list = houseRepository.countBuildings();
+        for (Object[] objects : list) {
+            String houseName = (String) objects[0];
+            BigInteger count = (BigInteger) objects[1];
+            map.put(houseName, count.intValue());
+
+        }
+        return map;
     }
 }

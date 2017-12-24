@@ -59,10 +59,12 @@ public class TownNewsService {
     }
 
     private void saveNews(TownNewsType newsType, Family family, String text) {
-        TownNews townNews = new TownNews();
-        townNews.setFamily(family);
-        townNews.setType(newsType);
-        townNews.setText(text);
-        townNewsRepository.save(townNews);
+        if (family.getUser().getType().equals(UserType.player)) {
+            TownNews townNews = new TownNews();
+            townNews.setFamily(family);
+            townNews.setType(newsType);
+            townNews.setText(text);
+            townNewsRepository.save(townNews);
+        }
     }
 }

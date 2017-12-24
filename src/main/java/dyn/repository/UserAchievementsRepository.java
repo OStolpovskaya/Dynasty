@@ -17,6 +17,6 @@ public interface UserAchievementsRepository extends CrudRepository<UserAchieveme
 
     List<UserAchievements> findByUserOrderByDate(User user);
 
-    @Query(value = "SELECT user_userid, COUNT( * ) AS count FROM user_achievements GROUP BY user_userid ORDER BY count DESC LIMIT 10", nativeQuery = true)
+    @Query(value = "SELECT user_userid, COUNT( * ) AS count FROM user_achievements JOIN users ON users.userid = user_achievements.user_userid WHERE users.type = 'player' GROUP BY user_userid ORDER BY count DESC LIMIT 10", nativeQuery = true)
     List<Object[]> countAchievements();
 }

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Новости города</title>
+    <th:block th:replace="fragments/custom :: headLinks"></th:block>
+</head>
+<body>
+<th:block th:replace="fragments/scripts :: counters"></th:block>
+<div th:replace="fragments/navigation :: nav-for-game"></div>
+<div class="container" style="width: 1240px;">
+    <th:block th:if="${family.getLevel() == 0}">
+        <div class="alert alert-success">
+            По сути городская газета, новости, рейтинги, объявления и статистика. <br/>
+        </div>
+    </th:block>
+    <div style="font-size: 12px;">
+        <div class="well" style="display: inline-block; vertical-align: top; width: 800px; ">
+            <h3>Новости города</h3>
+            <div>
+                <table class="table table-condensed" style="margin-bottom: 5px;">
+                    <thead>
+                    <tr>
+                        <th>Дата</th>
+                        <th>Новость</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <th:block th:each="newsItem : ${news}">
+                        <!--/*@thymesVar id="newsItem" type="dyn.model.TownNews"*/-->
+                        <tr>
+                            <td th:text="${newsItem.formattedDate()}" style="width: 120px;">name</td>
+                            <td th:utext="${newsItem.getText()}" style="">desc</td>
+                        </tr>
+                    </th:block>
+                    </tbody>
+                </table>
+                <div class="row" style="margin: 0px;">
+                    <div th:if="${news.totalPages != 1}" class="form-group col-sm-11 pagination-centered">
+                        <ul class="pagination" style="margin: 0px;">
+                            <li th:unless="${news.number == 0}">
+                                <a class="pageLink" th:href="@{/game/news(townNews_page=0)}"><span class="glyphicon glyphicon-fast-backward" style="color: #333;"></span></a>
+                            </li>
+                            <li th:unless="${news.number == 0}">
+                                <a class="pageLink" th:href="@{/game/news(townNews_page=${news.number - 1})}"><span class="glyphicon glyphicon-chevron-left" style="color: #333;"></span></a>
+                            </li>
+                            <li>
+                                <a th:text="${news.number+'/'+news.totalPages}" style="color: #333;"></a>
+                            </li>
+                            <li th:unless="${news.number + 1 >= news.totalPages}">
+                                <a class="pageLink" th:href="@{/game/news(townNews_page=${news.number + 1})}"><span class="glyphicon glyphicon-chevron-right" style="color: #333;"></span></a>
+                            </li>
+                            <li th:unless="${news.number + 1 >= news.totalPages}">
+                                <a class="pageLink" th:href="@{/game/news(townNews_page=${news.totalPages})}"><span class="glyphicon glyphicon-fast-forward" style="color: #333;"></span></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="display: inline-block; vertical-align: top; width: 395px; margin-left: 10px; " align="center">
+            <h3>Рейтинг</h3>
+            <div style="width: 300px;">
+                <div class="w3-bar ">
+                    <a onclick="openCity('achiev')" style="cursor: pointer;">Достижения</a>
+                    <a onclick="openCity('money')" style="cursor: pointer;">Деньги</a>
+                    <a onclick="openCity('level')" style="cursor: pointer;">Уровень</a>
+                </div>
+                <div id="achiev" class="rating">
+                    <h4>по количеству достижений</h4>
+                    <table class="table table-condensed">
+                        <th:block th:each="mapEntry, mStat : ${acievementRatingMap}" th:with="user = ${mapEntry.getKey()}, count = ${mapEntry.getValue()}">
+                            <tr th:class="${mStat.count==1?'success':''}">
+                                <!--/*@thymesVar id="user" type="dyn.model.User"*/-->
+                                <td>
+                                    <th:block th:utext="${user.link()}"></th:block>
+                                </td>
+                                <td>
+                                    <th:block th:text="${count}"></th:block>
+                                    <div class="my_tooltip"><span class="glyphicon glyphicon-info-sign" style="color: darkgrey;"></span>
+                                        <span class="my_tooltiptext" style="width: 300px;">
+                                    <ul>
+                                        <li th:each="achievement : ${user.getUserAchievements()}" th:text="${achievement.getAchievement().getName()}"></li>
+                                    </ul>
+                                </span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </th:block>
+                    </table>
+                </div>
+                <div id="money" class="rating" style="display:none">
+                    <h4>по количеству динов</h4>
+                    <table class="table table-condensed">
+                        <th:block th:each="family,fstat : ${familyMoneyRating}">
+                            <tr th:class="${fstat.count==1?'success':''}">
+                                <!--/*@thymesVar id="user" type="dyn.model.User"*/-->
+                                <td>
+                                    <th:block th:utext="${family.link()}"></th:block>
+                                </td>
+                            </tr>
+                        </th:block>
+                    </table>
+                </div>
+                <div id="level" class="rating" style="display:none">
+                    <h4>по уровню</h4>
+                    <table class="table table-condensed">
+                        <th:block th:each="family,fstat : ${familyLevelRating}">
+                            <tr th:class="${fstat.count==1?'success':''}">
+                                <!--/*@thymesVar id="user" type="dyn.model.User"*/-->
+                                <td>
+                                    <th:block th:utext="${family.link()}"></th:block>
+                                </td>
+                                <td>
+                                    <th:block th:utext="${family.getLevel()}"></th:block>
+                                </td>
+                            </tr>
+                        </th:block>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="well" style="">
+        <h3>Заявки на предметы</h3>
+        <p>Как подать заявку читайте <a href="/game/help#itemRequest">здесь</a>.</p>
+        <th:block th:unless="${itemRequests.totalPages==0}">
+            <table class="table table-striped table-condensed" style="margin-bottom: 5px;">
+                <thead>
+                <tr>
+                    <th>Дата</th>
+                    <th>Семья</th>
+                    <th>Предмет</th>
+                    <th>Проект</th>
+                    <th>Качество</th>
+                    <th>Сумма</th>
+                    <th>Предоставить</th>
+                </tr>
+                </thead>
+                <tbody>
+                <th:block th:each="itemRequest : ${itemRequests}">
+                    <!--/*@thymesVar id="itemRequest" type="dyn.model.ItemRequest"*/-->
+                    <tr>
+                        <td th:text="${itemRequest.formattedDate()}">name</td>
+                        <td th:utext="${itemRequest.getFamily().link()}">desc</td>
+                        <td th:utext="${itemRequest.getThing().link()}">desc</td>
+                        <td th:text="${itemRequest.getProject() == null?'любой':itemRequest.getProject().getName()}">desc</td>
+                        <td th:text="${itemRequest.getMinQuality() == 0?'любая':'не ниже '+itemRequest.getMinQuality()}">desc</td>
+                        <td th:text="${itemRequest.getDeposit()}">name</td>
+                        <td th:with="itemToFulfillItemRequest = ${family.itemToFulfillItemRequest(itemRequest)}">
+                            <form th:action="@{/game/fulfillItemRequest}" method="post" class="form-inline">
+                                <input type="hidden" name="itemRequestId" th:value="${itemRequest.getId()}"/>
+                                <button type="submit" class="btn btn-xs btn-warning"
+                                        th:disabled="${itemToFulfillItemRequest==null}"
+                                        th:title="${itemToFulfillItemRequest==null?'На складе нет подходящего под условия заявки предмета.':'Внимание! Будет отдан первый попавшийся под условия заявки предмет!'}">
+                                    Выполнить
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                </th:block>
+                </tbody>
+            </table>
+            <div class="row" style="margin: 0px;">
+                <div th:if="${itemRequests.totalPages != 1}" class="form-group col-sm-11 pagination-centered">
+                    <ul class="pagination" style="margin: 0px;">
+                        <li th:unless="${itemRequests.number == 0}">
+                            <a class="pageLink" th:href="@{/game/news(itemRequests_page=0)}"><span class="glyphicon glyphicon-fast-backward" style="color: #333;"></span></a>
+                        </li>
+                        <li th:unless="${itemRequests.number == 0}">
+                            <a class="pageLink" th:href="@{/game/news(itemRequests_page=${itemRequests.number - 1})}"><span class="glyphicon glyphicon-chevron-left" style="color: #333;"></span></a>
+                        </li>
+                        <li>
+                            <a th:text="${itemRequests.number+'/'+itemRequests.totalPages}" style="color: #333;"></a>
+                        </li>
+                        <li th:unless="${itemRequests.number + 1 >= itemRequests.totalPages}">
+                            <a class="pageLink" th:href="@{/game/news(itemRequests_page=${itemRequests.number + 1})}"><span class="glyphicon glyphicon-chevron-right" style="color: #333;"></span></a>
+                        </li>
+                        <li th:unless="${itemRequests.number + 1 >= itemRequests.totalPages}">
+                            <a class="pageLink" th:href="@{/game/news(itemRequests_page=${itemRequests.totalPages})}"><span class="glyphicon glyphicon-fast-forward" style="color: #333;"></span></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </th:block>
+        <th:block th:if="${itemRequests.totalPages==0}">
+            <p style="text-align: center;">Пока нет заявок.</p>
+        </th:block>
+    </div>
+
+    <div style="font-size: 12px; ">
+        <h3>Статистика</h3>
+        <div style="display: inline-block; vertical-align: top; width: 300px; ">
+            <strong>Дома</strong>
+            <table class="table table-condensed"> <!--houseMap-->
+                <table class="table table-condensed">
+                    <th:block th:each="mapEntry, mStat : ${houseMap}" th:with="houseName = ${mapEntry.getKey()}, count = ${mapEntry.getValue()}">
+                        <tr>
+                            <td>
+                                <th:block th:utext="${houseName}"></th:block>
+                            </td>
+                            <td>
+                                <th:block th:text="${count}"></th:block>
+                            </td>
+                        </tr>
+                    </th:block>
+                </table>
+            </table>
+        </div>
+        <div style="display: inline-block; vertical-align: top; width: 300px; margin-left: 50px;">
+            <strong>Здания</strong>
+            <table class="table table-condensed"> <!--houseMap-->
+                <table class="table table-condensed">
+                    <th:block th:each="mapEntry, mStat : ${buildingMap}" th:with="buildingName = ${mapEntry.getKey()}, count = ${mapEntry.getValue()}">
+                        <tr>
+                            <td>
+                                <th:block th:utext="${buildingName}"></th:block>
+                            </td>
+                            <td>
+                                <th:block th:text="${count}"></th:block>
+                            </td>
+                        </tr>
+                    </th:block>
+                </table>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<th:block th:replace="fragments/scripts :: webjars"></th:block>
+<script>
+    /*<![CDATA[*/
+    function openCity(cityName) {
+        var i;
+        var x = document.getElementsByClassName("rating");
+        for (i = 0; i < x.length; i++) {
+            x[i].style.display = "none";
+        }
+        document.getElementById(cityName).style.display = "block";
+    }
+    /*]]>*/
+</script>
+</body>
+</html>

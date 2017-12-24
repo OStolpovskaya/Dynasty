@@ -50,6 +50,10 @@ public class User implements Serializable {
     @Column(name = "last_login_date")
     private Date lastLoginDate;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type")
+    private UserType type;
+
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Family> families;
 
@@ -138,6 +142,14 @@ public class User implements Serializable {
 
     public void setLastLoginDate(Date lastLoginDate) {
         this.lastLoginDate = lastLoginDate;
+    }
+
+    public UserType getType() {
+        return type;
+    }
+
+    public void setType(UserType type) {
+        this.type = type;
     }
 
     public List<Family> getFamilies() {

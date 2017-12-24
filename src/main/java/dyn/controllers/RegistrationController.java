@@ -7,6 +7,7 @@ package dyn.controllers;
 
 import dyn.model.User;
 import dyn.model.UserRole;
+import dyn.model.UserType;
 import dyn.repository.UserRepository;
 import dyn.repository.UserRolesRepository;
 import org.slf4j.Logger;
@@ -68,6 +69,7 @@ public class RegistrationController {
         }
 
         regUser.setEnabled(true);
+        regUser.setType(UserType.player);
         regUser.setPassword(passwordEncoder.encode(regUser.getPassword()));
         logger.info("SAVE USER:" + regUser.toString());
 

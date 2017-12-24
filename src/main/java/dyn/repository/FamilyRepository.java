@@ -2,6 +2,7 @@ package dyn.repository;
 
 import dyn.model.Family;
 import dyn.model.User;
+import dyn.model.UserType;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -17,7 +18,8 @@ public interface FamilyRepository extends CrudRepository<Family, Long> {
 
     List<Family> findAllByOrderByUserLastLoginDateDesc();
 
-    List<Family> findTop10ByOrderByMoneyDesc();
+    List<Family> findTop10ByUserTypeOrderByMoneyDesc(UserType userType);
 
-    List<Family> findTop10ByOrderByLevelDesc();
+    List<Family> findTop10ByUserTypeOrderByLevelDesc(UserType userType);
+
 }
