@@ -664,7 +664,7 @@ public class GameController {
         }
         model.addAttribute("fathers", fathersMap);
 
-        List<UserAchievements> userAchievements = achievementService.getAchievementsOfUser(user);
+        List<UserAchievements> userAchievements = achievementService.getAchievementsOfUser(player);
         model.addAttribute("userAchievements", userAchievements);
 
         List<Family> playerFamilies = player.getFamilies();

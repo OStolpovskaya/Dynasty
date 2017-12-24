@@ -62,3 +62,4 @@ ALTER TABLE  `item_request` ADD  `fulfiller_id` INT NULL DEFAULT NULL;
 ALTER TABLE  `users` ADD  `type` ENUM(  'player',  'admin',  'bot' ) NOT NULL DEFAULT  'player';
 UPDATE  `dyn`.`users` SET  `type` =  'admin' WHERE  `users`.`userid` =1;
 UPDATE  `dyn`.`users` SET  `type` =  'bot' WHERE  `users`.`userid` >=26 and `users`.`userid`<=53;
+/*====================================================================================================================*/
