@@ -410,8 +410,8 @@ public class CraftController {
         Project project = craftService.getProject(projectId);
         if (project != null) {
             if (family.getCraftProjects().contains(project)) {
+                House building = houseService.getBuildingByProduction(project);
                 if (family.hasResourcesForProject(project) && family.getMoney() >= project.getCost()) {
-                    House building = houseService.getBuildingByProduction(project);
                     FamilyBuilding familyBuilding = houseService.getFamilyBuildingByFamilyAndBuilding(family, building);
                     int count = 1;
                     if (familyBuilding.getBuildingQuality() >= 3) {
@@ -440,7 +440,7 @@ public class CraftController {
                 }
                 logger.error(family.userNameAndFamilyName() + " doesn't have resources to make item for project:" + project.getName());
                 redirectAttributes.addFlashAttribute("mess", "Недостаточно ресурсов для изготовления предмета по проекту: " + project.getName());
-                return "redirect:/game/chooseProject?thingId=" + project.getThing().getId();
+                return "redirect:/game/buildings#building" + building.getId();
             }
             logger.error(family.userNameAndFamilyName() + " doesn't have the project:" + project.getName());
             redirectAttributes.addFlashAttribute("mess", "Ваша семья не владеет таким проектом: " + project.getName());
