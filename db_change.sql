@@ -63,3 +63,11 @@ ALTER TABLE  `users` ADD  `type` ENUM(  'player',  'admin',  'bot' ) NOT NULL DE
 UPDATE  `dyn`.`users` SET  `type` =  'admin' WHERE  `users`.`userid` =1;
 UPDATE  `dyn`.`users` SET  `type` =  'bot' WHERE  `users`.`userid` >=26 and `users`.`userid`<=53;
 /*====================================================================================================================*/
+CREATE TABLE IF NOT EXISTS `user_neighbors` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `neighbor_user_id` int(11) NOT NULL,
+  `neighbor_family_id` int(11) NOT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
