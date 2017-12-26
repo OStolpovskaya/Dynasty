@@ -60,6 +60,8 @@ public class GameController {
     FamilyLogService familyLogService;
     @Autowired
     FamilyService familyService;
+    @Autowired
+    UserNeighborService userNeighborService;
 
     @Autowired
     HouseService houseService;
@@ -649,7 +651,9 @@ public class GameController {
             }
         }
 
-        model.addAttribute("playerCurrentFamily", playerFamily);
+        model.addAttribute("playerFamily", playerFamily);
+        model.addAttribute("isNeighbor", userNeighborService.userHasThisNeighborLink(user, playerFamily));
+
 
         List<Character> fathers;
         if (playerFamily.getLevel() > 0) {

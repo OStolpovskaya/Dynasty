@@ -5,10 +5,7 @@ package dyn.controllers;
  */
 
 
-import dyn.model.Family;
-import dyn.model.House;
-import dyn.model.Project;
-import dyn.model.User;
+import dyn.model.*;
 import dyn.repository.FamilyRepository;
 import dyn.repository.UserRepository;
 import dyn.service.*;
@@ -26,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
+
 import static dyn.controllers.GameController.loc;
 
 @Controller
@@ -39,6 +38,8 @@ public class TownController {
     CraftService craftService;
     @Autowired
     MessageSource messageSource;
+    @Autowired
+    UserNeighborService userNeighborService;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -62,6 +63,9 @@ public class TownController {
         model.addAttribute("family", family);
         model.addAttribute("buildingList", houseService.getBuildingList());
         model.addAttribute("familyBuildingList", family.getBuildings());
+
+        List<UserNeighbor> neighborsOfUser = userNeighborService.getNeighborsOfUser(user);
+        model.addAttribute("neighborsOfUser", neighborsOfUser);
 
         return "game/town";
     }
