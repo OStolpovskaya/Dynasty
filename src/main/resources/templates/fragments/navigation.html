@@ -80,8 +80,13 @@
                     <li th:classappend="${#httpServletRequest.getRequestURI().contains('/game/house') ? 'active':''}"><a href="/game/house">Дом</a></li>
                     <li th:classappend="${#httpServletRequest.getRequestURI().contains('/game/storage') ? 'active':''}"><a href="/game/storage">Склад</a></li>
                     <li th:classappend="${#httpServletRequest.getRequestURI().contains('/game/craft') ? 'active':''}"><a href="/game/craft">Крафт</a></li>
-                    <li th:classappend="${#httpServletRequest.getRequestURI().contains('/game/town') ? 'active':''}"><a href="/game/town">Город
-                        <span class="glyphicon glyphicon-envelope" th:if="${@mailService.hasNewMail(family.getUser())}" title="Новое письмо!"></span></a></li>
+                    <li th:classappend="${#httpServletRequest.getRequestURI().contains('/game/town') ? 'active':''}">
+                        <a href="/game/town">Город
+                            <th:block th:if="${family != null}">
+                                <span class="glyphicon glyphicon-envelope" th:if="${@mailService.hasNewMail(family.getUser())}" title="Новое письмо!"></span>
+                            </th:block>
+                        </a>
+                    </li>
                     <li th:classappend="${#httpServletRequest.getRequestURI().contains('/game/news') ? 'active':''}"><a href="/game/news">Новости</a></li>
                     <li th:classappend="${#httpServletRequest.getRequestURI().contains('/game/buildings') ? 'active':''}"><a href="/game/buildings">Бизнес</a></li>
                     <li th:classappend="${#httpServletRequest.getRequestURI().contains('/game/help') ? 'active':''}"><a href="/game/help">Справка</a></li>
