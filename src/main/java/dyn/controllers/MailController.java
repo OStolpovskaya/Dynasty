@@ -79,10 +79,6 @@ public class MailController {
     @PostMapping("/game/addMail")
     public String addMail(ModelMap model, @ModelAttribute(value = "newMail") @Valid Mail newMail, BindingResult result,
                           @RequestParam(value = "playerId") Long playerId, RedirectAttributes redirectAttributes) {
-        System.out.println("model = " + model);
-        System.out.println("newMail = " + newMail);
-        System.out.println("playerId = " + playerId);
-
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         Family family = user.getCurrentFamily();
         if (result.hasErrors()) {
@@ -97,7 +93,6 @@ public class MailController {
             newMail.setFrom(user);
             newMail.setTo(player);
             newMail.setStatus(MailStatus.unread);
-            System.out.println("newMail = " + newMail);
             mailService.save(newMail);
             return "redirect:/game/mail?chatWith=" + player.getUserid();
         }

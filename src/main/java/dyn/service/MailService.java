@@ -22,7 +22,6 @@ public class MailService {
 
     public List<Mail> showUnreadChat(User user, User player) {
         List<Mail> chat = mailRepository.findAllByFromOrToAndStatusOrderByDateDesc(user, player, MailStatus.unread);
-        System.out.println("chat unread = " + chat);
         for (Mail mail : chat) {
             if (mail.getTo() == user) {
                 mail.setStatus(MailStatus.read);
@@ -34,7 +33,6 @@ public class MailService {
 
     public List<Mail> showReadChat(User user, User player) {
         List<Mail> chat = mailRepository.findAllByFromOrToAndStatusOrderByDateDesc(user, player, MailStatus.read);
-        System.out.println("chat read = " + chat);
         return chat;
     }
 
