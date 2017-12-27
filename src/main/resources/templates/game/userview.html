@@ -34,15 +34,25 @@
             </tr>
             </tbody>
         </table>
-        <th:block th:unless="${isNeighbor}">
-            <form th:action="@{/game/addNeighbor}" method="post" class="form-inline">
-                <input type="hidden" name="neighborUserId" th:value="${player.getUserid()}"/>
-                <input type="hidden" name="neighborFamilyId" th:value="${playerFamily.getId()}"/>
-                <button type="submit" class="btn btn-sm btn-primary">
-                    Добавить в список соседей
-                </button>
-            </form>
-        </th:block>
+        <div>
+            <th:block th:unless="${isNeighbor}">
+                <div style="display: inline-block;">
+                    <form th:action="@{/game/addNeighbor}" method="post" class="form-inline">
+                        <input type="hidden" name="neighborUserId" th:value="${player.getUserid()}"/>
+                        <input type="hidden" name="neighborFamilyId" th:value="${playerFamily.getId()}"/>
+                        <button type="submit" class="btn btn-sm btn-primary">
+                            Добавить в список соседей
+                        </button>
+                    </form>
+                </div>
+            </th:block>
+            <div style="display: inline-block;">
+                <form th:action="@{/game/mail}" method="get" class="form-inline">
+                    <input type="hidden" name="chatWith" th:value="${player.getUserid()}"/>
+                    <button type="submit" class="btn btn-sm btn-success">Отправить письмо</button>
+                </form>
+            </div>
+        </div>
     </div>
     <div align="center">
         <ul class="list-inline">

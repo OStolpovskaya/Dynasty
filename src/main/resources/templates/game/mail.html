@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Почта</title>
+    <th:block th:replace="fragments/custom :: headLinks"></th:block>
+</head>
+<body>
+<th:block th:replace="fragments/scripts :: counters"></th:block>
+<div th:replace="fragments/navigation :: nav-for-game"></div>
+<div style="width: 1240px; margin-left: auto; margin-right: auto; ">
+    <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
+    <!--/*@thymesVar id="player" type="dyn.model.User"*/-->
+    <div style="width:75%; margin-left: auto; margin-right: auto;">
+        <!--/*@thymesVar id="newMail" type="dyn.model.Mail"*/-->
+        <form class="form-horizontal" th:action="@{/game/addMail}" th:object="${newMail}" method="POST">
+            <fieldset>
+                <div id="legend">
+                    <legend th:inline="text">Новое почтовое сообщение для [[${player.getUserName()}]]</legend>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for="text">Текст сообщения</label>
+                    <div class="controls">
+                        <p class="has-error" th:if="${#fields.hasErrors('text')}" th:errors="*{text}"></p>
+                        <textarea id="text" name="text" th:field="*{text}" class="form-control" rows="4" maxlength="350" cols="20" wrap="hard" style="width: 70%; max-width: 70%;"></textarea>
+                        <p class="help-block">Текст сообщения (2-350 символов), не ругайтесь, пожалуйста, и не оскорбляйте собеседника</p>
+                    </div>
+                </div>
+
+                <input type="hidden" name="playerId" th:value="${player.getUserid()}"/>
+                <div class="control-group">
+                    <div class="controls">
+                        <button class="btn btn-primary">Отправить письмо!</button>
+                    </div>
+                </div>
+
+            </fieldset>
+        </form>
+        <br/>
+        <div id="legend">
+            <legend th:inline="text">История переписки с [[${player.getUserName()}]]
+                <span class="glyphicon glyphicon-question-sign" style="color: lightgrey;" title="Зеленым цветом помечаются новые или еще непрочитанные собеседником сообщения"></span>
+            </legend>
+        </div>
+        <th:block th:each="mail: ${newMailList}">
+            <!--/*@thymesVar id="mail" type="dyn.model.Mail"*/-->
+            <div style="width: 75%;" th:styleappend="${mail.getFrom().getUserid()!=player.getUserid()?'margin-left: 25%;text-align: right;':'text-align: left;'}">
+                <span th:text="${mail.formattedDate()}" style="font-size: 12px;"></span>
+                <pre th:text="${mail.getText()}" style="background-color: lightgreen; "
+                     th:styleappend="${mail.getFrom().getUserid()!=player.getUserid()?'text-align: right;':'text-align: left;'}"></pre>
+
+            </div>
+        </th:block>
+        <th:block th:each="mail: ${readMailList}">
+            <!--/*@thymesVar id="mail" type="dyn.model.Mail"*/-->
+            <div style="width: 75%; " th:styleappend="${mail.getFrom().getUserid()!=player.getUserid()?'margin-left: 25%;text-align: right;':'text-align: left;'}">
+                <span th:text="${mail.formattedDate()}" style="font-size: 12px;"></span>
+
+                <pre th:text="${mail.getText()}"
+                     th:styleappend="${mail.getFrom().getUserid()!=player.getUserid()?'text-align: right;':'text-align: left;'}"></pre>
+            </div>
+        </th:block>
+    </div>
+
+</div>
+<th:block th:replace="fragments/scripts :: webjars"></th:block>
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+<script>
+    /*<![CDATA[*/
+    function openCity(cityName) {
+        var i;
+        var x = document.getElementsByClassName("rating");
+        for (i = 0; i < x.length; i++) {
+            x[i].style.display = "none";
+        }
+        document.getElementById(cityName).style.display = "block";
+    }
+    /*]]>*/
+</script>
+</body>
+</html>

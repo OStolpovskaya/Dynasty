@@ -9,6 +9,7 @@ import dyn.model.*;
 import dyn.repository.FamilyRepository;
 import dyn.repository.UserRepository;
 import dyn.service.*;
+import dyn.utils.MailCounter;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Map;
 
 import static dyn.controllers.GameController.loc;
 
@@ -45,7 +47,7 @@ public class TownController {
     @Autowired
     private FamilyRepository familyRepository;
     @Autowired
-    private AchievementService achService;
+    private MailService mailService;
     @Autowired
     private TownNewsService townNewsService;
 
@@ -66,6 +68,9 @@ public class TownController {
 
         List<UserNeighbor> neighborsOfUser = userNeighborService.getNeighborsOfUser(user);
         model.addAttribute("neighborsOfUser", neighborsOfUser);
+
+        Map<User, MailCounter> userMailCounterMap = mailService.countMailOfUser(user);
+        model.addAttribute("userMailCounterMap", userMailCounterMap);
 
         return "game/town";
     }

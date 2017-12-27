@@ -9,7 +9,7 @@
 <body>
 <div th:replace="fragments/navigation :: nav-for-admin"></div>
 <div class="container">
-    <h3>Семья</h3>
+    <h3 th:inline="text">Семья [[${family.getFamilyName()}]]</h3>
     <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
     <table class="table table-striped">
         <thead>

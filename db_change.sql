@@ -71,3 +71,12 @@ CREATE TABLE IF NOT EXISTS `user_neighbors` (
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+CREATE TABLE IF NOT EXISTS `mail` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `status` enum('unread','read') NOT NULL DEFAULT 'unread',
+  `from_userid` int(11) NOT NULL,
+  `to_userid` int(11) NOT NULL,
+  `text` varchar(350) NOT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
