@@ -80,3 +80,14 @@ CREATE TABLE IF NOT EXISTS `mail` (
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+/*====================================================================================================================*/
+ALTER TABLE  `achievement` CHANGE  `type`  `type` ENUM(  'newborn',  'famous_people',  'vocation10level',  'craft_master' ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
+INSERT INTO  `dyn`.`achievement` (
+`id` ,
+`name` ,
+`type` ,
+`for_what`
+)
+VALUES (
+NULL ,  'Мастер крафта - изготовлено 50 предметов по проекту!',  'craft_master',  '50'
+);

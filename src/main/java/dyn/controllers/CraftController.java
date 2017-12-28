@@ -9,10 +9,7 @@ import dyn.model.*;
 import dyn.repository.CraftBranchRepository;
 import dyn.repository.FamilyRepository;
 import dyn.repository.UserRepository;
-import dyn.service.Const;
-import dyn.service.CraftService;
-import dyn.service.FamilyLogService;
-import dyn.service.HouseService;
+import dyn.service.*;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,14 +42,16 @@ public class CraftController {
     private static final Logger logger = LogManager.getLogger(CraftController.class);
     @Autowired
     CraftService craftService;
-
+    @Autowired
+    AchievementService achievementService;
     @Autowired
     HouseService houseService;
-
     @Autowired
     FamilyLogService familyLogService;
     @Autowired
     MessageSource messageSource;
+    @Autowired
+    private TownNewsService townNewsService;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -356,13 +355,11 @@ public class CraftController {
                         }
                     }
 
+                    FamilyProject familyProject = craftService.getFamilyProject(project, family);
 
-                    Item item = craftService.createItem(project, family, applyBuffItemQuality);
+                    Item item = craftService.createItem(project, family, familyProject, applyBuffItemQuality);
                     family.getItems().add(item);
                     family.getFamilyResources().makingProject(project);
-                    if (projectIsProductionOfBuilding) {
-                        family.setMoney(family.getMoney() - project.getCost());
-                    }
                     familyRepository.save(family);
 
                     project.incProduced(1);
@@ -371,21 +368,23 @@ public class CraftController {
                     logger.info(family.userNameAndFamilyName() + " makes the item:" + item.getFullName());
                     String mess = "Ваша семья изготавливает предмет " + item.getFullName() + ". Израсходовано: " + project.resString() + ". ";
 
-                    if (projectIsProductionOfBuilding) {
-                        mess = "Ваша семья изготавливает " + project.getThing().getName() + " " + project.getName() + ". Израсходовано: " + project.getCost() + (project.resString() != "" ? ", " + project.resString() : "") + ". ";
-                    }
-
                     if (buffItemQuality != null) {
                         mess += "Вы использовали бафф " + buffItemQuality.getProject().getName() + ". ";
                         houseService.deleteItem(buffItemQuality);
                     }
 
+                    if (familyProject.getCount() == Const.ITEM_QUALITY_3) {
+                        Achievement achievement = achievementService.checkCraftMasterAchievement(user, family, familyProject, familyProject.getCount());
+                        if (achievement != null) {
+                            mess += "<br><strong>" + messageSource.getMessage("turn.achievement", new Object[]{achievement.getName(), Const.ACHIEVEMENT_CRAFT_POINTS, Const.ACHIEVEMENT_MONEY}, loc()) + "</strong>";
+                            townNewsService.addAchievementNews(family, achievement);
+                        }
+                        townNewsService.addCommonNews(family, "Семья " + family.link() + " теперь изготавливает только высококачественные(3+) предметы: " + familyProject.getProject().getFullName() + "!");
+                    }
+
+
                     familyLogService.addToLog(family, mess);
                     redirectAttributes.addFlashAttribute("mess", mess);
-                    if (projectIsProductionOfBuilding) {
-                        House building = houseService.getBuildingByProduction(project);
-                        return "redirect:/game/buildings#building" + building.getId();
-                    }
                     return "redirect:/game/chooseProject?thingId=" + project.getThing().getId();
                 }
                 logger.error(family.userNameAndFamilyName() + " doesn't have resources to make item for project:" + project.getName());

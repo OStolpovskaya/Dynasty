@@ -512,7 +512,7 @@ public class GameController {
         child.setRace(raceService.defineRace(child));
         Achievement achievement = achievementService.checkAchievement(AchievementType.newborn, user, family, child);
         if (achievement != null) {
-            log.append(messageSource.getMessage("turn.achievement", new Object[]{achievement.getName(), Const.ACHIEVEMENT_CRAFT_POINTS, Const.ACHIEVEMENT_MONEY}, loc()));
+            log.append("(" + messageSource.getMessage("turn.achievement", new Object[]{achievement.getName(), Const.ACHIEVEMENT_CRAFT_POINTS, Const.ACHIEVEMENT_MONEY}, loc()) + ")");
             logAchievements.append(child.getName()).append(": ").append(achievement.getName()).append("<br>");
             townNewsService.addAchievementNews(family, achievement);
         }
@@ -546,7 +546,7 @@ public class GameController {
 
         // salary coeff for house quality
         float houseQualitySalaryCoeff = houseService.countHouseQualitySalaryCoeff(family.getHouseQuality());
-        logger.debug(family.userNameAndFamilyName() + " houseQualitySalaryCoeff = " + houseQualitySalaryCoeff);
+        //logger.debug(family.userNameAndFamilyName() + " houseQualitySalaryCoeff = " + houseQualitySalaryCoeff);
 
         // processing
         for (Character worker : workers) {
@@ -575,7 +575,7 @@ public class GameController {
             // achievement career 10 level
             Achievement achievement = achievementService.checkAchievement(AchievementType.vocation10level, user, family, worker);
             if (achievement != null) {
-                turnLog.append(messageSource.getMessage("turn.achievement", new Object[]{achievement.getName()}, loc()));
+                turnLog.append("(" + messageSource.getMessage("turn.achievement", new Object[]{achievement.getName(), Const.ACHIEVEMENT_CRAFT_POINTS, Const.ACHIEVEMENT_MONEY}, loc()) + ")");
                 turnAchievements.append(worker.getName()).append(": ").append(achievement.getName()).append("<br>");
             }
 

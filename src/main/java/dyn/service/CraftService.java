@@ -80,8 +80,7 @@ public class CraftService {
         return projectRepository.findOne(projectId);
     }
 
-    public Item createItem(Project project, Family family, boolean applyBuffItemQuality) {
-        FamilyProject familyProject = familyProjectRepository.findByFamilyAndProject(family, project);
+    public Item createItem(Project project, Family family, FamilyProject familyProject, boolean applyBuffItemQuality) {
 
         Item item = new Item();
         item.setProject(project);
@@ -290,4 +289,7 @@ public class CraftService {
     }
 
 
+    public FamilyProject getFamilyProject(Project project, Family family) {
+        return familyProjectRepository.findByFamilyAndProject(family, project);
+    }
 }

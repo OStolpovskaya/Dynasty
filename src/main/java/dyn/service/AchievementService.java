@@ -49,20 +49,24 @@ public class AchievementService {
                 break;
         }
         if (achievement != null && userHasAchievement(user, achievement) == null) {
-            family.setCraftPoint(family.getCraftPoint() + Const.ACHIEVEMENT_CRAFT_POINTS);
-            family.addMoney(Const.ACHIEVEMENT_MONEY);
-            familyRepository.save(family);
-
-            UserAchievements userAchievement = new UserAchievements();
-            userAchievement.setAchievement(achievement);
-            userAchievement.setUser(user);
-            userAchievement.setFamily(family);
-            userAchievementsRepository.save(userAchievement);
+            awardUser(user, family, achievement);
 
             logger.info(user.getUserName() + " is awarded! Achievement: " + achievement.getName() + ". Added " + Const.ACHIEVEMENT_CRAFT_POINTS + " craft points and " + Const.ACHIEVEMENT_MONEY + " to family " + family.getFamilyName());
             return achievement;
         }
         return null;
+    }
+
+    public void awardUser(User user, Family family, Achievement achievement) {
+        family.setCraftPoint(family.getCraftPoint() + Const.ACHIEVEMENT_CRAFT_POINTS);
+        family.addMoney(Const.ACHIEVEMENT_MONEY);
+        familyRepository.save(family);
+
+        UserAchievements userAchievement = new UserAchievements();
+        userAchievement.setAchievement(achievement);
+        userAchievement.setUser(user);
+        userAchievement.setFamily(family);
+        userAchievementsRepository.save(userAchievement);
     }
 
     private UserAchievements userHasAchievement(User user, Achievement achievement) {
@@ -85,5 +89,15 @@ public class AchievementService {
 
         }
         return map;
+    }
+
+    public Achievement checkCraftMasterAchievement(User user, Family family, FamilyProject familyProject, int count) {
+        Achievement achievement = achievementRepository.findByTypeAndForWhat(AchievementType.craft_master, count);
+        if (familyProject.getCount() == count && userHasAchievement(user, achievement) == null) {
+            awardUser(user, family, achievement);
+            logger.info(user.getUserName() + " is awarded! Achievement: " + achievement.getName() + ". Added " + Const.ACHIEVEMENT_CRAFT_POINTS + " craft points and " + Const.ACHIEVEMENT_MONEY + " to family " + family.getFamilyName());
+            return achievement;
+        }
+        return null;
     }
 }
