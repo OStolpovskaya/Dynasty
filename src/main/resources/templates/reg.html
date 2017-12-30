@@ -16,6 +16,7 @@
             <legend class="">Регистрация</legend>
         </div>
         <form class="form-horizontal" th:action="@{/reg}" th:object="${regUser}" method="POST">
+            <input type="hidden" th:field="*{userid}"/>
             <div class="form-group">
                 <!-- Username -->
                 <label for="username">Имя пользователя в игре (будет видно всем игрокам)</label>

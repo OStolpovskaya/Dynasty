@@ -138,16 +138,27 @@ public class AdminController {
         Iterable<Family> families = familyRepository.findAllByOrderByUserLastLoginDateDesc();
         List<Family> currentFamilies = new ArrayList<>();
         List<Family> notCurrentFamilies = new ArrayList<>();
+        List<Family> guestFamilies = new ArrayList<>();
+        List<Family> notPlayerFamilies = new ArrayList<>();
         for (Family family : families) {
-            if (family.isCurrent()) {
-
-                currentFamilies.add(family);
-            } else {
-                notCurrentFamilies.add(family);
+            if (family.getUser().isGuest()) {
+                guestFamilies.add(family);
+                continue;
             }
+            if (family.getUser().getType().equals(UserType.player)) {
+                if (family.isCurrent()) {
+                    currentFamilies.add(family);
+                } else {
+                    notCurrentFamilies.add(family);
+                }
+                continue;
+            }
+            notPlayerFamilies.add(family);
         }
         model.addAttribute("curFamilyList", currentFamilies);
         model.addAttribute("notCurFamilyList", notCurrentFamilies);
+        model.addAttribute("guestFamilies", guestFamilies);
+        model.addAttribute("notPlayerFamilies", notPlayerFamilies);
 
 
         return "admin/families";

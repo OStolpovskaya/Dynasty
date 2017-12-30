@@ -12,7 +12,11 @@
 <div class="container" style="min-width: 1280px; width: 100%;">
     <!--/*@thymesVar id="user" type="dyn.model.User"*/-->
     <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
-
+    <th:block th:if="${family.getUser().isGuest()}">
+        <div class="alert alert-danger" style="margin-left: 100px; margin-right: 100px;">
+            Это гостевой аккаунт. Пожалуйста, зарегистрируйтесь, чтобы сохранить прогресс семьи. Красная круглая кнопка на левой панели.
+        </div>
+    </th:block>
     <th:block th:if="${family.getLevel() == 0}">
         <div class="alert alert-success" style="margin-left: 100px; margin-right: 100px;">
             Итак, вы начали игру. Почти все элементы окна имеют всплывающие подсказки, просто наведите курсор.
@@ -127,6 +131,15 @@
                 <span class="glyphicon glyphicon-play-circle"></span>
             </button>
         </form>
+        <th:block th:if="${family.getUser().isGuest()}">
+            <form th:action="@{/game/regAccount}" method="post">
+                <input type="hidden" name="guestId" th:value="${family.getUser().getUserid()}"/>
+                <button class="btn btn-danger center-block" type="submit" name="regAccount" style="margin-bottom: 10px; margin-top: 10px; width: 40px; height: 40px; border-radius: 20px;"
+                        title="Зарегистрировать аккаунт. Понадобится имя пользователя, адрес электронной почты и пароль. ">
+                    <span class="glyphicon glyphicon-check"></span>
+                </button>
+            </form>
+        </th:block>
     </div>
 
     <!--Лог уровня-->

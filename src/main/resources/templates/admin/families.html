@@ -10,7 +10,7 @@
 <div th:replace="fragments/navigation :: nav-for-admin"></div>
 <div>
     <h3>Семья CURRENT</h3>
-    <table id="cFamilyTable" class="table table-striped">
+    <table id="cFamilyTable" class="table table-striped table-condensed" style="font-size: 12px;">
         <thead>
         <tr>
             <th onclick="sortTable(0,'cFamilyTable')">ID</th>
@@ -48,7 +48,76 @@
             <td th:text="${family.getId()}">id</td>
             <td th:text="${family.getUser().getUserName()}">id</td>
             <td th:text="${family.getUser().getLastLoginDate()}">title</td>
-            <td th:text="${family.getFamilyName()}">title</td>
+            <td th:text="${family.getFamilyName()+'('+family.getFemaleLastname()+','+family.getMaleLastname()+')'}">title</td>
+            <td th:text="${family.getCreationDate()}">title</td>
+            <td th:text="${family.getLevel()}">type</td>
+            <td><span class="glyphicon glyphicon-envelope" th:if="${@mailService.hasNewMail(family.getUser())}" title="Новое письмо!" style="color: green;"></span></td>
+            <td th:text="${family.getHouse().getName()}">type</td>
+            <td th:text="${family.getCraftPoint()}">type</td>
+            <td th:text="${family.getMoney()}">type</td>
+
+            <td th:text="${family.getFamilyResources().getFood()}">type</td>
+            <td th:text="${family.getFamilyResources().getWood()}">type</td>
+            <td th:text="${family.getFamilyResources().getMetall()}">type</td>
+            <td th:text="${family.getFamilyResources().getPlastic()}">type</td>
+            <td th:text="${family.getFamilyResources().getMicroelectronics()}">type</td>
+            <td th:text="${family.getFamilyResources().getCloth()}">type</td>
+            <td th:text="${family.getFamilyResources().getStone()}">type</td>
+            <td th:text="${family.getFamilyResources().getChemical()}">type</td>
+
+            <td th:text="${family.getItems().size()}">type</td>
+            <td th:text="${family.getCraftProjects().size()}">type</td>
+            <td th:text="${family.getCraftThings().size()}">type</td>
+            <td><span th:each="achiev : ${family.getUser().getUserAchievements()}" th:text="${achiev.getAchievement().getId()+'; '}"
+                      th:title="${achiev.getAchievement().getName() + '('+achiev.getDate()+')'}"></span></td>
+
+            <td><a th:href="${'/admin/family?familyId='+family.getId()}">Лог</a></td>
+
+
+        </tr>
+        </tbody>
+    </table>
+
+    <h3>Семья GUEST</h3>
+    <table id="gFamilyTable" class="table table-striped table-condensed" style="font-size: 12px;">
+        <thead>
+        <tr>
+            <th onclick="sortTable(0,'gFamilyTable')">ID</th>
+            <th onclick="sortTable(1,'gFamilyTable')">Игрок</th>
+            <th onclick="sortTable(2,'gFamilyTable')">lastlogin</th>
+            <th onclick="sortTable(3,'gFamilyTable')">Фамилия</th>
+            <th onclick="sortTable(4,'gFamilyTable')">Дата</th>
+            <th onclick="sortTable(5,'gFamilyTable')">Ур.</th>
+            <th onclick="sortTable(6,'gFamilyTable')">M</th>
+            <th onclick="sortTable(7,'gFamilyTable')">Дом</th>
+            <th onclick="sortTable(8,'gFamilyTable')">Баллы</th>
+            <th onclick="sortTable(9,'gFamilyTable')">Деньги</th>
+
+            <th onclick="sortTable(10,'gFamilyTable')">food</th>
+            <th onclick="sortTable(11,'gFamilyTable')">wood</th>
+            <th onclick="sortTable(12,'gFamilyTable')">metall</th>
+            <th onclick="sortTable(13,'gFamilyTable')">plastic</th>
+            <th onclick="sortTable(14,'gFamilyTable')">microel</th>
+            <th onclick="sortTable(15,'gFamilyTable')">cloth</th>
+            <th onclick="sortTable(16,'gFamilyTable')">stone</th>
+            <th onclick="sortTable(17,'gFamilyTable')">chemical</th>
+
+            <th onclick="sortTable(18,'gFamilyTable')">items</th>
+            <th onclick="sortTable(19,'gFamilyTable')">projects</th>
+            <th onclick="sortTable(20,'gFamilyTable')">things</th>
+            <th onclick="sortTable(21,'gFamilyTable')">achiev</th>
+
+
+            <th>Лог</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="family : ${guestFamilies}">
+            <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
+            <td th:text="${family.getId()}">id</td>
+            <td th:text="${family.getUser().getUserName()}">id</td>
+            <td th:text="${family.getUser().getLastLoginDate()}">title</td>
+            <td th:text="${family.getFamilyName()+'('+family.getFemaleLastname()+','+family.getMaleLastname()+')'}">title</td>
             <td th:text="${family.getCreationDate()}">title</td>
             <td th:text="${family.getLevel()}">type</td>
             <td><span class="glyphicon glyphicon-envelope" th:if="${@mailService.hasNewMail(family.getUser())}" title="Новое письмо!" style="color: green;"></span></td>
@@ -79,7 +148,7 @@
     </table>
 
     <h3>Семьи NOT CURRENT</h3>
-    <table id="ncFamilyTable" class="table table-striped">
+    <table id="ncFamilyTable" class="table table-striped table-condensed" style="font-size: 12px;">
         <thead>
         <tr>
             <th onclick="sortTable(0,'ncFamilyTable')">ID</th>
@@ -117,10 +186,79 @@
             <td th:text="${family.getId()}">id</td>
             <td th:text="${family.getUser().getUserName()}">id</td>
             <td th:text="${family.getUser().getLastLoginDate()}">title</td>
-            <td th:text="${family.getFamilyName()}">title</td>
+            <td th:text="${family.getFamilyName()+'('+family.getFemaleLastname()+','+family.getMaleLastname()+')'}">title</td>
             <td th:text="${family.getCreationDate()}">title</td>
             <td th:text="${family.getLevel()}">type</td>
             <td th:text="${family.isCurrent()}">type</td>
+            <td th:text="${family.getHouse().getName()}">type</td>
+            <td th:text="${family.getCraftPoint()}">type</td>
+            <td th:text="${family.getMoney()}">type</td>
+
+            <td th:text="${family.getFamilyResources().getFood()}">type</td>
+            <td th:text="${family.getFamilyResources().getWood()}">type</td>
+            <td th:text="${family.getFamilyResources().getMetall()}">type</td>
+            <td th:text="${family.getFamilyResources().getPlastic()}">type</td>
+            <td th:text="${family.getFamilyResources().getMicroelectronics()}">type</td>
+            <td th:text="${family.getFamilyResources().getCloth()}">type</td>
+            <td th:text="${family.getFamilyResources().getStone()}">type</td>
+            <td th:text="${family.getFamilyResources().getChemical()}">type</td>
+
+            <td th:text="${family.getItems().size()}">type</td>
+            <td th:text="${family.getCraftProjects().size()}">type</td>
+            <td th:text="${family.getCraftThings().size()}">type</td>
+            <td><span th:each="achiev : ${family.getUser().getUserAchievements()}" th:text="${achiev.getAchievement().getId()+'; '}"
+                      th:title="${achiev.getAchievement().getName() + '('+achiev.getDate()+')'}"></span></td>
+
+            <td><a th:href="${'/admin/family?familyId='+family.getId()}">Лог</a></td>
+
+
+        </tr>
+        </tbody>
+    </table>
+
+    <h3>Семья NOT PLAYER</h3>
+    <table id="notPlayerFamilyTable" class="table table-striped table-condensed" style="font-size: 12px;">
+        <thead>
+        <tr>
+            <th onclick="sortTable(0,'notPlayerFamilyTable')">ID</th>
+            <th onclick="sortTable(1,'notPlayerFamilyTable')">Игрок</th>
+            <th onclick="sortTable(2,'notPlayerFamilyTable')">lastlogin</th>
+            <th onclick="sortTable(3,'notPlayerFamilyTable')">Фамилия</th>
+            <th onclick="sortTable(4,'notPlayerFamilyTable')">Дата</th>
+            <th onclick="sortTable(5,'notPlayerFamilyTable')">Ур.</th>
+            <th onclick="sortTable(6,'notPlayerFamilyTable')">M</th>
+            <th onclick="sortTable(7,'notPlayerFamilyTable')">Дом</th>
+            <th onclick="sortTable(8,'notPlayerFamilyTable')">Баллы</th>
+            <th onclick="sortTable(9,'notPlayerFamilyTable')">Деньги</th>
+
+            <th onclick="sortTable(10,'notPlayerFamilyTable')">food</th>
+            <th onclick="sortTable(11,'notPlayerFamilyTable')">wood</th>
+            <th onclick="sortTable(12,'notPlayerFamilyTable')">metall</th>
+            <th onclick="sortTable(13,'notPlayerFamilyTable')">plastic</th>
+            <th onclick="sortTable(14,'notPlayerFamilyTable')">microel</th>
+            <th onclick="sortTable(15,'notPlayerFamilyTable')">cloth</th>
+            <th onclick="sortTable(16,'notPlayerFamilyTable')">stone</th>
+            <th onclick="sortTable(17,'notPlayerFamilyTable')">chemical</th>
+
+            <th onclick="sortTable(18,'notPlayerFamilyTable')">items</th>
+            <th onclick="sortTable(19,'notPlayerFamilyTable')">projects</th>
+            <th onclick="sortTable(20,'notPlayerFamilyTable')">things</th>
+            <th onclick="sortTable(21,'notPlayerFamilyTable')">achiev</th>
+
+
+            <th>Лог</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="family : ${notPlayerFamilies}">
+            <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
+            <td th:text="${family.getId()}">id</td>
+            <td th:text="${family.getUser().getUserName()}">id</td>
+            <td th:text="${family.getUser().getLastLoginDate()}">title</td>
+            <td th:text="${family.getFamilyName()}">title</td>
+            <td th:text="${family.getCreationDate()}">title</td>
+            <td th:text="${family.getLevel()}">type</td>
+            <td><span class="glyphicon glyphicon-envelope" th:if="${@mailService.hasNewMail(family.getUser())}" title="Новое письмо!" style="color: green;"></span></td>
             <td th:text="${family.getHouse().getName()}">type</td>
             <td th:text="${family.getCraftPoint()}">type</td>
             <td th:text="${family.getMoney()}">type</td>

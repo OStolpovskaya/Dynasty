@@ -91,3 +91,5 @@ INSERT INTO  `dyn`.`achievement` (
 VALUES (
 NULL ,  'Мастер крафта - изготовлено 50 предметов по проекту!',  'craft_master',  '50'
 );
+/*====================================================================================================================*/
+ALTER TABLE  `users` CHANGE  `type`  `type` ENUM(  'player',  'admin',  'bot',  'guest' ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT  'player';

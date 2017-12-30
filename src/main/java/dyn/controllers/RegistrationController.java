@@ -25,10 +25,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 
 @Controller
@@ -71,16 +74,31 @@ public class RegistrationController {
         regUser.setEnabled(true);
         regUser.setType(UserType.player);
         regUser.setPassword(passwordEncoder.encode(regUser.getPassword()));
+        registrateUser(regUser, request);
+
+        return "redirect:/game";
+
+    }
+
+    private void registrateUser(User regUser, HttpServletRequest request) {
+
         logger.info("SAVE USER:" + regUser.toString());
 
         userRepository.save(regUser);
 
-        UserRole userRole = new UserRole();
-        userRole.setUserid(regUser.getUserid());
-        userRole.setRole("ROLE_USER");
-        logger.info("SAVE ROLE:" + userRole.toString());
+        if (regUser.isGuest()) {
+            regUser.setUserName(regUser.getUserName() + regUser.getUserid());
+            userRepository.save(regUser);
+        }
 
-        userRolesRepository.save(userRole);
+        List<String> roleByUserName = userRolesRepository.findRoleByUserName(regUser.getUserName());
+        if (roleByUserName.size() == 0) {
+            UserRole userRole = new UserRole();
+            userRole.setUserid(regUser.getUserid());
+            userRole.setRole("ROLE_USER");
+            logger.info("SAVE ROLE:" + userRole.toString());
+            userRolesRepository.save(userRole);
+        }
 
         logger.info("AUTOLOGIN " + regUser.getEmail() + " " + regUser.getPasswordConfirm());
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(regUser.getEmail(), regUser.getPasswordConfirm());
@@ -95,9 +113,40 @@ public class RegistrationController {
 
         regUser.setLastLoginDate(new Date());
         userRepository.save(regUser);
-
-        return "redirect:/game";
-
     }
 
+    //regGuest
+    @PostMapping("/regGuest")
+    public String regGuest(ModelMap model, HttpServletRequest request) {
+        SimpleDateFormat formatter;
+
+        formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+        String date = formatter.format(new Date());
+
+        User user = new User();
+        user.setUserName("Гостевой");
+        user.setEmail("guest" + date + "@dyngame.ru");
+
+        String password = "guest";
+
+        user.setEnabled(true);
+        user.setType(UserType.guest);
+        user.setPassword(passwordEncoder.encode(password));
+        user.setPasswordConfirm(password);
+        registrateUser(user, request);
+
+        return "redirect:/game";
+    }
+
+    //regAccount
+    @PostMapping("/game/regAccount")
+    public String regAccount(ModelMap model, @RequestParam(value = "guestId") Long guestId) {
+        User guest = userRepository.findOne(guestId);
+        guest.setEmail("");
+        guest.setUserName("");
+        guest.setPassword("");
+        model.addAttribute("regUser", guest);
+
+        return "reg";
+    }
 }

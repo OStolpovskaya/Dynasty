@@ -185,4 +185,8 @@ public class User implements Serializable {
     public String link() {
         return "<a href='/game/userview?userId=" + userId + "'>" + userName + "</a>";
     }
+
+    public boolean isGuest() {
+        return type.equals(UserType.guest);
+    }
 }

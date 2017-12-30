@@ -78,6 +78,15 @@
             </div>
         </div>
     </div>
+
+    <div class="well">
+        <form th:action="@{/regGuest}" method="post" class="form-inline">
+            <button type="submit" class="btn btn-sm btn-warning" title="Вы потеряете контроль над своей династией, если закроете браузер или выйдет время сессии">
+                Попробовать без регистрации!
+            </button>
+        </form>
+    </div>
+
     <h3 style="text-align:center; margin-top: 10px; margin-bottom: 10px;">Скриншоты</h3>
 
     <img id="img1" th:src="@{'/graphics/screenshots/Крафт.png' }" onclick="imgView('img1')" alt="Крафт стула" height="124" style="display: inline-block;"/>
