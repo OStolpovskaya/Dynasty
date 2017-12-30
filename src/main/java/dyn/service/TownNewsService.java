@@ -59,7 +59,7 @@ public class TownNewsService {
     }
 
     private void saveNews(TownNewsType newsType, Family family, String text) {
-        if (family.getUser().getType().equals(UserType.player)) {
+        if (family.getUser().getType().equals(UserType.player) || family.getUser().isGuest()) {
             TownNews townNews = new TownNews();
             townNews.setFamily(family);
             townNews.setType(newsType);
