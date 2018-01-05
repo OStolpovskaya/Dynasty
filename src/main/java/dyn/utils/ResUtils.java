@@ -67,14 +67,22 @@ public class ResUtils {
 
     public static String getResString(ResourcesHolder resHolder, double coeff) {
         List<String> resources = new ArrayList<>();
-        if (resHolder.getFood() > 0) resources.add("<img class='resImage' title='" + Const.RES_FOOD_NAME + "' src='/graphics/resources/resources_02.png'/> " + Math.ceil(resHolder.getFood() * coeff));
-        if (resHolder.getWood() > 0) resources.add("<img class='resImage' title='" + Const.RES_WOOD_NAME + "' src='/graphics/resources/resources_03.png'/> " + Math.ceil(resHolder.getWood() * coeff));
-        if (resHolder.getMetall() > 0) resources.add("<img class='resImage' title='" + Const.RES_METALL_NAME + "' src='/graphics/resources/resources_04.png'/> " + Math.ceil(resHolder.getMetall() * coeff));
-        if (resHolder.getPlastic() > 0) resources.add("<img class='resImage' title='" + Const.RES_PLASTIC_NAME + "' src='/graphics/resources/resources_05.png'/> " + Math.ceil(resHolder.getPlastic() * coeff));
-        if (resHolder.getMicroelectronics() > 0) resources.add("<img class='resImage' title='" + Const.RES_MICROELECTRONICS_NAME + "' src='/graphics/resources/resources_06.png'/> " + Math.ceil(resHolder.getMicroelectronics() * coeff));
-        if (resHolder.getCloth() > 0) resources.add("<img class='resImage' title='" + Const.RES_CLOTH_NAME + "' src='/graphics/resources/resources_07.png'/> " + Math.ceil(resHolder.getCloth() * coeff));
-        if (resHolder.getStone() > 0) resources.add("<img class='resImage' title='" + Const.RES_STONE_NAME + "' src='/graphics/resources/resources_08.png'/> " + Math.ceil(resHolder.getStone() * coeff));
-        if (resHolder.getChemical() > 0) resources.add("<img class='resImage' title='" + Const.RES_CHEMICAL_NAME + "' src='/graphics/resources/resources_09.png'/>" + Math.ceil(resHolder.getChemical() * coeff));
+        if (resHolder.getFood() > 0) resources.add("<img class='resImage' title='" + Const.RES_FOOD_NAME + "' " +
+                "src='/graphics/resources/resources_02.png'/> " + (int) Math.ceil(resHolder.getFood() * coeff));
+        if (resHolder.getWood() > 0)
+            resources.add("<img class='resImage' title='" + Const.RES_WOOD_NAME + "' src='/graphics/resources/resources_03.png'/> " + (int) Math.ceil(resHolder.getWood() * coeff));
+        if (resHolder.getMetall() > 0)
+            resources.add("<img class='resImage' title='" + Const.RES_METALL_NAME + "' src='/graphics/resources/resources_04.png'/> " + (int) Math.ceil(resHolder.getMetall() * coeff));
+        if (resHolder.getPlastic() > 0)
+            resources.add("<img class='resImage' title='" + Const.RES_PLASTIC_NAME + "' src='/graphics/resources/resources_05.png'/> " + (int) Math.ceil(resHolder.getPlastic() * coeff));
+        if (resHolder.getMicroelectronics() > 0)
+            resources.add("<img class='resImage' title='" + Const.RES_MICROELECTRONICS_NAME + "' src='/graphics/resources/resources_06.png'/> " + (int) Math.ceil(resHolder.getMicroelectronics() * coeff));
+        if (resHolder.getCloth() > 0)
+            resources.add("<img class='resImage' title='" + Const.RES_CLOTH_NAME + "' src='/graphics/resources/resources_07.png'/> " + (int) Math.ceil(resHolder.getCloth() * coeff));
+        if (resHolder.getStone() > 0)
+            resources.add("<img class='resImage' title='" + Const.RES_STONE_NAME + "' src='/graphics/resources/resources_08.png'/> " + (int) Math.ceil(resHolder.getStone() * coeff));
+        if (resHolder.getChemical() > 0)
+            resources.add("<img class='resImage' title='" + Const.RES_CHEMICAL_NAME + "' src='/graphics/resources/resources_09.png'/>" + (int) Math.ceil(resHolder.getChemical() * coeff));
         return org.springframework.util.StringUtils.arrayToDelimitedString(resources.toArray(), ", ");
     }
 

@@ -12,77 +12,90 @@
 <th:block th:replace="fragments/scripts :: counters"></th:block>
 <div th:replace="fragments/navigation :: nav-for-index"></div>
 <div align="center" style="width: 946px; margin-right: auto; margin-left: auto;">
-    <img th:src="@{'/graphics/logo.png' }" align="center"/>
-    <p align="center">
-        Дом Для Династии - это браузерная пошаговая многопользовательская игра, в которой вам предстоит создать династию!
-    </p>
+    <div class="well" style="margin-right: auto; margin-left: auto; background-color: transparent;">
+        <img th:src="@{'/graphics/logo.png' }" align="center" width="900px;"/>
+        <p align="center">
+            Дом Для Династии - это браузерная пошаговая многопользовательская игра, в которой вам предстоит создать династию!
+        </p>
+    </div>
     <a name="uniq" class="anchor"></a>
-    <div class="row" style="margin-right: auto; margin-left: auto;">
-        <div class="col-sm-6" style="text-align: left; padding: 10px; ">
-            <div class="row">
-                <div class="col-sm-2"><img th:src="@{'/graphics/index_01.png' }" height="50" style="filter: grayscale(100%);"/></div>
-                <div class="col-sm-10"><label>Генетика</label>
-                    <p>Сколько поколений понадобится вашей династии, чтобы перейти от человеческой расы к эльфийской? </p>
-                    <p>
-                    <li>20+ рас из разных вселенных</li>
-                    <li>наследование и случайные мутации</li>
-                    <li>80+ особенностей внешности</li>
-                    <li>30+ генетических модификаций</li>
-                    </p>
-                </div>
+    <div class="well" style="margin-right: auto; margin-left: auto; background-color: transparent;">
+        <div class="row" style="text-align: left; ">
+            <div class="col-sm-2"><img th:src="@{'/graphics/index_01.png' }" height="100"/></div>
+            <div class="col-sm-10"><label>Генетика</label>
+                <p>Сколько поколений понадобится вашей династии, чтобы перейти от человеческой расы к эльфийской? </p>
+                <p>
+                <li>20+ рас из разных вселенных</li>
+                <li>наследование и случайные мутации</li>
+                <li>80+ особенностей внешности</li>
+                <li>30+ генетических модификаций</li>
+                </p>
             </div>
-
         </div>
-        <div class="col-sm-6" style="text-align: left; padding: 10px; ">
-            <div class="row">
-                <div class="col-sm-2"><img th:src="@{'/graphics/index_02.png' }" height="50" style="filter: grayscale(100%);"/></div>
-                <div class="col-sm-10">
-                    <label>Крафт</label>
-                    <p>Обустройте дом вашей династии: мебель, техника, автомобили и даже бассейн! Наладьте производство баффов в Городе для себя и других игроков. </p>
-                    <p>
-                    <li>150+ видов предметов для дома и бизнеса</li>
-                    <li>400+ различных вариантов этих предметов</li>
-                    <li>10 типов домов, от 3 до 14 комнат</li>
-                    <li>27 городских зданий</li>
-                    </p>
-                </div>
-            </div>
+        <div class="row">
+            <img th:src="@{'/graphics/uniq1_genetics.png' }" height="300"/>
         </div>
     </div>
-    <div class="row" style="margin-right: auto; margin-left: auto; margin-top: 10px;">
-        <div class="col-sm-6" style="text-align: left; padding: 10px;">
-            <div class="row">
-                <div class="col-sm-2"><img th:src="@{'/graphics/index_04.png' }" height="50" style="filter: grayscale(100%);"/></div>
-                <div class="col-sm-10">
-                    <label>Торговля</label>
-                    <p>Любой предмет продается и покупается. Анализируйте рынок, сравнивайте цены, зарабатывайте! </p>
-                    <p>
-                    <li>демпинг и монополия - все в ваших руках</li>
-                    <li>заявки на изготовление предметов</li>
-                    </p>
-                </div>
+    <div class="well" style="margin-right: auto; margin-left: auto; background-color: transparent;">
+        <div class="row" style="text-align: left; ">
+            <div class="col-sm-2"><img th:src="@{'/graphics/index_02.png' }" height="100"/></div>
+            <div class="col-sm-10">
+                <label>Крафт</label>
+                <p>Обустройте дом вашей династии: мебель, техника, автомобили и даже бассейн! Наладьте производство баффов в Городе для себя и
+                    других игроков. </p>
+                <p>
+                <li>150+ видов предметов для дома и бизнеса (400+ их различных вариантов)</li>
+                <li>8 ресурсов, деньги и крафт-баллы - важно их правильно тратить!</li>
+                <li>10 типов домов, от 3 до 14 комнат</li>
+                <li>27 городских зданий</li>
+                </p>
             </div>
         </div>
-        <div class="col-sm-6" style="text-align: left; padding: 10px; ">
-            <div class="row">
-                <div class="col-sm-2"><img th:src="@{'/graphics/index_03.png' }" height="50" style="filter: grayscale(100%);"/></div>
-                <div class="col-sm-10">
-                    <label>Творчество</label>
-                    <p>Нарисуйте уникальный кухонный гарнитур или мебель для детской, загрузите в игру и следите, как другие игроки покупают ваши проекты! </p>
-                    <p>
-                    <li>фирменный стиль династии</li>
-                    <li>ваши произведения оценят все игроки</li>
-                    <li>доход от продажи проекта</li>
-                    </p>
-                </div>
+        <div class="row">
+            <img th:src="@{'/graphics/uniq2_craft.png' }" height="300"/>
+        </div>
+    </div>
+    <div class="well" style="margin-right: auto; margin-left: auto; background-color: transparent;">
+        <div class="row" style="text-align: left; ">
+            <div class="col-sm-2"><img th:src="@{'/graphics/index_04.png' }" height="100"/></div>
+            <div class="col-sm-10">
+                <label>Торговля</label>
+                <p>Любой предмет продается и покупается. Анализируйте рынок, сравнивайте цены, зарабатывайте! </p>
+                <p>
+                <li>демпинг и монополия - все в ваших руках</li>
+                <li>заявки на изготовление предметов</li>
+                </p>
             </div>
+        </div>
+        <div class="row">
+            <img th:src="@{'/graphics/uniq3_store.png' }" height="300"/>
+        </div>
+    </div>
+    <div class="well" style="margin-right: auto; margin-left: auto; background-color: transparent;">
+        <div class="row" style="text-align: left; ">
+            <div class="col-sm-2"><img th:src="@{'/graphics/index_03.png' }" height="100"/></div>
+            <div class="col-sm-10">
+                <label>Творчество</label>
+                <p>Нарисуйте уникальный кухонный гарнитур или мебель для детской, загрузите в игру и следите, как другие игроки покупают ваши
+                    проекты! </p>
+                <p>
+                <li>фирменный стиль династии</li>
+                <li>ваши произведения оценят все игроки</li>
+                <li>доход от продажи проекта</li>
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <img th:src="@{'/graphics/uniq4_create.png' }" height="300"/>
         </div>
     </div>
 
-    <div class="well">
+
+    <div class="well warning">
         <form th:action="@{/regGuest}" method="post" class="form-inline">
-            <button type="submit" class="btn btn-sm btn-warning" title="Вы потеряете контроль над своей династией, если закроете браузер или выйдет время сессии">
-                Попробовать без регистрации!
+            <button type="submit" class="btn btn-lg btn-danger"
+                    title="Вы потеряете контроль над своей династией, если закроете браузер или выйдет время сессии">
+                Играть без регистрации!
             </button>
         </form>
     </div>

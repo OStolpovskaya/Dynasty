@@ -224,7 +224,7 @@ public class HouseController {
                     item.setPlace(ItemPlace.storage);
                     houseService.saveItem(item);
 
-                    returnTo = "storage";
+                    returnTo = "storage#inStore";
                     break;
             }
             return "redirect:/game/" + returnTo;

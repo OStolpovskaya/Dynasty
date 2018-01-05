@@ -10,6 +10,7 @@ import dyn.model.*;
 import dyn.model.Character;
 import dyn.model.appearance.*;
 import dyn.model.career.Career;
+import dyn.model.career.Education;
 import dyn.repository.*;
 import dyn.service.*;
 import org.apache.log4j.LogManager;
@@ -440,7 +441,6 @@ public class AdminController {
                                        @RequestParam("charisma") int charisma,
                                        @RequestParam("strength") int strength,
                                        @RequestParam("creativity") int creativity,
-                                       @RequestParam("education") long education,
                                        RedirectAttributes redirectAttributes) {
         String username = getAuthUser().getUsername();
         Character character = characterRepository.findOne(characterId);
@@ -451,7 +451,7 @@ public class AdminController {
             career.setCharisma(charisma);
             career.setStrength(strength);
             career.setCreativity(creativity);
-            career.setEducation(careerService.getEducation(education));
+            career.setEducation(careerService.getEducation(Education.PRIMARY));
             characterRepository.save(character);
             logger.info(username + " changes character's cereer:" + character.getId());
             redirectAttributes.addFlashAttribute("mess", "Карьера персонажа обновлена: " + characterId);
