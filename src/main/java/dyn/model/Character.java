@@ -337,17 +337,11 @@ public class Character {
     }
 
     public String getFullName() {
-        String lastname;
         if (family == null) {
-            lastname = "";
+            return name;
         } else {
-            if (sex.equals("male")) {
-                lastname = family.getMaleLastname();
-            } else {
-                lastname = family.getFemaleLastname();
-            }
+            return name + ", " + family.getFamilyName();
         }
-        return lastname + " " + name;
     }
 
     @Override

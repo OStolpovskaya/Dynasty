@@ -66,7 +66,7 @@ public class GameControllerTest {
 //        players.put("ForTest9@mail.ru", new String[]{"Osipov", "Осиповы", "Осипов", "Осипова"});
 //        players.put("ForTest10@mail.ru", new String[]{"Prohorov", "Прохоровы", "Прохоров", "Прохорова"});
 //        players.put("ForTest11@mail.ru", new String[]{"Rogova", "Роговы", "Рогов", "Рогова"});
-//        players.put("ForTest12@mail.ru", new String[]{"Somova", "Сомовы", "Сомов", "Сомова"});
+        players.put("ForTest12@mail.ru", new String[]{"Somova", "Сомовы", "Сомов", "Сомова"});
         players.put("fortest13@mail.ru", new String[]{"Terehov", "Тереховы", "Терехов", "Терехова"});
 //        players.put("fortest14@mail.ru", new String[]{"Uhova", "Уховы", "Ухов", "Ухова"});
 //        players.put("fortest15@mail.ru", new String[]{"Fokin", "Фокины", "Фокин", "Фокина"});
@@ -81,7 +81,7 @@ public class GameControllerTest {
 
         /*for (String player : players.keySet()) {
             logIn(player);
-            addNewFamily(player, players.get(player)[1], players.get(player)[2], players.get(player)[3]);
+            addNewFamily(player, players.get(player)[1]);
             makeTurn(player);
             postFiancees(player);
             logOut(player);
@@ -166,14 +166,12 @@ public class GameControllerTest {
         ((JavascriptExecutor) driver).executeScript(scrollElementIntoMiddle, webElement);
     }
 
-    public void addNewFamily(String player, String familyName, String maleLastname, String femaleLastname) {
+    public void addNewFamily(String player, String familyName) {
         System.out.println("*** GameControllerTest.addNewFamily: " + player + " ***");
 
         Assert.assertTrue("'Создание семьи", isAddNewFamilyPage());
 
         driver.findElement(By.name("family.familyName")).sendKeys(familyName);
-        driver.findElement(By.name("family.maleLastname")).sendKeys(maleLastname);
-        driver.findElement(By.name("family.femaleLastname")).sendKeys(femaleLastname);
 
         WebElement addNewFamilyButton = driver.findElement(By.name("addNewFamilyButton"));
         scrollTo(addNewFamilyButton);

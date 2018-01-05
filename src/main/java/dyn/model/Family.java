@@ -15,8 +15,6 @@ public class Family {
     private User user;
 
     private String familyName;
-    private String maleLastname;
-    private String femaleLastname;
 
     private boolean current;
     private int level;
@@ -76,24 +74,6 @@ public class Family {
     }
     public void setFamilyName(String familyName) {
         this.familyName = familyName;
-    }
-
-    @Size(min = 2, max = 30, message = "{field.size2-30}")
-    @Column(name = "male_lastname")
-    public String getMaleLastname() {
-        return maleLastname;
-    }
-    public void setMaleLastname(String maleLastname) {
-        this.maleLastname = maleLastname;
-    }
-
-    @Size(min = 2, max = 30, message = "{field.size2-30}")
-    @Column(name = "female_lastname")
-    public String getFemaleLastname() {
-        return femaleLastname;
-    }
-    public void setFemaleLastname(String femaleLastname) {
-        this.femaleLastname = femaleLastname;
     }
 
     public boolean isCurrent() {
@@ -259,8 +239,6 @@ public class Family {
                 ", user=" + (user == null ? "" : user.getUserName()) +
                 ", familyName='" + familyName + '\'' +
                 ", current=" + current +
-                ", maleLastname='" + maleLastname + '\'' +
-                ", femaleLastname='" + femaleLastname + '\'' +
                 ", level=" + level +
                 '}';
     }

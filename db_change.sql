@@ -93,3 +93,7 @@ NULL ,  'Мастер крафта - изготовлено 50 предмето�
 );
 /*====================================================================================================================*/
 ALTER TABLE  `users` CHANGE  `type`  `type` ENUM(  'player',  'admin',  'bot',  'guest' ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT  'player';
+/*====================================================================================================================*/
+ALTER TABLE `family`
+  DROP `male_lastname`,
+  DROP `female_lastname`;
