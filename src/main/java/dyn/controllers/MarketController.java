@@ -264,7 +264,7 @@ public class MarketController {
             logger.error(family.userNameAndFamilyName() + "tries to fulfill nonexisting or satisfied item request: " + itemRequestId);
             redirectAttributes.addFlashAttribute("mess", "Эта заявка была удалена автором или выполнена другим игроком..");
         }
-        return "redirect:/game/town";
+        return "redirect:/game/news";
     }
 }
 
