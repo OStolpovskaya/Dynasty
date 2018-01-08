@@ -113,7 +113,7 @@ public class HouseService {
     }
 
     public List<Item> getItemsInStoreByThing(Thing thing) {
-        return itemRepository.findByPlaceAndProjectThing(ItemPlace.store, thing);
+        return itemRepository.findByPlaceAndProjectThingOrderByProjectAscQualityAscCostAsc(ItemPlace.store, thing);
     }
 
     public Thing getThing(Long thingId) {
