@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Приключения</title>
+    <th:block th:replace="fragments/custom :: headLinks"></th:block>
+</head>
+<body>
+<th:block th:replace="fragments/scripts :: counters"></th:block>
+<div th:replace="fragments/navigation :: nav-for-game"></div>
+<div class="container">
+    <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
+    <h3>Приключения <strong>(в разработке)</strong></h3>
+    <p>Один раз за ход ваша семья может отправиться в приключение! Несколько случайных квестов-заданий-загадок, за выполнение которых вы
+        получите небольшие призы: ресурсы, крафт-баллы, деньги или предметы. А за выполнение всех заданий - уникальный предмет! <br/> Или
+        уникальный проект, мы сами еще не решили... Пишите в форме обратной связи ваши идеи - придумаем вместе!</p>
+    <p align="center"><img th:src="@{'/graphics/анонс приключений.jpg' }" width="200"/></p>
+</div>
+<th:block th:replace="fragments/scripts :: webjars"></th:block>
+</body>
+</html>

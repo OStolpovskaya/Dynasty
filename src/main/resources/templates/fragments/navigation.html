@@ -89,9 +89,17 @@
                     </li>
                     <li th:classappend="${#httpServletRequest.getRequestURI().contains('/game/news') ? 'active':''}"><a href="/game/news">Новости</a></li>
                     <li th:classappend="${#httpServletRequest.getRequestURI().contains('/game/buildings') ? 'active':''}"><a href="/game/buildings">Бизнес</a></li>
-                    <li th:classappend="${#httpServletRequest.getRequestURI().contains('/game/help') ? 'active':''}"><a href="/game/help">Справка</a></li>
-                    <li th:classappend="${#httpServletRequest.getRequestURI().contains('/game/feedback') ? 'active':''}"><a href="/game/feedback">Обратная связь</a></li>
-                    <li><a href="/logout" name="logouta">Выход</a></li>
+                    <li th:classappend="${#httpServletRequest.getRequestURI().contains('/game/adventures') ? 'active':''}">
+                        <a href="/game/adventures">Приключения</a></li>
+                    <li th:classappend="${#httpServletRequest.getRequestURI().contains('/game/help') ? 'active':''}">
+                        <a href="/game/help" title="Справка"><span class="glyphicon glyphicon-question-sign" style="color: #9d9d9d;"></span></a>
+                    </li>
+                    <li th:classappend="${#httpServletRequest.getRequestURI().contains('/game/feedback') ? 'active':''}">
+                        <a href="/game/feedback" title="Обратная связь"><span class="glyphicon glyphicon-exclamation-sign" style="color: #9d9d9d;"></span></a>
+                    </li>
+                    <li>
+                        <a href="/logout" name="logouta" title="Выход"><span class="glyphicon glyphicon-log-out" style="color: #9d9d9d;"></span></a>
+                    </li>
                 </ul>
             </div>
         </div>
