@@ -80,10 +80,12 @@
         </div>
     </th:block>
 
-    <div class="well">
+    <div class="well" th:with="amount = ${#lists.size(itemsInStorage)}">
         <a name="storage" class="anchor"></a>
-        <h3>Склад:</h3>
-        <th:block th:if="${not #lists.isEmpty(itemsInStorage)}">
+        <h3>Склад:
+            <th:block th:if="${amount>0}" th:text="${amount + ' шт.'}"></th:block>
+        </h3>
+        <th:block th:if="${amount>0}">
             <table class="table table-sm table-striped">
                 <thead>
                 <tr>
@@ -139,19 +141,16 @@
                 </tbody>
             </table>
         </th:block>
-        <th:block th:unless="${not #lists.isEmpty(itemsInStorage)}">
+        <th:block th:if="${amount==0}">
             <p>Нет вещей на складе</p>
         </th:block>
     </div>
-    <div class="well">
+    <div class="well" th:with="amount = ${#lists.size(serviceAndBuffsInStorage)}">
         <a name="buffsStorage" class="anchor"></a>
-        <h3>Склад услуг и баффов:</h3>
-
-        <th:block th:each="item : ${newItemList}">
-            <span th:text="${item.getProject().getName()}"></span><br/>
-        </th:block>
-
-        <th:block th:if="${not #lists.isEmpty(serviceAndBuffsInStorage)}">
+        <h3>Склад услуг и баффов:
+            <th:block th:if="${amount>0}" th:text="${amount + ' шт.'}"></th:block>
+        </h3>
+        <th:block th:if="${amount>0}">
             <table class="table table-sm table-striped">
                 <thead>
                 <tr>
@@ -208,14 +207,16 @@
                 </tbody>
             </table>
         </th:block>
-        <th:block th:unless="${not #lists.isEmpty(serviceAndBuffsInStorage)}">
+        <th:block th:if="${amount==0}">
             <p>Нет вещей на складе</p>
         </th:block>
     </div>
-    <div class="well">
+    <div class="well" th:with="amount = ${#lists.size(itemsInStore)}">
         <a name="inStore" class="anchor"></a>
-        <h3>Выставлены на продажу:</h3>
-        <th:block th:if="${not #lists.isEmpty(itemsInStore)}">
+        <h3>Выставлены на продажу:
+            <th:block th:if="${amount>0}" th:text="${amount + ' шт.'}"></th:block>
+        </h3>
+        <th:block th:if="${amount>0}">
             <table class="table table-sm table-striped">
                 <thead>
                 <tr>
@@ -258,7 +259,7 @@
                 </tbody>
             </table>
         </th:block>
-        <th:block th:unless="${not #lists.isEmpty(itemsInStore)}">
+        <th:block th:if="${amount==0}">
             <p>Нет выставленных на продажу вещей</p>
         </th:block>
     </div>
