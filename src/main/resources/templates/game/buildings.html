@@ -22,28 +22,35 @@
                 <a th:href="${'/game/buildings#building'+building.getId()}" th:text="${building.getName()}">Home</a>
             </li>
         </ul>
-        <p>Среднее значение качества предметов в здании увеличивает производительность. Так, если этот показатель равен или больше 3, то вы изготавливаете сразу два баффа (или услуги, или сертификата), если равен 5 - то сразу три!</p>
+        <p>Среднее значение качества предметов в здании увеличивает производительность. Так, если этот показатель равен или больше 3, то вы изготавливаете сразу два баффа (или услуги, или
+            сертификата), если равен 5 - то сразу три!</p>
     </div>
     <th:block th:if="${#lists.size(buildingList) > 0}">
         <th:block th:each="mapEntry : ${buildingMap}" th:with="familyBuilding = ${mapEntry.getKey()}, roomViewList = ${mapEntry.getValue()}">
             <th:block th:with="building = ${familyBuilding.getBuilding()}">
                 <a th:name="${'building'+building.getId()}" class="anchor"></a>
                 <h3 th:text="${#strings.toUpperCase(building.getName())}">Здание</h3>
-                <p><strong th:text="${building.getDesc()}"></strong></p>
-                <p>Среднее значение качества предметов в здании: <strong th:text="${familyBuilding.getBuildingQuality()}"></strong></p>
+                <p><strong th:text="${building.getDesc()}"></strong>
+                    Среднее значение качества предметов в здании: <strong th:text="${familyBuilding.getBuildingQuality()}"></strong></p>
                 <th:block th:with="roomView = ${roomViewList.get(0)}">
                     <!--/*@thymesVar id="roomView" type="dyn.model.RoomView"*/-->
-                    <div th:if="${roomView.isFull()}" th:with="production = ${building.getProduction()}" class="panel">
+                    <div th:if="${roomView.isFull()}" th:with="production = ${building.getProduction()}">
                         <!--/*@thymesVar id="production" type="dyn.model.Project"*/-->
-                        <form th:action="@{/game/makeProduction}" method="post">
-                            <span>Здание производит: </span>
-                            <label th:text="${production.getFullName()}"></label><br/>
-                            <span>
+                        <span>Здание производит: </span>
+                        <label th:text="${production.getFullName()}"></label><br/>
+                        <span>
                                 <th:block th:text="${'Стоимость и ресурсы: ' + production.getCost() + ' д.'}"></th:block>
                                 <th:block th:replace="fragments/custom :: resImageView (resHolder=${production})"></th:block>
-                            </span><br/>
+                            </span>
+                        <form th:action="@{/game/makeProduction}" class="form-inline" method="post" style="margin-top: 5px; margin-bottom: 5px;">
                             <input type="hidden" name="projectId" th:value="${production.getId()}"/>
-                            <button id="makeItemButton" type="submit" class="btn btn-sm btn-success " th:disabled="${not family.hasResourcesForProject(production)}">Изготовить предмет</button>
+                            <div class="form-group">
+                                <label>Производство, шт:</label>
+                                <input name="count" type="number" value="1" step="1" min="1" max="10" class="form-control"/>
+                            </div>
+
+                            <button id="makeItemButton" type="submit" class="btn btn-success " th:disabled="${not family.hasResourcesForProject(production)}">Изготовить предмет</button>
+
                         </form>
 
                     </div>

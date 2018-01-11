@@ -330,65 +330,68 @@ public class CraftController {
     @RequestMapping(value = "/game/makeItem", method = RequestMethod.POST)
     public String makeItem(ModelMap model, RedirectAttributes redirectAttributes,
                            @RequestParam(value = "projectId") Long projectId,
-                           @RequestParam(value = "applyBuffItemQuality", defaultValue = "false") boolean applyBuffItemQuality) {
+                           @RequestParam(value = "applyBuffItemQuality", defaultValue = "false") boolean applyBuffItemQuality,
+                           @RequestParam(value = "count", defaultValue = "1") int count) {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         Family family = user.getCurrentFamily();
 
         Project project = craftService.getProject(projectId);
         if (project != null) {
             if (family.getCraftProjects().contains(project)) {
-                boolean projectIsProductionOfBuilding = project.isProductionProject();
-                boolean enoughMoney = true;
-                if (projectIsProductionOfBuilding) {
-                    enoughMoney = family.getMoney() >= project.getCost();
-                }
-                if (family.hasResourcesForProject(project) && enoughMoney) {
-                    Item buffItemQuality = null;
-                    if (applyBuffItemQuality) {
-                        List<Item> buffItemQualityList = houseService.getBuffsInStorageByProject(family, Const.PROJECT_ITEM_QUALITY);
-                        if (!buffItemQualityList.isEmpty()) {
-                            buffItemQuality = buffItemQualityList.get(0);
-                        } else {
-                            logger.error(family.userNameAndFamilyName() + " doesn't have buffs item quality in storage, but want to apply it");
-                            redirectAttributes.addFlashAttribute("mess", "У вас нет баффов, увеличивающих качество предмета при изготовлении '" + project.getName() + "'");
-                            return "redirect:/game/chooseProject?thingId=" + project.getThing().getId();
+                StringBuilder countMess = new StringBuilder();
+                for (int i = 0; i < count; i++) {
+                    if (family.hasResourcesForProject(project)) {
+                        Item buffItemQuality = null;
+                        if (applyBuffItemQuality) {
+                            List<Item> buffItemQualityList = houseService.getBuffsInStorageByProject(family, Const.PROJECT_ITEM_QUALITY);
+                            if (!buffItemQualityList.isEmpty()) {
+                                buffItemQuality = buffItemQualityList.get(0);
+                            } else {
+                                logger.error(family.userNameAndFamilyName() + " doesn't have buffs item quality in storage, but want to apply it");
+                                redirectAttributes.addFlashAttribute("mess", "У вас нет баффов, увеличивающих качество предмета при изготовлении '" + project.getName() + "'");
+                                return "redirect:/game/chooseProject?thingId=" + project.getThing().getId();
+                            }
                         }
-                    }
 
-                    FamilyProject familyProject = craftService.getFamilyProject(project, family);
+                        FamilyProject familyProject = craftService.getFamilyProject(project, family);
 
-                    Item item = craftService.createItem(project, family, familyProject, applyBuffItemQuality);
-                    family.getItems().add(item);
-                    family.getFamilyResources().makingProject(project);
-                    familyRepository.save(family);
+                        Item item = craftService.createItem(project, family, familyProject, applyBuffItemQuality);
+                        family.getItems().add(item);
+                        family.getFamilyResources().makingProject(project);
+                        familyRepository.save(family);
 
-                    project.incProduced(1);
-                    craftService.saveProject(project);
+                        project.incProduced(1);
+                        craftService.saveProject(project);
 
-                    logger.info(family.userNameAndFamilyName() + " makes the item:" + item.getFullName());
-                    String mess = "Ваша семья изготавливает предмет " + item.getFullName() + ". Израсходовано: " + project.resString() + ". ";
+                        logger.info(family.userNameAndFamilyName() + " makes the item:" + item.getFullName());
+                        String mess = "Ваша семья изготавливает предмет " + item.getFullName() + ". Израсходовано: " + project.resString() + ". ";
 
-                    if (buffItemQuality != null) {
-                        mess += "Вы использовали бафф " + buffItemQuality.getProject().getName() + ". ";
-                        houseService.deleteItem(buffItemQuality);
-                    }
-
-                    if (familyProject.getCount() == Const.ITEM_QUALITY_3) {
-                        Achievement achievement = achievementService.checkCraftMasterAchievement(user, family, familyProject, familyProject.getCount());
-                        if (achievement != null) {
-                            mess += "<br><strong>" + messageSource.getMessage("turn.achievement", new Object[]{achievement.getName(), Const.ACHIEVEMENT_CRAFT_POINTS, Const.ACHIEVEMENT_MONEY}, loc()) + "</strong>";
-                            townNewsService.addAchievementNews(family, achievement);
+                        if (buffItemQuality != null) {
+                            mess += "Вы использовали бафф " + buffItemQuality.getProject().getName() + ". ";
+                            houseService.deleteItem(buffItemQuality);
+                            applyBuffItemQuality = false;
                         }
-                        townNewsService.addCommonNews(family, "Семья " + family.link() + " теперь изготавливает только высококачественные(3+) предметы: " + familyProject.getProject().getFullName() + "!");
+
+                        if (familyProject.getCount() == Const.ITEM_QUALITY_3) {
+                            Achievement achievement = achievementService.checkCraftMasterAchievement(user, family, familyProject, familyProject.getCount());
+                            if (achievement != null) {
+                                mess += "<br><strong>" + messageSource.getMessage("turn.achievement", new Object[]{achievement.getName(), Const.ACHIEVEMENT_CRAFT_POINTS, Const.ACHIEVEMENT_MONEY}, loc()) + "</strong>";
+                                townNewsService.addAchievementNews(family, achievement);
+                            }
+                            townNewsService.addCommonNews(family, "Семья " + family.link() + " теперь изготавливает только высококачественные(3+) предметы: " + familyProject.getProject().getFullName() + "!");
+                        }
+
+
+                        familyLogService.addToLog(family, mess);
+                        countMess.append(mess).append("<br>");
+                    } else {
+                        logger.error(family.userNameAndFamilyName() + " doesn't have resources to make item for project:" + project.getName());
+                        countMess.append("Недостаточно ресурсов для изготовления предмета по проекту: " + project.getName());
+                        break;
                     }
 
-
-                    familyLogService.addToLog(family, mess);
-                    redirectAttributes.addFlashAttribute("mess", mess);
-                    return "redirect:/game/chooseProject?thingId=" + project.getThing().getId();
                 }
-                logger.error(family.userNameAndFamilyName() + " doesn't have resources to make item for project:" + project.getName());
-                redirectAttributes.addFlashAttribute("mess", "Недостаточно ресурсов для изготовления предмета по проекту: " + project.getName());
+                redirectAttributes.addFlashAttribute("mess", countMess.toString());
                 return "redirect:/game/chooseProject?thingId=" + project.getThing().getId();
             }
             logger.error(family.userNameAndFamilyName() + " doesn't have the project:" + project.getName());
@@ -402,7 +405,8 @@ public class CraftController {
 
     @RequestMapping(value = "/game/makeProduction", method = RequestMethod.POST)
     public String makeProduction(ModelMap model, RedirectAttributes redirectAttributes,
-                                 @RequestParam(value = "projectId") Long projectId) {
+                                 @RequestParam(value = "projectId") Long projectId,
+                                 @RequestParam(value = "count", defaultValue = "1") int countItems) {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         Family family = user.getCurrentFamily();
 
@@ -410,35 +414,40 @@ public class CraftController {
         if (project != null) {
             if (family.getCraftProjects().contains(project)) {
                 House building = houseService.getBuildingByProduction(project);
-                if (family.hasResourcesForProject(project) && family.getMoney() >= project.getCost()) {
-                    FamilyBuilding familyBuilding = houseService.getFamilyBuildingByFamilyAndBuilding(family, building);
-                    int count = 1;
-                    if (familyBuilding.getBuildingQuality() >= 3) {
-                        count += 1;
+                StringBuilder countMess = new StringBuilder();
+                for (int j = 0; j < countItems; j++) {
+                    if (family.hasResourcesForProject(project) && family.getMoney() >= project.getCost()) {
+                        FamilyBuilding familyBuilding = houseService.getFamilyBuildingByFamilyAndBuilding(family, building);
+                        int count = 1;
+                        if (familyBuilding.getBuildingQuality() >= 3) {
+                            count += 1;
+                        }
+                        if (familyBuilding.getBuildingQuality() >= 5) {
+                            count += 1;
+                        }
+                        Item item = null;
+                        for (int i = 0; i < count; i++) {
+                            item = craftService.createProductionItem(project, family);
+                            family.getItems().add(item);
+                        }
+                        family.getFamilyResources().makingProject(project);
+                        family.setMoney(family.getMoney() - project.getCost());
+                        familyRepository.save(family);
+
+                        logger.info(family.userNameAndFamilyName() + " makes the production:" + item.getFullName() + ". Count: " + count);
+                        String mess = "Ваша семья изготавливает " + project.getThing().getName() + " " + project.getName() + "(" + count + " шт.). Израсходовано: " + project.getCost() + (project.resString() != "" ? ", " + project.resString() : "");
+
+                        familyLogService.addToLog(family, mess);
+                        countMess.append(mess).append("<br>");
+                        ;
+                    } else {
+                        logger.error(family.userNameAndFamilyName() + " doesn't have resources to make item for project:" + project.getName());
+                        countMess.append("Недостаточно ресурсов для изготовления предмета по проекту: " + project.getName());
+                        break;
                     }
-                    if (familyBuilding.getBuildingQuality() >= 5) {
-                        count += 1;
-                    }
-                    Item item = null;
-                    for (int i = 0; i < count; i++) {
-                        item = craftService.createProductionItem(project, family);
-                        family.getItems().add(item);
-                    }
-                    family.getFamilyResources().makingProject(project);
-                    family.setMoney(family.getMoney() - project.getCost());
-                    familyRepository.save(family);
 
-                    logger.info(family.userNameAndFamilyName() + " makes the production:" + item.getFullName() + ". Count: " + count);
-                    String mess = "Ваша семья изготавливает " + project.getThing().getName() + " " + project.getName() + "(" + count + " шт.). Израсходовано: " + project.getCost() + (project.resString() != "" ? ", " + project.resString() : "");
-
-                    familyLogService.addToLog(family, mess);
-                    redirectAttributes.addFlashAttribute("mess", mess);
-
-
-                    return "redirect:/game/buildings#building" + building.getId();
                 }
-                logger.error(family.userNameAndFamilyName() + " doesn't have resources to make item for project:" + project.getName());
-                redirectAttributes.addFlashAttribute("mess", "Недостаточно ресурсов для изготовления предмета по проекту: " + project.getName());
+                redirectAttributes.addFlashAttribute("mess", countMess.toString());
                 return "redirect:/game/buildings#building" + building.getId();
             }
             logger.error(family.userNameAndFamilyName() + " doesn't have the project:" + project.getName());
