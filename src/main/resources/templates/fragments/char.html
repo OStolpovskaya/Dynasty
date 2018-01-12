@@ -212,8 +212,10 @@
                 <!--/*@thymesVar id="nextProfession" type="dyn.model.career.Profession"*/-->
                 <span class="glyphicon glyphicon-education"
                       th:alt-title="${'Предполагаемая профессия: '+ profession.getName() +' ('+profession.getLevel()+' ур., ЗП: '+career.getVocation().getStartSalary()*profession.getLevel()+' д.). '+
-                      'Следующий уровень: интеллект='+nextProfession.getIntelligence()+', харизма='+nextProfession.getCharisma() +
-                      ', сила='+nextProfession.getStrength()+', творчество='+nextProfession.getCreativity()+'.'}"></span>
+                      (nextProfession!=null?'Следующий уровень: интеллект='+nextProfession.getIntelligence()+', харизма='+nextProfession.getCharisma() +
+                      ', сила='+nextProfession.getStrength()+', творчество='+nextProfession.getCreativity()+'.':'')}">
+
+                </span>
             </th:block>
         </div>
     </div>
