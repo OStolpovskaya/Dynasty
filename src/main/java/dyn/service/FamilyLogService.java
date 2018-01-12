@@ -73,6 +73,11 @@ public class FamilyLogService {
         // todo: ограничение на длину текста
         FamilyLog familyLog = familyLogRepository.findByFamilyAndLevel(family, family.getLevel());
         familyLog.addText(text);
-        familyLogRepository.save(familyLog);
+        try {
+            familyLogRepository.save(familyLog);
+        } catch (Exception e) {
+            logger.error("Family " + family.userNameAndFamilyName() + " has full family log!!!");
+        }
+
     }
 }
