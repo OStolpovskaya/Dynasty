@@ -439,7 +439,7 @@ public class CraftController {
 
                         familyLogService.addToLog(family, mess);
                         countMess.append(mess).append("<br>");
-                        ;
+
                     } else {
                         logger.error(family.userNameAndFamilyName() + " doesn't have resources to make item for project:" + project.getName());
                         countMess.append("Недостаточно ресурсов для изготовления предмета по проекту: " + project.getName());

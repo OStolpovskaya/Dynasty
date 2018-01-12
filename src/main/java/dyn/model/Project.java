@@ -209,8 +209,8 @@ public class Project implements ResourcesHolder {
         return ResUtils.getResString(this);
     }
 
-    public String resDestroyString() {
-        return ResUtils.getResString(this, Const.DESTROY_ITEM_COEFF);
+    public String resDestroyString(int amount) {
+        return ResUtils.getResString(this, Const.DESTROY_ITEM_COEFF, amount);
     }
 
     @Override

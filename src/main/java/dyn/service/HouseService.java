@@ -93,7 +93,7 @@ public class HouseService {
     }
 
     public List<Item> getItemsInStorage(Family family) {
-        return itemRepository.findByFamilyAndPlaceAndProjectThingCraftBranchIdLessThanEqualOrderByProjectThingAscProjectAscQualityAsc(family, ItemPlace.storage, Const.CRAFTBRANCH_MAX);
+        return itemRepository.findByFamilyAndPlaceAndProjectThingCraftBranchIdLessThanEqualOrderByProjectThingNameAscProjectAscQualityAsc(family, ItemPlace.storage, Const.CRAFTBRANCH_MAX);
     }
 
     public List<Item> getBuffsInStorage(Family family) {
@@ -106,6 +106,15 @@ public class HouseService {
 
     public Item getItem(Long itemId) {
         return itemRepository.findOne(itemId);
+    }
+
+    public Item getItemOfFamilyInPlace(Long itemId, Family family, ItemPlace place) {
+        return itemRepository.findByIdAndFamilyAndPlace(itemId, family, place);
+    }
+
+    public List<Item> getItemsWhichIsEqualTo(Item item) {
+
+        return itemRepository.findByProjectAndFamilyAndAuthorAndQualityAndPlace(item.getProject(), item.getFamily(), item.getAuthor(), item.getQuality(), item.getPlace());
     }
 
     public void saveItem(Item item) {

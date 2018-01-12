@@ -127,9 +127,11 @@ public class HouseController {
         }
         model.addAttribute("family", family);
 
-        model.addAttribute("itemsInStorage", houseService.getItemsInStorage(family));
+        Map<Item, Integer> itemsInStorageCMap = craftService.arrangeItems(houseService.getItemsInStorage(family));
+        model.addAttribute("itemsInStorageCMap", itemsInStorageCMap);
 
-        model.addAttribute("serviceAndBuffsInStorage", houseService.getBuffsInStorage(family));
+        Map<Item, Integer> buffsInStorageCMap = craftService.arrangeItems(houseService.getBuffsInStorage(family));
+        model.addAttribute("buffsInStorageCMap", buffsInStorageCMap);
 
         model.addAttribute("itemsInStore", houseService.getItemsInStore(family));
 
@@ -274,22 +276,31 @@ public class HouseController {
 
     @RequestMapping(value = "/game/destroyItem", method = RequestMethod.POST)
     public String destroyItem(ModelMap model, RedirectAttributes redirectAttributes,
-                              @RequestParam(value = "itemId") Long itemId) {
+                              @RequestParam(value = "itemId") Long itemId,
+                              @RequestParam(value = "btn", defaultValue = "single") String amount) {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         Family family = user.getCurrentFamily();
 
         Item item = houseService.getItemByFamilyAndItemId(family, itemId);
         if (item != null) {
-            Project project = item.getProject();
-            family.getFamilyResources().addResFromDestroyedItem(item);
-            familyRepository.save(family);
-
-            logger.info(family.userNameAndFamilyName() + " destroy item: " + item.getProject().getName() + "(" + item.getId() + ")");
-            String mess = "Вещь разобрана: " + item.getFullName() + ". Получены ресурсы: " + project.resDestroyString();
+            String mess;
+            if (amount.equals("single")) {
+                family.getFamilyResources().addResFromDestroyedItem(item);
+                familyRepository.save(family);
+                houseService.deleteItem(item);
+                mess = "Вещь разобрана: " + item.getFullName() + ". Получены ресурсы: " + item.getProject().resDestroyString(1);
+            } else {
+                List<Item> itemsWhichIsEqualTo = houseService.getItemsWhichIsEqualTo(item);
+                for (Item equalItem : itemsWhichIsEqualTo) {
+                    family.getFamilyResources().addResFromDestroyedItem(equalItem);
+                    familyRepository.save(family);
+                    houseService.deleteItem(equalItem);
+                }
+                int size = itemsWhichIsEqualTo.size();
+                mess = "Вещи (" + size + " шт.) разобраны: " + item.getFullName() + ". Получены ресурсы: " + item.getProject().resDestroyString(size);
+            }
+            logger.info(family.userNameAndFamilyName() + mess);
             familyLogService.addToLog(family, mess);
-
-            houseService.deleteItem(item);
-
             redirectAttributes.addFlashAttribute("mess", mess);
             return "redirect:/game/storage";
         }
@@ -301,29 +312,31 @@ public class HouseController {
     @RequestMapping(value = "/game/putItemToStore", method = RequestMethod.POST)
     public String putItemToStore(ModelMap model, RedirectAttributes redirectAttributes,
                                  @RequestParam(value = "itemId") Long itemId,
-                                 @RequestParam(value = "cost") int cost) {
+                                 @RequestParam(value = "cost") int cost,
+                                 @RequestParam(value = "btn", defaultValue = "single") String amount) {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         Family family = user.getCurrentFamily();
 
-        Item item = houseService.getItem(itemId);
+        Item item = houseService.getItemOfFamilyInPlace(itemId, family, ItemPlace.storage);
         if (item != null) {
-            if (family.getItems().contains(item)) {
-                if (item.getPlace().equals(ItemPlace.storage)) {
-                    item.setPlace(ItemPlace.store);
-                    item.setCost(cost);
-                    houseService.saveItem(item);
-                    logger.info(family.userNameAndFamilyName() + " put item to store: " + item.getProject().getName() + "(" + item.getId() + ")");
-                    String mess = "Вещь выставлена на продажу: " + item.getFullName() + ". Стоимость: " + cost + " д.";
-                    familyLogService.addToLog(family, mess);
-                    redirectAttributes.addFlashAttribute("mess", mess);
-                    return "redirect:/game/storage";
+            String mess;
+            if (amount.equals("single")) {
+                item.setPlace(ItemPlace.store);
+                item.setCost(cost);
+                houseService.saveItem(item);
+                mess = "Вещь выставлена на продажу: " + item.getFullName() + ". Стоимость: " + cost + " д.";
+            } else {
+                List<Item> itemsWhichIsEqualTo = houseService.getItemsWhichIsEqualTo(item);
+                for (Item equalItem : itemsWhichIsEqualTo) {
+                    equalItem.setPlace(ItemPlace.store);
+                    equalItem.setCost(cost);
+                    houseService.saveItem(equalItem);
                 }
-                logger.error(family.userNameAndFamilyName() + " want to put in store item, which is not in the storage: " + item.getProject().getName() + "(" + item.getId() + "), place=" + item.getPlace().toString());
-                redirectAttributes.addFlashAttribute("mess", "Вещь, выставляемая на продажу, должна быть на складе: " + item.getFullName());
-                return "redirect:/game/storage";
+                mess = "Вещи (" + itemsWhichIsEqualTo.size() + " шт.) выставлены на продажу: " + item.getFullName() + ". Стоимость: " + cost + " д.";
             }
-            logger.error(family.userNameAndFamilyName() + " has not item: " + item.getProject().getName() + "(" + item.getId() + ")");
-            redirectAttributes.addFlashAttribute("mess", "Вы не владеете такой вещью: " + item.getFullName());
+            logger.info(family.userNameAndFamilyName() + mess);
+            familyLogService.addToLog(family, mess);
+            redirectAttributes.addFlashAttribute("mess", mess);
             return "redirect:/game/storage";
         }
         logger.error(family.userNameAndFamilyName() + " want to put in store non existing item: " + itemId);
