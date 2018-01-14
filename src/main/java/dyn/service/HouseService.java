@@ -198,6 +198,10 @@ public class HouseService {
         itemRepository.delete(item);
     }
 
+    public void deleteItems(List<Item> items) {
+        itemRepository.delete(items);
+    }
+
     public List<Item> getItemsInStoreByProject(Project project) {
         return itemRepository.findByPlaceAndProject(ItemPlace.store, project);
     }

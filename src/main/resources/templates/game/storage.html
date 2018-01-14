@@ -189,8 +189,12 @@
                                         <li>
                                             <form th:action="@{/game/applyItemResource}" method="post" class="form-inline">
                                                 <input type="hidden" name="itemId" th:value="${item.getId()}"/>
-                                                <button type="submit" class="btn btn-sm btn-success" data-toggle="tooltip" title="Применить">
-                                                    <span class="glyphicon glyphicon glyphicon glyphicon-share-alt"></span>
+
+                                                <button type="submit" name="btn" value="single" class="btn btn-sm btn-success" title="Применить ОДИН сертификат">
+                                                    1 <span class="glyphicon glyphicon-share-alt"></span>
+                                                </button>
+                                                <button type="submit" name="btn" value="maxAmount" class="btn btn-sm btn-success" title="Применить ВСЕ сертификаты">
+                                                    M <span class="glyphicon glyphicon-share-alt"></span>
                                                 </button>
                                             </form>
                                         </li>

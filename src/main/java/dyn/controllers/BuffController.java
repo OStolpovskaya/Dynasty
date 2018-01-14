@@ -127,38 +127,52 @@ public class BuffController {
 
     @RequestMapping(value = "/game/applyItemResource", method = RequestMethod.POST)
     public String applyItemResource(ModelMap model, RedirectAttributes redirectAttributes,
-                                    @RequestParam(value = "itemId") Long itemId) {
+                                    @RequestParam(value = "itemId") Long itemId,
+                                    @RequestParam(value = "btn", defaultValue = "single") String amount) {
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         Family family = user.getCurrentFamily();
 
         String mess = "";
         Item item = houseService.getItemByFamilyAndItemId(family, itemId);
         if (item != null) {
-            Long projectId = item.getProject().getId();
+            Project project = item.getProject();
+            Long projectId = project.getId();
+
+            int coeff = 1;
+
+            if ("single".equals(amount)) {
+                houseService.deleteItem(item);
+            } else {
+                List<Item> itemsWhichIsEqualTo = houseService.getItemsWhichIsEqualTo(item);
+                coeff = itemsWhichIsEqualTo.size();
+                houseService.deleteItems(itemsWhichIsEqualTo);
+            }
+
+            int resAmount = 10 * coeff;
             if (projectId.equals(Const.PROJECT_RES_WOOD)) {
-                family.getFamilyResources().addWood(10);
-                mess = "Добавлено: " + Const.RES_WOOD_NAME + " (10 шт.)";
+                family.getFamilyResources().addWood(resAmount);
+                mess = "Добавлено: " + Const.RES_WOOD_NAME + " (" + resAmount + " шт.)";
             } else if (projectId.equals(Const.PROJECT_RES_FOOD)) {
-                family.getFamilyResources().addFood(10);
-                mess = "Добавлено: " + Const.RES_FOOD_NAME + " (10 шт.)";
+                family.getFamilyResources().addFood(resAmount);
+                mess = "Добавлено: " + Const.RES_FOOD_NAME + " (" + resAmount + " шт.)";
             } else if (projectId.equals(Const.PROJECT_RES_METALL)) {
-                family.getFamilyResources().addMetall(10);
-                mess = "Добавлено: " + Const.RES_METALL_NAME + " (10 шт.)";
+                family.getFamilyResources().addMetall(resAmount);
+                mess = "Добавлено: " + Const.RES_METALL_NAME + " (" + resAmount + " шт.)";
             } else if (projectId.equals(Const.PROJECT_RES_PLASTIC)) {
-                family.getFamilyResources().addPlastic(10);
-                mess = "Добавлено: " + Const.RES_PLASTIC_NAME + " (10 шт.)";
+                family.getFamilyResources().addPlastic(resAmount);
+                mess = "Добавлено: " + Const.RES_PLASTIC_NAME + " (" + resAmount + " шт.)";
             } else if (projectId.equals(Const.PROJECT_RES_MICROELECTRONICS)) {
-                family.getFamilyResources().addMicroelectronics(10);
-                mess = "Добавлено: " + Const.RES_MICROELECTRONICS_NAME + " (10 шт.)";
+                family.getFamilyResources().addMicroelectronics(resAmount);
+                mess = "Добавлено: " + Const.RES_MICROELECTRONICS_NAME + " (" + resAmount + " шт.)";
             } else if (projectId.equals(Const.PROJECT_RES_CLOTH)) {
-                family.getFamilyResources().addCloth(10);
-                mess = "Добавлено: " + Const.RES_CLOTH_NAME + " (10 шт.)";
+                family.getFamilyResources().addCloth(resAmount);
+                mess = "Добавлено: " + Const.RES_CLOTH_NAME + " (" + resAmount + " шт.)";
             } else if (projectId.equals(Const.PROJECT_RES_STONE)) {
-                family.getFamilyResources().addStone(10);
-                mess = "Добавлено: " + Const.RES_STONE_NAME + " (10 шт.)";
+                family.getFamilyResources().addStone(resAmount);
+                mess = "Добавлено: " + Const.RES_STONE_NAME + " (" + resAmount + " шт.)";
             } else if (projectId.equals(Const.PROJECT_RES_CHEMICAL)) {
-                family.getFamilyResources().addChemical(10);
-                mess = "Добавлено: " + Const.RES_CHEMICAL_NAME + " (10 шт.)";
+                family.getFamilyResources().addChemical(resAmount);
+                mess = "Добавлено: " + Const.RES_CHEMICAL_NAME + " (" + resAmount + " шт.)";
             } else {
                 logger.error(family.userNameAndFamilyName() + "want to apply item of project with no rule: " + projectId);
                 redirectAttributes.addFlashAttribute("mess", "Проект этого предмета еще не описан");
@@ -166,11 +180,11 @@ public class BuffController {
             }
 
             familyRepository.save(family);
-            houseService.deleteItem(item);
+
 
             familyLogService.addToLog(family, mess);
             redirectAttributes.addFlashAttribute("mess", mess);
-            logger.info(family.userNameAndFamilyName() + " apply item of project: '" + item.getProject().getName());
+            logger.info(family.userNameAndFamilyName() + " apply item of project: " + project.getName());
             return "redirect:/game/storage";
         }
         logger.error(family.userNameAndFamilyName() + "want to apply nonexisting item: " + itemId);
