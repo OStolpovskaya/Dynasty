@@ -14,78 +14,126 @@
 <body>
 <th:block th:replace="fragments/scripts :: counters"></th:block>
 <div th:replace="fragments/navigation :: nav-for-game"></div>
-<div class="container">
+<div class="container" style="width: 1280px;">
     <!--/*@thymesVar id="character" type="dyn.model.Character"*/-->
-    <div style="float: left">
-        <p th:inline="text">
-            Династия: <a th:href="${'/game/userview?userId='+character.getFamily().getUser().getUserid() +'&amp;familyId='+character.getFamily().getId()}" th:text="${character.getFamily().userNameAndFamilyName()}"></a><br/>
-            Имя: [[${character.getName()}]]<br/>
-            Уровень: [[${character.getLevel()}]]<br/>
-            Пол: [[${character.getSex()}]]<br/>
-            Раса: [[${character.getRace().getName()}]]<br/>
-        </p>
-        <p>Баффы:
-            <th:block th:each="buff : ${character.getBuffs()}">
-                <li th:text="#{${buff.getTitle()}}"></li>
+    <div class="row">
+        <div class="col-sm-6">
+            <legend>Персонаж</legend>
+            <p th:inline="text">
+                Династия: <a th:href="${'/game/userview?userId='+character.getFamily().getUser().getUserid() +'&amp;familyId='+character.getFamily().getId()}"
+                             th:text="${character.getFamily().userNameAndFamilyName()}"></a><br/>
+                Имя: [[${character.getName()}]]<br/>
+                Уровень: [[${character.getLevel()}]]<br/>
+                Пол: [[${character.getSex()=='male'?'мужчина':'женщина'}]]<br/>
+                Раса: [[${character.getRace().getName()}]]<br/>
+            </p>
+            <legend>Черты:</legend>
+            <p>
+                <th:block th:utext="#{chardesc(${character.getSkinColor().getTitle()},
+                                       ${character.getHeight().getTitle()},
+                                       ${character.getBody().getTitle()},
+                                       ${character.getHead().getTitle()},
+                                       ${character.getEars().getTitle()},
+                                       ${character.getEyebrows().getTitle()},
+                                       ${character.getEyes().getTitle()},
+                                       ${character.getEyeColor().getTitle()},
+                                       ${character.getNose().getTitle()},
+                                       ${character.getMouth().getTitle()},
+                                       ${character.getHairType().getTitle()},
+                                       ${character.getHairColor().getTitle()},
+                                       ${character.getHairStyle().getTitle()}
+                                       )}">
+
+                </th:block>
+            </p>
+            <legend>Карьера</legend>
+            <p>Призвание:
+                <th:block th:text="${character.getCareer().getVocation().getName()}"></th:block>
+            </p>
+            <p>
+                Интеллект:
+                <th:block th:text="${character.getCareer().getIntelligence()}"></th:block>
+                <br/>
+                Харизма:
+                <th:block th:text="${character.getCareer().getCharisma()}"></th:block>
+                <br/>
+                Сила:
+                <th:block th:text="${character.getCareer().getStrength()}"></th:block>
+                <br/>
+                Творчество:
+                <th:block th:text="${character.getCareer().getCreativity()}"></th:block>
+                <br/>
+            </p>
+            <p th:if="${character.getCareer().getProfession() == null}" th:with="profession = ${@careerService.getAvailableProfession(character)}">
+                Предполагаемая профессия:
+                <!--/*@thymesVar id="profession" type="dyn.model.career.Profession"*/-->
+                <th:block th:text="${profession.getName() +' ('+profession.getLevel()+' ур.)'}"></th:block>
+
+            </p>
+            <p th:if="${character.getCareer().getProfession() != null}" th:with="profession = ${character.getCareer().getProfession()}">
+                Профессия:
+                <th:block th:text="${profession.getName() +' ('+profession.getLevel()+' ур.)'}"></th:block>
+            </p>
+            <th:block th:with="buffs = ${character.getBuffs()}">
+                <th:block th:if="${!buffs.isEmpty()}">
+                    <legend>Баффы:</legend>
+                    <th:block th:each="buff : ${character.getBuffs()}">
+                        <li th:text="#{${buff.getTitle()}}"></li>
+                    </th:block>
+                </th:block>
+
             </th:block>
-        </p>
-        <p th:if="${character.getCareer().getProfession() == null}" th:with="profession = ${@careerService.getAvailableProfession(character)}">
-            Предполагаемая профессия:
-            <!--/*@thymesVar id="profession" type="dyn.model.career.Profession"*/-->
-            <th:block th:text="${profession.getName() +' ('+profession.getLevel()+' ур.)'}"></th:block>
 
-        </p>
-    </div>
-    <div style="float: right" align="center">
-
-        <strong th:if="${character.getFather() != null}">Родители:</strong>
-        <div>
-            <div class="char-view-div" th:if="${character.getFather() != null}" style="zoom: 0.5">
-                <div th:replace="fragments/char :: char-panel (character=${character.getFather()})"></div>
-            </div>
-            <div class="char-view-div" style="zoom: 0.5" th:if="${character.getFather() != null}">
-                <div th:replace="fragments/char :: char-panel (character=${character.getFather().getSpouse()})"></div>
-            </div>
         </div>
-        <br></br>
-        <div class="char-view-div">
-            <div th:replace="fragments/char :: char-panel (character=${character})"></div>
-        </div>
-        <div class="char-view-div" th:if="${character.getSpouse() != null}">
-            <div th:replace="fragments/char :: char-panel (character=${character.getSpouse()})"></div>
-        </div>
-        <br></br>
-
-        <th:block th:switch="${character.getSex()}">
-            <th:block th:case="'male'">
-                <strong th:if="${character.getChildren().size() gt 0}">Дети:</strong>
-                <div>
-                    <div style="display: inline-block; zoom: 0.5" th:each="child : ${character.getChildren()}">
-
-                        <div class="char-view-div">
-                            <div th:replace="fragments/char :: char-panel (character=${child})"></div>
-                        </div>
-                    </div>
+        <div class="col-sm-6">
+            <strong th:if="${character.getFather() != null}">Родители:</strong>
+            <div>
+                <div class="char-view-div" th:if="${character.getFather() != null}" style="zoom: 0.5">
+                    <div th:replace="fragments/char :: char-panel (character=${character.getFather()})"></div>
                 </div>
-            </th:block>
-            <th:block th:case="'female'">
-                <th:block th:if="${character.getSpouse() != null}">
-                    <strong th:if="${character.getSpouse().getChildren().size() gt 0}">Дети:</strong>
+                <div class="char-view-div" style="zoom: 0.5" th:if="${character.getFather() != null}">
+                    <div th:replace="fragments/char :: char-panel (character=${character.getFather().getSpouse()})"></div>
+                </div>
+            </div>
+            <br></br>
+            <div class="char-view-div">
+                <div th:replace="fragments/char :: char-panel (character=${character})"></div>
+            </div>
+            <div class="char-view-div" th:if="${character.getSpouse() != null}">
+                <div th:replace="fragments/char :: char-panel (character=${character.getSpouse()})"></div>
+            </div>
+            <br></br>
+
+            <th:block th:switch="${character.getSex()}">
+                <th:block th:case="'male'">
+                    <strong th:if="${character.getChildren().size() gt 0}">Дети:</strong>
                     <div>
-                        <div style="display: inline-block; zoom: 0.5" th:each="child : ${character.getSpouse().getChildren()}">
+                        <div style="display: inline-block; zoom: 0.5" th:each="child : ${character.getChildren()}">
+
                             <div class="char-view-div">
                                 <div th:replace="fragments/char :: char-panel (character=${child})"></div>
                             </div>
-
                         </div>
                     </div>
                 </th:block>
+                <th:block th:case="'female'">
+                    <th:block th:if="${character.getSpouse() != null}">
+                        <strong th:if="${character.getSpouse().getChildren().size() gt 0}">Дети:</strong>
+                        <div>
+                            <div style="display: inline-block; zoom: 0.5" th:each="child : ${character.getSpouse().getChildren()}">
+                                <div class="char-view-div">
+                                    <div th:replace="fragments/char :: char-panel (character=${child})"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </th:block>
+                </th:block>
             </th:block>
-
-        </th:block>
-
+        </div>
     </div>
 </div>
+
 <th:block th:replace="fragments/scripts :: webjars"></th:block>
 </body>
 </html>
