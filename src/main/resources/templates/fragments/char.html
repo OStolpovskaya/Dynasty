@@ -114,39 +114,42 @@
             <a href="/game/character" th:href="${nolink}==null?@{/game/character(characterId=${character.getId()})}:'#'">
                 <th:block th:with="p = ${'/graphics/'+character.getSex()+'/'}">
                     <!--/*@thymesVar id="character" type="dyn.model.Character"*/-->
-                    <div style="position: relative; width: 200px; height: 200px; " th:alt-title="#{tooltip(
-                                       ${character.getFullName()},
-                                       ${character.getSkinColor().getTitle()},
-                                       ${character.getHeight().getTitle()},
-                                       ${character.getBody().getTitle()},
-                                       ${character.getHead().getTitle()},
-                                       ${character.getEars().getTitle()},
-                                       ${character.getEyebrows().getTitle()},
-                                       ${character.getEyes().getTitle()},
-                                       ${character.getEyeColor().getTitle()},
-                                       ${character.getNose().getTitle()},
-                                       ${character.getMouth().getTitle()},
-                                       ${character.getHairType().getTitle()},
-                                       ${character.getHairColor().getTitle()},
-                                       ${character.getHairStyle().getTitle()}
-                                       )}">
-                        <img th:src="${p+character.getBody().getName() + '_sub_'+character.getSkinColor().getNamePart()+'.png'}" style="position: absolute; left: 0px; "/>
-                        <img th:src="${p+character.getBody().getName() + '.png'}" style="position: absolute;left: 0px;"/>
-                        <img th:src="${p+character.getHead().getName() + '_sub_'+character.getSkinColor().getNamePart()+'.png'}" style="position: absolute;left: 0px;"/>
-                        <img th:src="${p+character.getHead().getName() + '.png'}" style="position: absolute;left: 0px;"/>
-                        <img th:src="${p+character.getEyebrows().getName() + '.png'}" style="position: absolute;left: 0px;"/>
-                        <img th:src="${p+character.getEyeColor().getName() + '.png'}" style="position: absolute;left: 0px;"/>
-                        <img th:src="${p+'pupil.png'}" style="position: absolute;left: 0px;"/>
-                        <img th:src="${p+character.getEyes().getName() + '.png'}" style="position: absolute;left: 0px;"/>
-                        <img th:src="${p+character.getMouth().getName() + '.png'}" style="position: absolute;left: 0px;"/>
-                        <img th:src="${p+character.getNose().getName() + '.png'}" style="position: absolute;left: 0px;"/>
-                        <img th:src="${p+character.getHairStyle().getName() + '_sub_'+character.getHairColor().getNamePart()+'.png'}" style="position: absolute;left: 0px;"/>
-                        <img th:src="${p+character.getHairStyle().getName() + '.png'}" style="position: absolute;left: 0px;"/>
-                        <img th:src="${p+character.getEars().getName() + '_sub_'+character.getSkinColor().getNamePart()+'.png'}" style="position: absolute;left: 0px;"/>
-                        <img th:src="${p+character.getEars().getName() + '.png'}" style="position: absolute;left: 0px;"/>
-                        <img th:src="${p+character.getHeight().getName() + '.png'}" style="position: absolute;left: 0px;"/>
-
+                    <div style="position: relative; width: 200px; height: 200px; ">
+                        <div class="my_tooltip" style="display: block;">
+                            <img th:src="${p+character.getBody().getName() + '_sub_'+character.getSkinColor().getNamePart()+'.png'}" style="position: absolute; left: 0px; "/>
+                            <img th:src="${p+character.getBody().getName() + '.png'}" style="position: absolute;left: 0px;"/>
+                            <img th:src="${p+character.getHead().getName() + '_sub_'+character.getSkinColor().getNamePart()+'.png'}" style="position: absolute;left: 0px;"/>
+                            <img th:src="${p+character.getHead().getName() + '.png'}" style="position: absolute;left: 0px;"/>
+                            <img th:src="${p+character.getEyebrows().getName() + '.png'}" style="position: absolute;left: 0px;"/>
+                            <img th:src="${p+character.getEyeColor().getName() + '.png'}" style="position: absolute;left: 0px;"/>
+                            <img th:src="${p+'pupil.png'}" style="position: absolute;left: 0px;"/>
+                            <img th:src="${p+character.getEyes().getName() + '.png'}" style="position: absolute;left: 0px;"/>
+                            <img th:src="${p+character.getMouth().getName() + '.png'}" style="position: absolute;left: 0px;"/>
+                            <img th:src="${p+character.getNose().getName() + '.png'}" style="position: absolute;left: 0px;"/>
+                            <img th:src="${p+character.getHairStyle().getName() + '_sub_'+character.getHairColor().getNamePart()+'.png'}" style="position: absolute;left: 0px;"/>
+                            <img th:src="${p+character.getHairStyle().getName() + '.png'}" style="position: absolute;left: 0px;"/>
+                            <img th:src="${p+character.getEars().getName() + '_sub_'+character.getSkinColor().getNamePart()+'.png'}" style="position: absolute;left: 0px;"/>
+                            <img th:src="${p+character.getEars().getName() + '.png'}" style="position: absolute;left: 0px;"/>
+                            <img th:src="${p+character.getHeight().getName() + '.png'}" style="position: absolute;left: 0px;"/>
+                            <span class="my_tooltiptext" style="font-size: 12px; width: 250px; opacity: 0.97; ">
+                                <strong><th:block th:text="${character.getFullName()}"></th:block></strong><br/>
+                                Цвет кожи: <span th:text="${character.getSkinColor().getTitle()}" th:style="${character.getSkinColor().isRare()?'color: DarkOrchid':''}"></span><br/>
+                                Рост: <span th:text="${character.getHeight().getTitle()}" th:style="${character.getHeight().isRare()?'color: DarkOrchid':''}"></span><br/>
+                                Тело: <span th:text="${character.getBody().getTitle()}" th:style="${character.getBody().isRare()?'color: DarkOrchid':''}"></span><br/>
+                                Голова: <span th:text="${character.getHead().getTitle()}" th:style="${character.getHead().isRare()?'color: DarkOrchid':''}"></span><br/>
+                                Уши: <span th:text="${character.getEars().getTitle()}" th:style="${character.getEars().isRare()?'color: DarkOrchid':''}"></span><br/>
+                                Брови: <span th:text="${character.getEyebrows().getTitle()}" th:style="${character.getEyebrows().isRare()?'color: DarkOrchid':''}"></span><br/>
+                                Глаза: <span th:text="${character.getEyes().getTitle()}" th:style="${character.getEyes().isRare()?'color: DarkOrchid':''}"></span><br/>
+                                Цвет глаз: <span th:text="${character.getEyeColor().getTitle()}" th:style="${character.getEyeColor().isRare()?'color: DarkOrchid':''}"></span><br/>
+                                Нос: <span th:text="${character.getNose().getTitle()}" th:style="${character.getNose().isRare()?'color: DarkOrchid':''}"></span><br/>
+                                Рот: <span th:text="${character.getMouth().getTitle()}" th:style="${character.getMouth().isRare()?'color: DarkOrchid':''}"></span><br/>
+                                Тип волос: <span th:text="${character.getHairType().getTitle()}" th:style="${character.getHairType().isRare()?'color: DarkOrchid':''}"></span><br/>
+                                Цвет волос: <span th:text="${character.getHairColor().getTitle()}" th:style="${character.getHairColor().isRare()?'color: DarkOrchid':''}"></span><br/>
+                                Прическа: <span th:text="${character.getHairStyle().getTitle()}"></span><br/>
+                            </span>
+                        </div>
                     </div>
+
                 </th:block>
             </a>
             <th:block th:each="buff : ${character.getBuffs()}" th:with="count=${(buffStat.count-1) * 20}">

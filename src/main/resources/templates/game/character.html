@@ -29,22 +29,21 @@
             </p>
             <legend>Черты:</legend>
             <p>
-                <th:block th:utext="#{chardesc(${character.getSkinColor().getTitle()},
-                                       ${character.getHeight().getTitle()},
-                                       ${character.getBody().getTitle()},
-                                       ${character.getHead().getTitle()},
-                                       ${character.getEars().getTitle()},
-                                       ${character.getEyebrows().getTitle()},
-                                       ${character.getEyes().getTitle()},
-                                       ${character.getEyeColor().getTitle()},
-                                       ${character.getNose().getTitle()},
-                                       ${character.getMouth().getTitle()},
-                                       ${character.getHairType().getTitle()},
-                                       ${character.getHairColor().getTitle()},
-                                       ${character.getHairStyle().getTitle()}
-                                       )}">
+                Цвет кожи: <span th:text="${character.getSkinColor().getTitle()}" th:style="${character.getSkinColor().isRare()?'color: DarkOrchid':''}"></span><br/>
+                Рост: <span th:text="${character.getHeight().getTitle()}" th:style="${character.getHeight().isRare()?'color: DarkOrchid':''}"></span><br/>
+                Тело: <span th:text="${character.getBody().getTitle()}" th:style="${character.getBody().isRare()?'color: DarkOrchid':''}"></span><br/>
+                Голова: <span th:text="${character.getHead().getTitle()}" th:style="${character.getHead().isRare()?'color: DarkOrchid':''}"></span><br/>
+                Уши: <span th:text="${character.getEars().getTitle()}" th:style="${character.getEars().isRare()?'color: DarkOrchid':''}"></span><br/>
+                Брови: <span th:text="${character.getEyebrows().getTitle()}" th:style="${character.getEyebrows().isRare()?'color: DarkOrchid':''}"></span><br/>
+                Глаза: <span th:text="${character.getEyes().getTitle()}" th:style="${character.getEyes().isRare()?'color: DarkOrchid':''}"></span><br/>
+                Цвет глаз: <span th:text="${character.getEyeColor().getTitle()}" th:style="${character.getEyeColor().isRare()?'color: DarkOrchid':''}"></span><br/>
+                Нос: <span th:text="${character.getNose().getTitle()}" th:style="${character.getNose().isRare()?'color: DarkOrchid':''}"></span><br/>
+                Рот: <span th:text="${character.getMouth().getTitle()}" th:style="${character.getMouth().isRare()?'color: DarkOrchid':''}"></span><br/>
+                Тип волос: <span th:text="${character.getHairType().getTitle()}" th:style="${character.getHairType().isRare()?'color: DarkOrchid':''}"></span><br/>
+                Цвет волос: <span th:text="${character.getHairColor().getTitle()}" th:style="${character.getHairColor().isRare()?'color: DarkOrchid':''}"></span><br/>
+                Прическа: <span th:text="${character.getHairStyle().getTitle()}"></span><br/>
 
-                </th:block>
+
             </p>
             <legend>Карьера</legend>
             <p>Призвание:
