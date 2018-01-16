@@ -98,25 +98,27 @@
                                  'top: ' + roomThing.getY()+'px;'}"
                      data-toggle="modal" data-target="#roomThing"
                      th:onclick="'javascript:roomViewPassDataToHouse(' + ${roomThingWithItems.getStringForModal()}+');'">
-                    <div th:if="${curItem == null}" th:text="${roomThing.getThing().getName()}" align="center"
-                         style="border: dotted 2px forestgreen; border-radius: 10px; color: #000000; display: table-cell; vertical-align: middle; font-size: 8px;">
-                        Нет вещи
-                    </div>
+                    <th:block th:if="${curItem == null}">
+                        <div style="position: relative">
+                            <div style="border: dotted 2px forestgreen; border-radius: 10px; background-color: lightgreen; position: absolute; opacity: 0.45;"
+                                 th:styleappend="${'width: '+ roomThing.getThing().getWidth() +'px; height: ' + roomThing.getThing().getHeight()+'px;'}"></div>
+                            <div th:text="${roomThing.getThing().getName()}" align="center"
+                                 style="color: yellow; display: table-cell; vertical-align: middle; font-size: 12px; padding: 5px; z-index: 1; position: absolute; "
+                                 th:styleappend="${'width: '+ roomThing.getThing().getWidth() +'px; height: ' + roomThing.getThing().getHeight()+'px;'}">
+                                Нет вещи
+                            </div>
+                        </div>
+                    </th:block>
                     <th:block th:if="${curItem != null}">
                         <th:block th:if="${curItem.getProject().getView() != null}">
-
                             <img th:src="${'data:image/png;base64,'+curItem.getProject().getEncodedView()}"
-                                 data-toggle="tooltip"
                                  th:title="${curItem.getFullName() + ' от '+curItem.getAuthor().getFamilyName() + '. Качество: ' + curItem.getQuality()}"/>
                         </th:block>
                         <th:block th:if="${curItem.getProject().getView() == null}">
                         <span th:text="${curItem.getProject().getName()}" style="color: cornflowerblue;  display: table-cell; vertical-align: middle; font-size: 8px;"
-                              data-toggle="tooltip"
                               th:title="${curItem.getFullName() + ' от '+curItem.getAuthor().getFamilyName() + '. Качество: ' + curItem.getQuality()}"></span>
                         </th:block>
-
                     </th:block>
-
                 </div>
             </th:block>
 
