@@ -55,7 +55,7 @@ public class Feedback {
 
     @Basic
     @Column(name = "text")
-    @Size(min = 35, max = 350, message = "{feedback.text.size}")
+    @Size(min = 35, max = 500, message = "{feedback.text.size}")
     public String getText() {
         return text;
     }
