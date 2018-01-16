@@ -140,7 +140,7 @@ public class MarketController {
                         item.setCost(0);
                         houseService.saveItem(item);
 
-                        logger.info(family.userNameAndFamilyName() + "buy item: " + item.getId());
+                        logger.info(family.userNameAndFamilyName() + "buy item: " + item.getTitle());
                         redirectAttributes.addFlashAttribute("mess", mess);
                     } else {
                         logger.error(family.userNameAndFamilyName() + "want to buy item, but has not enough money: " + item.getId());

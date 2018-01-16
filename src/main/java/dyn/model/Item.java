@@ -151,4 +151,8 @@ public class Item {
         result = 31 * result + quality;
         return result;
     }
+
+    public String getTitle() {
+        return getFullName() + " от " + getAuthor().getFamilyName() + ". Качество: " + getQuality();
+    }
 }
