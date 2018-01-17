@@ -269,6 +269,9 @@ public class Family {
     }
 
     public String link() {
+        if (getUser().getUserid().equals(1L)) {
+            return getFamilyName();
+        }
         return "<a href='/game/userview?userId=" + getUser().getUserid() + "&familyId=" + getId() + "'>" + getFamilyName() + "</a>";
     }
 
