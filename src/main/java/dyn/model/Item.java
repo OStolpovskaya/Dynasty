@@ -1,5 +1,7 @@
 package dyn.model;
 
+import dyn.service.Const;
+
 import javax.persistence.*;
 
 /**
@@ -153,6 +155,18 @@ public class Item {
     }
 
     public String getTitle() {
-        return getFullName() + " от " + getAuthor().getFamilyName() + ". Качество: " + getQuality();
+        return getFullName() + " от " + getAuthor().getFamilyName() + " (качество: " + getQuality() + ")";
+    }
+
+    public void incQuality() {
+        if (quality < Const.ITEM_MAX_QUALITY) {
+            quality++;
+        }
+    }
+
+    public void decQuality() {
+        if (quality > 0) {
+            quality--;
+        }
     }
 }

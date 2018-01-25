@@ -7,5 +7,6 @@ public enum ProjectStatus {
     approved,
     newProject,
     rework,
-    corrected
+    corrected,
+    unique
 }

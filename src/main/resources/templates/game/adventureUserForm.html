@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Создание квеста</title>
+    <th:block th:replace="fragments/custom :: headLinks"></th:block>
+</head>
+<body>
+<th:block th:replace="fragments/scripts :: counters"></th:block>
+<div th:replace="fragments/navigation :: nav-for-game"></div>
+<div class="container" style="min-width: 1140px;">
+    <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
+    <h3>Создать новое приключение</h3>
+    <p></p>
+    <form class="form-horizontal" th:action="@{/game/createAdventure}" th:object="${newAdventure}" method="POST">
+        <!--/*@thymesVar id="newAdventure" type="dyn.model.adventure.Adventure"*/-->
+        <th:block th:replace="fragments/form :: adventureCreationForm"></th:block>
+        <button type="submit" class="btn btn-primary btn-md center-block"
+                th:disabled="${(family.getAdventuresCompleted() lt @const.ADVENTURE_AMOUNT_PER_TURN) or (family.getMoney() lt (@const.ADVENTURE_CREATION_COST))}"
+                style="margin-top: 15px; margin-bottom: 15px;">Сохранить (
+            <th:block th:text="${@const.ADVENTURE_CREATION_COST}"></th:block>
+            д.)
+        </button>
+    </form>
+</div>
+<th:block th:replace="fragments/scripts :: webjars"></th:block>
+
+</body>
+</html>

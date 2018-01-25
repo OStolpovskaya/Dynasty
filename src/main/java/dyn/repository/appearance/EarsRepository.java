@@ -22,4 +22,6 @@ public interface EarsRepository extends CrudRepository<Ears, Long> {
     public Ears getRandomRare();
 
     List<Ears> findByType(AppearanceType type);
+
+    List<Ears> findAllByOrderByTypeAsc();
 }

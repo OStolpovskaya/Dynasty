@@ -75,16 +75,21 @@
                 <th>Фамилия</th>
                 <th>Уровень</th>
                 <th>Текущий выбор</th>
+                <th>Пройдено приключений</th>
+                <th>Получено уникальных вещей</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="pFamily : ${playerFamilies}">
+                <!--/*@thymesVar id="pFamily" type="dyn.model.Family"*/-->
                 <td th:utext="${pFamily.link()}">name</td>
                 <td th:text="${pFamily.getLevel()}">1</td>
                 <td>
                     <th:block th:if="${pFamily.isCurrent()}"><span class="glyphicon glyphicon-ok-sign" style="color: forestgreen"></span>
                     </th:block>
                 </td>
+                <td th:text="${pFamily.getAdventuresCompleted()}"></td>
+                <td th:text="${pFamily.getGotUniqueItems()}"></td>
             </tr>
             </tbody>
         </table>

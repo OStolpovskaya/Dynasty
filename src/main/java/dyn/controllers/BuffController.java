@@ -48,6 +48,8 @@ public class BuffController {
     @Autowired
     HouseService houseService;
     @Autowired
+    CharacterService characterService;
+    @Autowired
     private UserRepository userRepository;
     @Autowired
     private FamilyRepository familyRepository;
@@ -212,16 +214,16 @@ public class BuffController {
 
                     Long projectId = item.getProject().getId();
                     if (projectId.equals(Const.PROJECT_SKILL_INTELLIGENCE)) {
-                        character.getCareer().addToIntelligence(Const.SKILL_IMPROVEMENT_COEFFICIENT);
+                        character.getCareer().incIntelligence(Const.SKILL_IMPROVEMENT_COEFFICIENT);
                         mess = "Интеллект повышен у персонажа: " + character.getFullName();
                     } else if (projectId.equals(Const.PROJECT_SKILL_CHARISMA)) {
-                        character.getCareer().addToCharisma(Const.SKILL_IMPROVEMENT_COEFFICIENT);
+                        character.getCareer().incCharisma(Const.SKILL_IMPROVEMENT_COEFFICIENT);
                         mess = "Харизма повышена у персонажа: " + character.getFullName();
                     } else if (projectId.equals(Const.PROJECT_SKILL_STRENGTH)) {
-                        character.getCareer().addToStrength(Const.SKILL_IMPROVEMENT_COEFFICIENT);
+                        character.getCareer().incStrength(Const.SKILL_IMPROVEMENT_COEFFICIENT);
                         mess = "Сила повышена у персонажа: " + character.getFullName();
                     } else if (projectId.equals(Const.PROJECT_SKILL_CREATIVITY)) {
-                        character.getCareer().addToCreativity(Const.SKILL_IMPROVEMENT_COEFFICIENT);
+                        character.getCareer().incCreativity(Const.SKILL_IMPROVEMENT_COEFFICIENT);
                         mess = "Творчество повышено у персонажа: " + character.getFullName();
                     } else if (projectId.equals(Const.PROJECT_SALARY_INC)) {
                         Buff buff = buffRepository.findOne(Const.BUFF_SALARY_INC);
@@ -375,38 +377,14 @@ public class BuffController {
                 if (levelCheck && familyCheck && hasChildren) {
                     Long projectId = item.getProject().getId();
                     if (projectId.equals(Const.PROJECT_CLONE)) {
-                        String characterSex = character.getSex();
-
-                        Character clone = new Character();
-                        clone.setSex(characterSex);
-
-                        if (characterSex.equals("male")) {
-                            clone.setName(characterRepository.getRandomNameMale());
+                        Character clone = characterService.cloneCharacter(family, character);
+                        clone.setLevel(character.getLevel() + 1);
+                        if (character.getSex().equals("male")) {
                             clone.setFather(character);
                         } else {
-                            clone.setName(characterRepository.getRandomNameFemale());
                             clone.setFather(character.getSpouse());
                         }
-                        clone.setRace(character.getRace());
-                        clone.setLevel(character.getLevel() + 1);
 
-                        clone.setCareer(careerService.copyCareer(character.getCareer()));
-
-                        clone.setBody(character.getBody());
-                        clone.setEars(character.getEars());
-                        clone.setEyebrows(character.getEyebrows());
-                        clone.setEyeColor(character.getEyeColor());
-                        clone.setEyes(character.getEyes());
-                        clone.setHairColor(character.getHairColor());
-                        clone.setHairType(character.getHairType());
-                        clone.setHairStyle(app.getRandomHairStyle(clone.getSex(), clone.getHairType()));
-                        clone.setHead(character.getHead());
-                        clone.setHeight(character.getHeight());
-                        clone.setMouth(character.getMouth());
-                        clone.setNose(character.getNose());
-                        clone.setSkinColor(character.getSkinColor());
-
-                        clone.setFamily(family);
                         characterRepository.save(clone);
                         mess = "Вы клонировали персонажа " + character.getName() + ". Новый персонаж: " + clone.getName();
                     } else if (projectId.equals(Const.PROJECT_ADOPTED_CHILD)) {

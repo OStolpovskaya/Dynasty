@@ -22,4 +22,6 @@ public interface NoseRepository extends CrudRepository<Nose, Long> {
     public Nose getRandomRare();
 
     List<Nose> findByType(AppearanceType type);
+
+    List<Nose> findAllByOrderByTypeAsc();
 }

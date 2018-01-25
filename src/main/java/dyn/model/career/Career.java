@@ -101,20 +101,48 @@ public class Career {
         return sb.toString();
     }
 
-    public void addToIntelligence(int num) {
+    public void incIntelligence(int num) {
         intelligence += num;
     }
 
-    public void addToCharisma(int num) {
+    public void incCharisma(int num) {
         charisma += num;
     }
 
-    public void addToStrength(int num) {
+    public void incStrength(int num) {
         strength += num;
     }
 
-    public void addToCreativity(int num) {
+    public void incCreativity(int num) {
         creativity += num;
+    }
+
+    public void decIntelligence(int num) {
+        intelligence -= num;
+        if (intelligence < 0) {
+            intelligence = 0;
+        }
+    }
+
+    public void decCharisma(int num) {
+        charisma -= num;
+        if (charisma < 0) {
+            charisma = 0;
+        }
+    }
+
+    public void decStrength(int num) {
+        strength -= num;
+        if (strength < 0) {
+            strength = 0;
+        }
+    }
+
+    public void decCreativity(int num) {
+        creativity -= num;
+        if (creativity < 0) {
+            creativity = 0;
+        }
     }
 
 }

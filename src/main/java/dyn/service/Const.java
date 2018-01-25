@@ -140,4 +140,12 @@ public class Const {
     // ========== GIFT ============================================
     public static final int GIFT_LEVEL = 5;
     public static final Long[] GIFT_PROJECTS = {PROJECT_FERTILITY, PROJECT_GEN_MOD, PROJECT_PAIR_ONE_MORE, PROJECT_BRIDE_ONE_MORE};
+
+    // ========== ADVENTURES ======================================
+    public static final int ADVENTURE_AMOUNT_PER_TURN = 5;
+    public static final int ADVENTURE_COST = 350;
+    public static final int ADVENTURE_AUTHOR_AWARD = 1000;
+    public static final int ADVENTURE_CREATION_COST = 10000;
+    // ============================================================
+    public static final int ITEM_MAX_QUALITY = 5;
 }

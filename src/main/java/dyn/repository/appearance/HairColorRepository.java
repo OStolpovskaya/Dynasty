@@ -22,4 +22,6 @@ public interface HairColorRepository extends CrudRepository<HairColor, Long> {
     public HairColor getRandomRare();
 
     List<HairColor> findByType(AppearanceType type);
+
+    List<HairColor> findAllByOrderByTypeAsc();
 }

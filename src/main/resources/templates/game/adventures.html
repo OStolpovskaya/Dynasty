@@ -10,12 +10,187 @@
 <div th:replace="fragments/navigation :: nav-for-game"></div>
 <div class="container">
     <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
-    <h3>Приключения <strong>(в разработке)</strong></h3>
-    <p>Один раз за ход ваша семья может отправиться в приключение! Несколько случайных квестов-заданий-загадок, за выполнение которых вы
-        получите небольшие призы: ресурсы, крафт-баллы, деньги или предметы. А за выполнение всех заданий - уникальный предмет! <br/> Или
-        уникальный проект, мы сами еще не решили... Пишите в форме обратной связи ваши идеи - придумаем вместе!</p>
-    <p align="center"><img th:src="@{'/graphics/анонс приключений.jpg' }" width="200"/></p>
+    <!--/*@thymesVar id="currentAdventure" type="dyn.model.adventure.FamilyAdventure"*/-->
+    <th:block th:if="${currentAdventure == null}">
+        <h3>Приключения</h3>
+        <p>Один раз за ход ваша семья может отправиться в приключение! Несколько случайных квестов-заданий-загадок, за выполнение которых вы
+            получите небольшие призы: ресурсы, крафт-баллы, деньги или предметы. А за выполнение всех заданий - уникальный предмет! </p>
+        <p align="center"><img th:src="@{'/graphics/анонс приключений.jpg' }" width="200"/></p>
+        <p align="center">Отправиться в путешествие можно начиная с 10го уровня семьи. Стоимость путешествия: уровень семьи, помноженный на
+            <th:block th:text="${@const.ADVENTURE_COST}"></th:block>
+            д.
+        </p>
+        <form th:action="@{/game/startAdventure}" enctype="multipart/form-data" method="post">
+            <button type="submit" class="btn btn-primary center-block" th:disabled="${(family.getLevel() lt 10) or (family.getMoney() lt (@const.ADVENTURE_COST*family.getLevel()))}">Отправиться в
+                приключение!
+                <th:block th:if="${family.getLevel() ge 10}" th:text="${@const.ADVENTURE_COST*family.getLevel() + ' д.'}"></th:block>
+            </button>
+        </form>
+    </th:block>
+
+    <th:block th:if="${currentAdventure != null}" th:with="adv = ${currentAdventure.getAdventure()}">
+        <div class="well">
+            <div class="row">
+                <div class="col-sm-2" th:with="prevFamilyAdventure = ${currentAdventure.getNum()-1}" align="center">
+                    <th:block th:if="${prevFamilyAdventure gt 0}">
+                        <form th:action="@{/game/setCurrentFamilyAdventure}" method="post">
+                            <input type="hidden" name="num" th:value="${prevFamilyAdventure}"/>
+                            <button type="submit" class="btn btn-primary" title="Предыдущий квест"><span class="glyphicon glyphicon-triangle-left"></span></button>
+                        </form>
+                    </th:block>
+
+                </div>
+                <div class="col-sm-8" align="center">
+                    <h3 th:utext="${'Квест ' + currentAdventure.getNum()+'. '+adv.fullTitle()}"></h3>
+                </div>
+                <div class="col-sm-2" th:with="nextFamilyAdventure = ${currentAdventure.getNum()+1}" align="center">
+                    <th:block th:if="${nextFamilyAdventure lt 6}">
+                        <form th:action="@{/game/setCurrentFamilyAdventure}" method="post">
+                            <input type="hidden" name="num" th:value="${nextFamilyAdventure}"/>
+                            <button type="submit" class="btn btn-primary" title="Следующий квест"><span class="glyphicon glyphicon-triangle-right"></span></button>
+                        </form>
+                    </th:block>
+                </div>
+            </div>
+            <div style="position: relative; width: 400px; height: 200px; margin-left: auto; margin-right: auto; margin-bottom: 10px;">
+                <img th:src="@{'/graphics/adventures/landscapes/landscape'+${adv.getLandscape().getId()}+'.png' }" width="400"
+                     style="position: absolute; border: solid 1px #ccc; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);"/>
+                <img th:src="@{'/graphics/adventures/subjects/subject'+${adv.getSubject().getId()}+'.png' }" width="400" style="position: absolute;"/>
+
+
+            </div>
+            <p th:text="${adv.getTextDesc()}"></p>
+
+            <div th:if="${currentAdventure.getStatus().name()=='inprogress'}">
+                <form th:action="@{/game/answerAdventure}" method="post">
+                    <div class="checkbox">
+                        <label><input type="checkbox" name="things" value="true" id="things" onclick="openThingsBlock()"/>Предложить предметы со склада</label>
+                        <div id="thingsBlock" style="display:none">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label>Предмет №1</label>
+                                    <select class="form-control" name="item1">
+                                        <option value="">Нет</option>
+                                        <!--/*@thymesVar id="item" type="dyn.model.Item"*/-->
+                                        <option th:each="item : ${itemsInStorage}" th:value="${item.getId()}" th:text="${item.getTitle()}"></option>
+                                    </select>
+
+                                </div>
+                                <div class="col-sm-4">
+                                    <label>Предмет №2</label>
+                                    <select class="form-control" name="item2">
+                                        <option value="">Нет</option>
+                                        <option th:each="item : ${itemsInStorage}" th:value="${item.getId()}" th:text="${item.getTitle()}"></option>
+                                    </select>
+
+                                </div>
+                                <div class="col-sm-4">
+                                    <label>Предмет №3</label>
+                                    <select class="form-control" name="item3">
+                                        <option value="">Нет</option>
+                                        <option th:each="item : ${itemsInStorage}" th:value="${item.getId()}" th:text="${item.getTitle()}"></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="checkbox">
+                        <label><input type="checkbox" name="char" value="true" id="char" onclick="openCharBlock()"/>Отправить персонажа на задание</label>
+                        <div id="charBlock" style="display:none">
+                            <th:block th:each="character: ${availableCharacters}">
+                                <div class="radio" style="display: inline-block;">
+                                    <label><!--/*@thymesVar id="character" type="dyn.model.Character"*/-->
+                                        <input type="radio" name="character" th:value="${character.getId()}"/>
+                                        <div th:replace="fragments/char :: char-panel (character=${character})"></div>
+                                    </label>
+                                </div>
+                            </th:block>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Выполнить задание!</button>
+                </form>
+            </div>
+            <div th:if="${currentAdventure.getStatus().name()=='finished'}">
+                <p th:text="${adv.getTextSuccess()}" style="color: forestgreen;"></p>
+            </div>
+        </div>
+    </th:block>
+
+    <div class="well" style="margin-top: 20px;">
+        <h3>Авторские квесты</h3>
+
+        <th:block th:unless="${#lists.isEmpty(adventuresCreatedBy)}">
+            <table class="table table-sm">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Дата</th>
+                    <th>Статус</th>
+                    <th>Название</th>
+                    <th>Предложено раз</th>
+                    <th>Завершено раз</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="quest : ${adventuresCreatedBy}">
+                    <th scope="row" th:text="${questStat.count}">1</th>
+                    <!--/*@thymesVar id="quest" type="dyn.model.adventure.Adventure"*/-->
+                    <td th:text="${quest.getCreationDate()}">Mark</td>
+                    <td th:with="status = *{quest.getStatus().name()}">
+                        <span th:if="${status == 'approved'}" class="glyphicon glyphicon-ok-sign" style="color: green;" title="Принят"></span>
+                        <span th:if="${status == 'newAdventure'}" class="glyphicon glyphicon-exclamation-sign" style="color: red;" title="Ожидает проверки"></span>
+                    </td>
+                    <td th:text="${quest.getTitle()}">Mark</td>
+                    <td th:text="${quest.getProposedTimes()}">Otto</td>
+                    <td th:text="${quest.getCompletedTimes()}">Otto</td>
+                </tr>
+                </tbody>
+            </table>
+        </th:block>
+        <p>Если ваша семья успешно прошла
+            <th:block th:text="${@const.ADVENTURE_AMOUNT_PER_TURN}"></th:block>
+            квестов, то при наличии
+            <th:block th:text="${@const.ADVENTURE_CREATION_COST}"></th:block>
+            д. вы можете создать свой квест! После модерации ваш квест будет в случайном порядке предлагаться игрокам. Если игрок пройдет
+            ваш квест, то вы получите авторские отчисления в размере
+            <th:block th:text="${@const.ADVENTURE_AUTHOR_AWARD}"></th:block>
+            д. Модератор вправе незначительно отредактировать ваш квест.
+        </p>
+        <a th:href="@{/game/adventureForm}">
+            <button class="btn btn-primary"
+                    th:disabled="${(family.getAdventuresCompleted() lt @const.ADVENTURE_AMOUNT_PER_TURN) or (family.getMoney() lt (@const.ADVENTURE_CREATION_COST))}">Создать квест!
+            </button>
+        </a>
+    </div>
 </div>
+<script>
+    function openThingsBlock() {
+        // Get the checkbox
+        var checkBox = document.getElementById("things");
+        // Get the output text
+        var text = document.getElementById("thingsBlock");
+
+        // If the checkbox is checked, display the output text
+        if (checkBox.checked == true) {
+            text.style.display = "block";
+        } else {
+            text.style.display = "none";
+        }
+    }
+    function openCharBlock() {
+        // Get the checkbox
+        var checkBox = document.getElementById("char");
+        // Get the output text
+        var text = document.getElementById("charBlock");
+
+        // If the checkbox is checked, display the output text
+        if (checkBox.checked == true) {
+            text.style.display = "block";
+        } else {
+            text.style.display = "none";
+        }
+    }
+</script>
 <th:block th:replace="fragments/scripts :: webjars"></th:block>
 </body>
 </html>

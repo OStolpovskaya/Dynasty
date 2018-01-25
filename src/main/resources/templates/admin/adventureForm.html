@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Приключения</title>
+    <link th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}" rel="stylesheet"></link>
+    <link th:href="@{/css/common.css}" rel="stylesheet"></link>
+</head>
+<body>
+<div th:replace="fragments/navigation :: nav-for-admin"></div>
+<div class="container" style="width: 1280px;">
+    <h3>Создать новое приключение</h3>
+    <form class="form-horizontal" th:action="@{/admin/createAdventure}" th:object="${newAdventure}" method="POST">
+        <!--/*@thymesVar id="newAdventure" type="dyn.model.adventure.Adventure"*/-->
+        <th:block th:replace="fragments/form :: adventureCreationForm"></th:block>
+        <button type="submit" class="btn btn-primary btn-md center-block" style="margin-top: 15px; margin-bottom: 15px;">Сохранить</button>
+    </form>
+</div>
+
+<script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
+</body>
+
+</html>

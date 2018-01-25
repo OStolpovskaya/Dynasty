@@ -22,4 +22,6 @@ public interface EyebrowsRepository extends CrudRepository<Eyebrows, Long> {
     public Eyebrows getRandomRare();
 
     List<Eyebrows> findByType(AppearanceType type);
+
+    List<Eyebrows> findAllByOrderByTypeAsc();
 }

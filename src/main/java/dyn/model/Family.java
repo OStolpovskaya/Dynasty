@@ -31,6 +31,9 @@ public class Family {
 
     @Column(name = "creation_date")
     private Date creationDate;
+
+    private int adventuresCompleted;
+    private int gotUniqueItems;
     // ===================================
     private List<Character> characters;
     private FamilyResources familyResources;
@@ -188,6 +191,22 @@ public class Family {
         this.creationDate = creationDate;
     }
 
+    public int getAdventuresCompleted() {
+        return adventuresCompleted;
+    }
+
+    public void setAdventuresCompleted(int adventuresCompleted) {
+        this.adventuresCompleted = adventuresCompleted;
+    }
+
+    public int getGotUniqueItems() {
+        return gotUniqueItems;
+    }
+
+    public void setGotUniqueItems(int gotUniqueItems) {
+        this.gotUniqueItems = gotUniqueItems;
+    }
+
     @OneToMany(mappedBy = "family", fetch = FetchType.LAZY)
     public List<Character> getCharacters() {
         return characters;
@@ -301,4 +320,15 @@ public class Family {
     }
 
 
+    public void addCraftPoints(int awardCraftPoint) {
+        craftPoint += awardCraftPoint;
+    }
+
+    public void incAdventuresCompleted() {
+        adventuresCompleted++;
+    }
+
+    public void incGotUniqueItems() {
+        gotUniqueItems++;
+    }
 }

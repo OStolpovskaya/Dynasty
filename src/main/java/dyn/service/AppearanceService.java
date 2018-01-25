@@ -199,7 +199,7 @@ public class AppearanceService {
             case RARE:
                 return earsRepository.findByType(AppearanceType.rare);
             default:
-                return (List<Ears>) earsRepository.findAll();
+                return earsRepository.findAllByOrderByTypeAsc();
         }
     }
 
@@ -210,7 +210,7 @@ public class AppearanceService {
             case RARE:
                 return eyebrowsRepository.findByType(AppearanceType.rare);
             default:
-                return (List<Eyebrows>) eyebrowsRepository.findAll();
+                return eyebrowsRepository.findAllByOrderByTypeAsc();
         }
     }
 
@@ -221,7 +221,7 @@ public class AppearanceService {
             case RARE:
                 return eyeColorRepository.findByType(AppearanceType.rare);
             default:
-                return (List<EyeColor>) eyeColorRepository.findAll();
+                return eyeColorRepository.findAllByOrderByTypeAsc();
         }
     }
 
@@ -232,7 +232,7 @@ public class AppearanceService {
             case RARE:
                 return eyesRepository.findByType(AppearanceType.rare);
             default:
-                return (List<Eyes>) eyesRepository.findAll();
+                return eyesRepository.findAllByOrderByTypeAsc();
         }
     }
 
@@ -243,7 +243,7 @@ public class AppearanceService {
             case RARE:
                 return hairColorRepository.findByType(AppearanceType.rare);
             default:
-                return (List<HairColor>) hairColorRepository.findAll();
+                return hairColorRepository.findAllByOrderByTypeAsc();
         }
     }
 
@@ -260,7 +260,7 @@ public class AppearanceService {
             case RARE:
                 return hairTypeRepository.findByType(AppearanceType.rare);
             default:
-                return (List<HairType>) hairTypeRepository.findAll();
+                return hairTypeRepository.findAllByOrderByTypeAsc();
         }
     }
 
@@ -271,7 +271,7 @@ public class AppearanceService {
             case RARE:
                 return headRepository.findByType(AppearanceType.rare);
             default:
-                return (List<Head>) headRepository.findAll();
+                return headRepository.findAllByOrderByTypeAsc();
         }
     }
 
@@ -282,7 +282,7 @@ public class AppearanceService {
             case RARE:
                 return heightRepository.findByType(AppearanceType.rare);
             default:
-                return (List<Height>) heightRepository.findAll();
+                return heightRepository.findAllByOrderByTypeAsc();
         }
     }
 
@@ -293,7 +293,7 @@ public class AppearanceService {
             case RARE:
                 return mouthRepository.findByType(AppearanceType.rare);
             default:
-                return (List<Mouth>) mouthRepository.findAll();
+                return mouthRepository.findAllByOrderByTypeAsc();
         }
     }
 
@@ -304,7 +304,7 @@ public class AppearanceService {
             case RARE:
                 return noseRepository.findByType(AppearanceType.rare);
             default:
-                return (List<Nose>) noseRepository.findAll();
+                return noseRepository.findAllByOrderByTypeAsc();
         }
     }
 
@@ -315,7 +315,7 @@ public class AppearanceService {
             case RARE:
                 return skinColorRepository.findByType(AppearanceType.rare);
             default:
-                return (List<SkinColor>) skinColorRepository.findAll();
+                return skinColorRepository.findAllByOrderByTypeAsc();
         }
     }
 

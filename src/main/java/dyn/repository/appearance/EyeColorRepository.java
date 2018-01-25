@@ -22,4 +22,6 @@ public interface EyeColorRepository extends CrudRepository<EyeColor, Long> {
     public EyeColor getRandomRare();
 
     List<EyeColor> findByType(AppearanceType type);
+
+    List<EyeColor> findAllByOrderByTypeAsc();
 }

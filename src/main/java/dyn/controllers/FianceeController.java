@@ -170,6 +170,7 @@ public class FianceeController {
             с высшей расой, если ты человек или гм-человек
             с высшей расой, если ты сам из высших рас, но другой
             */
+            // todo: показывать невест, на которых нет денег, но задисаблить
             List<Fiancee> available = new ArrayList<>();
             List<Fiancee> disabled = new ArrayList<>();
             List<Fiancee> lowerLevel = new ArrayList<>();

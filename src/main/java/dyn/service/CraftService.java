@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by OM on 30.03.2017.
@@ -58,9 +59,12 @@ public class CraftService {
 
     }
 
-    public Project giveGift(Family family, Long projectId) {
+    public Item giveGift(Family family, Long projectId) {
         Project project = projectRepository.findOne(projectId);
+        return giveGift(family, project);
+    }
 
+    public Item giveGift(Family family, Project project) {
         Item item = new Item();
         item.setProject(project);
         item.setFamily(family);
@@ -69,7 +73,7 @@ public class CraftService {
         item.setInteriorId(0L);
         item.setCost(0);
         itemRepository.save(item);
-        return project;
+        return item;
     }
 
     public Thing getThing(Long thingId) {
@@ -165,6 +169,10 @@ public class CraftService {
 
     public List<Thing> getAllThings() {
         return (List<Thing>) thingRepository.findAll();
+    }
+
+    public List<Thing> getAllUsualThings() {
+        return thingRepository.findByCraftBranchIdLessThanEqualOrderByName(Const.CRAFTBRANCH_MAX);
     }
 
     public void changeThing(Long thingId, String thingName, Long thingParentId, int thingCost, int thingWidth, int thingHeight) {
@@ -291,5 +299,18 @@ public class CraftService {
 
     public FamilyProject getFamilyProject(Project project, Family family) {
         return familyProjectRepository.findByFamilyAndProject(family, project);
+    }
+
+    public Project getRandomProjectOfThing(Thing thing) {
+        return projectRepository.getRandomApprovedProjectOfThing(thing.getId());
+    }
+
+    public Project getRandomUniqueProject() {
+        List<Project> projects = projectRepository.findAllByStatusOrderByThing(ProjectStatus.unique);
+        return projects.get(ThreadLocalRandom.current().nextInt(projects.size()));
+    }
+
+    public List<Project> getAvailableBuffs() {
+        return projectRepository.findAllByThingCraftBranchIdOrderByThingIdAscNameAsc(Const.CRAFTBRANCH_SERVICE_AND_BUFFS);
     }
 }

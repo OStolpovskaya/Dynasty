@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<body>
+<div th:replace="fragments/navigation :: nav-for-admin"></div>
+<div style="width: 1900px; margin: 5px;">
+    <h3>Приключения</h3>
+    <a th:href="@{/admin/adventureForm}">
+        <button class="btn btn-primary">
+            Создать новое приключение
+        </button>
+    </a>
+    <table class="table table-condensed table-striped" style="font-size: 10px;">
+        <thead>
+        <th>id</th>
+        <th style="width: 65px;">date</th>
+        <th>S</th>
+        <th>createdBy</th>
+        <th>title</th>
+        <th>image</th>
+        <th>textDesc</th>
+        <th>textSuccess</th>
+        <th>textFailed</th>
+        <th>answerType</th>
+        <th>things</th>
+        <th width="150px">char</th>
+        <th>actionsThings</th>
+        <th>actionsChar</th>
+        <th width="150px">actionsChar</th>
+        <th width="150px">awards</th>
+
+        <th>proposedTimes</th>
+        <th>completedTimes</th>
+        <th>actions</th>
+        <th></th>
+        </thead>
+        <tbody>
+        <tr th:each="adventure: ${adventureList}" th:object="${adventure}">
+            <!--/*@thymesVar id="adventure" type="dyn.model.adventure.Adventure"*/-->
+            <td th:text="*{id}"></td>
+            <td th:text="*{getCreationDate()}"></td>
+            <td th:with="status = *{getStatus().name()}">
+                <span th:if="${status == 'approved'}" class="glyphicon glyphicon-ok-sign" style="color: green;" th:title="${status}"></span>
+                <span th:if="${status == 'newAdventure'}" class="glyphicon glyphicon-exclamation-sign" style="color: red;" th:title="${status}"></span>
+            </td>
+            <td th:text="*{getCreatedBy().userNameAndFamilyName()}"></td>
+            <td th:text="*{getTitle()}"></td>
+            <td th:text="*{getLandscape().getName()+': '+getSubject().getName()}"></td>
+            <td th:text="*{getTextDesc()}"></td>
+            <td th:text="*{getTextSuccess()}"></td>
+            <td th:text="*{getTextFailed()}"></td>
+            <td th:text="#{'adventure.answerType.'+*{getAnswerType()}}"></td>
+
+            <td>
+                <ul style="list-style-type:none">
+                    <li th:if="*{thing1 != null}" th:text="*{'1)'+thing1.getName()}"></li>
+                    <li th:if="*{thing2 != null}" th:text="*{'2)'+thing2.getName()}"></li>
+                    <li th:if="*{thing3 != null}" th:text="*{'3)'+thing3.getName()}"></li>
+                </ul>
+            </td>
+            <td>
+                <ul style="list-style-type:none">
+                    <li th:if="*{getCharSex()!=''}" th:text="${'Пол: '+adventure.getCharSex()}"></li>
+
+                    <li th:if="*{getCharIntelligence() != null}" th:text="${'Интеллект: '+adventure.getCharIntelligence()}">int</li>
+                    <li th:if="*{getCharCharisma() != null}" th:text="${'Харизма: '+adventure.getCharCharisma()}">int</li>
+                    <li th:if="*{getCharStrength() != null}" th:text="${'Сила: '+adventure.getCharStrength()}">int</li>
+                    <li th:if="*{getCharCreativity() != null}" th:text="${'Творчество: '+adventure.getCharCreativity()}">int</li>
+
+                    <li th:if="*{getCharRace() != null}" th:text="${'Раса: ' + adventure.getCharRace().getName()}">race</li>
+                    <li th:if="*{getCharVocation() != null}" th:text="${'Призвание: ' + adventure.getCharVocation()?.getName()}">vocation</li>
+
+                    <li th:if="*{getCharAppBody() != null}" th:text="*{'Тело: '+getCharAppBody().getTitle()}">body</li>
+                    <li th:if="*{getCharAppEars() != null}" th:text="*{'Уши: '+getCharAppEars().getTitle()}">ears</li>
+                    <li th:if="*{getCharAppEyebrows() != null}" th:text="*{'Брови: '+getCharAppEyebrows().getTitle()}">eyebrows</li>
+                    <li th:if="*{getCharAppEyes() != null}" th:text="*{'Глаза: '+getCharAppEyes().getTitle()}">eyes</li>
+                    <li th:if="*{getCharAppEyeColor() != null}" th:text="*{'Цвет глаз: '+getCharAppEyeColor().getTitle()}">eyeColor</li>
+                    <li th:if="*{getCharAppHairColor() != null}" th:text="*{'Цвет волос: '+getCharAppHairColor().getTitle()}">hairColor</li>
+                    <li th:if="*{getCharAppHairType() != null}" th:text="*{'Тип волос: '+getCharAppHairType().getTitle()}">hairType</li>
+                    <li th:if="*{getCharAppHead() != null}" th:text="*{'Голова: '+getCharAppHead().getTitle()}">head</li>
+                    <li th:if="*{getCharAppHeight() != null}" th:text="*{'Рост: '+getCharAppHeight().getTitle()}">height</li>
+                    <li th:if="*{getCharAppMouth() != null}" th:text="*{'Рот: '+getCharAppMouth().getTitle()}">mouth</li>
+                    <li th:if="*{getCharAppNose() != null}" th:text="*{'Нос: '+getCharAppNose().getTitle()}">nose</li>
+                    <li th:if="*{getCharAppSkinColor() != null}" th:text="*{'Цвет кожи: '+getCharAppSkinColor().getTitle()}">skinColor</li>
+                </ul>
+            </td>
+            <td>
+                <ul style="list-style-type:none">
+                    <li th:if="*{actionThing1.name() != 'nothing'}" th:text="*{'1)'+actionThing1.name()}"></li>
+                    <li th:if="*{actionThing2.name() != 'nothing'}" th:text="*{'2)'+actionThing2.name()}"></li>
+                    <li th:if="*{actionThing3.name() != 'nothing'}" th:text="*{'3)'+actionThing3.name()}"></li>
+                </ul>
+            </td>
+            <td>
+                <th:block th:if="*{actionChar != null}" th:text="#{'adventure.actionChar.'+*{actionChar.name()}}"></th:block>
+            </td>
+            <td>
+                <ul style="list-style-type:none">
+                    <li th:if="*{actionCharIntelligence != null}" th:text="*{'Интеллект: '+actionCharIntelligence}">int</li>
+                    <li th:if="*{actionCharCharisma != null}" th:text="*{'Харизма: '+actionCharCharisma}">int</li>
+                    <li th:if="*{actionCharStrength != null}" th:text="*{'Сила: '+actionCharStrength}">int</li>
+                    <li th:if="*{actionCharCreativity != null}" th:text="*{'Творчество: '+actionCharCreativity}">int</li>
+
+                    <li th:if="*{actionCharRace != null}" th:text="*{'Раса: ' + actionCharRace.getName()}">race</li>
+                    <li th:if="*{actionCharVocation != null}" th:text="*{'Призвание: ' + actionCharVocation.getName()}">vocation</li>
+
+                    <li th:if="*{actionCharAppBody != null}" th:text="*{'Тело: '+actionCharAppBody.getTitle()}">body</li>
+                    <li th:if="*{actionCharAppEars != null}" th:text="*{'Уши: '+actionCharAppEars.getTitle()}">ears</li>
+                    <li th:if="*{actionCharAppEyebrows != null}" th:text="*{'Брови: '+actionCharAppEyebrows.getTitle()}">eyebrows</li>
+                    <li th:if="*{actionCharAppEyes != null}" th:text="*{'Глаза: '+actionCharAppEyes.getTitle()}">eyes</li>
+                    <li th:if="*{actionCharAppEyeColor != null}" th:text="*{'Цвет глаз: '+actionCharAppEyeColor.getTitle()}">eyeColor</li>
+                    <li th:if="*{actionCharAppHairColor != null}" th:text="*{'Цвет волос: '+actionCharAppHairColor.getTitle()}">hairColor</li>
+                    <li th:if="*{actionCharAppHairType != null}" th:text="*{'Тип волос: '+actionCharAppHairType.getTitle()}">hairType</li>
+                    <li th:if="*{actionCharAppHead != null}" th:text="*{'Голова: '+actionCharAppHead.getTitle()}">head</li>
+                    <li th:if="*{actionCharAppHeight != null}" th:text="*{'Рост: '+actionCharAppHeight.getTitle()}">height</li>
+                    <li th:if="*{actionCharAppMouth != null}" th:text="*{'Рот: '+actionCharAppMouth.getTitle()}">mouth</li>
+                    <li th:if="*{actionCharAppNose != null}" th:text="*{'Нос: '+actionCharAppNose.getTitle()}">nose</li>
+                    <li th:if="*{actionCharAppSkinColor != null}" th:text="*{'Цвет кожи: '+actionCharAppSkinColor.getTitle()}">skinColor</li>
+                </ul>
+            </td>
+            <td>
+                <ul style="list-style-type:none">
+                    <li th:if="*{awardResType != null}">
+                        <th:block th:text="#{'RES.'+*{awardResType}}"></th:block>
+                        :
+                        <th:block th:text="*{awardResAmount}"></th:block>
+                    </li>
+                    <li th:if="*{awardMoney != 0}">
+                        <th:block th:text="*{'Деньги: '+awardMoney}"></th:block>
+                    </li>
+                    <li th:if="*{awardCraftPoint != 0}">
+                        <th:block th:text="*{'Крафтбаллы: '+awardCraftPoint}"></th:block>
+                    </li>
+                    <li th:if="*{awardThing != null}">
+                        <th:block th:text="*{'Предмет: '+awardThing.getName()}"></th:block>
+                    </li>
+                </ul>
+            </td>
+
+            <td th:text="*{getProposedTimes()}"></td>
+            <td th:text="*{getCompletedTimes()}"></td>
+            <td>
+                <form th:action="@{/admin/actionsWithAdventure}" class="form-inline" method="POST">
+                    <input type="hidden" name="adventureId" th:value="*{getId()}"/>
+                    <button type="submit" name="btn" value="setApproved" class="btn btn-sm btn-success" title="Установить статус ПРИНЯТО">
+                        <span class="glyphicon glyphicon-ok-sign"></span>
+                    </button>
+                    <button type="submit" name="btn" value="edit" class="btn btn-sm btn-warning" title="Редактировать">
+                        <span class="glyphicon glyphicon-edit"></span>
+                    </button>
+
+                </form>
+            </td>
+            <td></td>
+        </tr>
+        </tbody>
+    </table>
+
+
+</div>
+
+<script th:src="@{/webjars/jquery/1.9.1/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/3.3.6/js/bootstrap.min.js}"></script>
+</body>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Приключения</title>
+    <link th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}" rel="stylesheet"></link>
+    <link th:href="@{/css/common.css}" rel="stylesheet"></link>
+</head>
+</html>

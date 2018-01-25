@@ -382,7 +382,7 @@ public class CraftController {
                         }
 
 
-                        familyLogService.addToLog(family, mess);
+                        familyLogService.addToLog(family, mess); // TODO: прекращение крафта и огшибка при переполнении
                         countMess.append(mess).append("<br>");
                     } else {
                         logger.error(family.userNameAndFamilyName() + " doesn't have resources to make item for project:" + project.getName());

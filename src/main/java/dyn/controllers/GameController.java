@@ -65,7 +65,8 @@ public class GameController {
 
     @Autowired
     HouseService houseService;
-
+    @Autowired
+    AdventureService adventureService;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -349,13 +350,15 @@ public class GameController {
             int idx = new Random().nextInt(Const.GIFT_PROJECTS.length);
             Long giftProject = (Const.GIFT_PROJECTS[idx]);
 
-            Project project = craftService.giveGift(family, giftProject);
-            turnIncome.append("<br><strong>Подарок</strong> за каждый пятый уровень: бафф " + project.getName());
-            logger.info(family.userNameAndFamilyName() + "получает подарок " + project.getName());
+            Item item = craftService.giveGift(family, giftProject);
+            turnIncome.append("<br><strong>Подарок</strong> за каждый пятый уровень: бафф " + item.getProject().getName());
+            logger.info(family.userNameAndFamilyName() + "получает подарок " + item.getProject().getName());
         }
         if (family.getLevel() % 10 == 0) {
             townNewsService.addCommonNews(family, "Семья " + family.link() + " достигла " + family.getLevel() + " уровня!");
         }
+
+        adventureService.deleteFamilyAdventures(family);
 
         String flashAttribute = turnIncome.toString();
         redirectAttributes.addFlashAttribute("mess", flashAttribute);

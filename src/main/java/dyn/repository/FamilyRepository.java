@@ -22,4 +22,5 @@ public interface FamilyRepository extends CrudRepository<Family, Long> {
 
     List<Family> findTop10ByUserTypeOrderByLevelDesc(UserType userType);
 
+
 }

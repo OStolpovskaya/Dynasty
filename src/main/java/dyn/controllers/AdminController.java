@@ -118,13 +118,6 @@ public class AdminController {
         return "admin/achievements";
     }
 
-    @RequestMapping("/admin/buffs")
-    public String buffs(ModelMap model) {
-
-        model.addAttribute("buffList", buffRepository.findAll());
-        return "admin/buffs";
-    }
-
     @RequestMapping("/admin/fiancees")
     public String fianceesView(ModelMap model) {
 
@@ -481,8 +474,10 @@ public class AdminController {
             Project project = new Project();
             project.setThing(thing);
             project.setAuthor(familyRepository.findOne(1L));
+            project.setStatus(ProjectStatus.approved);
             model.addAttribute("newProject", project);
 
+            model.addAttribute("projectStatusValues", ProjectStatus.values());
             return "admin/projectsForThing";
         }
         return "admin/craft";
@@ -531,7 +526,6 @@ public class AdminController {
         }
         if (imageInByte != null) {
             project.setView(imageInByte);
-            project.setStatus(ProjectStatus.approved);
             project.setStatusMessage("");
             craftService.saveProject(project);
             logger.info(username + " create project " + project.getFullName());

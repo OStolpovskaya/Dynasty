@@ -22,4 +22,6 @@ public interface MouthRepository extends CrudRepository<Mouth, Long> {
     public Mouth getRandomRare();
 
     List<Mouth> findByType(AppearanceType type);
+
+    List<Mouth> findAllByOrderByTypeAsc();
 }

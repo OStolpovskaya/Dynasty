@@ -22,4 +22,6 @@ public interface HeightRepository extends CrudRepository<Height, Long> {
     public Height getRandomRare();
 
     List<Height> findByType(AppearanceType type);
+
+    List<Height> findAllByOrderByTypeAsc();
 }

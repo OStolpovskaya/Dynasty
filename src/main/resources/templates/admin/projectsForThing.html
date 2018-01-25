@@ -41,7 +41,8 @@
 
                     <input type="text" name="name" th:value="${project.getName()}" class="form-control input-sm"/>
                     <input type="hidden" name="projectId" th:value="${project.getId()}"/>
-                    <button type="submit" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Сохранить новое название" style="display: inline-block"><span class="glyphicon glyphicon-ok"></span></button>
+                    <button type="submit" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Сохранить новое название" style="display: inline-block"><span
+                            class="glyphicon glyphicon-ok"></span></button>
                 </form>
             </td>
             <td th:text="${project.getAuthor().userNameAndFamilyName()}">type</td>
@@ -61,14 +62,16 @@
                 <form th:action="@{/admin/updateProjectView}" enctype="multipart/form-data" method="post" class="form-inline" style="margin-top: 2px;">
                     <input type="file" name="file" style="display: inline-block"/>
                     <input type="hidden" name="projectId" th:value="${project.getId()}"/>
-                    <button type="submit" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Обновить изображение" style="display: inline-block"><span class="glyphicon glyphicon-ok"></span></button>
+                    <button type="submit" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Обновить изображение" style="display: inline-block"><span class="glyphicon glyphicon-ok"></span>
+                    </button>
                 </form>
             </td>
             <td>
                 <form th:action="@{/admin/updateProjectCost}" method="post" class="form-inline">
                     <input type="text" name="cost" th:value="${project.getCost()}" class="form-control input-sm" style="width: 60px;"/>
                     <input type="hidden" name="projectId" th:value="${project.getId()}"/>
-                    <button type="submit" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Сохранить новую стоимость" style="display: inline-block"><span class="glyphicon glyphicon-ok"></span></button>
+                    <button type="submit" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Сохранить новую стоимость" style="display: inline-block"><span
+                            class="glyphicon glyphicon-ok"></span></button>
                 </form>
             </td>
             <td>
@@ -90,7 +93,8 @@
                     <input type="text" name="chemical" th:value="${project.chemical}" data-toggle="tooltip" th:title="${@const.RES_CHEMICAL_NAME}" class="form-control input-sm"
                            style="width: 40px; background-color: #e98547; padding: 0; text-align: center;"/>
                     <input type="hidden" name="projectId" th:value="${project.getId()}"/>
-                    <button type="submit" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Сохранить новые ресурсы" style="display: inline-block"><span class="glyphicon glyphicon-ok"></span></button>
+                    <button type="submit" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Сохранить новые ресурсы" style="display: inline-block"><span
+                            class="glyphicon glyphicon-ok"></span></button>
                 </form>
             </td>
             <td th:text="${project.getStatus()}">title</td>
@@ -102,6 +106,7 @@
 
         <h3>Создание нового проекта</h3>
 
+        <!--/*@thymesVar id="newProject" type="dyn.model.Project"*/-->
         <form th:action="@{/admin/createProject}" enctype="multipart/form-data" method="post" th:object="${newProject}">
             <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="alert alert-danger"> Incorrect</div>
             <div th:if="${#fields.hasErrors('view')}" th:errors="*{view}" class="alert alert-danger"> Incorrect</div>
@@ -128,6 +133,14 @@
                 </div>
             </div>
 
+            <div class="form-group row">
+                <span class="col-sm-3 ">Статус:</span>
+                <div class="col-sm-5">
+                    <select class="form-control" th:field="*{status}">
+                        <option th:each="projectStatus : ${projectStatusValues}" th:value="${projectStatus}" th:text="${projectStatus}"></option>
+                    </select>
+                </div>
+            </div>
             <div class="form-group row">
                 <span class="col-sm-3 ">Стоимость</span>
                 <div class="col-sm-3">
@@ -156,72 +169,6 @@
                            style="width: 40px; background-color: #e98547; padding: 0; text-align: center; display: inline-block;"/>
                 </div>
             </div>
-            <!--
-            <div class="form-group row">
-                <span class="col-sm-3 ">
-                    <th:block th:text="${#strings.capitalize(@const.RES_FOOD_NAME)}"></th:block>
-                </span>
-                <div class="col-sm-3">
-                    <input th:field="*{food}" type="number" class="form-control"/>
-                </div>
-            </div>
-            <div class="form-group row">
-                <span class="col-sm-3 ">
-                    <th:block th:text="${#strings.capitalize(@const.RES_WOOD_NAME)}"></th:block>
-                </span>
-                <div class="col-sm-3">
-                    <input th:field="*{wood}" type="number" class="form-control"/>
-                </div>
-            </div>
-            <div class="form-group row">
-                <span class="col-sm-3 ">
-                    <th:block th:text="${#strings.capitalize(@const.RES_METALL_NAME)}"></th:block>
-                </span>
-                <div class="col-sm-3">
-                    <input th:field="*{metall}" type="number" class="form-control"/>
-                </div>
-            </div>
-            <div class="form-group row">
-                <span class="col-sm-3 ">
-                    <th:block th:text="${#strings.capitalize(@const.RES_PLASTIC_NAME)}"></th:block>
-                </span>
-                <div class="col-sm-3">
-                    <input th:field="*{plastic}" type="number" class="form-control"/>
-                </div>
-            </div>
-            <div class="form-group row">
-                <span class="col-sm-3 ">
-                    <th:block th:text="${#strings.capitalize(@const.RES_MICROELECTRONICS_NAME)}"></th:block>
-                </span>
-                <div class="col-sm-3">
-                    <input th:field="*{microelectronics}" type="number" class="form-control"/>
-                </div>
-            </div>
-            <div class="form-group row">
-                <span class="col-sm-3 ">
-                    <th:block th:text="${#strings.capitalize(@const.RES_CLOTH_NAME)}"></th:block>
-                </span>
-                <div class="col-sm-3">
-                    <input th:field="*{cloth}" type="number" class="form-control"/>
-                </div>
-            </div>
-            <div class="form-group row">
-                <span class="col-sm-3">
-                    <th:block th:text="${#strings.capitalize(@const.RES_STONE_NAME)}"></th:block>
-                </span>
-                <div class="col-sm-3">
-                    <input th:field="*{stone}" type="number" class="form-control"/>
-                </div>
-            </div>
-            <div class="form-group row">
-                <span class="col-sm-3 ">
-                    <th:block th:text="${#strings.capitalize(@const.RES_CHEMICAL_NAME)}"></th:block>
-                </span>
-                <div class="col-sm-3">
-                    <input th:field="*{chemical}" type="number" class="form-control"/>
-                </div>
-            </div>
-            -->
             <button type="submit" class="btn btn-primary">Создать</button>
         </form>
     </div>

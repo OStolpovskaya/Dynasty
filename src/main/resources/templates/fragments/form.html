@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Form fragments</title>
+</head>
+<body>
+<th:block th:fragment="adventureCreationForm">
+    <!-- todo: убрать вывод ошибок-->
+    <th:block th:if="${#fields.hasErrors('*')}">
+        <div class="alert alert-danger">
+            Ошибка в заполнении данных формы! Исправьте, пожалуйста, ошибки, отмеченные красным цветом.
+            <!--
+            <ul style="list-style-type: none;">
+                <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
+            </ul>
+            -->
+        </div>
+    </th:block>
+
+    <p> * - поля, обязательные для заполнения</p>
+    <input type="hidden" th:field="*{id}"/>
+    <input type="hidden" th:field="*{createdBy}"/>
+    <label>Название *</label>
+    <p class="has-error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></p>
+    <input type="text" name="title" th:field="*{title}" class="form-control"></input>
+    <p class="help-block">Название приключения должно содержать от 6 до 100 символов</p>
+    <label>Местность *</label>
+    <select class="form-control" th:field="*{landscape}">
+        <!--/*@thymesVar id="landscape" type="dyn.model.adventure.Landscape"*/-->
+        <option th:each="landscape : ${landscapes}" th:value="${landscape.getId()}" th:text="${landscape.getName()}"></option>
+    </select>
+    <p class="help-block">Будет использоваться в качестве картинки-фона</p>
+    <label>Объект на местности *</label>
+    <select class="form-control" th:field="*{subject}">
+        <!--/*@thymesVar id="subject" type="dyn.model.adventure.Subject"*/-->
+        <option th:each="subject : ${subjects}" th:value="${subject.getId()}" th:text="${subject.getName()}"></option>
+    </select>
+    <p class="help-block">Будет использоваться в качестве картинки поверх фона</p>
+    <label class="control-label">Текст задания *</label>
+    <div class="controls">
+        <p class="has-error" th:if="${#fields.hasErrors('textDesc')}" th:errors="*{textDesc}"></p>
+        <textarea th:field="*{textDesc}" class="form-control" rows="4" maxlength="600" cols="20"></textarea>
+        <p class="help-block">Придуймате историю, в которой кому-то где-то нужен, например, стул. Задание должно быть в виде загадки. "Принеси мне стул" - не подойдет. "Мне не на чем
+            сидеть, представляешь?" - здорово! (50-600 символов)</p>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <label class="control-label">Текст после успешного выполнения задания *</label>
+            <div class="controls">
+                <p class="has-error" th:if="${#fields.hasErrors('textSuccess')}" th:errors="*{textSuccess}"></p>
+                <textarea th:field="*{textSuccess}" class="form-control" rows="4" maxlength="400" cols="20"></textarea>
+                <p class="help-block">Благодарности и награждение. Пример "Оооо! Стул! Теперь я смогу обедать сидя. Спасибо! Вот тебе 10 шт. микроэлектроники." (50-400 символов)</p>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <label class="control-label">Текст, если задание не выполнено или выполнено неверно *</label>
+            <div class="controls">
+                <p class="has-error" th:if="${#fields.hasErrors('textFailed')}" th:errors="*{textFailed}"></p>
+                <textarea th:field="*{textFailed}" class="form-control" rows="4" maxlength="300" cols="20"></textarea>
+                <p class="help-block">В продолжение примера со стулом: "Нет, это не подойдет. Я не смогу сидеть на этом." (50-300 символов)</p>
+            </div>
+        </div>
+    </div>
+    <label>Тип ответа *</label>
+    <p>Общий план ответа на задание. В зависимости от этого плана будет сформированы условия выполнения приключения из следующих ниже полей формы.</p>
+    <select class="form-control" th:field="*{answerType}">
+        <option th:each="answerType : ${answerTypes}"
+                th:value="${answerType}"
+                th:text="#{'adventure.answerType.'+${answerType}}"></option>
+    </select>
+    <p class="help-block">Примеры: нужен один стул, нужны стул И стол, нужны персонаж с красными глазами И алкогольным напитком, нужен персонаж с глазами кошки ИЛИ
+        фонарик ИЛИ свеча.
+    </p>
+    <h3>Условия выполнения приключения:</h3>
+    <legend>Предметы</legend>
+    <p>Выберите один или несколько предметов в зависимости от типа ответа</p>
+    <p class="has-error" th:if="${#fields.hasErrors('thing1')}" th:errors="*{thing1}"></p>
+    <div class="row">
+        <div class="col-sm-4">
+            <label>Предмет №1</label>
+            <select class="form-control" th:field="*{thing1}">
+                <option value="">Нет</option>
+                <option th:each="thing : ${thingList}" th:value="${thing.getId()}" th:text="${thing.getName()}"></option>
+            </select>
+            <p class="help-block">Предмет, необходимый для задания</p>
+
+        </div>
+        <div class="col-sm-4">
+            <label>Предмет №2</label>
+            <select class="form-control" th:field="*{thing2}">
+                <option value="">Нет</option>
+                <option th:each="thing : ${thingList}" th:value="${thing.getId()}" th:text="${thing.getName()}"></option>
+            </select>
+            <p class="help-block">Предмет, необходимый для задания</p>
+
+        </div>
+        <div class="col-sm-4">
+            <label>Предмет №3</label>
+            <select class="form-control" th:field="*{thing3}">
+                <option value="">Нет</option>
+                <option th:each="thing : ${thingList}" th:value="${thing.getId()}" th:text="${thing.getName()}"></option>
+            </select>
+            <p class="help-block">Предмет, необходимый для задания</p>
+        </div>
+    </div>
+
+    <legend>Персонаж</legend>
+    <p>Выберите одно или несколько свойств персонажа в зависимости от типа ответа</p>
+    <p class="has-error" th:if="${#fields.hasErrors('charSex')}" th:errors="*{charSex}"></p>
+    <div class="row">
+        <div class="col-sm-4">
+            <label>Пол персонажа</label>
+            <select class="form-control" th:field="*{charSex}">
+                <option value="">Не важно</option>
+                <option value="male">Мужчина</option>
+                <option value="female">Женщина</option>
+            </select>
+        </div>
+        <div class="col-sm-4">
+            <label>Раса</label>
+            <select class="form-control" th:field="*{charRace}">
+                <option value="">Не важно</option>
+                <option th:each="race : ${raceList}" th:value="${race.getId()}" th:text="${race.getName()}"></option>
+            </select>
+            <p class="help-block">Это условие будет тяжело выполнить игрокам: за время приключения (один ход) очень трудно получить новую расу. В этом поле лучше указывать Человек или ГМ-человек
+                или оставлять не заполненным.</p>
+        </div>
+        <div class="col-sm-4">
+            <label>Призвание</label>
+            <select class="form-control" th:field="*{charVocation}">
+                <option value="">Не важно</option>
+                <option th:each="vocation : ${vocationList}" th:value="${vocation.getId()}" th:text="${vocation.getName()}"></option>
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-3">
+            <label>Интеллект</label>
+            <select class="form-control" th:field="*{charIntelligence}">
+                <option value="">Не важно</option>
+                <option th:each="charSkillValue : ${charSkills}" th:value="${charSkillValue}" th:text="#{'adventure.charSkill.'+${charSkillValue}}"></option>
+            </select>
+        </div>
+        <div class="col-sm-3">
+            <label>Харизма</label>
+            <select class="form-control" th:field="*{charCharisma}">
+                <option value="">Не важно</option>
+                <option th:each="charSkillValue : ${charSkills}" th:value="${charSkillValue}" th:text="#{'adventure.charSkill.'+${charSkillValue}}"></option>
+            </select>
+        </div>
+        <div class="col-sm-3">
+            <label>Сила</label>
+            <select class="form-control" th:field="*{charStrength}">
+                <option value="">Не важно</option>
+                <option th:each="charSkillValue : ${charSkills}" th:value="${charSkillValue}" th:text="#{'adventure.charSkill.'+${charSkillValue}}"></option>
+            </select>
+        </div>
+        <div class="col-sm-3">
+            <label>Творчество</label>
+            <select class="form-control" th:field="*{charCreativity}">
+                <option value="">Не важно</option>
+                <option th:each="charSkillValue : ${charSkills}" th:value="${charSkillValue}" th:text="#{'adventure.charSkill.'+${charSkillValue}}"></option>
+            </select>
+        </div>
+    </div>
+    <legend>Черты персонажа</legend>
+    <div class="row">
+        <div class="col-sm-4">
+            <label>Тело</label>
+            <select class="form-control" th:field="*{charAppBody}">
+                <option value="">Не важно</option>
+                <!--/*@thymesVar id="body" type="dyn.model.appearance.Body"*/-->
+                <option th:each="body : ${bodyList}" th:value="${body.getId()}" th:text="${body.getTitle()}"></option>
+            </select>
+        </div>
+        <div class="col-sm-4">
+            <label>Уши</label>
+            <select class="form-control" th:field="*{charAppEars}">
+                <option value="">Не важно</option>
+                <!--/*@thymesVar id="ears" type="dyn.model.appearance.Ears"*/-->
+                <option th:each="ears : ${earsList}" th:value="${ears.getId()}" th:text="${ears.getTitle()}"></option>
+            </select>
+        </div>
+        <div class="col-sm-4">
+            <label>Брови</label>
+            <select class="form-control" th:field="*{charAppEyebrows}">
+                <option value="">Не важно</option>
+                <!--/*@thymesVar id="eyebrows" type="dyn.model.appearance.Eyebrows"*/-->
+                <option th:each="eyebrows : ${eyebrowsList}" th:value="${eyebrows.getId()}" th:text="${eyebrows.getTitle()}"></option>
+            </select>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-sm-4">
+            <label>Глаза</label>
+            <select class="form-control" th:field="*{charAppEyes}">
+                <option value="">Не важно</option>
+                <!--/*@thymesVar id="eyes" type="dyn.model.appearance.Eyes"*/-->
+                <option th:each="eyes : ${eyesList}" th:value="${eyes.getId()}" th:text="${eyes.getTitle()}"></option>
+            </select>
+        </div>
+        <div class="col-sm-4">
+            <label>Цвет глаз</label>
+            <select class="form-control" th:field="*{charAppEyeColor}">
+                <option value="">Не важно</option>
+                <!--/*@thymesVar id="eyeColor" type="dyn.model.appearance.EyeColor"*/-->
+                <option th:each="eyeColor : ${eyeColorList}" th:value="${eyeColor.getId()}" th:text="${eyeColor.getTitle()}"></option>
+            </select>
+        </div>
+        <div class="col-sm-4">
+            <label>Цвет волос</label>
+            <select class="form-control" th:field="*{charAppHairColor}">
+                <option value="">Не важно</option>
+                <!--/*@thymesVar id="hairColor" type="dyn.model.appearance.HairColor"*/-->
+                <option th:each="hairColor : ${hairColorList}" th:value="${hairColor.getId()}" th:text="${hairColor.getTitle()}"></option>
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4">
+            <label>Тип волос</label>
+            <select class="form-control" th:field="*{charAppHairType}">
+                <option value="">Не важно</option>
+                <!--/*@thymesVar id="hairType" type="dyn.model.appearance.HairType"*/-->
+                <option th:each="hairType : ${hairTypeList}" th:value="${hairType.getId()}" th:text="${hairType.getTitle()}"></option>
+            </select>
+        </div>
+        <div class="col-sm-4">
+            <label>Голова</label>
+            <select class="form-control" th:field="*{charAppHead}">
+                <option value="">Не важно</option>
+                <!--/*@thymesVar id="head" type="dyn.model.appearance.Head"*/-->
+                <option th:each="head : ${headList}" th:value="${head.getId()}" th:text="${head.getTitle()}"></option>
+            </select>
+        </div>
+        <div class="col-sm-4">
+            <label>Рост</label>
+            <select class="form-control" th:field="*{charAppHeight}">
+                <option value="">Не важно</option>
+                <!--/*@thymesVar id="height" type="dyn.model.appearance.Height"*/-->
+                <option th:each="height : ${heightList}" th:value="${height.getId()}" th:text="${height.getTitle()}"></option>
+            </select>
+        </div>
+    </div>
+    <div class="row">
+
+        <div class="col-sm-4">
+            <label>Рот</label>
+            <select class="form-control" th:field="*{charAppMouth}">
+                <option value="">Не важно</option>
+                <!--/*@thymesVar id="mouth" type="dyn.model.appearance.Mouth"*/-->
+                <option th:each="mouth : ${mouthList}" th:value="${mouth.getId()}" th:text="${mouth.getTitle()}"></option>
+            </select>
+        </div>
+        <div class="col-sm-4">
+            <label>Нос</label>
+            <select class="form-control" th:field="*{charAppNose}">
+                <option value="">Не важно</option>
+                <!--/*@thymesVar id="nose" type="dyn.model.appearance.Nose"*/-->
+                <option th:each="nose : ${noseList}" th:value="${nose.getId()}" th:text="${nose.getTitle()}"></option>
+            </select>
+        </div>
+        <div class="col-sm-4">
+            <label>Цвет кожи</label>
+            <select class="form-control" th:field="*{charAppSkinColor}">
+                <option value="">Не важно</option>
+                <!--/*@thymesVar id="skinColor" type="dyn.model.appearance.SkinColor"*/-->
+                <option th:each="skinColor : ${skinColorList}" th:value="${skinColor.getId()}" th:text="${skinColor.getTitle()}"></option>
+            </select>
+        </div>
+    </div>
+    <h3>Действия после выполнения задания:</h3>
+    <p>Если игрок выполнит выше перечисленные условия, то можно что-то сделать с предоставленными предметами или персонажем. В продолжение примера со стулом: стул нужно забрать.</p>
+    <legend>Предметы</legend>
+    <div class="row">
+        <div class="col-sm-4">
+            <label>Действие с предметом №1</label>
+            <select class="form-control" th:field="*{actionThing1}">
+                <option th:each="actionThing : ${actionThingValues}" th:value="${actionThing}" th:text="#{'adventure.actionThing.'+${actionThing}}"></option>
+            </select>
+            <p class="help-block">Действие будет выполнено над предметом №1, если он указан</p>
+        </div>
+        <div class="col-sm-4">
+            <label>Действие с предметом №2</label>
+            <select class="form-control" th:field="*{actionThing2}">
+                <option th:each="actionThing : ${actionThingValues}" th:value="${actionThing}" th:text="#{'adventure.actionThing.'+${actionThing}}"></option>
+            </select>
+            <p class="help-block">Действие будет выполнено над предметом №2, если он указан</p>
+        </div>
+        <div class="col-sm-4">
+            <label>Действие с предметом №3</label>
+            <select class="form-control" th:field="*{actionThing3}">
+                <option th:each="actionThing : ${actionThingValues}" th:value="${actionThing}" th:text="#{'adventure.actionThing.'+${actionThing}}"></option>
+            </select>
+            <p class="help-block">Действие будет выполнено над предметом №3, если он указан</p>
+        </div>
+    </div>
+    <legend>Персонаж</legend>
+    <p>Сначала выполнится действие над персонажем, затем уже будут применены изменения свойств. </p>
+    <div class="row">
+        <div class="col-sm-4"><label>Действие над персонажем:</label>
+            <select class="form-control" th:field="*{actionChar}">
+                <option value="">Нет</option>
+                <option th:each="actionChar : ${actionCharValues}" th:value="${actionChar}" th:text="#{'adventure.actionChar.'+${actionChar}}"></option>
+            </select></div>
+        <div class="col-sm-4"><label>Новая раса:</label>
+            <select class="form-control" th:field="*{actionCharRace}">
+                <option value="">Нет</option>
+                <option th:each="newRace : ${raceList}" th:value="${newRace.getId()}" th:text="${newRace.getName()}"></option>
+            </select></div>
+        <div class="col-sm-4"><label>Новое призвание персонажа:</label>
+            <select class="form-control" th:field="*{actionCharVocation}">
+                <option value="">Нет</option>
+                <option th:each="newVocation : ${vocationList}" th:value="${newVocation.getId()}" th:text="${newVocation.getName()}"></option>
+            </select></div>
+    </div>
+    <div class="row">
+        <div class="col-sm-3">
+            <label>Интеллект</label>
+            <select class="form-control" th:field="*{actionCharIntelligence}">
+                <option value="">Не менять</option>
+                <option th:each="actionCharSkillValue : ${actionCharSkillValues}" th:value="${actionCharSkillValue}" th:text="#{'adventure.actionCharSkill.'+${actionCharSkillValue}}"></option>
+            </select>
+        </div>
+        <div class="col-sm-3">
+            <label>Харизма</label>
+            <select class="form-control" th:field="*{actionCharCharisma}">
+                <option value="">Не менять</option>
+                <option th:each="actionCharSkillValue : ${actionCharSkillValues}" th:value="${actionCharSkillValue}" th:text="#{'adventure.actionCharSkill.'+${actionCharSkillValue}}"></option>
+            </select>
+        </div>
+        <div class="col-sm-3">
+            <label>Сила</label>
+            <select class="form-control" th:field="*{actionCharStrength}">
+                <option value="">Не менять</option>
+                <option th:each="actionCharSkillValue : ${actionCharSkillValues}" th:value="${actionCharSkillValue}" th:text="#{'adventure.actionCharSkill.'+${actionCharSkillValue}}"></option>
+            </select>
+        </div>
+        <div class="col-sm-3">
+            <label>Творчество</label>
+            <select class="form-control" th:field="*{actionCharCreativity}">
+                <option value="">Не менять</option>
+                <option th:each="actionCharSkillValue : ${actionCharSkillValues}" th:value="${actionCharSkillValue}" th:text="#{'adventure.actionCharSkill.'+${actionCharSkillValue}}"></option>
+            </select>
+        </div>
+    </div>
+    <legend>Новые черты персонажа</legend>
+    <div class="row">
+        <div class="col-sm-4">
+            <label>Тело</label>
+            <select class="form-control" th:field="*{actionCharAppBody}">
+                <option value="">Нет</option>
+                <option th:each="body : ${bodyList}" th:value="${body.getId()}" th:text="${body.getTitle()}"></option>
+            </select>
+        </div>
+        <div class="col-sm-4">
+            <label>Уши</label>
+            <select class="form-control" th:field="*{actionCharAppEars}">
+                <option value="">Нет</option>
+                <option th:each="ears : ${earsList}" th:value="${ears.getId()}" th:text="${ears.getTitle()}"></option>
+            </select>
+        </div>
+        <div class="col-sm-4">
+            <label>Брови</label>
+            <select class="form-control" th:field="*{actionCharAppEyebrows}">
+                <option value="">Нет</option>
+                <option th:each="eyebrows : ${eyebrowsList}" th:value="${eyebrows.getId()}" th:text="${eyebrows.getTitle()}"></option>
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4">
+            <label>Глаза</label>
+            <select class="form-control" th:field="*{actionCharAppEyes}">
+                <option value="">Нет</option>
+                <option th:each="eyes : ${eyesList}" th:value="${eyes.getId()}" th:text="${eyes.getTitle()}"></option>
+            </select>
+        </div>
+        <div class="col-sm-4">
+            <label>Цвет глаз</label>
+            <select class="form-control" th:field="*{actionCharAppEyeColor}">
+                <option value="">Нет</option>
+                <option th:each="eyeColor : ${eyeColorList}" th:value="${eyeColor.getId()}" th:text="${eyeColor.getTitle()}"></option>
+            </select>
+        </div>
+        <div class="col-sm-4">
+            <label>Цвет волос</label>
+            <select class="form-control" th:field="*{actionCharAppHairColor}">
+                <option value="">Нет</option>
+                <option th:each="hairColor : ${hairColorList}" th:value="${hairColor.getId()}" th:text="${hairColor.getTitle()}"></option>
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4">
+            <label>Тип волос</label>
+            <select class="form-control" th:field="*{actionCharAppHairType}">
+                <option value="">Нет</option>
+                <option th:each="hairType : ${hairTypeList}" th:value="${hairType.getId()}" th:text="${hairType.getTitle()}"></option>
+            </select>
+        </div>
+        <div class="col-sm-4">
+            <label>Голова</label>
+            <select class="form-control" th:field="*{actionCharAppHead}">
+                <option value="">Нет</option>
+                <option th:each="head : ${headList}" th:value="${head.getId()}" th:text="${head.getTitle()}"></option>
+            </select>
+        </div>
+        <div class="col-sm-4">
+            <label>Рост</label>
+            <select class="form-control" th:field="*{actionCharAppHeight}">
+                <option value="">Нет</option>
+                <option th:each="height : ${heightList}" th:value="${height.getId()}" th:text="${height.getTitle()}"></option>
+            </select>
+        </div>
+    </div>
+    <div class="row">
+
+        <div class="col-sm-4">
+            <label>Рот</label>
+            <select class="form-control" th:field="*{actionCharAppMouth}">
+                <option value="">Нет</option>
+                <!--/*@thymesVar id="mouth" type="dyn.model.appearance.Mouth"*/-->
+                <option th:each="mouth : ${mouthList}" th:value="${mouth.getId()}" th:text="${mouth.getTitle()}"></option>
+            </select>
+        </div>
+        <div class="col-sm-4">
+            <label>Нос</label>
+            <select class="form-control" th:field="*{actionCharAppNose}">
+                <option value="">Нет</option>
+                <!--/*@thymesVar id="nose" type="dyn.model.appearance.Nose"*/-->
+                <option th:each="nose : ${noseList}" th:value="${nose.getId()}" th:text="${nose.getTitle()}"></option>
+            </select>
+        </div>
+        <div class="col-sm-4">
+            <label>Цвет кожи</label>
+            <select class="form-control" th:field="*{actionCharAppSkinColor}">
+                <option value="">Нет</option>
+                <!--/*@thymesVar id="skinColor" type="dyn.model.appearance.SkinColor"*/-->
+                <option th:each="skinColor : ${skinColorList}" th:value="${skinColor.getId()}" th:text="${skinColor.getTitle()}"></option>
+            </select>
+        </div>
+    </div>
+    <h3>Награда *</h3>
+    <p class="has-error" th:if="${#fields.hasErrors('awardResType')}" th:errors="*{awardResType}"></p>
+    <p>Награду небходимо выбрать обязательно, одну или несколько. Если вы выберете ресурсы, то не забудьте указать количество. Если вы выберете предмет, то случайным образом будет выбран проект
+        этого предмета, создан сам предмет максимального качества и подарен игроку. </p>
+    <div class="row">
+        <div class="col-sm-4">
+
+            <label>Rесурс</label>
+            <select class="form-control" th:field="*{awardResType}">
+                <option value="">Нет</option>
+                <option th:each="resType : ${resTypeValues}" th:value="${resType}" th:text="#{'RES.'+${resType}}"></option>
+            </select>
+        </div>
+        <div class="col-sm-2">
+            <label>Количество ресурсов:</label>
+            <input th:field="*{awardResAmount}" type="number" value="0" step="10" min="0" max="50" class="form-control"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4">
+            <label>Деньги</label>
+            <input th:field="*{awardMoney}" type="number" value="0" step="1000" min="0" max="10000" class="form-control"/>
+        </div>
+        <div class="col-sm-4">
+            <label>Крафт-баллы</label>
+            <input th:field="*{awardCraftPoint}" type="number" value="0" step="1" min="0" max="10" class="form-control"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4">
+            <label>Предмет</label>
+            <select class="form-control" th:field="*{awardThing}">
+                <option value="">Нет</option>
+                <option th:each="thing : ${thingList}" th:value="${thing.getId()}" th:text="${thing.getName()}"></option>
+            </select>
+        </div>
+        <div class="col-sm-4">
+            <label>Бафф</label>
+            <select class="form-control" th:field="*{awardBuff}">
+                <option value="">Нет</option>
+                <option th:each="buff : ${buffList}" th:value="${buff.getId()}" th:text="${buff.getName()}"></option>
+            </select>
+        </div>
+    </div>
+
+</th:block>
+</body>
+</html>

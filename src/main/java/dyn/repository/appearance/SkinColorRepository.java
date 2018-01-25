@@ -22,4 +22,6 @@ public interface SkinColorRepository extends CrudRepository<SkinColor, Long> {
     public SkinColor getRandomRare();
 
     List<SkinColor> findByType(AppearanceType type);
+
+    List<SkinColor> findAllByOrderByTypeAsc();
 }

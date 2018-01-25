@@ -4,6 +4,7 @@ import dyn.model.Family;
 import dyn.model.Project;
 import dyn.model.ProjectStatus;
 import dyn.model.Thing;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -26,4 +27,10 @@ public interface ProjectRepository extends CrudRepository<Project, Long> {
     List<Project> findAllByThingCraftBranchIdOrderByCostAscThingIdAsc(Long craftBranchId);
 
     List<Project> findByThingAndAuthorId(Thing thing, long authorId);
+
+    @Query(value = "SELECT * FROM project WHERE project.thing_id=?1 AND project.status='approved' ORDER BY RAND() LIMIT 1", nativeQuery = true)
+    Project getRandomApprovedProjectOfThing(Long id);
+
+    List<Project> findAllByThingCraftBranchIdOrderByThingIdAscNameAsc(Long craftBranchId);
+
 }
