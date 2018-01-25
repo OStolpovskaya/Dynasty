@@ -23,7 +23,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static dyn.controllers.GameController.getAuthUser;
@@ -59,6 +58,8 @@ public class AdventureController {
     private FamilyRepository familyRepository;
     @Autowired
     private CharacterRepository characterRepository;
+    @Autowired
+    private TownNewsService townNewsService;
 
     @RequestMapping("/game/adventures")
     public String adventures(ModelMap model, RedirectAttributes redirectAttributes) {
@@ -107,6 +108,7 @@ public class AdventureController {
 
         List<FamilyAdventure> familyAdventures = adventureService.getFamilyAdventures(family);
         if (familyAdventures.isEmpty() && family.getLevel() >= 10 && family.getMoney() >= Const.ADVENTURE_COST * family.getLevel()) {
+            logger.info(family.userNameAndFamilyName() + " started adventure");
             family.removeMoney(Const.ADVENTURE_COST * family.getLevel());
             familyRepository.save(family);
             adventureService.createFamilyAdventures(family);
@@ -184,6 +186,9 @@ public class AdventureController {
 
         Adventure adventure = currentAdventure.getAdventure();
         StringBuilder adventureLog = new StringBuilder();
+
+        logger.info(family.userNameAndFamilyName() + " try to complete adventure: " + adventure.getTitle());
+
         boolean adventureCompleted = checkAnswer(family, adventure, items, character, adventureLog);
         if (adventureCompleted) {
             awardFamilyForAdventure(family, adventure, adventureLog);
@@ -231,10 +236,17 @@ public class AdventureController {
 
                 mess.append(" И завершили свое приключение. Подарок: " + item.getTitle());
                 logger.info(family.userNameAndFamilyName() + " completed ALL adventures. Got gift: " + item.getTitle());
+                townNewsService.addCommonNews(family, "Семья " + family.link() + " успешно завершила приключение! Награда: " + item.getTitle());
             }
             familyLogService.addToLog(family, mess.toString());
             redirectAttributes.addFlashAttribute("mess", mess.toString());
         } else {
+            List<String> itemsNames = new ArrayList<>();
+            for (Item item : items) {
+                itemsNames.add(item.getProject().getThing().getName());
+            }
+            logger.info(family.userNameAndFamilyName() + " failed to complete adventure: " + adventure.getTitle() + ". Things: " + itemsNames.toString() + ". Character: " +
+                    "" + (character == null ? "нет" : character.getName() + "(" + character.getId() + ")"));
             redirectAttributes.addFlashAttribute("mess", adventure.getTextFailed());
         }
 
@@ -242,7 +254,6 @@ public class AdventureController {
     }
 
     private boolean checkAnswer(Family family, Adventure adventure, List<Item> items, Character character, StringBuilder adventureLog) {
-        System.out.println("checkAnswer adventure.getAnswerType() = " + adventure.getAnswerType());
         switch (adventure.getAnswerType()) {
             case oneItem:
                 if (itemsMatchOr(adventure, items, adventureLog)) {
@@ -299,7 +310,6 @@ public class AdventureController {
     }
 
     private boolean characterMatches(Character character, Adventure adventure, Family family, StringBuilder adventureLog) {
-        System.out.println("characterMatches ");
         if (character != null) {
             if (!adventure.getCharSex().isEmpty() && !adventure.getCharSex().equals(character.getSex())) {
                 return false;
@@ -716,12 +726,11 @@ public class AdventureController {
             characterRepository.save(character);
         }
         if (actionCharLog.length() > 0) {
-            adventureLog.append(" Персонаж ").append(character.getName()).append(" изменился: <br>").append(actionCharLog);
+            adventureLog.append(" Персонаж ").append(character.getName()).append(" изменился: ").append(actionCharLog);
         }
     }
 
     private boolean itemsMatchAnd(Adventure adventure, List<Item> items, StringBuilder adventureLog) {
-        System.out.println("itemsMatchAnd");
         boolean thing1Match = adventure.getThing1() == null;
         boolean thing2Match = adventure.getThing2() == null;
         boolean thing3Match = adventure.getThing3() == null;
@@ -743,7 +752,6 @@ public class AdventureController {
     }
 
     private boolean itemsMatchOr(Adventure adventure, List<Item> items, StringBuilder adventureLog) {
-        System.out.println("itemsMatchOr");
         for (Item item : items) {
             if (item.getProject().getThing() == adventure.getThing1()) {
                 applyActionThing(adventure.getActionThing1(), item, adventureLog);
@@ -889,6 +897,8 @@ public class AdventureController {
                 case "setApproved":
                     adventure.setStatus(AdventureStatus.approved);
                     adventureService.saveAdventure(adventure);
+                    Family family = adventure.getCreatedBy();
+                    townNewsService.addCommonNews(family, "Новый квест от семьи " + family.link() + ": " + adventure.getTitle() + "!");
                     break;
                 case "edit":
                     model.addAttribute("newAdventure", adventure);
@@ -912,6 +922,8 @@ public class AdventureController {
     @RequestMapping(value = "/admin/createAdventure", method = RequestMethod.POST)
     public String createAdventure(ModelMap model, RedirectAttributes redirectAttributes,
                                   @ModelAttribute(value = "newAdventure") @Valid Adventure newAdventure, BindingResult result) {
+        User user = userRepository.findByUserName(getAuthUser().getUsername());
+
         checkNewAdventureForm(newAdventure, result);
         if (result.hasErrors()) {
             fillAdventureCreationForm(model);
@@ -922,6 +934,7 @@ public class AdventureController {
         newAdventure.setStatus(AdventureStatus.approved);
         adventureService.saveAdventure(newAdventure);
 
+        logger.info(user.getUserName() + " created new adventure: " + newAdventure.getTitle());
 
         return "redirect:/admin/adventures";
     }
@@ -947,10 +960,10 @@ public class AdventureController {
         Family family = user.getCurrentFamily();
 
         if (family.getAdventuresCompleted() >= Const.ADVENTURE_AMOUNT_PER_TURN && family.getMoney() >= Const.ADVENTURE_CREATION_COST) {
+            logger.debug(family.userNameAndFamilyName() + " try to create new adventure: " + newAdventure.getTitle());
             checkNewAdventureForm(newAdventure, result);
 
             if (result.hasErrors()) {
-                System.out.println("result = " + Arrays.toString(result.resolveMessageCodes("*")));
                 model.addAttribute("family", family);
                 fillAdventureCreationForm(model);
                 return "game/adventureUserForm";
@@ -962,6 +975,7 @@ public class AdventureController {
             newAdventure.setStatus(AdventureStatus.newAdventure);
             adventureService.saveAdventure(newAdventure);
 
+            logger.info(family.userNameAndFamilyName() + " created NEW ADVENTURE: " + newAdventure.getTitle());
             redirectAttributes.addFlashAttribute("mess", "Квест успешно создан. Ожидайте проверки модератором.");
             return "redirect:/game/adventures";
         }
