@@ -914,7 +914,10 @@ public class AdventureController {
 
     @RequestMapping("/admin/adventureForm")
     public String adventureForm(ModelMap model, RedirectAttributes redirectAttributes) {
-        model.addAttribute("newAdventure", new Adventure());
+        Adventure adventure = new Adventure();
+        adventure.setCreatedBy(familyRepository.findOne(1L));
+        adventure.setStatus(AdventureStatus.approved);
+        model.addAttribute("newAdventure", adventure);
         fillAdventureCreationForm(model);
         return "admin/adventureForm";
     }
@@ -930,11 +933,9 @@ public class AdventureController {
             return "admin/adventureForm";
         }
 
-        newAdventure.setCreatedBy(familyRepository.findOne(1L));
-        newAdventure.setStatus(AdventureStatus.approved);
         adventureService.saveAdventure(newAdventure);
 
-        logger.info(user.getUserName() + " created new adventure: " + newAdventure.getTitle());
+        logger.info(user.getUserName() + " created/edit adventure: " + newAdventure.getTitle());
 
         return "redirect:/admin/adventures";
     }

@@ -21,22 +21,46 @@
     <p> * - поля, обязательные для заполнения</p>
     <input type="hidden" th:field="*{id}"/>
     <input type="hidden" th:field="*{createdBy}"/>
+    <input type="hidden" th:field="*{status}"/>
     <label>Название *</label>
     <p class="has-error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></p>
     <input type="text" name="title" th:field="*{title}" class="form-control"></input>
     <p class="help-block">Название приключения должно содержать от 6 до 100 символов</p>
-    <label>Местность *</label>
-    <select class="form-control" th:field="*{landscape}">
-        <!--/*@thymesVar id="landscape" type="dyn.model.adventure.Landscape"*/-->
-        <option th:each="landscape : ${landscapes}" th:value="${landscape.getId()}" th:text="${landscape.getName()}"></option>
-    </select>
-    <p class="help-block">Будет использоваться в качестве картинки-фона</p>
-    <label>Объект на местности *</label>
-    <select class="form-control" th:field="*{subject}">
-        <!--/*@thymesVar id="subject" type="dyn.model.adventure.Subject"*/-->
-        <option th:each="subject : ${subjects}" th:value="${subject.getId()}" th:text="${subject.getName()}"></option>
-    </select>
-    <p class="help-block">Будет использоваться в качестве картинки поверх фона</p>
+    <div class="row">
+        <div class="col-sm-4">
+            <label>Местность *</label>
+            <select class="form-control" th:field="*{landscape}" onchange="onBckImgChange(this)">
+                <!--/*@thymesVar id="landscape" type="dyn.model.adventure.Landscape"*/-->
+                <option th:each="landscape : ${landscapes}" th:value="${landscape.getId()}" th:text="${landscape.getName()}"></option>
+            </select>
+            <p class="help-block">Будет использоваться в качестве картинки-фона</p>
+            <label>Объект на местности *</label>
+            <select class="form-control" th:field="*{subject}" onchange="onSbjImgChange(this)">
+                <!--/*@thymesVar id="subject" type="dyn.model.adventure.Subject"*/-->
+                <option th:each="subject : ${subjects}" th:value="${subject.getId()}" th:text="${subject.getName()}"></option>
+            </select>
+            <p class="help-block">Будет использоваться в качестве картинки поверх фона</p>
+        </div>
+        <div class="col-sm-8">
+            <div style="position: relative; width: 400px; height: 200px; margin-left: auto; margin-right: auto; margin-bottom: 10px;">
+                <img id="bckImg" th:src="@{'/graphics/adventures/landscapes/landscape3.png' }" width="400"
+                     style="position: absolute; border: solid 1px #ccc; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);"/>
+                <img id="sbjImg" th:src="@{'/graphics/adventures/subjects/subject30.png' }" width="400" style="position: absolute;"/>
+            </div>
+            <script>
+                function onBckImgChange(el) {
+                    var newBckImg = el.options[el.selectedIndex].value;
+                    document.getElementById("bckImg").setAttribute("src", "/graphics/adventures/landscapes/landscape" + newBckImg + ".png");
+                }
+                function onSbjImgChange(el) {
+                    var newImg = el.options[el.selectedIndex].value;
+                    document.getElementById("sbjImg").setAttribute("src", "/graphics/adventures/subjects/subject" + newImg + ".png");
+                }
+            </script>
+        </div>
+    </div>
+
+
     <label class="control-label">Текст задания *</label>
     <div class="controls">
         <p class="has-error" th:if="${#fields.hasErrors('textDesc')}" th:errors="*{textDesc}"></p>

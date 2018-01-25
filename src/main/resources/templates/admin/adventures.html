@@ -133,6 +133,9 @@
                     <li th:if="*{awardThing != null}">
                         <th:block th:text="*{'Предмет: '+awardThing.getName()}"></th:block>
                     </li>
+                    <li th:if="*{awardBuff != null}">
+                        <th:block th:text="*{'Бафф: '+awardBuff.getName()}"></th:block>
+                    </li>
                 </ul>
             </td>
 
