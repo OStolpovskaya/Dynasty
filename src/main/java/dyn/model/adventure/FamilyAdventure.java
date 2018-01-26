@@ -24,6 +24,8 @@ public class FamilyAdventure {
 
     private boolean current;
 
+    private String log;
+
     public long getId() {
         return id;
     }
@@ -70,5 +72,13 @@ public class FamilyAdventure {
 
     public void setCurrent(boolean current) {
         this.current = current;
+    }
+
+    public String getLog() {
+        return log;
+    }
+
+    public void setLog(String log) {
+        this.log = log;
     }
 }

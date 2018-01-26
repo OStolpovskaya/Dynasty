@@ -94,6 +94,7 @@ public class MailController {
             newMail.setTo(player);
             newMail.setStatus(MailStatus.unread);
             mailService.save(newMail);
+            logger.info(user.getUserName() + " send MAIL to " + player.getUserName());
             return "redirect:/game/mail?chatWith=" + player.getUserid();
         }
         logger.error(family.userNameAndFamilyName() + "want to chat with nonexistent user: " + playerId);

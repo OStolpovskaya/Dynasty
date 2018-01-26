@@ -27,13 +27,13 @@ public class Adventure {
     @OneToOne
     private Subject subject;
 
-    @Size(min = 50, max = 600, message = "{adventure.creation.textDescSize}")
+    @Size(min = 50, max = 800, message = "{adventure.creation.textDescSize}")
     private String textDesc;
 
-    @Size(min = 50, max = 400, message = "{adventure.creation.textSuccessSize}")
+    @Size(min = 50, max = 600, message = "{adventure.creation.textSuccessSize}")
     private String textSuccess;
 
-    @Size(min = 50, max = 300, message = "{adventure.creation.textFailedSize}")
+    @Size(min = 50, max = 400, message = "{adventure.creation.textFailedSize}")
     private String textFailed;
 
     @Enumerated(EnumType.STRING)

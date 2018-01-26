@@ -197,7 +197,6 @@ public class AdventureController {
             familyRepository.save(family);
 
             currentAdventure.setStatus(FamilyAdventureStatus.finished);
-            adventureService.saveFamilyAdventure(currentAdventure);
 
             StringBuilder mess = new StringBuilder("Вы прошли квест " + adventure.fullTitle() + "!");
             mess.append(adventureLog);
@@ -239,7 +238,11 @@ public class AdventureController {
                 townNewsService.addCommonNews(family, "Семья " + family.link() + " успешно завершила приключение! Награда: " + item.getTitle());
             }
             familyLogService.addToLog(family, mess.toString());
-            redirectAttributes.addFlashAttribute("mess", mess.toString());
+
+            currentAdventure.setLog(mess.toString());
+            adventureService.saveFamilyAdventure(currentAdventure);
+
+            redirectAttributes.addFlashAttribute("mess", "Вы прошли квест " + adventure.fullTitle() + "!");
         } else {
             List<String> itemsNames = new ArrayList<>();
             for (Item item : items) {
@@ -647,11 +650,11 @@ public class AdventureController {
             characterRepository.save(character);
         }
         if (adventure.getActionCharRace() != null) {
-            actionCharLog.append(" Новая раса ").append(adventure.getActionCharRace().getName()).append(".");
+            actionCharLog.append(" Новая раса: ").append(adventure.getActionCharRace().getName()).append(".");
             raceService.turnCharacterToRace(character, adventure.getActionCharRace());
         }
         if (adventure.getActionCharVocation() != null) {
-            actionCharLog.append(" Новое призвание '").append(adventure.getActionCharVocation().getName()).append("'.");
+            actionCharLog.append(" Новое призвание: '").append(adventure.getActionCharVocation().getName()).append("'.");
             character.getCareer().setVocation(adventure.getActionCharVocation());
             characterRepository.save(character);
         }
@@ -726,7 +729,7 @@ public class AdventureController {
             characterRepository.save(character);
         }
         if (actionCharLog.length() > 0) {
-            adventureLog.append(" Персонаж ").append(character.getName()).append(" изменился: ").append(actionCharLog);
+            adventureLog.append(" Персонаж ").append(character.getName()).append(" изменился.").append(actionCharLog);
         }
     }
 
@@ -990,7 +993,7 @@ public class AdventureController {
         if (!adventure.getAnswerType().equals(AnswerType.character) && (adventure.getThing1() == null && adventure.getThing2() == null && adventure.getThing1() == null)) {
             result.rejectValue("thing1", "adventure.creation.thingsIsEmpty");
         }
-        if (!(adventure.getAnswerType().equals(AnswerType.manyItemsAnd) || adventure.getAnswerType().equals(AnswerType.manyItemsAnd) || adventure.getAnswerType().equals(AnswerType.oneItem))) {
+        if (!(adventure.getAnswerType().equals(AnswerType.manyItemsAnd) || adventure.getAnswerType().equals(AnswerType.manyItemsOr) || adventure.getAnswerType().equals(AnswerType.oneItem))) {
             if (adventure.getCharSex().equals("") && adventure.getCharRace() == null && adventure.getCharVocation() == null &&
                     adventure.getCharIntelligence() == null && adventure.getCharCharisma() == null && adventure.getCharStrength() == null && adventure.getCharCreativity() == null &&
                     adventure.getCharAppBody() == null && adventure.getCharAppEars() == null && adventure.getCharAppEyebrows() == null &&

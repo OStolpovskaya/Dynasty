@@ -133,7 +133,10 @@
 
                     </a></td>
                     <td th:text="${mailCounter.read}">1</td>
-                    <td th:text="${mailCounter.unread}"></td>
+                    <td>
+                        <th:block th:text="${mailCounter.unread}"></th:block>
+                        <span class="glyphicon glyphicon-envelope" th:if="${mailCounter.unread gt 0}" title="Новое письмо!"
+                              style="color: mediumseagreen;"></span></td>
                 </tr>
                 </tbody>
             </table>

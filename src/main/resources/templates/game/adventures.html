@@ -14,11 +14,13 @@
     <th:block th:if="${currentAdventure == null}">
         <h3>Приключения</h3>
         <p>Один раз за ход ваша семья может отправиться в приключение! Несколько случайных квестов-заданий-загадок, за выполнение которых вы
-            получите небольшие призы: ресурсы, крафт-баллы, деньги или предметы. А за выполнение всех заданий - уникальный предмет! </p>
+            получите небольшие призы: ресурсы, крафт-баллы, деньги, баффы или предметы. А за выполнение всех заданий - уникальный предмет (в данный момент это предметы из коллекции мебели для ванной
+            "Безмятежность")! </p>
         <p align="center"><img th:src="@{'/graphics/анонс приключений.jpg' }" width="200"/></p>
         <p align="center">Отправиться в путешествие можно начиная с 10го уровня семьи. Стоимость путешествия: уровень семьи, помноженный на
             <th:block th:text="${@const.ADVENTURE_COST}"></th:block>
-            д.
+            д. Квесты выбираются абсолютно случайным образом: могут выпасть как самые сложные квесты, так и самые легкие.
+            Советуем отправляться в путешествие в начале хода до выбора невест для своих сыновей.
         </p>
         <form th:action="@{/game/startAdventure}" enctype="multipart/form-data" method="post">
             <button type="submit" class="btn btn-primary center-block" th:disabled="${(family.getLevel() lt 10) or (family.getMoney() lt (@const.ADVENTURE_COST*family.getLevel()))}">Отправиться в
@@ -112,6 +114,7 @@
             </div>
             <div th:if="${currentAdventure.getStatus().name()=='finished'}">
                 <p th:text="${adv.getTextSuccess()}" style="color: forestgreen;"></p>
+                <p>Лог: <span th:utext="${currentAdventure.getLog()}" style="color: #888;"></span></p>
             </div>
         </div>
     </th:block>
@@ -161,6 +164,15 @@
                     th:disabled="${(family.getAdventuresCompleted() lt @const.ADVENTURE_AMOUNT_PER_TURN) or (family.getMoney() lt (@const.ADVENTURE_CREATION_COST))}">Создать квест!
             </button>
         </a>
+    </div>
+    <div class="well">
+        <h3>Статистика</h3>
+        <p>Пройдено квестов:
+            <th:block th:text="${family.getAdventuresCompleted()}"></th:block>
+        </p>
+        <p>Получено уникальных предметов:
+            <th:block th:text="${family.getGotUniqueItems()}"></th:block>
+        </p>
     </div>
 </div>
 <script>

@@ -10,8 +10,7 @@
 <div th:replace="fragments/navigation :: nav-for-game"></div>
 <div class="container" style="min-width: 1140px;">
     <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
-    <h3>Создать новое приключение</h3>
-    <p></p>
+    <h3>Создать новый квест</h3>
     <form class="form-horizontal" th:action="@{/game/createAdventure}" th:object="${newAdventure}" method="POST">
         <!--/*@thymesVar id="newAdventure" type="dyn.model.adventure.Adventure"*/-->
         <th:block th:replace="fragments/form :: adventureCreationForm"></th:block>

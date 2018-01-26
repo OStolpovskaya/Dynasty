@@ -25,7 +25,7 @@
     <label>Название *</label>
     <p class="has-error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></p>
     <input type="text" name="title" th:field="*{title}" class="form-control"></input>
-    <p class="help-block">Название приключения должно содержать от 6 до 100 символов</p>
+    <p class="help-block">Название квеста должно содержать от 6 до 100 символов</p>
     <div class="row">
         <div class="col-sm-4">
             <label>Местность *</label>
@@ -64,30 +64,30 @@
     <label class="control-label">Текст задания *</label>
     <div class="controls">
         <p class="has-error" th:if="${#fields.hasErrors('textDesc')}" th:errors="*{textDesc}"></p>
-        <textarea th:field="*{textDesc}" class="form-control" rows="4" maxlength="600" cols="20"></textarea>
+        <textarea th:field="*{textDesc}" class="form-control" rows="4" maxlength="800" cols="20"></textarea>
         <p class="help-block">Придуймате историю, в которой кому-то где-то нужен, например, стул. Задание должно быть в виде загадки. "Принеси мне стул" - не подойдет. "Мне не на чем
-            сидеть, представляешь?" - здорово! (50-600 символов)</p>
+            сидеть, представляешь?" - здорово! (50-800 символов)</p>
     </div>
     <div class="row">
         <div class="col-sm-6">
             <label class="control-label">Текст после успешного выполнения задания *</label>
             <div class="controls">
                 <p class="has-error" th:if="${#fields.hasErrors('textSuccess')}" th:errors="*{textSuccess}"></p>
-                <textarea th:field="*{textSuccess}" class="form-control" rows="4" maxlength="400" cols="20"></textarea>
-                <p class="help-block">Благодарности и награждение. Пример "Оооо! Стул! Теперь я смогу обедать сидя. Спасибо! Вот тебе 10 шт. микроэлектроники." (50-400 символов)</p>
+                <textarea th:field="*{textSuccess}" class="form-control" rows="4" maxlength="600" cols="20"></textarea>
+                <p class="help-block">Благодарности и награждение. Пример "Оооо! Стул! Теперь я смогу обедать сидя. Спасибо! Вот тебе 10 шт. микроэлектроники." (50-600 символов)</p>
             </div>
         </div>
         <div class="col-sm-6">
             <label class="control-label">Текст, если задание не выполнено или выполнено неверно *</label>
             <div class="controls">
                 <p class="has-error" th:if="${#fields.hasErrors('textFailed')}" th:errors="*{textFailed}"></p>
-                <textarea th:field="*{textFailed}" class="form-control" rows="4" maxlength="300" cols="20"></textarea>
-                <p class="help-block">В продолжение примера со стулом: "Нет, это не подойдет. Я не смогу сидеть на этом." (50-300 символов)</p>
+                <textarea th:field="*{textFailed}" class="form-control" rows="4" maxlength="400" cols="20"></textarea>
+                <p class="help-block">В продолжение примера со стулом: "Нет, это не подойдет. Я не смогу сидеть на этом." (50-400 символов)</p>
             </div>
         </div>
     </div>
     <label>Тип ответа *</label>
-    <p>Общий план ответа на задание. В зависимости от этого плана будет сформированы условия выполнения приключения из следующих ниже полей формы.</p>
+    <p>Общий план ответа на задание. В зависимости от этого плана будет сформированы условия выполнения квеста из следующих ниже полей формы.</p>
     <select class="form-control" th:field="*{answerType}">
         <option th:each="answerType : ${answerTypes}"
                 th:value="${answerType}"
@@ -98,7 +98,8 @@
     </p>
     <h3>Условия выполнения приключения:</h3>
     <legend>Предметы</legend>
-    <p>Выберите один или несколько предметов в зависимости от типа ответа</p>
+    <p>Выберите один или несколько предметов в зависимости от типа ответа. Если вы придумали потрясающий сценарий, но в игре нет подходящей вещи - напишите нам через Обратную связь, постараемся
+        добавить новый предмет!</p>
     <p class="has-error" th:if="${#fields.hasErrors('thing1')}" th:errors="*{thing1}"></p>
     <div class="row">
         <div class="col-sm-4">
@@ -147,8 +148,7 @@
                 <option value="">Не важно</option>
                 <option th:each="race : ${raceList}" th:value="${race.getId()}" th:text="${race.getName()}"></option>
             </select>
-            <p class="help-block">Это условие будет тяжело выполнить игрокам: за время приключения (один ход) очень трудно получить новую расу. В этом поле лучше указывать Человек или ГМ-человек
-                или оставлять не заполненным.</p>
+            <p class="help-block">Это условие будет тяжело выполнить игрокам: за время приключения (один ход) очень трудно получить новую расу. Лучший вариант: Человек или ГМ-человек.</p>
         </div>
         <div class="col-sm-4">
             <label>Призвание</label>

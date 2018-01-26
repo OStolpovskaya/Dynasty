@@ -83,6 +83,7 @@ public class AdventureService {
             } else {
                 familyAdventure.setCurrent(false);
             }
+            familyAdventure.setLog("");
             familyAdventureRepository.save(familyAdventure);
 
             adventure.incProposedTimes();
