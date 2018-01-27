@@ -260,57 +260,89 @@ public class AdventureController {
         switch (adventure.getAnswerType()) {
             case oneItem:
                 if (itemsMatchOr(adventure, items, adventureLog)) {
+                    applyActionToItems(adventure, items, adventureLog);
                     return true;
                 }
                 break;
             case manyItemsAnd:
                 if (itemsMatchAnd(adventure, items, adventureLog)) {
+                    applyActionToItems(adventure, items, adventureLog);
                     return true;
                 }
                 break;
             case manyItemsOr:
                 if (itemsMatchOr(adventure, items, adventureLog)) {
+                    applyActionToItems(adventure, items, adventureLog);
                     return true;
                 }
                 break;
             case character:
                 if (characterMatches(character, adventure, family, adventureLog)) {
+                    applyActionChar(family, adventure, character, adventureLog);
                     return true;
                 }
                 break;
             case characterAndOneItem:
                 if (itemsMatchOr(adventure, items, adventureLog) && characterMatches(character, adventure, family, adventureLog)) {
+                    applyActionToItems(adventure, items, adventureLog);
+                    applyActionChar(family, adventure, character, adventureLog);
                     return true;
                 }
                 break;
             case characterAndManyItemsAnd:
                 if (itemsMatchAnd(adventure, items, adventureLog) && characterMatches(character, adventure, family, adventureLog)) {
+                    applyActionToItems(adventure, items, adventureLog);
+                    applyActionChar(family, adventure, character, adventureLog);
                     return true;
                 }
                 break;
             case characterAndManyItemsOr:
                 if (itemsMatchOr(adventure, items, adventureLog) && characterMatches(character, adventure, family, adventureLog)) {
+                    applyActionToItems(adventure, items, adventureLog);
+                    applyActionChar(family, adventure, character, adventureLog);
                     return true;
                 }
                 break;
             case characterOrOneItem:
-                if (itemsMatchOr(adventure, items, adventureLog) || characterMatches(character, adventure, family, adventureLog)) {
+                boolean itemsMatchOr = itemsMatchOr(adventure, items, adventureLog);
+                boolean characterMatches = characterMatches(character, adventure, family, adventureLog);
+                if (itemsMatchOr || characterMatches) {
+                    if (itemsMatchOr) {
+                        applyActionToItems(adventure, items, adventureLog);
+                    } else {
+                        applyActionChar(family, adventure, character, adventureLog);
+                    }
                     return true;
                 }
                 break;
             case characterOrManyItemsAnd:
-                if (itemsMatchAnd(adventure, items, adventureLog) || characterMatches(character, adventure, family, adventureLog)) {
+                boolean itemsMatchAnd = itemsMatchAnd(adventure, items, adventureLog);
+                boolean characterMatches1 = characterMatches(character, adventure, family, adventureLog);
+                if (itemsMatchAnd || characterMatches1) {
+                    if (itemsMatchAnd) {
+                        applyActionToItems(adventure, items, adventureLog);
+                    } else {
+                        applyActionChar(family, adventure, character, adventureLog);
+                    }
                     return true;
                 }
                 break;
             case characterOrManyItemsOr:
-                if (itemsMatchOr(adventure, items, adventureLog) || characterMatches(character, adventure, family, adventureLog)) {
+                boolean itemsMatchOr1 = itemsMatchOr(adventure, items, adventureLog);
+                boolean characterMatches2 = characterMatches(character, adventure, family, adventureLog);
+                if (itemsMatchOr1 || characterMatches2) {
+                    if (itemsMatchOr1) {
+                        applyActionToItems(adventure, items, adventureLog);
+                    } else {
+                        applyActionChar(family, adventure, character, adventureLog);
+                    }
                     return true;
                 }
                 break;
         }
         return false;
     }
+
 
     private boolean characterMatches(Character character, Adventure adventure, Family family, StringBuilder adventureLog) {
         if (character != null) {
@@ -435,7 +467,7 @@ public class AdventureController {
             if (adventure.getCharAppSkinColor() != null && !character.getSkinColor().equals(adventure.getCharAppSkinColor())) {
                 return false;
             }
-            applyActionChar(family, adventure, character, adventureLog);
+            //applyActionChar(family, adventure, character, adventureLog);
             return true;
         }
         return false;
@@ -739,15 +771,15 @@ public class AdventureController {
         boolean thing3Match = adventure.getThing3() == null;
         for (Item item : items) {
             if (item.getProject().getThing() == adventure.getThing1()) {
-                applyActionThing(adventure.getActionThing1(), item, adventureLog);
+                //applyActionThing(adventure.getActionThing1(), item, adventureLog);
                 thing1Match = true;
             }
             if (item.getProject().getThing() == adventure.getThing2()) {
-                applyActionThing(adventure.getActionThing2(), item, adventureLog);
+                //applyActionThing(adventure.getActionThing2(), item, adventureLog);
                 thing2Match = true;
             }
             if (item.getProject().getThing() == adventure.getThing3()) {
-                applyActionThing(adventure.getActionThing3(), item, adventureLog);
+                //applyActionThing(adventure.getActionThing3(), item, adventureLog);
                 thing3Match = true;
             }
         }
@@ -757,15 +789,15 @@ public class AdventureController {
     private boolean itemsMatchOr(Adventure adventure, List<Item> items, StringBuilder adventureLog) {
         for (Item item : items) {
             if (item.getProject().getThing() == adventure.getThing1()) {
-                applyActionThing(adventure.getActionThing1(), item, adventureLog);
+                //applyActionThing(adventure.getActionThing1(), item, adventureLog);
                 return true;
             }
             if (item.getProject().getThing() == adventure.getThing2()) {
-                applyActionThing(adventure.getActionThing2(), item, adventureLog);
+                //applyActionThing(adventure.getActionThing2(), item, adventureLog);
                 return true;
             }
             if (item.getProject().getThing() == adventure.getThing3()) {
-                applyActionThing(adventure.getActionThing3(), item, adventureLog);
+                //applyActionThing(adventure.getActionThing3(), item, adventureLog);
                 return true;
             }
         }
@@ -834,6 +866,48 @@ public class AdventureController {
             adventureLog.append(" Получен бафф: ").append(item.getTitle());
         }
     }
+
+    private void applyActionToItems(Adventure adventure, List<Item> items, StringBuilder adventureLog) {
+        switch (adventure.getAnswerType()) {
+            case oneItem:
+            case manyItemsOr:
+            case characterAndOneItem:
+            case characterAndManyItemsOr:
+            case characterOrOneItem:
+            case characterOrManyItemsOr:
+                for (Item item : items) {
+                    if (item.getProject().getThing() == adventure.getThing1()) {
+                        applyActionThing(adventure.getActionThing1(), item, adventureLog);
+                        break;
+                    }
+                    if (item.getProject().getThing() == adventure.getThing2()) {
+                        applyActionThing(adventure.getActionThing2(), item, adventureLog);
+                        break;
+                    }
+                    if (item.getProject().getThing() == adventure.getThing3()) {
+                        applyActionThing(adventure.getActionThing3(), item, adventureLog);
+                        break;
+                    }
+                }
+                break;
+            case manyItemsAnd:
+            case characterAndManyItemsAnd:
+            case characterOrManyItemsAnd:
+                for (Item item : items) {
+                    if (item.getProject().getThing() == adventure.getThing1()) {
+                        applyActionThing(adventure.getActionThing1(), item, adventureLog);
+                    }
+                    if (item.getProject().getThing() == adventure.getThing2()) {
+                        applyActionThing(adventure.getActionThing2(), item, adventureLog);
+                    }
+                    if (item.getProject().getThing() == adventure.getThing3()) {
+                        applyActionThing(adventure.getActionThing3(), item, adventureLog);
+                    }
+                }
+                break;
+        }
+    }
+
 
     private void applyActionThing(ActionThing actionThing, Item item, StringBuilder adventureLog) {
         switch (actionThing) {
