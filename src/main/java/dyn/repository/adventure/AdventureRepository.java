@@ -20,6 +20,6 @@ public interface AdventureRepository extends CrudRepository<Adventure, Long> {
     @Query(value = "select * from adventure where adventure.landscape_id=?1 ORDER BY RAND() LIMIT ?2", nativeQuery = true)
     List<Adventure> findRandomAdventuresOfLandscape(long landscape, int amountPerTurn);
 
-    @Query(value = "select * from adventure ORDER BY RAND() LIMIT ?1", nativeQuery = true)
+    @Query(value = "SELECT * FROM adventure WHERE status='approved' ORDER BY RAND() LIMIT ?1", nativeQuery = true)
     List<Adventure> findRandomAdventures(int adventureAmountPerTurn);
 }
