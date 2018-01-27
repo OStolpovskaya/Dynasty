@@ -68,6 +68,8 @@
                     <div class="checkbox">
                         <label><input type="checkbox" name="things" value="true" id="things" onclick="openThingsBlock()"/>Предложить предметы со склада</label>
                         <div id="thingsBlock" style="display:none">
+                            <p style="font-style: italic;">Если в задании требуется какой-нибудь предмет, то его можно взять со склада. Играет роль только тип предмета: стул, стол,
+                                кровать. Проект предмета ("самсколотил" или "ретро") - не важен. </p>
                             <div class="row">
                                 <div class="col-sm-4">
                                     <label>Предмет №1</label>
@@ -99,6 +101,8 @@
                     <div class="checkbox">
                         <label><input type="checkbox" name="char" value="true" id="char" onclick="openCharBlock()"/>Отправить персонажа на задание</label>
                         <div id="charBlock" style="display:none">
+                            <p style="font-style: italic;">Если в задании требуется какое-нибудь свойство персонажа, то вы можете отправить сына, его жену или незамужнуюю дочь. Если персонаж
+                                обладает этим свойством, то квест будет засчитан. </p>
                             <th:block th:each="character: ${availableCharacters}">
                                 <div class="radio" style="display: inline-block;">
                                     <label><!--/*@thymesVar id="character" type="dyn.model.Character"*/-->
