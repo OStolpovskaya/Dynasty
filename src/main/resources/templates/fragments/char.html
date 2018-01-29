@@ -114,7 +114,7 @@
             <a href="/game/character" th:href="${nolink}==null?@{/game/character(characterId=${character.getId()})}:'#'">
                 <th:block th:with="p = ${'/graphics/'+character.getSex()+'/'}">
                     <!--/*@thymesVar id="character" type="dyn.model.Character"*/-->
-                    <div style="position: relative; width: 200px; height: 200px; ">
+                    <div style="position: relative; width: 200px; height: 200px; background-color: #eee;">
                         <div class="my_tooltip" style="display: block;">
                             <img th:src="${p+character.getBody().getName() + '_sub_'+character.getSkinColor().getNamePart()+'.png'}" style="position: absolute; left: 0px; "/>
                             <img th:src="${p+character.getBody().getName() + '.png'}" style="position: absolute;left: 0px;"/>

@@ -99,6 +99,7 @@ public class FamilyController {
             redirectAttributes.addFlashAttribute("mess", "Вы достигли максимального количества семей: " + Const.MAX_FAMILIES);
             return "redirect:/game/families";
         }
+        model.addAttribute("user", user);
 
         Race race = raceRepository.findOne(Race.RACE_HUMAN);
 
@@ -175,6 +176,7 @@ public class FamilyController {
         }
 
         if (result.hasErrors()) {
+            model.addAttribute("user", user);
             return "game/addNewFamily";
         }
 

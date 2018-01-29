@@ -9,6 +9,11 @@
 <th:block th:replace="fragments/scripts :: counters"></th:block>
 <div th:replace="fragments/navigation :: nav-for-game"></div>
 <div class="container">
+    <th:block th:if="${user.isGuest()}">
+        <div class="alert alert-danger" style="margin-left: 100px; margin-right: 100px;">
+            Это гостевой аккаунт, но для игры вам все равно нужно создать "гостевую" семью. Введите фамилию семьи в поле ниже.
+        </div>
+    </th:block>
     <div style="margin-right: auto; margin-left: auto; width: 480px;">
         <div class="form-area">
             <!--/*@thymesVar id="familyForm" type="dyn.form.FamilyForm"*/-->
