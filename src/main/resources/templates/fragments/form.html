@@ -64,25 +64,25 @@
     <label class="control-label">Текст задания *</label>
     <div class="controls">
         <p class="has-error" th:if="${#fields.hasErrors('textDesc')}" th:errors="*{textDesc}"></p>
-        <textarea th:field="*{textDesc}" class="form-control" rows="4" maxlength="800" cols="20"></textarea>
+        <textarea th:field="*{textDesc}" class="form-control" rows="4" maxlength="1600" cols="20"></textarea>
         <p class="help-block">Придуймате историю, в которой кому-то где-то нужен, например, стул. Задание должно быть в виде загадки. "Принеси мне стул" - не подойдет. "Мне не на чем
-            сидеть, представляешь?" - здорово! (50-800 символов)</p>
+            сидеть, представляешь?" - здорово! (50-1600 символов)</p>
     </div>
     <div class="row">
         <div class="col-sm-6">
             <label class="control-label">Текст после успешного выполнения задания *</label>
             <div class="controls">
                 <p class="has-error" th:if="${#fields.hasErrors('textSuccess')}" th:errors="*{textSuccess}"></p>
-                <textarea th:field="*{textSuccess}" class="form-control" rows="4" maxlength="600" cols="20"></textarea>
-                <p class="help-block">Благодарности и награждение. Пример "Оооо! Стул! Теперь я смогу обедать сидя. Спасибо! Вот тебе 10 шт. микроэлектроники." (50-600 символов)</p>
+                <textarea th:field="*{textSuccess}" class="form-control" rows="4" maxlength="1000" cols="20"></textarea>
+                <p class="help-block">Благодарности и награждение. Пример "Оооо! Стул! Теперь я смогу обедать сидя. Спасибо! Вот тебе 10 шт. микроэлектроники." (50-1000 символов)</p>
             </div>
         </div>
         <div class="col-sm-6">
             <label class="control-label">Текст, если задание не выполнено или выполнено неверно *</label>
             <div class="controls">
                 <p class="has-error" th:if="${#fields.hasErrors('textFailed')}" th:errors="*{textFailed}"></p>
-                <textarea th:field="*{textFailed}" class="form-control" rows="4" maxlength="400" cols="20"></textarea>
-                <p class="help-block">В продолжение примера со стулом: "Нет, это не подойдет. Я не смогу сидеть на этом." (50-400 символов)</p>
+                <textarea th:field="*{textFailed}" class="form-control" rows="4" maxlength="800" cols="20"></textarea>
+                <p class="help-block">В продолжение примера со стулом: "Нет, это не подойдет. Я не смогу сидеть на этом." (50-800 символов)</p>
             </div>
         </div>
     </div>

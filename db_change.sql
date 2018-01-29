@@ -36,3 +36,8 @@ INSERT INTO `achievement` (`id`, `name`, `type`, `for_what`) VALUES
 (49, 'Полуорк: первый новорожденный!', 'newborn', 22),
 (50, 'Дроу: первый новорожденный!', 'newborn', 23),
 (51, 'Ангел: первый новорожденный!', 'newborn', 24);
+
+ALTER TABLE  `adventure` CHANGE  `text_desc`  `text_desc` VARCHAR( 1600 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+CHANGE  `text_success`  `text_success` VARCHAR( 1000 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+CHANGE  `text_failed`  `text_failed` VARCHAR( 800 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
+
