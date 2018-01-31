@@ -462,7 +462,7 @@ public class BuffController {
                             genModPercent = Const.PERCENTAGE_GEN_MOD_BUFFED;//0.40;
                         }
 
-                        StringBuilder log = new StringBuilder("У вас появился еще один ребенок: ");
+                        StringBuilder log = new StringBuilder("У персонажей " + father.getName() + " и " + mother.getName() + " появился еще один ребенок: ");
                         StringBuilder logAchievements = new StringBuilder();
                         Character child = gameController.generateChild(user, family, father, mother, firstTurn, fatherFeaturePercent, sonOrDaughterPercent, genModPercent, 1, log, logAchievements);
 

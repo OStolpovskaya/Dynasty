@@ -20,7 +20,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Locale;
+import java.util.Arrays;
 import java.util.Map;
 
 
@@ -34,9 +34,14 @@ public class IndexController implements ErrorController {
     private ErrorAttributes errorAttributes;
 
     @RequestMapping("/")
-    public String index() {
-        Locale locale = LocaleContextHolder.getLocale();
-        logger.debug("Index current locale: " + locale + ". Message: " + messageSource.getMessage("welcome", null, locale));
+    public String index(HttpServletRequest request) {
+        StringBuilder sb = new StringBuilder();
+        Map<String, String[]> parameterMap = request.getParameterMap();
+        for (String s : parameterMap.keySet()) {
+            sb.append(s).append(": ").append(Arrays.toString(parameterMap.get(s)));
+        }
+
+        logger.debug("*INDEX*: " + LocaleContextHolder.getLocale() + ". " + sb.toString());
         return "index";
     }
 

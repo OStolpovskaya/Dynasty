@@ -62,7 +62,10 @@ public class FamilyController {
     private TownNewsService townNewsService;
 
     @RequestMapping("game/families")
-    public String families(ModelMap model, RedirectAttributes redirectAttributes) {
+    public String families(ModelMap model, RedirectAttributes redirectAttributes,
+                           @RequestParam(value = "level", required = false) Integer level) {
+        System.out.println("level = " + level);
+
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         List<Family> families = user.getFamilies();
         if (families.size() == 0) {
@@ -75,18 +78,36 @@ public class FamilyController {
             Family family = user.getCurrentFamily();
             model.addAttribute("family", family);
 
-            List<Map<Character, List<Character>>> levelFatherChildren = new ArrayList<>();
-            for (int i = 0; i <= family.getLevel(); i++) {
-                List<Character> fathersOnLevel = characterRepository.findByFamilyAndLevelAndSexAndSpouseIsNotNull(family, i, "male");
+
+            if (level == null) {
+                level = family.getLevel() - 1;
+            }
+
+            if (level < 0) {
+                level = 0;
+            }
+            if (level >= family.getLevel() - 1) {
+                level = family.getLevel() - 1;
+            }
+
+            if (family.getLevel() >= 1) {
+                model.addAttribute("level", level);
+
+                List<Map<Character, List<Character>>> levelFatherChildren = new ArrayList<>();
+                List<Character> fathersOnLevel = characterRepository.findByFamilyAndLevelAndSexAndSpouseIsNotNull(family, level == 0 ? 0 : level - 1, "male");
                 Map<Character, List<Character>> fatherChildrenMap = new LinkedHashMap<>();
                 for (Character father : fathersOnLevel) {
                     fatherChildrenMap.put(father, father.getChildren());
                 }
-                levelFatherChildren.add(fatherChildrenMap);
-            }
-            model.addAttribute("levelFatherChildren", levelFatherChildren);
+                model.addAttribute("fatherChildrenMap", fatherChildrenMap);
 
-            model.addAttribute("familyLog", familyLogService.getFamilyLogOrderbyLevel(family));
+                levelFatherChildren.add(fatherChildrenMap);
+
+                model.addAttribute("levelFatherChildren", levelFatherChildren);
+
+                model.addAttribute("familyLog", familyLogService.getFamilyLogByFamilyAndLevel(family, level));
+
+            }
         }
         return "game/families";
     }

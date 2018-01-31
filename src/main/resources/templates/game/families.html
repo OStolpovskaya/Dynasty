@@ -12,7 +12,8 @@
     <!--/*@thymesVar id="family" type="dyn.model.Family"*/-->
     <th:block th:if="${family.getLevel() == 0}">
         <div class="alert alert-success">
-            Здесь отображены все семьи вашего аккаунта и история выбранной семьи (с родословной и логами уровня). Вы можете переключаться между семьями вашего аккаунта в любое время или создать новую семью.<br/>
+            Здесь отображены все семьи вашего аккаунта. Вы можете переключаться между семьями в любое время или создать новую семью.<br/>
+            На следующих уровнях семьи вы сможете просматривать здесь родословную своей династии с самого первого поколения. <br/>
             Пожалуйста, перейдите в меню на вкладку Дом.
         </div>
     </th:block>
@@ -24,6 +25,8 @@
             <th>Фамилия</th>
             <th>Уровень</th>
             <th>Деньги</th>
+            <th>Крафт-баллы</th>
+            <th>Ресурсы</th>
             <th>Текущий выбор</th>
             <th>Действия</th>
         </tr>
@@ -33,6 +36,8 @@
             <td th:text="${family.getFamilyName()}">name</td>
             <td th:text="${family.getLevel()}">1</td>
             <td th:text="${family.getMoney()}">1</td>
+            <td th:text="${family.getCraftPoint()}">1</td>
+            <td th:utext="${family.getFamilyResources().resString()}">1</td>
             <td>
                 <th:block th:if="${family.isCurrent()}"><span class="glyphicon glyphicon-ok-sign" style="color: forestgreen"></span>
                 </th:block>
@@ -50,36 +55,52 @@
         </tr>
         </tbody>
     </table>
-    Вы можете создать
-    <th:block th:text="${@const.MAX_FAMILIES}"></th:block>
-    семей. Удалять семьи нельзя. <br/>
-    <a href="/game/addNewFamily" class="btn btn-info" role="button">Создать новую семью!</a>
+    <div class="row" align="center">
+        <a href="/game/addNewFamily" class="btn btn-info" role="button">Создать новую семью!</a>
+        <p class="help-block">Вы можете создать
+            <th:block th:text="${@const.MAX_FAMILIES}"></th:block>
+            семей. Удалять семьи нельзя.
+        </p>
+    </div>
 
-    <h3>История выбранной семьи:</h3>
-    <!--levelFatherChildren-->
-    <th:block th:each="fatherChildrenMap : ${levelFatherChildren}" th:with="level = ${fatherChildrenMapStat.count - 1}">
-        <a th:name="${'level'+level}" class="anchor"></a>
-        <!--familyLog-->
-        <ul class="list-inline">
-            <!--/*@thymesVar id="room" type="dyn.model.Room"*/-->
-            <li th:text="${'Уровень: '+level}">
 
-            </li>
-            <li>
-                <button data-toggle="collapse" th:attr="data-target=${'#family-log'+level}" class="btn">
-                    Лог <span class="glyphicon glyphicon-menu-down"></span>
-                </button>
-            </li>
-        </ul>
-
-        <div th:id="${'family-log'+(fatherChildrenMapStat.count-1)}" class="collapse">
-            <pre class="pre-scrollable" style="height: 150px; max-height: 150px;" th:utext="${familyLog.get(level).getText()}"></pre>
+    <th:block th:if="${family.getLevel() ge 1}">
+        <h3>История выбранной семьи: уровень
+            <th:block th:text="${level}"></th:block>
+        </h3>
+        <div class="row">
+            <div class="col-sm-3" align="left">
+                <th:block th:if="${level gt 0}">
+                    <a th:href="${'/game/families?level='+(level-1)}">Предыдущий уровень:
+                        <th:block th:text="${level-1}"></th:block>
+                    </a>
+                </th:block>
+            </div>
+            <div class="col-sm-6" align="center">
+                <form action="/game/families" class="form-inline">
+                    <label>Быстрый переход к уровню: </label>
+                    <input name="level" type="number" th:value="${level}" step="1" min="0" th:max="${family.getLevel()-1}" class="form-control" style="width: 80px;"/>
+                    <button type="submit" class="btn btn-default">Перейти</button>
+                </form>
+            </div>
+            <div class="col-sm-3" align="right">
+                <th:block th:if="${(level+1) lt family.getLevel()}">
+                    <a th:href="${'/game/families?level='+(level+1)}">Следующий уровень:
+                        <th:block th:text="${level+1}"></th:block>
+                    </a>
+                </th:block>
+            </div>
         </div>
+        <div class="row" align="center" style="margin-bottom: 10px;">
+            <a href="#log">Лог уровня</a>
+        </div>
+
+
         <div class="well" align="center">
             <th:block th:each="mapEntry : ${fatherChildrenMap}" th:with="father = ${mapEntry.getKey()}, childList = ${mapEntry.getValue()}">
                 <!--/*@thymesVar id="father" type="dyn.model.Character"*/-->
-                <div align="center" style="zoom: 0.5; display: inline-block; margin-right: 28px;">
-                    <div style="display: inline-block; padding: 5px; background-color: #dff0d8; border: solid 1px mediumseagreen;">
+                <div align="center" style="zoom: 0.5; display: inline-block; margin-right: 28px; margin-top: 20px; padding: 10px; border: solid 1px #aaa; border-radius: 10px; background-color: #ccc;">
+                    <div style="display: inline-block; padding: 5px; background-color: #ccccff; border: solid 1px #b3b3ff; margin-bottom: 10px;">
                         <div style="display: inline-block;">
                             <th:block th:replace="fragments/char :: char-panel (character=${father})"></th:block>
                         </div>
@@ -101,6 +122,16 @@
                 </div>
             </th:block>
         </div>
+        <a name="log" class="anchor"></a>
+        <h3>Лог уровня
+            <th:block th:text="${level}"></th:block>
+            :
+        </h3>
+        <pre th:utext="${familyLog.getText()}"></pre>
+    </th:block>
+    <th:block th:if="${family.getLevel() lt 1}">
+        <h3>История выбранной семьи</h3>
+        <p>История вашей династии только началась, пока записей нет.</p>
     </th:block>
 
 </div>

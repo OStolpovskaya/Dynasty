@@ -418,6 +418,7 @@ public class GameController {
                 Character child = generateChild(user, family, character, wife, firstTurn, fatherFeaturePercent, sonOrDaughterPercent, genModPercent, childSeqNum, turnLog, turnAchievements);
                 child.setLevel(family.getLevel() + 1);
                 characterRepository.save(child);
+                turnLog.append("<br>");
             }
             turnLog.append("<br>");
 
@@ -515,7 +516,7 @@ public class GameController {
         child.setRace(raceService.defineRace(child));
         Achievement achievement = achievementService.checkAchievement(AchievementType.newborn, user, family, child);
         if (achievement != null) {
-            log.append("(" + messageSource.getMessage("turn.achievement", new Object[]{achievement.getName(), Const.ACHIEVEMENT_CRAFT_POINTS, Const.ACHIEVEMENT_MONEY}, loc()) + ")");
+            log.append(" (" + messageSource.getMessage("turn.achievement", new Object[]{achievement.getName(), Const.ACHIEVEMENT_CRAFT_POINTS, Const.ACHIEVEMENT_MONEY}, loc()) + ")");
             logAchievements.append(child.getName()).append(": ").append(achievement.getName()).append("<br>");
             townNewsService.addAchievementNews(family, achievement);
         }
@@ -527,7 +528,6 @@ public class GameController {
         logger.info("   child: " + child.getName() + ", genModFeature = " + feature + ", race: " + child.getRace().getName());
         characterRepository.save(child);
 
-        log.append("<br>");
         return child;
     }
 

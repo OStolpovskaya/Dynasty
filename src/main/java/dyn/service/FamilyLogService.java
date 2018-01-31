@@ -64,6 +64,11 @@ public class FamilyLogService {
         return familyLog;
     }
 
+    public FamilyLog getFamilyLogByFamilyAndLevel(Family family, int level) {
+        FamilyLog familyLog = familyLogRepository.findByFamilyAndLevel(family, level);
+        return familyLog;
+    }
+
     public List<FamilyLog> getFamilyLogOrderbyLevel(Family family) {
         List<FamilyLog> familyLog = familyLogRepository.findByFamilyOrderByLevel(family);
         return familyLog;
