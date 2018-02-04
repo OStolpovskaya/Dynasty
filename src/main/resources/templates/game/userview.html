@@ -34,7 +34,7 @@
             </tr>
             </tbody>
         </table>
-        <div th:if="${player.getUserid() != family.getUser().getUserid()}">
+        <div th:if="${family != null and player.getUserid() != family.getUser().getUserid()}">
             <th:block th:unless="${isNeighbor}">
                 <div style="display: inline-block;">
                     <form th:action="@{/game/addNeighbor}" method="post" class="form-inline">

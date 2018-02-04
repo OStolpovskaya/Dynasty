@@ -14,7 +14,8 @@
         <div class="alert alert-success">
             Это ваш дом. Пока это только хижина с тремя комнатами, но когда-нибудь вы обязательно прикупите дворец с гаражом и бассейном! <br/>
             Тип дома определяет, сколько пар вы можете создать (например, сейчас вы можете выбрать невест только для трех сыновей) и сколько анкет невест вы можете разместить (сейчас пять). <br/>
-            Сейчас на вашем складе есть предмет Плита "Скоровар" (список вещей на складе можно посмотреть в меню "Склад"). Кликните на прямоугольник с подписью "плита" на изображении кухни и выберите имеющуюся у вас плиту Скоровар.
+            Сейчас на вашем складе есть предмет Плита "Скоровар" (список вещей на складе можно посмотреть в меню "Склад"). Кликните на прямоугольник с подписью "плита" на изображении кухни и выберите
+            имеющуюся у вас плиту Скоровар.
             Теперь в вашем доме есть хоть какая-то мебель!<br/>
             Предметы для дома вы можете купить или изготовить. Пожалуйста, перейдите в меню на вкладку "Крафт".
         </div>
@@ -36,7 +37,8 @@
                 </p>
                 <p>
 
-                <div class="my_tooltip">Среднее значение качества предметов в доме: <strong th:text="${family.getHouseQuality()}"></strong>&nbsp;<span class="glyphicon glyphicon-question-sign" style="color: lightslategray;"></span>
+                <div class="my_tooltip">Среднее значение качества предметов в доме: <strong th:text="${family.getHouseQuality()}"></strong>&nbsp;<span class="glyphicon glyphicon-question-sign"
+                                                                                                                                                       style="color: lightslategray;"></span>
                     <span class="my_tooltiptext">
                         <th:block th:replace="game/help :: house_quality_table"></th:block>
                     </span>
@@ -98,29 +100,57 @@
                 </h4>
             </div>
             <div class="modal-body">
-                <p>Доступные действия:</p>
-                <a id="formCraftKnownThing" href="#">Создать вещь</a>
-                <form id="formUnsetItem" th:action="@{/game/unsetItem}" method="post" class="form-inline" style="margin-top: 5px;">
-                    <label>Установленная вещь:</label>
-                    <span id="curItemName"></span>
-                    <input type="hidden" name="itemId" id="curItemId" value=""/>
-                    <button type="submit" id="curItemUnsetButton" class="btn btn-warning">Убрать</button>
-                </form>
+                <p>Доступные действия:
+                <ul class="list-inline">
+                    <li>
+                        <a id="formCraftKnownThing" href="#">Создать предмет</a>
+                    </li>
+                    <li>
+                        <a id="linkToMarket" href="#">Купить предмет</a>
+                    </li>
+                </ul>
+                </p>
+
+                <div id="actionsWithCurrentItem">
+                    <form id="formUnsetItem" th:action="@{/game/unsetItem}" method="post" class="form-inline" style="margin-top: 5px;">
+                        <label>Установленная вещь:</label>
+                        <span id="curItemName"></span>
+                        <input type="hidden" name="itemId" id="curItemId" value=""/>
+                        <button type="submit" id="curItemUnsetButton" class="btn btn-warning btn-sm"
+                                title="Вернуть на склад. Расположение предмета станет по умолчанию.">Убрать
+                        </button>
+                    </form>
+                    <form id="moveItemForm" class="form-inline" th:action="@{/game/moveItem}" method="post" style="display: inline-block; margin-top: 5px;">
+                        <label>Переставить предмет: </label>
+                        <input id="moveItemFormCurItemId" type="hidden" name="itemId"/>
+                        <input id="moveItemFormRoomThingId" type="hidden" name="roomThingId"/>
+                        <div class="form-group">x:
+                            <input id="moveItemFormCurItemX" name="x" type="number" step="45" min="0"
+                                   class="form-control input-sm" style="width: 60px;" title="Положение по оси х левого верхнего угла предмета. Ось х: слева 0, справа 1035"/></div>
+                        <div class="form-group">y:
+                            <input id="moveItemFormCurItemY" name="y" type="number" step="45" min="0"
+                                   class="form-control input-sm" style="width: 60px;" title="Положение по оси у левого верхнего угла предмета. Ось у: сверху 0, снизу 405"/>
+                        </div>
+                        <div class="form-group">z:
+                            <input id="moveItemFormCurItemLayer" name="layer" type="number" step="1" min="1" max="10"
+                                   class="form-control input-sm" style="width: 50px;" title="Положение по глубине. Дальний план 1, ближе к вам 10"/></div>
+                        <button type="submit" class="btn btn-primary btn-sm"
+                                title="Укажите новые координаты х, у и z, чтобы передвинуть. Ограничения по x: 0 и 1035 минус ширина предмета. Ограничение по у: 0 и 405 минус высота предмета.
+                                Ограничение по z: от 1 до 10 уровня">Переставить
+                        </button>
+                    </form>
+                </div>
                 <form id="formSetItemToThing" th:action="@{/game/setItemToThing}" method="post" class="form-inline" style="margin-top: 5px;">
-                    <label>Установить вещь:</label>
+                    <label>Установить предмет:</label>
                     <input type="hidden" name="roomThingId" id="roomThingId" value=""/>
                     <div class="form-group">
-                        <select class="form-control" id="selectAvItems" name="itemId">
+                        <select class="form-control input-sm" id="selectAvItems" name="itemId">
                             <option value="0">0</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-success">Выбрать</button>
+                    <button type="submit" class="btn btn-success btn-sm">Выбрать</button>
                 </form>
-                <form th:action="@{/game/chooseItemToBuy}" method="get" class="form-inline" style="margin-top: 5px;">
-                    <label>Приобрести вещь на маркете:</label>
-                    <input type="hidden" name="thingId" id="thingId" value=""/>
-                    <button type="submit" class="btn btn-info">Купить</button>
-                </form>
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
@@ -135,7 +165,8 @@
 
 <script>
     //<![CDATA[
-    function roomViewPassDataToHouse(thingId, thingName, roomThingId, isKnownThing, curItemId, curItemName, availableItemNames, availableItemIds) {
+    function roomViewPassDataToHouse(thingId, thingName, roomThingId, roomThingWidth, roomThingHeight, roomThingLayer, isKnownThing, curItemId, curItemName, curItemX, curItemY, curItemLayer,
+                                     availableItemNames, availableItemIds) {
         $(".modal-header #thingName").text(thingName);
         $(".modal-body #thingId").val(thingId);
         $(".modal-body #roomThingId").val(roomThingId);
@@ -145,11 +176,26 @@
         $(".modal-body #availableItemNames").text(availableItemNames);
         $(".modal-body #availableItemIds").text(availableItemIds);
 
+        $(".modal-body #moveItemFormCurItemId").val(curItemId);
+        $(".modal-body #moveItemFormRoomThingId").val(roomThingId);
+        $(".modal-body #moveItemFormCurItemX").val(curItemX);
+        $(".modal-body #moveItemFormCurItemY").val(curItemY);
+        $(".modal-body #moveItemFormCurItemLayer").val(curItemLayer);
+        $(".modal-body #moveItemFormCurItemX").attr("max", 1035 - roomThingWidth);
+        $(".modal-body #moveItemFormCurItemY").attr("max", 405 - roomThingHeight);
+
+        document.getElementById("linkToMarket").href = "/game/chooseItemToBuy?thingId=" + thingId;
 
         if (curItemId == '0') {
-            document.getElementById("formUnsetItem").style.display = "none";
+            document.getElementById("actionsWithCurrentItem").style.display = "none";
         } else {
-            document.getElementById("formUnsetItem").style.display = "block";
+            document.getElementById("actionsWithCurrentItem").style.display = "block";
+        }
+
+        if (roomThingLayer == 0) {
+            document.getElementById("moveItemForm").style.display = "none";
+        } else {
+            document.getElementById("moveItemForm").style.display = "inline-block";
         }
 
         var select = document.getElementById("selectAvItems");

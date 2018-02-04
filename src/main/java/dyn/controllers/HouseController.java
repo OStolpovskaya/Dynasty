@@ -140,6 +140,46 @@ public class HouseController {
         return "game/storage";
     }
 
+    @RequestMapping(value = "/game/moveItem", method = RequestMethod.POST)
+    public String moveItem(ModelMap model, RedirectAttributes redirectAttributes,
+                           @RequestParam(value = "itemId") Long itemId,
+                           @RequestParam(value = "roomThingId") Long roomThingId,
+                           @RequestParam(value = "x") Integer x,
+                           @RequestParam(value = "y") Integer y,
+                           @RequestParam(value = "layer") Integer layer) {
+        User user = userRepository.findByUserName(getAuthUser().getUsername());
+        Family family = user.getCurrentFamily();
+
+
+        Item item = houseService.getItemByFamilyAndItemId(family, itemId);
+        if (item != null && (item.getPlace().equals(ItemPlace.home) || item.getPlace().equals(ItemPlace.building))) {
+            RoomThing roomThing = houseService.getRoomThingById(roomThingId);
+            String returnTo;
+            if (roomThing.getHouse().getType().equals(HouseType.building)) {
+                returnTo = "buildings#building" + roomThing.getHouse().getId();
+            } else {
+                returnTo = "house#room" + roomThing.getRoom().getId();
+            }
+            if (x < 0 || x > 1035 - item.getProject().getThing().getWidth() || y < 0 || y > 405 - item.getProject().getThing().getHeight() || layer <= 0 || layer > 10) {
+                logger.error(family.userNameAndFamilyName() + "want to move item with incorrect coordinates: " + itemId + ", x=" + x + ", y=" + y + ", layer=" + layer);
+                redirectAttributes.addFlashAttribute("mess", "Вы ввели неправильные координаты для предмета");
+            } else {
+                item.setX(x);
+                item.setY(y);
+                item.setLayer(layer);
+                houseService.saveItem(item);
+                logger.debug(family.userNameAndFamilyName() + "move item with coordinates: " + item.getFullName() + ", x=" + x + ", y=" + y + ", layer=" + layer);
+                redirectAttributes.addFlashAttribute("mess", "Предмет " + item.getFullName() + " переставлен");
+            }
+            return "redirect:/game/" + returnTo;
+        } else {
+            logger.error(family.userNameAndFamilyName() + "want to set nonexisting item: " + itemId + " or incorrect itemplace");
+            redirectAttributes.addFlashAttribute("mess", "Нет такого предмета или непонятно куда ставить");
+        }
+
+        return "redirect:/game/";
+    }
+
     @RequestMapping(value = "/game/setItemToThing", method = RequestMethod.POST)
     public String setItemToRoomInterior(ModelMap model, RedirectAttributes redirectAttributes,
                                         @RequestParam(value = "itemId") Long itemId,
@@ -152,9 +192,20 @@ public class HouseController {
         if (item != null && roomThing != null) {
             Item oldItem = houseService.getItemByFamilyAndRoomThing(family, roomThing);//itemRepository.findByFamilyAndInteriorId(family, roomThing.getId());
             if (oldItem != null) {
+                item.setX(oldItem.getX());
+                item.setY(oldItem.getY());
+                item.setLayer(oldItem.getLayer());
+
+                oldItem.setX(null);
+                oldItem.setY(null);
+                oldItem.setLayer(null);
                 oldItem.setPlace(ItemPlace.storage);
                 oldItem.setInteriorId(0L);
                 houseService.saveItem(oldItem);
+            } else {
+                item.setX(roomThing.getX());
+                item.setY(roomThing.getY());
+                item.setLayer(roomThing.getLayer());
             }
             String returnTo;
             if (roomThing.getHouse().getType().equals(HouseType.building)) {
@@ -196,6 +247,9 @@ public class HouseController {
             switch (item.getPlace()) {
                 case home:
                     roomThing = houseService.getRoomThingById(item.getInteriorId());
+                    item.setX(null);
+                    item.setY(null);
+                    item.setLayer(null);
                     item.setInteriorId(0L);
                     logger.debug(family.userNameAndFamilyName() + "unset item " + item.getProject().getName() + "(" + item.getId() + ") from room ");
                     redirectAttributes.addFlashAttribute("mess", "Предмет перенесен из дома на склад: " + item.getFullName());
@@ -207,7 +261,9 @@ public class HouseController {
                     break;
                 case building:
                     roomThing = houseService.getRoomThingById(item.getInteriorId());
-
+                    item.setX(null);
+                    item.setY(null);
+                    item.setLayer(null);
                     item.setInteriorId(0L);
                     logger.debug(family.userNameAndFamilyName() + "unset item " + item.getProject().getName() + "(" + item.getId() + ") from building ");
                     redirectAttributes.addFlashAttribute("mess", "Предмет перенесен из помещения на склад: " + item.getFullName());

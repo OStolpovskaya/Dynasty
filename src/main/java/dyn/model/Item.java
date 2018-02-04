@@ -34,6 +34,10 @@ public class Item {
     @Column(name = "store_cost")
     private int cost;
 
+    private Integer x;
+    private Integer y;
+    private Integer layer;
+
     //=======================================================
 
 
@@ -104,6 +108,30 @@ public class Item {
         this.cost = cost;
     }
 
+    public Integer getX() {
+        return x;
+    }
+
+    public void setX(Integer x) {
+        this.x = x;
+    }
+
+    public Integer getY() {
+        return y;
+    }
+
+    public void setY(Integer y) {
+        this.y = y;
+    }
+
+    public Integer getLayer() {
+        return layer;
+    }
+
+    public void setLayer(Integer layer) {
+        this.layer = layer;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Item{");
@@ -127,6 +155,15 @@ public class Item {
     public String link() {
 
         return getProject().getThing().getName() + " '" + getProject().getName() + "' от " + author.link() + " качеством " + quality;
+    }
+
+    public String shortLink() {
+
+        return getProject().getName() + " от " + author.link() + " (" + quality + ")";
+    }
+
+    public String shortTitle() {
+        return getProject().getName() + "(" + getAuthor().getFamilyName() + ", " + getQuality() + ")";
     }
 
     @Override

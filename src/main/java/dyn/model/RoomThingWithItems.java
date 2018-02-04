@@ -49,14 +49,20 @@ public class RoomThingWithItems {
         sb.append(roomThing.getThing().getId()).append(",");
         sb.append("'").append(roomThing.getThing().getName()).append("',");
         sb.append(roomThing.getId()).append(",");
+        sb.append(roomThing.getThing().getWidth()).append(",");
+        sb.append(roomThing.getThing().getHeight()).append(",");
+        sb.append(roomThing.getLayer()).append(",");
         sb.append(knownThing).append(",");
         sb.append(currentItem == null ? "0" : currentItem.getId()).append(",");
-        sb.append("'").append(currentItem == null ? "Нет вещи" : currentItem.getProject().getName()).append("',");
+        sb.append("'").append(currentItem == null ? "Нет вещи" : currentItem.shortTitle()).append("',");
+        sb.append(currentItem == null ? "0" : currentItem.getX()).append(",");
+        sb.append(currentItem == null ? "0" : currentItem.getY()).append(",");
+        sb.append(currentItem == null ? "0" : currentItem.getLayer()).append(",");
         List<String> availableItemIds = new ArrayList<>();
         List<String> availableItemNames = new ArrayList<>();
         for (Item availableItem : availableItems) {
             availableItemIds.add(availableItem.getId().toString());
-            availableItemNames.add("'" + availableItem.getProject().getName() + "(" + availableItem.getQuality() + ")" + "'");
+            availableItemNames.add("'" + availableItem.shortTitle() + "'");
         }
         sb.append("[").append(String.join(",", availableItemNames)).append("],");
         sb.append("[").append(String.join(",", availableItemIds)).append("]");
