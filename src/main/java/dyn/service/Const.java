@@ -148,4 +148,5 @@ public class Const {
     public static final int ADVENTURE_CREATION_COST = 10000;
     // ============================================================
     public static final int ITEM_MAX_QUALITY = 5;
+    public static final int ADVENTURE_AMOUNT_PER_AWARD = 7;
 }

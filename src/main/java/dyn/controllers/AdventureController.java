@@ -201,6 +201,19 @@ public class AdventureController {
             StringBuilder mess = new StringBuilder("Вы прошли квест " + adventure.fullTitle() + "!");
             mess.append(adventureLog);
 
+            if (family.getAdventuresCompleted() % Const.ADVENTURE_AMOUNT_PER_AWARD == 0) {
+                Project randomUniqueProject = craftService.getRandomUniqueProject();
+                Item item = craftService.giveGift(family, randomUniqueProject.getId());
+                item.setQuality(Const.ITEM_MAX_QUALITY);
+                houseService.saveItem(item);
+
+                family.incGotUniqueItems();
+                familyRepository.save(family);
+
+                mess.append(" За каждый " + Const.ADVENTURE_AMOUNT_PER_AWARD + " квест полагается подарок! Вы получаете: " + item.getTitle());
+                logger.info(family.userNameAndFamilyName() + " completed " + Const.ADVENTURE_AMOUNT_PER_AWARD + " adventures. Got gift: " + item.getTitle());
+            }
+
             if (adventure.getCreatedBy().getId() > 1) {
                 Family author = adventure.getCreatedBy();
                 author.addMoney(Const.ADVENTURE_AUTHOR_AWARD);
