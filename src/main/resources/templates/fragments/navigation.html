@@ -91,6 +91,9 @@
                     <li th:classappend="${#httpServletRequest.getRequestURI().contains('/game/buildings') ? 'active':''}"><a href="/game/buildings">Бизнес</a></li>
                     <li th:classappend="${#httpServletRequest.getRequestURI().contains('/game/adventures') ? 'active':''}">
                         <a href="/game/adventures">Приключения</a></li>
+                    <li th:classappend="${#httpServletRequest.getRequestURI().contains('/game/races') ? 'active':''}">
+                        <a href="/game/races" title="Расы и комбинации расовых черт" target="_blank"><span class="glyphicon glyphicon-list-alt" style="color: darkseagreen;"></span></a>
+                    </li>
                     <li th:classappend="${#httpServletRequest.getRequestURI().contains('/game/help') ? 'active':''}">
                         <a href="/game/help" title="Справка"><span class="glyphicon glyphicon-question-sign" style="color: #9d9d9d;"></span></a>
                     </li>

@@ -64,7 +64,6 @@ public class FamilyController {
     @RequestMapping("game/families")
     public String families(ModelMap model, RedirectAttributes redirectAttributes,
                            @RequestParam(value = "level", required = false) Integer level) {
-        System.out.println("level = " + level);
 
         User user = userRepository.findByUserName(getAuthUser().getUsername());
         List<Family> families = user.getFamilies();
